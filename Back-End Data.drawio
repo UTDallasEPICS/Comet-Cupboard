@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-09-14T21:30:39.050Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33" etag="irdmmxYcOndACNPwZY00" version="20.3.0" type="github">
+<mxfile host="app.diagrams.net" modified="2022-09-14T21:34:20.229Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36 Edg/105.0.1343.33" etag="r2hJnYuig0bUUmM_R7-C" version="20.3.0" type="github">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="782" dy="468" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -16,11 +16,8 @@
         <mxCell id="W-ZZmaoJpfkEgvUS2qyO-39" value="Date (Form)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="W-ZZmaoJpfkEgvUS2qyO-13" vertex="1">
           <mxGeometry x="55" y="100" width="90" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="W-ZZmaoJpfkEgvUS2qyO-14" value="Inventory" style="swimlane;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+        <mxCell id="W-ZZmaoJpfkEgvUS2qyO-14" value="Categories" style="swimlane;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="600" y="285" width="200" height="200" as="geometry" />
-        </mxCell>
-        <mxCell id="W-ZZmaoJpfkEgvUS2qyO-19" value="Item Name&lt;br&gt;Quantity&lt;br&gt;Location&lt;br&gt;Weight/Value&lt;br&gt;Date in&lt;br&gt;Date out&lt;br&gt;Is Perishable&lt;br&gt;Exp Date&lt;br&gt;Item Type" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="W-ZZmaoJpfkEgvUS2qyO-14" vertex="1">
-          <mxGeometry x="55" y="35" width="90" height="140" as="geometry" />
         </mxCell>
         <mxCell id="W-ZZmaoJpfkEgvUS2qyO-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.393;entryY=-0.012;entryDx=0;entryDy=0;entryPerimeter=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="W-ZZmaoJpfkEgvUS2qyO-34" target="W-ZZmaoJpfkEgvUS2qyO-13" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -28,8 +25,11 @@
         <mxCell id="W-ZZmaoJpfkEgvUS2qyO-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.638;entryY=-0.004;entryDx=0;entryDy=0;entryPerimeter=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="W-ZZmaoJpfkEgvUS2qyO-34" target="W-ZZmaoJpfkEgvUS2qyO-14" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="LEjf0Js33OpnvhWqmB9_-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="W-ZZmaoJpfkEgvUS2qyO-34" target="LEjf0Js33OpnvhWqmB9_-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="W-ZZmaoJpfkEgvUS2qyO-34" value="Tables" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="294" y="170" width="240" height="50" as="geometry" />
+          <mxGeometry x="294" y="170" width="240" height="40" as="geometry" />
         </mxCell>
         <mxCell id="W-ZZmaoJpfkEgvUS2qyO-45" value="NFTBA Form" style="swimlane;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="20" y="510" width="200" height="200" as="geometry" />
@@ -40,8 +40,17 @@
         <mxCell id="W-ZZmaoJpfkEgvUS2qyO-51" value="NumChil&lt;br&gt;NumPar&lt;br&gt;NumOld&lt;br&gt;Income" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="85" y="535" width="70" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="W-ZZmaoJpfkEgvUS2qyO-53" value="Text" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="110" y="470" width="40" height="20" as="geometry" />
+        <mxCell id="LEjf0Js33OpnvhWqmB9_-0" value="On recepient id creation/year" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;rotation=90;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="140" y="480" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="LEjf0Js33OpnvhWqmB9_-1" value="Users" style="swimlane;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="314" y="250" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="LEjf0Js33OpnvhWqmB9_-3" value="ID&lt;br&gt;Password&lt;br&gt;Permissions(object with values)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="305" y="280" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="LEjf0Js33OpnvhWqmB9_-4" value="Items (array)&lt;br&gt;Name&lt;br&gt;Description/Color" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="630" y="300" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
