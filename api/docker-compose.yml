@@ -1,0 +1,50 @@
+version: '3'
+services:
+  api:
+    container_name: example_api
+    image: node:16
+    working_dir: /example-api/
+    command: yarn start
+    volumes:
+      - .:/example-api/
+    networks:
+      - backend
+    ports:
+      - "3000:3000"
+    environment:
+      - SERVER_PORT=3000
+      - REDIS_HOST=redis
+      - REDIS_PREFIX=example
+      - MONGODB_ORIGIN=mongodb://database
+      - DATABASE_NAME=example
+      - SESSION_SECRET=development
+      - NODE_ENV=development
+
+  redis:
+    container_name: example_redis
+    image: redis:7
+    volumes:
+      - "redis:/data"
+    networks:
+      - backend
+    # ports:
+    #   - "6379:6379"
+
+  database:
+    container_name: example_db
+    image: mongo:6
+    volumes:
+      - "mongo:/data/db"
+      - "mongo_config:/data/configdb"
+    networks:
+      - backend
+    ports:
+      - "27000:27017"
+
+networks:
+  backend: {}
+
+volumes:
+  redis:
+  mongo:
+  mongo_config:
