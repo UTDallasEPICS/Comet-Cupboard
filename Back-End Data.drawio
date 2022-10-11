@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-10-11T01:52:43.068Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36" etag="FRQO8x1ik_bGSsrF9WEk" version="20.4.0" type="github">
+<mxfile host="app.diagrams.net" modified="2022-10-11T01:53:02.396Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36" etag="jH7_GbDbswf7Az9vTAXu" version="20.4.0" type="github">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="1002" dy="682" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -72,13 +72,13 @@
           <mxGeometry x="324" y="760" width="180" height="120" as="geometry" />
         </mxCell>
         <mxCell id="LEjf0Js33OpnvhWqmB9_-14" value="Quantity (taken)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="LEjf0Js33OpnvhWqmB9_-9" vertex="1">
-          <mxGeometry x="55" y="60" width="110" height="30" as="geometry" />
+          <mxGeometry x="35" y="45" width="110" height="30" as="geometry" />
         </mxCell>
         <mxCell id="GrbsJYLR_bLG-Z3R_im9-0" value="&lt;br&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="LEjf0Js33OpnvhWqmB9_-9" vertex="1">
           <mxGeometry x="100" y="105" width="20" height="30" as="geometry" />
         </mxCell>
         <mxCell id="GrbsJYLR_bLG-Z3R_im9-22" value="Array of item" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="LEjf0Js33OpnvhWqmB9_-9" vertex="1">
-          <mxGeometry x="55" y="85" width="90" height="30" as="geometry" />
+          <mxGeometry x="45" y="75" width="90" height="30" as="geometry" />
         </mxCell>
         <mxCell id="LEjf0Js33OpnvhWqmB9_-20" value="Access" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="525" y="300" width="60" height="30" as="geometry" />
