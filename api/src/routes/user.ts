@@ -70,3 +70,29 @@ router.delete("/:id", validateSchema(MongoIdSchema), async (req, res, next) => {
     next(e);
   }
 });
+
+
+// update exisiting account
+router.put("/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, res, next) => {
+  try {
+    const existingUser = await User.findOne({_id: req.params.id });
+    if (!existingUser) {
+      return next({
+        message: "Account does not exists",
+        status: status.BAD_REQUEST
+      });
+    }
+    const updatedUser = await User.findOneAndUpdate(
+      {_id: req.params.id},
+       {
+        numChild: 4
+       },
+       {
+        new: true
+      });
+    res.send(updatedUser);
+  } catch(e) {
+    next(e);
+  }
+});
+
