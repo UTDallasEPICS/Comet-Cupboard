@@ -1,4 +1,4 @@
-import { Schema, Document, model } from "mongoose"; //Where objects are defined
+import { Schema, Document, model } from "mongoose"; //Where objects are defined.
 
 export interface IUser {
   netID: string;
