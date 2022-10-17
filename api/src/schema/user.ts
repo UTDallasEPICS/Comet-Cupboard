@@ -10,6 +10,5 @@ export interface ICreateUserSchema extends express.Request {
 export const CreateUserSchema = Joi.object({
   body: Joi.object({
     netID: Joi.string().required().lowercase().trim().min(9).max(9),
-    
   })
 });
