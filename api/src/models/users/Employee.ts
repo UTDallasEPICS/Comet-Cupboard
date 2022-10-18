@@ -20,4 +20,4 @@ export interface IEmployee {
     { timestamps: { createdAt: true, updatedAt: true } }
   );
   
-  export default model<IEmployeeDocument>("User", schema);
+  export default model<IEmployeeDocument>("Employee", schema);

@@ -18,4 +18,4 @@ export interface IItems {
     { timestamps: { createdAt: true } }
   );
   
-  export default model<IItemsDocument>("User", schema);
+  export default model<IItemsDocument>("Item", schema);
