@@ -1,12 +1,13 @@
 import { Schema, Document, model } from "mongoose";
 
-export interface IItems {
+export interface IItem {
    expDate: string,
    dateIn: string,
    donor: string,
+   type: string,
  
   }
-  export interface IItemsDocument extends IItems, Document {
+  export interface IItemDocument extends IItem, Document {
     createdAt: Date;
     
   }
@@ -15,9 +16,10 @@ export interface IItems {
     {
       expDate:  { type: String, required: true },
       dateIn: { type: String, required: true },
-      donor:{type: String, required: true}
+      donor:{type: String, required: true},
+      type: { type: String, required: true }
     },
     { timestamps: { createdAt: true } }
   );
   
-  export default model<IItemsDocument>("Item", schema);
+  export default model<IItemDocument>("Item", schema);

@@ -2,7 +2,7 @@ import { Schema, Document, model } from "mongoose";
 
 export interface IItemLog {
    quantityTaken: string,
-   //arrayOfItem?
+   items: IItemLog[];
    
  
   }
@@ -13,9 +13,9 @@ export interface IItemLog {
   
   const schema = new Schema(
     {
-      expDate:  { type: String, required: true },
-      dateIn: { type: String, required: true },
-      donor:{type: String, required: true}
+      quantityTaken:  { type: String, required: true },
+      items: {type: String, required: true}
+      
     },
     { timestamps: { createdAt: true } }
   );
