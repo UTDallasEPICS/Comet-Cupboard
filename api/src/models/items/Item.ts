@@ -1,8 +1,11 @@
 import { Schema, Document, model } from "mongoose";
 
 export interface IItems {
-   expDate: string,
-   donor: string,
+   name: string,
+   location: string,
+   quantity: string,
+   //arrayOfItem
+
     
   }
   export interface IItemsDocument extends IItems, Document {
@@ -12,8 +15,9 @@ export interface IItems {
   
   const schema = new Schema(
     {
-      expDate: { type: String, required: true },
-      donor:{type: String, required: true}
+      name:  { type: String, required: true },
+      location: { type: String, required: true },
+      quantity:{type: String, required: true}
     },
     { timestamps: { createdAt: true } }
   );
