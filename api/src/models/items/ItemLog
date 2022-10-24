@@ -1,0 +1,23 @@
+import { Schema, Document, model } from "mongoose";
+
+export interface IItemLog {
+   quantityTaken: string,
+   //arrayOfItem?
+   
+ 
+  }
+  export interface IItemLogDocument extends IItemLog, Document {
+    createdAt: Date;
+    
+  }
+  
+  const schema = new Schema(
+    {
+      expDate:  { type: String, required: true },
+      dateIn: { type: String, required: true },
+      donor:{type: String, required: true}
+    },
+    { timestamps: { createdAt: true } }
+  );
+  
+  export default model<IItemLogDocument>("Item", schema);
