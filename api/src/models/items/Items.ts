@@ -1,10 +1,11 @@
 import { Schema, Document, model } from "mongoose";
+import { IItem } from "./Item(Individual)";
 
 export interface IItems {
    name: string,
    location: string,
    quantity: string,
-   items: IItems[];
+   items: IItem[];
     
   }
   export interface IItemsDocument extends IItems, Document {
