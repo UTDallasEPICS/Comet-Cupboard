@@ -1,15 +1,15 @@
 
 import { Schema, Document, model } from "mongoose";
 
-export interface IDemographic {
+export interface IDemographics {
     netID: string;
     numChild: number;
-    numOld: number;
-    numIncome: number;
     numParents: number;
+    numOld: number;
+    income: number;
 }
 
-export interface IDemographicDocument extends IDemographic, Document {
+export interface IDemographicsDocument extends IDemographics, Document {
     updatedAt: Date;
   }
 
@@ -17,12 +17,12 @@ const schema = new Schema(
     {
       netID: { type: String, required: true, unique: false },
       numChild: { type: Number, required: true, unique: false },
+      numParents: {type: Number, required: true, unique: false},
       numOld: {type: Number, required: true, unique: false},
-      numIncome: {type: Number, required: true, unique: false},
-      numParents: {type: Number, required: true, unique: false}
+      income: {type: Number, required: true, unique: false}
     },
     {timestamps: {updatedAt: true}}
   );
 
-export default model <IDemographicDocument>("Demographic", schema);
+export default model <IDemographicsDocument>("Demographic", schema);
   

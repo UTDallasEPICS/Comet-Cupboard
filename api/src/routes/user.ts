@@ -2,7 +2,9 @@ import express from "express";
 import status from "http-status";
 import { validate as validateSchema, MongoIdSchema, IMongoIdSchema } from "../schema";
 import * as schema from "../schema/user";
+import * as demographicsSchema from "../schema/demographics";
 import { User } from "../models";
+import { Demographics } from "../models";
 
 export const router = express.Router();
 
@@ -27,6 +29,28 @@ router.post("/", validateSchema(schema.CreateUserSchema), async (req: schema.ICr
   }
 });
 
+router.post("/demographics/", validateSchema(demographicsSchema.CreateDemographicsSchema), async (req: demographicsSchema.ICreateDemographicsSchema, res, next) => {
+  try {
+    const exisitingUser = await User.findOne({ test: req.body.netID });
+    if(!exisitingUser) {
+      return next({
+        message: "Account doesn't exist",
+        status: status.BAD_REQUEST
+      });
+    }
+    const demographics = new Demographics({
+      netID: req.body.netID,
+      numChild: req.body.numChild,
+      numParents: req.body.numParents,
+      numOld: req.body.numOld,
+      income: req.body.income
+    });
+    await demographics.save();
+    res.send({ message: "Successfully created new demographics form! "});
+  } catch (e) {
+    next(e);
+  }
+});
 // get all accounts
 router.get("/", async (req, res, next) => {
   try {
