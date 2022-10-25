@@ -1,8 +1,9 @@
 import { Schema, Document, model } from "mongoose";
+import { IItem } from "./Item(Individual)";
 
 export interface IItemLog {
    quantityTaken: string,
-   items: IItemLog[];
+   items: IItem[]; 
    
  
   }
