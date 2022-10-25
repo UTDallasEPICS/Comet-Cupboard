@@ -8,7 +8,7 @@ export interface ICreateItemSchema extends express.Request {
    
   };
 }
-export const CreateEmployeeSchema = Joi.object({
+export const CreateItemSchema = Joi.object({
   body: Joi.object({
     expDate: Joi.string().required(),
     donor: Joi.string().required(),

@@ -1,8 +1,8 @@
 import express from "express";
-import status from "http-status";
+//import status from "http-status";
 import { validate as validateSchema, MongoIdSchema, IMongoIdSchema } from "../schema";
 import * as schema from "../schema/employee";
-import { Employee } from "../models";
+//import { Employee } from "../models";
 
 export const router = express.Router();
 

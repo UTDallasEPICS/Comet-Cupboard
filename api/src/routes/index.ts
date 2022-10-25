@@ -2,9 +2,7 @@ import express from "express";
 import { default as disableBrowserCache } from "nocache";
 import { router as userRoute } from "./user";
 import { router as itemRoute } from "./items";
-import { router as NFTBRoute } from "./NFTB";
 import { router as EmployeeRoute } from "./employee";
-
 
 export const router = express.Router();
 
@@ -20,8 +18,6 @@ router.get("/", (req: express.Request, res: express.Response) => {
 router.use("/user", userRoute);
 
 router.use("/item", itemRoute);
-
-router.use("/NFTB", NFTBRoute);
 
 router.use("/employee", EmployeeRoute);
 
