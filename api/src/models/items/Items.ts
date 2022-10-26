@@ -25,4 +25,4 @@ export interface IItems {
     { timestamps: { createdAt: true } }
   );
   
-  export default model<IItemsDocument>("Category", schema);
+  export default model<IItemsDocument>("Items", schema);
