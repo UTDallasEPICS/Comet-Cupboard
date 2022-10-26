@@ -27,9 +27,9 @@
     justify-content: space-between;
   }
 
-  div {
-    /* display: inline-block; */
-  }
+  /* div {
+    display: inline-block;
+  } */
 
   .logo {
     width: 160px;
@@ -37,9 +37,9 @@
     padding-top: 20px;
   }
 
-  .header-left {
+  /* .header-left {
     
-  }
+  } */
 
   .cart {
     width: 48px;

@@ -12,16 +12,6 @@
 </div>
 
 <style>
-  div {
-    /* display: inline-block; */
-  }
-
-  .logo {
-    width: 160px;
-    padding: 15px;
-    padding-top: 20px;
-  }
-
   /* .header-image {
     margin: 0;
     width: 810px;
