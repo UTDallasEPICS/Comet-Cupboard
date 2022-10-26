@@ -1,10 +1,10 @@
 import { Schema, Document, model } from "mongoose";
-import { IUser } from "..";
 
 
-export interface IWorkerLogs {
+
+export interface IWorkerLogsDocument extends Document{
     date: string;
-    items: IUser[];
+    timeWorked: number
     //probably have to change this later to use document, but i wasn't sure.
   }
   
@@ -12,9 +12,10 @@ export interface IWorkerLogs {
   const schema = new Schema(
     {
       date: { type: String, required: true, unique: true },
+      timeworked: {type: Number, required:true, unique: false},
      
     },
    
   );
   
-  export default model<IWorkerLogs>("User", schema);
+  export default model<IWorkerLogsDocument>("User", schema);
