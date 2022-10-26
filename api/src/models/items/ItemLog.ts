@@ -21,4 +21,4 @@ export interface IItemLog {
     { timestamps: { createdAt: true } }
   );
   
-  export default model<IItemLogDocument>("Item", schema);
+  export default model<IItemLogDocument>("ItemLog", schema);
