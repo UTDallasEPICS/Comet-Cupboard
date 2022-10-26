@@ -29,6 +29,7 @@ router.post("/", validateSchema(schema.CreateUserSchema), async (req: schema.ICr
   }
 });
 
+// create new Demographics form for an exisiting user
 router.post("/demographics/", validateSchema(demographicsSchema.CreateDemographicsSchema), async (req: demographicsSchema.ICreateDemographicsSchema, res, next) => {
   try {
     const exisitingUser = await User.findOne({ test: req.body.netID });
@@ -51,11 +52,41 @@ router.post("/demographics/", validateSchema(demographicsSchema.CreateDemographi
     next(e);
   }
 });
+
 // get all accounts
 router.get("/", async (req, res, next) => {
   try {
     const Users = await User.find();
     res.send({ accounts: Users });
+  } catch (e) {
+    next(e);
+  }
+});
+
+// get all demographics currently in the system
+router.get("/demographics/", async (req, res, next) => {
+  try {
+    const Demos = await Demographics.find();
+    res.send({ demographics: Demos });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/demographics/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, res, next) => {
+  try {
+    if (!req.params.id) {
+      return next({ message: "Id is required", status: status.BAD_REQUEST });
+    }
+    const existingForm = await Demographics.findOne({ _id: req.params.id });
+    if (!existingForm) {
+      return next({
+        message: "Form not found",
+        status: status.BAD_REQUEST
+      });
+    }
+
+    res.send({ account: existingForm });
   } catch (e) {
     next(e);
   }
@@ -96,25 +127,28 @@ router.delete("/:id", validateSchema(MongoIdSchema), async (req, res, next) => {
 });
 
 
-// update exisiting account
-router.put("/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, res, next) => {
+// update exisiting form
+router.put("/demographics/", validateSchema(demographicsSchema.CreateDemographicsSchema), async (req: demographicsSchema.ICreateDemographicsSchema, res, next) => {
   try {
-    const existingUser = await User.findOne({_id: req.params.id });
-    if (!existingUser) {
+    const existingForm = await Demographics.findOne({ test: req.body.netID });
+    if (!existingForm) {
       return next({
-        message: "Account does not exists",
+        message: "Form does not already exists",
         status: status.BAD_REQUEST
       });
     }
-    const updatedUser = await User.findOneAndUpdate(
-      {_id: req.params.id},
+    const updatedForm = await Demographics.findOneAndUpdate(
+      {test: req.body.netID},
        {
-        numChild: 4
+        numChild: req.body.numChild,
+        numParents: req.body.numParents,
+        numOld: req.body.numOld,
+        income: req.body.income
        },
        {
         new: true
       });
-    res.send(updatedUser);
+    res.send(updatedForm);
   } catch(e) {
     next(e);
   }
