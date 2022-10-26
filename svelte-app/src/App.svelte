@@ -4,7 +4,6 @@
   import TopBar from './components/TopBar.svelte'
   import ShopForItems from './components/ShopForItems.svelte'
   import Footer from './components/Footer.svelte'
-  //import Counter from './lib/Counter.svelte'
 
   //var height = document.getElementById('footer').offsetHeight; -- put this in console
   // ^^ 238px = height of footer
@@ -40,6 +39,24 @@
   </div>
   <div class="content">
     <ShopForItems />
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
+    <p>content</p>
     <p>content</p>
     <p>content</p>
     <p>content</p>
