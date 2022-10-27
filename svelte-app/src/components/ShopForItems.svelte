@@ -30,9 +30,10 @@
   }
 
   h1 {
-    color: white;
     padding-top: 90px;
     margin: 0;
+
+    color: white;
     font-size: 45px;
     text-shadow: rgb(61, 61, 61) 1px 0 10px;
   }

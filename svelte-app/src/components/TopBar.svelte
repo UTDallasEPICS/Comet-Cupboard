@@ -5,24 +5,31 @@
     import AccountIcon from "../../public/images/account-circle-icon.png"
 </script>
 
-<header>
+<header class="flex-container">
   <div class="header-left">
-      <!-- <img src="images/CometCupboard_transparent.png" alt="JYgjhgGjJHJA." /> -->
       <img src={CometCupboardLogo} class="logo" alt="Comet Cupboard logo." />
   </div>
 
   <div class="header-right">
 
     <img src={CartIcon} class="cart" alt="Cart icon." />
-    <img src={AccountIcon} class="account" alt="Account icon." />
+    <!-- <div> -->
+      <img src={AccountIcon} class="account" alt="Account icon." />
+    <!-- </div> -->
+    <!-- <p>NetID</p> -->
   </div>
+  <!-- <div class="header-right">
+    <img src={AccountIcon} class="account" alt="Account icon." />
+  </div> -->
 </header>
 
 <style>
   header {
     background: #154734;
-    /* min-width: 810px; */
     margin: 0;
+  }
+
+  .flex-container {
     display: flex;
     justify-content: space-between;
   }
@@ -37,9 +44,10 @@
     padding-top: 20px;
   }
 
-  /* .header-left {
-    
-  } */
+  .header-left {
+    /* flex: 2 1 0%; */
+    align-self: flex-start;
+  }
 
   .cart {
     width: 48px;
@@ -55,5 +63,6 @@
 
   .header-right {
     align-self: flex-end;
+    /* flex: 1 1 0%; */
   }
   </style>

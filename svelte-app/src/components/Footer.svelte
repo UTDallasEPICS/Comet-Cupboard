@@ -1,9 +1,5 @@
 <script>
-    //let src = "images/CometCupboard_transparent.png";
-    //let src = 'C:/Users/sophi/Desktop/F22CometCupboard/Comet-Cupboard/svelte-app/public/CometCupboard_transparent.png';
-    //let src = 'https://icon-library.com/images/22224-tiger-icon_5825.png';
     import CometCupboardLogo from '../../public/images/CometCupboard_transparent.png';
-    //import CometCupboardLogo from '../assets/CometCupboard_transparent.png'
 </script>
 
 <footer>

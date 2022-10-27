@@ -5,7 +5,7 @@
   import ShopForItems from './components/ShopForItems.svelte'
   import Footer from './components/Footer.svelte'
 
-  //var height = document.getElementById('footer').offsetHeight; -- put this in console
+  //var height = document.getElementById('footer').offsetHeight; -- put this in console to find height of footer
   // ^^ 238px = height of footer
 </script>
 
@@ -96,11 +96,12 @@
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-    justify-content: flex-start;
-    box-sizing: border-box;
+    /* justify-content: flex-start; */
+    /* box-sizing: border-box; */
   }
 
   .header {
+    /* make header stay on top of page at all times */
     position: sticky;
     top: 0;
   }
@@ -119,6 +120,6 @@
     /* display: flex; */
     /* justify-content: center; */
 
-    margin-top: auto;
+    margin-top: auto; /* push footer to the bottom when content overflows the page and when content is short */
   }
 </style>
