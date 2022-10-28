@@ -29,7 +29,7 @@
     margin: 0;
   }
 
-  .flex-container {
+  .flex-container { 
     display: flex;
     justify-content: space-between;
   }

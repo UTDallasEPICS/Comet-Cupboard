@@ -12,15 +12,8 @@
 </div>
 
 <style>
-  /* .header-image {
-    margin: 0;
-    width: 810px;
-  } */
 
   .image-container {
-    /* margin: 0;
-    padding: 0; */
-    /* width: 810px; */
     width: 100%;
     height: 263px;
 
@@ -29,7 +22,7 @@
     background-size: cover;
   }
 
-  h1 {
+  .image-container h1 {
     padding-top: 90px;
     margin: 0;
 

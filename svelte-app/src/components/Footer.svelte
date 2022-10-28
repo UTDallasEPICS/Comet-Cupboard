@@ -4,7 +4,6 @@
 
 <footer>
   <div>
-      <!-- <img src="images/CometCupboard_transparent.png" alt="JYgjhgGjJHJA." /> -->
       <img src={CometCupboardLogo} alt="Comet Cupboard logo." />
   </div>
 

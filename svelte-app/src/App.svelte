@@ -4,6 +4,7 @@
   import TopBar from './components/TopBar.svelte'
   import ShopForItems from './components/ShopForItems.svelte'
   import Footer from './components/Footer.svelte'
+    import CheckoutHistory from './components/CheckoutHistory.svelte';
 
   //var height = document.getElementById('footer').offsetHeight; -- put this in console to find height of footer
   // ^^ 238px = height of footer
@@ -73,7 +74,8 @@
 </div>
 
 <style>
-  /* .logo {
+  /* sample code
+   .logo {
     height: 6em;
     padding: 1.5em;
     will-change: filter;
@@ -86,7 +88,8 @@
   }
   .read-the-docs {
     color: #888;
-  } */
+  }
+  */
 
   .flex-wrapper {
     /* min-height: 100%;
