@@ -10,7 +10,8 @@
   // ^^ 238px = height of footer
 </script>
 
-<!-- <main>
+<!-- sample code
+  <main>
   <div>
     <a href="https://vitejs.dev" target="_blank"> 
       <img src="/vite.svg" class="logo" alt="Vite Logo" />
