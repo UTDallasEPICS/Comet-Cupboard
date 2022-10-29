@@ -4,7 +4,7 @@
   import TopBar from './components/TopBar.svelte'
   import ShopForItems from './components/ShopForItems.svelte'
   import Footer from './components/Footer.svelte'
-    import CheckoutHistory from './components/CheckoutHistory.svelte';
+  import CheckoutHistory from './components/CheckoutHistory.svelte'
 
   //var height = document.getElementById('footer').offsetHeight; -- put this in console to find height of footer
   // ^^ 238px = height of footer
@@ -100,7 +100,9 @@
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-    /* justify-content: flex-start; */
+    
+    /*this doesn't work*/
+    /* justify-content: flex-start; */ 
     /* box-sizing: border-box; */
   }
 
@@ -110,20 +112,7 @@
     top: 0;
   }
 
-  /* .content {
-    padding: 10px;
-    padding-bottom: 238px;   height of the footer
-  } */
-
   .footer {
-    /* position: absolute;
-    bottom: 0;
-    width: 100%; */
-    /* height: 238px;   height of the footer */
-
-    /* display: flex; */
-    /* justify-content: center; */
-
     margin-top: auto; /* push footer to the bottom when content overflows the page and when content is short */
   }
 </style>

@@ -32,7 +32,6 @@
 <style>
   footer {
     background: #626262;
-    /* min-width: 810px; */
     padding: 15px;
     margin: 0;
   }
@@ -43,7 +42,7 @@
   } */
 
   div {
-    display: inline-block;
+    display: inline-block; /* have both img and contact side by side */
     padding-right: 70px;
   }
 
@@ -51,7 +50,7 @@
     width: 240px;
   }
 
-  p {
+  p { /* contact and mission */
     color: white;
     font-size: 15px;
   }

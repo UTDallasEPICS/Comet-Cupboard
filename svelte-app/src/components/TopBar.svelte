@@ -27,9 +27,7 @@
   header {
     background: #154734;
     margin: 0;
-  }
 
-  .flex-container { 
     display: flex;
     justify-content: space-between;
   }
@@ -42,10 +40,7 @@
     width: 160px;
     padding: 15px;
     padding-top: 20px;
-  }
 
-  .header-left {
-    /* flex: 2 1 0%; */
     align-self: flex-start;
   }
 
