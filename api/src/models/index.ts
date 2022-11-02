@@ -5,6 +5,7 @@ export { default as Employee, IEmployee, IEmployeeDocument } from "./users/Emplo
 export { default as Categories, ICategory, ICategoryDocument } from "./items/Categories";
 export { default as Item, IItem, IItemDocument } from "./items/Item(Individual)";
 export { default as ItemLog, IItemLog, IItemLogDocument } from "./items/ItemLog";
+export {default as WorkerLogs, IWorkerLogsDocument} from "./forms/WorkerLogs";
 
 
 
