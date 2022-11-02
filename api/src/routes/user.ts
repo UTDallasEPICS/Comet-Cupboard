@@ -30,7 +30,7 @@ router.post("/", validateSchema(schema.CreateUserSchema), async (req: schema.ICr
 });
 
 // create new Demographics form for an exisiting user
-router.post("/demographics/", validateSchema(demographicsSchema.CreateDemographicsSchema), async (req: demographicsSchema.ICreateDemographicsSchema, res, next) => {
+router.post("/demographics", validateSchema(demographicsSchema.CreateDemographicsSchema), async (req: demographicsSchema.ICreateDemographicsSchema, res, next) => {
   try {
     const exisitingUser = await User.findOne({ test: req.body.netID });
     if(!exisitingUser) {
@@ -64,7 +64,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // get all demographics currently in the system
-router.get("/demographics/", async (req, res, next) => {
+router.get("/demographics", async (req, res, next) => {
   try {
     const Demos = await Demographics.find();
     res.send({ demographics: Demos });
@@ -128,16 +128,16 @@ router.delete("/:id", validateSchema(MongoIdSchema), async (req, res, next) => {
 
 
 // update exisiting form
-router.put("/demographics/", validateSchema(demographicsSchema.CreateDemographicsSchema), async (req: demographicsSchema.ICreateDemographicsSchema, res, next) => {
+router.put("/demographics", validateSchema(demographicsSchema.CreateDemographicsSchema), async (req: demographicsSchema.ICreateDemographicsSchema, res, next) => {
   try {
-    const existingForm = await Demographics.findOne({ test: req.body.netID });
+    const existingForm = await Demographics.findOne({ netID: req.body.netID });
     if (!existingForm) {
       return next({
         message: "Form does not already exists",
         status: status.BAD_REQUEST
       });
     }
-    const updatedForm = await Demographics.findOneAndUpdate(
+      const updatedForm = await Demographics.findOneAndUpdate(
       {test: req.body.netID},
        {
         numChild: req.body.numChild,

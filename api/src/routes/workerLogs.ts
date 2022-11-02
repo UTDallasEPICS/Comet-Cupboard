@@ -1,6 +1,6 @@
 import express from "express";
 import status from "http-status";
-import { validate as validateSchema, MongoIdSchema, IMongoIdSchema } from "../schema";
+import { validate as validateSchema, MongoIdSchema/*, IMongoIdSchema*/ } from "../schema";
 import * as schema from "../schema/workerLogs";
 import { WorkerLogs } from "../models";
 

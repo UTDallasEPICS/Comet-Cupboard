@@ -21,4 +21,4 @@ export interface IWorkerLogsDocument extends IWorkerLogs, Document {
    
   );
   
-  export default model<IWorkerLogsDocument>("User", schema);
+  export default model<IWorkerLogsDocument>("WorkerLogs", schema);
