@@ -2,10 +2,19 @@
   //import svelteLogo from './assets/CometCupboard_transparent.png'
   //import svelteLogo from '../public/vite.svg'
   import TopBar from './components/TopBar.svelte'
-  import ShopForItems from './components/ShopForItems.svelte'
+  import ShopForItems from './components/HeaderImage.svelte'
   import Footer from './components/Footer.svelte'
   import CheckoutHistory from './components/CheckoutHistory.svelte'
 
+  import Checkout from './pages/ShopForItems.svelte';
+  import Cart from './pages/Cart.svelte';
+
+  const routes = {
+    // exact path
+    '/': Checkout,
+
+
+  }
   //var height = document.getElementById('footer').offsetHeight; -- put this in console to find height of footer
   // ^^ 238px = height of footer
 </script>
