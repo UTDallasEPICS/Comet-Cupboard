@@ -1,6 +1,6 @@
 import express from "express";
 import status from "http-status";
-import { validate as validateSchema, MongoIdSchema/*, IMongoIdSchema*/ } from "../schema";
+import { validate as validateSchema, MongoIdSchema , IMongoIdSchema } from "../schema";
 import * as schema from "../schema/workerLogs";
 import { WorkerLogs } from "../models";
 
@@ -32,16 +32,44 @@ router.get("/", async (req, res, next) => {
       }
 });
 
-router.delete("/:id", validateSchema(MongoIdSchema), async (req, res, next) => {
-    try {
-      if (!req.params.id) {
-        return next({ message: "Id is required", status: status.BAD_REQUEST });
-      }
-      await WorkerLogs.deleteOne({ _id: req.params.id });
-  
-      res.send({ message: "Successfully deleted account" });
-    } catch (e) {
-      next(e);
+router.get("/name/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
+  try {
+    if (!req.body.name) {
+      return next({ message: "Name is required", status: status.BAD_REQUEST });
     }
-  });
+    const existingLog = await WorkerLogs.findOne({ name: req.body.name });
+    if (!existingLog) {
+      return next({
+        message: "Log not found",
+        status: status.BAD_REQUEST
+      });
+    } 
+
+    res.send({ account: existingLog });
+  } catch (e) {
+    next(e);
+  }
+});
+
+
+router.get("/date/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, res, next) => {
+  try {
+    if (!req.query.createdAt) {
+      return next({ message: "date  is required", status: status.BAD_REQUEST });
+    }
+    const existingLog = await WorkerLogs.findOne({ createdAt: req.query.createdAt });
+    if (!existingLog) {
+      return next({
+        message: "Log not found",
+        status: status.BAD_REQUEST
+      });
+    }
+
+    res.send({ account: existingLog });
+  } catch (e) {
+    next(e);
+  }
+});
+
+
 
