@@ -7,10 +7,19 @@ import { WorkerLogs } from "../models";
 export const router = express.Router();
 
 router.post("/", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
+   try
+   {
     const workerLogs = new WorkerLogs({
-        ...req.body
-      });
-      await workerLogs.save();
+      ...req.body
+    });
+    await workerLogs.save();
+    res.send({message: "ha swag"});
+   }
+   catch(e)
+   {
+    next(e);
+   }
+  
 });
 
 

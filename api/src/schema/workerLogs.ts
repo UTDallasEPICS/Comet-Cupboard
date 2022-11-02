@@ -4,7 +4,7 @@ import express from "express";
 export interface ICreateWorkerLogSchema extends express.Request {
   body: {
     name: string
-   timeworked: number;
+   timeWorked: number;
   };
 }
 export const CreateWorkerLogSchema = Joi.object({
