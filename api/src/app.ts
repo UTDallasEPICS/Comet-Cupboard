@@ -11,7 +11,6 @@ import { httpErrorHandler, validationErrorHandler, internalErrorHandler } from "
 import { db } from "./helpers/db";
 
 import { router as indexRoute } from "./routes";
-console.log("HELP");
 
 console.log("===========================================");
 console.log("API Starting");
