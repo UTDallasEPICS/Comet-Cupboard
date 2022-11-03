@@ -12,7 +12,9 @@
 
   <div class="header-right">
 
-    <img src={CartIcon} class="cart" alt="Cart icon." />
+    <a href="#/cart"> <!-- takes user to cart page -->
+      <img src={CartIcon} class="cart" alt="Cart icon." />
+    </a>
     <!-- <div> -->
       <img src={AccountIcon} class="account" alt="Account icon." />
     <!-- </div> -->
