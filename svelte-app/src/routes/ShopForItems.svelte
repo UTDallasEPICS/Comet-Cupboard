@@ -1,7 +1,8 @@
+<!-- shop for items page -->
 <script>
     // importing components
     import TopBar from '../components/TopBar.svelte'
-    import ShopForItems from '../components/HeaderImage.svelte'
+    import HeaderImage from '../components/HeaderImage.svelte'
     import Footer from '../components/Footer.svelte'
     import CheckoutHistory from '../components/CheckoutHistory.svelte'
 
@@ -39,7 +40,8 @@
       <TopBar />
     </div>
     <div class="content">
-      <ShopForItems />
+      <HeaderImage />
+      <CheckoutHistory />
       <p>content</p>
       <p>content</p>
       <p>content</p>

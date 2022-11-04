@@ -1,5 +1,4 @@
 <!-- when user tries to navigate to a route that doesn't exist, display this page -->
-
 <h1>Not Found</h1>
 <p>This page doesn't exist.</p>
 <a href="/">Click here to go back home.</a>
