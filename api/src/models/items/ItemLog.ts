@@ -1,10 +1,13 @@
 import { Schema, Document, model } from "mongoose";
-import { IItem } from "./Item(Individual)";
-
+// Could be intake, checkout, removing expired items, or something else
 export interface IItemLog {
-   quantityTaken: string,
-   items: IItem[]; 
-   
+   expDate: string,
+   dateIn: string,
+   item: string, //objectid
+   quantity: string,
+   dateOut: string,
+   donor: string, //donors
+   actionType: string, //Tracking the changes
  
   }
   export interface IItemLogDocument extends IItemLog, Document {
@@ -14,8 +17,13 @@ export interface IItemLog {
   
   const schema = new Schema(
     {
-      quantityTaken:  { type: String, required: true },
-      items: {type: String, required: true}
+      expDate: { type: String, required: true },
+      dateIn: {type: String, required: true},
+      item: {type: String, required: true},
+      quantity:{type: String, required: true},
+      dateOut:{type: String, required: true},
+      donor:{type: String, required: true},
+      actionType:{type: String, required: true}
       
     },
     { timestamps: { createdAt: true } }

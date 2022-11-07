@@ -1,12 +1,9 @@
 import { Schema, Document, model } from "mongoose";
-import { IItem } from "./Item(Individual)";
 
 export interface IItems {
    name: string,
    location: string,
-   quantity: string,
-   items: IItem[];
-    
+   quantity: string,    
   }
   export interface IItemsDocument extends IItems, Document {
     createdAt: Date;
@@ -18,9 +15,6 @@ export interface IItems {
       name: { type: String, required: true },
       location: {type: String, required: true},
       quantity: {type: String, required: true},
-      items: {type: String, required: true}
-
-      
     },
     { timestamps: { createdAt: true } }
   );
