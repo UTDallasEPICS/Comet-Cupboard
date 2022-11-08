@@ -12,7 +12,7 @@ router.use(disableBrowserCache());
 
 // human-readable API index
 router.get("/", (req: express.Request, res: express.Response) => {
-  res.send("Example API");
+  res.send("Comet Cupboard API");
 });
 
 // API endpoints

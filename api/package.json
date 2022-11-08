@@ -17,7 +17,7 @@
         "dist/"
       ],
       "watch": [
-        "src/"
+        "src/**/*"
       ],
       "execMap": {
         "ts": "node -r ts-node/register"

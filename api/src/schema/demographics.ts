@@ -3,7 +3,7 @@ import express from "express";
 
 export interface ICreateDemographicsSchema extends express.Request {
     body: {
-      netID: string;
+      userID: string;
       numChild: number;
       numParents: number;
       numOld: number;
@@ -13,7 +13,7 @@ export interface ICreateDemographicsSchema extends express.Request {
 
   export const CreateDemographicsSchema = Joi.object({
     body: Joi.object({
-      netID: Joi.string().required().max(9).min(9),
+      userID: Joi.string().required(),
       numChild: Joi.number().required(),
       numParents: Joi.number().required(),
       numOld: Joi.number().required(),

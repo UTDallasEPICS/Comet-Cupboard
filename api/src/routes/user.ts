@@ -1,3 +1,4 @@
+// Route Endpoint for all things related to the User
 import express from "express";
 import status from "http-status";
 import { validate as validateSchema, MongoIdSchema, IMongoIdSchema } from "../schema";
@@ -11,7 +12,7 @@ export const router = express.Router();
 // create new account
 router.post("/", validateSchema(schema.CreateUserSchema), async (req: schema.ICreateUserSchema, res, next) => {
   try {
-    const existingUser = await User.findOne({ test: req.body.netID });
+    const existingUser = await User.findOne({ netID: req.body.netID });
     if (existingUser) {
       return next({
         message: "Account already exists",
@@ -19,10 +20,10 @@ router.post("/", validateSchema(schema.CreateUserSchema), async (req: schema.ICr
       });
     }
     const user = new User({
-      ...req.body
+      netID: req.body.netID
     });
     await user.save();
-
+    // remember to send a response back to whoever is requesting or else it will infinitely wait
     res.send({ message: "Successfully created account!" });
   } catch (e) {
     next(e);
@@ -32,7 +33,7 @@ router.post("/", validateSchema(schema.CreateUserSchema), async (req: schema.ICr
 // create new Demographics form for an exisiting user
 router.post("/demographics", validateSchema(demographicsSchema.CreateDemographicsSchema), async (req: demographicsSchema.ICreateDemographicsSchema, res, next) => {
   try {
-    const exisitingUser = await User.findOne({ test: req.body.netID });
+    const exisitingUser = await User.findOne({ _id: req.body.userID });
     if(!exisitingUser) {
       return next({
         message: "Account doesn't exist",
@@ -40,7 +41,7 @@ router.post("/demographics", validateSchema(demographicsSchema.CreateDemographic
       });
     }
     const demographics = new Demographics({
-      netID: req.body.netID,
+      userID: req.body.userID,
       numChild: req.body.numChild,
       numParents: req.body.numParents,
       numOld: req.body.numOld,
@@ -73,6 +74,7 @@ router.get("/demographics", async (req, res, next) => {
   }
 });
 
+// get a specific form
 router.get("/demographics/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, res, next) => {
   try {
     if (!req.params.id) {
@@ -112,7 +114,7 @@ router.get("/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, re
   }
 });
 
-// create new account
+// delete new account
 router.delete("/:id", validateSchema(MongoIdSchema), async (req, res, next) => {
   try {
     if (!req.params.id) {
@@ -130,15 +132,17 @@ router.delete("/:id", validateSchema(MongoIdSchema), async (req, res, next) => {
 // update exisiting form
 router.put("/demographics", validateSchema(demographicsSchema.CreateDemographicsSchema), async (req: demographicsSchema.ICreateDemographicsSchema, res, next) => {
   try {
-    const existingForm = await Demographics.findOne({ netID: req.body.netID });
+    const existingForm = await Demographics.findOne({ userID: req.body.userID });
     if (!existingForm) {
       return next({
         message: "Form does not already exists",
         status: status.BAD_REQUEST
       });
     }
-      const updatedForm = await Demographics.findOneAndUpdate(
-      {test: req.body.netID},
+      await Demographics.findOneAndUpdate(
+      {
+        userID: req.body.userID
+      },
        {
         numChild: req.body.numChild,
         numParents: req.body.numParents,
@@ -148,7 +152,7 @@ router.put("/demographics", validateSchema(demographicsSchema.CreateDemographics
        {
         new: true
       });
-    res.send(updatedForm);
+    res.send("Successfully updated form!");
   } catch(e) {
     next(e);
   }

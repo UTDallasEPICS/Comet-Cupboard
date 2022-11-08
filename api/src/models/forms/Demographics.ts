@@ -2,7 +2,7 @@
 import { Schema, Document, model } from "mongoose";
 
 export interface IDemographics {
-    netID: string;
+    userID: string;
     numChild: number;
     numParents: number;
     numOld: number;
@@ -15,7 +15,7 @@ export interface IDemographicsDocument extends IDemographics, Document {
 
 const schema = new Schema(
     {
-      netID: { type: String, required: true, unique: false },
+      userID: { type: String, required: true, unique: false },
       numChild: { type: Number, required: true, unique: false },
       numParents: {type: Number, required: true, unique: false},
       numOld: {type: Number, required: true, unique: false},

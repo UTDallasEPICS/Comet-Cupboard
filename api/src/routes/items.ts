@@ -6,10 +6,8 @@ import * as schema from "../schema/item";
 
 export const router = express.Router();
 
-router.post("/items", validateSchema(itemsSchema.CreateitemsSchema), async (req: schema.ICreateitemsSchema, res, next) => {
+router.post("/", validateSchema(schema.CreateItemSchema), async (req: schema.ICreateItemSchema, res, next) => {
     res.status(501).send({message: "NOT_IMPLEMENTED"});
-
-
 });
 
 router.put("/:id", validateSchema(MongoIdSchema), async(req: IMongoIdSchema, res, next) => {
