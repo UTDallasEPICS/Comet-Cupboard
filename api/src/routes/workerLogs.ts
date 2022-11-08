@@ -32,7 +32,7 @@ router.get("/", async (req, res, next) => {
       }
 });
 
-router.get("/name/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
+router.get("/name", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
   try {
     if (!req.body.name) {
       return next({ message: "Name is required", status: status.BAD_REQUEST });
@@ -52,7 +52,7 @@ router.get("/name/:id", validateSchema(schema.CreateWorkerLogSchema), async (req
 });
 
 
-router.get("/date/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, res, next) => {
+router.get("/date", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
   try {
     if (!req.query.createdAt) {
       return next({ message: "date  is required", status: status.BAD_REQUEST });

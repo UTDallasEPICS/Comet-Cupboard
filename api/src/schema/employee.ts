@@ -5,7 +5,7 @@ export interface ICreateEmployeeSchema extends express.Request {
   body: {
     netID: string;
     password: string;
-    //array later, not sure for now
+    //array later, not sure 
   };
 }
 export const CreateEmployeeSchema = Joi.object({
