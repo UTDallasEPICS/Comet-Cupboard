@@ -10,7 +10,8 @@ router.post("/", validateSchema(schema.CreateWorkerLogSchema), async (req: schem
    try
    {
     const workerLogs = new WorkerLogs({
-      ...req.body
+      ...req.body,    
+      date: req.query.date
     });
     await workerLogs.save();
     res.send({message: "ha swag"});
@@ -57,7 +58,7 @@ router.get("/date", validateSchema(schema.CreateWorkerLogSchema), async (req: sc
     if (!req.query.date) {
       return next({ message: "date  is required", status: status.BAD_REQUEST });
     }
-    const existingLog = await WorkerLogs.findOne({ createdAt: req.query.date });
+    const existingLog = await WorkerLogs.find({ date: req.query.date });
     if (!existingLog) {
       return next({
         message: "Log not found",
