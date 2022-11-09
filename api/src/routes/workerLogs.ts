@@ -1,6 +1,6 @@
 import express from "express";
 import status from "http-status";
-import { validate as validateSchema, MongoIdSchema , IMongoIdSchema } from "../schema";
+import { validate as validateSchema} from "../schema";
 import * as schema from "../schema/workerLogs";
 import { WorkerLogs } from "../models";
 
@@ -54,10 +54,10 @@ router.get("/name", validateSchema(schema.CreateWorkerLogSchema), async (req: sc
 
 router.get("/date", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
   try {
-    if (!req.query.createdAt) {
+    if (!req.query.date) {
       return next({ message: "date  is required", status: status.BAD_REQUEST });
     }
-    const existingLog = await WorkerLogs.findOne({ createdAt: req.query.createdAt });
+    const existingLog = await WorkerLogs.findOne({ createdAt: req.query.date });
     if (!existingLog) {
       return next({
         message: "Log not found",

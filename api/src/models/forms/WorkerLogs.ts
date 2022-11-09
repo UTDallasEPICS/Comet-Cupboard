@@ -1,7 +1,6 @@
 import { Schema, Document, model } from "mongoose";
 
 
-
 export interface IWorkerLogs{
     name: string;
     timeWorked: number
