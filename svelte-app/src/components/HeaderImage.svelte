@@ -1,7 +1,7 @@
 <script>
-    //import HeaderImage from "../../public/images/header-image.jpg"
-    import SearchIcon from "../../public/images/magnify-icon.png"
-    import ScanIcon from "../../public/images/scan-icon.png"
+    //import HeaderImage from "../../src/images/header-image.jpg"
+    import SearchIcon from "../../src/images/magnify-icon.png"
+    import ScanIcon from "../../src/images/scan-icon.png"
 </script>
 
     <!-- <img src={HeaderImage} class="header-image" alt="Mac and cheese header." /> -->
@@ -16,7 +16,7 @@
     width: 100%;
     height: 263px;
 
-    background-image: url("../../public/images/header-image.jpg");
+    background-image: url("../../src/images/header-image.jpg");
     background-repeat: no-repeat;
     background-size: cover;
   }

@@ -1,8 +1,8 @@
 <script>
-    import CometCupboardLogo from '../../public/images/CometCupboard_transparent.png';
-    import CartIcon from "../../public/images/cart-icon.png"
-    //import HeaderImage from "../../public/images/header-image.jpg"
-    import AccountIcon from "../../public/images/account-circle-icon.png"
+    import CometCupboardLogo from '../../src/images/CometCupboard_transparent_orange.png';
+    import CartIcon from "../../src/images/cart-icon.png"
+    //import HeaderImage from "../../src/images/header-image.jpg"
+    import AccountIcon from "../../src/images/account-circle-icon.png"
 </script>
 
 <header class="flex-container">

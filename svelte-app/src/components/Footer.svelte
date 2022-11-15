@@ -1,5 +1,5 @@
 <script>
-    import CometCupboardLogo from '../../public/images/CometCupboard_transparent.png';
+    import CometCupboardLogo from '../../src/images/CometCupboard_transparent.png';
 </script>
 
 <footer>
