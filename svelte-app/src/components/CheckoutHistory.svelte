@@ -1,7 +1,7 @@
 <!-- displays user's checkout history -->
 <script lang="ts">
     import Select, { Option } from '@smui/select';
-    import SortIcon from '../../public/images/sort-icon.png';
+    import SortIcon from '../images/sort-icon.png';
     import Icon from '@smui/select/icon';
     import ItemCard from './ItemCard.svelte';
   
