@@ -1,20 +1,20 @@
 import Joi from "joi";
 import express from "express";
 
-export interface ICreateItemSchema extends express.Request {
+export interface ICreateItemLogSchema extends express.Request {
   body: {
     expDate: string,
     item: string, //objectid
-    quantity: string,
+    quantity: number,
     donor: string, //donors
     actionType: string, //Tracking the changes
   };
 }
-export const CreateItemSchema = Joi.object({
+export const CreateItemLogSchema = Joi.object({
   body: Joi.object({
     expDate: Joi.string().required(),
     item: Joi.string().required(),
-    quantity: Joi.string().required(),
+    quantity: Joi.number().required(),
     donor: Joi.string().required(),
     actionType: Joi.string().required()
   })

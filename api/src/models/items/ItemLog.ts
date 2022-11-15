@@ -3,7 +3,7 @@ import { Schema, Document, model } from "mongoose";
 export interface IItemLog {
    expDate: string,
    item: string, //objectid
-   quantity: string,
+   quantity: number,
    donor: string, //donors
    actionType: string, //Tracking the changes
  
@@ -17,7 +17,7 @@ export interface IItemLog {
     {
       expDate: { type: String, required: true },
       item: {type: String, required: true},
-      quantity:{type: String, required: true},
+      quantity:{type: Number, required: true},
       donor:{type: String, required: true},
       actionType:{type: String, required: true}
     },
