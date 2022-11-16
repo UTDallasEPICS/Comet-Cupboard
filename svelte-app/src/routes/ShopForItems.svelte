@@ -5,6 +5,7 @@
     import HeaderImage from '../components/HeaderImage.svelte'
     import Footer from '../components/Footer.svelte'
     import CheckoutHistory from '../components/CheckoutHistory.svelte'
+    import CategoryTabs from '../components/CategoryTabs.svelte'
 
   //var height = document.getElementById('footer').offsetHeight; -- put this in console to find height of footer
   // ^^ 238px = height of footer
@@ -41,35 +42,44 @@
     </div>
     <div class="content">
       <HeaderImage />
-      <CheckoutHistory />
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
-      <p>content</p>
+      <div class="container">
+        <div class="inline" id="category-tab">
+          <CategoryTabs />
+        </div>
+        <div class="inline" id="checkout-history">
+          <CheckoutHistory />
+        </div>
+      </div>
+      <div class="content-text">
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+        <p>content</p>
+    </div>
     </div>
     <div class="footer">
       <Footer />
@@ -112,9 +122,31 @@
       /* make header stay on top of page at all times */
       position: sticky;
       top: 0;
+
+      /* make header stay at the front of all items */
+      z-index: 1;
     }
   
     .footer {
       margin-top: auto; /* push footer to the bottom when content overflows the page and when content is short */
+    }
+
+    .container { /* have category tab  */
+      text-align: center;
+      position: relative;
+    }
+
+    #category-tab {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 250px;
+      background: #154734;
+    }
+
+    #checkout-history {
+      display: inline-block;
+      float: right;
+      width: 100%;
     }
   </style>
