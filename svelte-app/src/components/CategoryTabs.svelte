@@ -2,6 +2,7 @@
 
 </script>
 
+<!--The different category tabs that will be on the left side of the screen-->
 
 <div>
     <p>Pantry Staples</p>
@@ -19,6 +20,5 @@
 <style>
     p {
         text-align: center;
-        color: white;
     }
 </style>
