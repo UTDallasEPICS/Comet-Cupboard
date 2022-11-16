@@ -1,7 +1,6 @@
 <script>
     import CometCupboardLogo from '../../src/images/CometCupboard_transparent_orange.png';
     import CartIcon from "../../src/images/cart-icon.png"
-    //import HeaderImage from "../../src/images/header-image.jpg"
     import AccountIcon from "../../src/images/account-circle-icon.png"
 </script>
 

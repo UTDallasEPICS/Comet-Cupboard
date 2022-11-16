@@ -1,3 +1,5 @@
+<!-- component for Shop For Items image header -->
+
 <script>
     //import HeaderImage from "../../src/images/header-image.jpg"
     import SearchIcon from "../../src/images/magnify-icon.png"
