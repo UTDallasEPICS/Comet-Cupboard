@@ -1,3 +1,6 @@
+<!-- displays the application -->
+
+<!-- the stylesheets used in this app -->
 <svelte:head>
 	<!-- Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -15,6 +18,7 @@
 	import routes from './routes';
 </script>
 
+<!-- displays all the routes -->
 <main>
 	<Router {routes} />
 </main>
