@@ -1,3 +1,4 @@
+<!-- item card displayed in checkout history -->
 <script>
 
 </script>
@@ -22,6 +23,7 @@
   }
 
   .white-box h1 {
+    font-weight: normal; /* unbold the header text */
     margin: 0;
     padding-top: 45px;
     padding-left: 15px;
