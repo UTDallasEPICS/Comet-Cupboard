@@ -5,15 +5,16 @@
 
 <div>
     <div class="white-box">
-            <h1>Image Coming Soon</h1>
+      <h1>Image Coming Soon</h1>
     </div>
     <p><b>Item name</b></p>
 </div>
 
 <style>
   .white-box {
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
+    line-height: 130px; /* centers text horizontally */
 
     background-color: white;
     background-repeat: no-repeat;
@@ -24,19 +25,22 @@
 
   .white-box h1 {
     font-weight: normal; /* unbold the header text */
-    margin: 0;
-    padding-top: 45px;
+
+    /* centers h1 vertically */
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    
     padding-left: 15px;
     padding-right: 15px;
+
     color: rgb(139, 139, 139);
     font-size: 20px;
-    
-    /* text-shadow: rgb(61, 61, 61) 1px 0 10px; */
   }
 
   p {
     font-size: 20px;
     word-wrap: break-word;
-    width: 150px;
+    width: 130px;
   }
 </style>
