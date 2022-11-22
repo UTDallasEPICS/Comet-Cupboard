@@ -2,12 +2,14 @@
 <script>
   let itemName = 'Item name'; /* placeholder */
   let hasDeal = true;         /* placeholder ; does the item have a deal */
+  let hasImage = false;       /* placeholder; does item have an image */
+  let itemDeal = 'Deal: 2 for 1'; /* placeholder ; deal for item */
 </script>
 
 <div>
     <div class="white-box">
       <div class="deal-label">
-        <p>Deal: 2 for 1</p>
+        <p>{itemDeal}</p>
       </div>
       <p>Image Coming Soon</p>
     </div>
@@ -26,17 +28,23 @@
 
     box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     /* makes deal label in front of white box */
     position: relative;
     z-index: 0;
   }
 
-  .white-box p {
+  .white-box p { /* Image Coming Soon text */
     /* centers text vertically */
     display: inline-block;
     vertical-align: middle;
-    line-height: normal;
+
+    line-height: normal; /* fixes spacing of text */
     
+    /* makes text have 1 word per line */
     padding-left: 15px;
     padding-right: 15px;
 
@@ -57,14 +65,15 @@
 
     line-height: 1.7;  /* centers line height for text */
     height: 30px;
-    width: 130px;
+    width: 125px;
     top: 0;
 
     /* makes deal label in front of white box */
     position: absolute;
     z-index: 1;
 
-    transform: translateY(-50%); /* positions deal label halfway above white box */
+    /* positions deal label halfway above white box */
+    transform: translateY(-50%);
   }
 
   .deal-label p {
