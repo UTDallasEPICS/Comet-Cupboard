@@ -14,7 +14,8 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --mdc-theme-primary: #154726; /* primary color of web components from SMUI */
+  --mdc-theme-primary: #154726;   /* primary color of web components from SMUI */
+  --mdc-theme-secondary: #E87500; /* secondary color of web components from SMUI */
 }
 
 a {
