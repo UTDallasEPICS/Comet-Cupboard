@@ -41,7 +41,7 @@
   
       <!-- <pre class="status">Selected: {valueLeadingIcon}</pre> -->
     </div>
-    <div class="item-list">
+    <div class="item-grid">
       <ItemCard />
       <ItemCard />
       <ItemCard />
@@ -53,7 +53,10 @@
 </div>
 
 <style>
-  .item-list {
+  h1 {
+    font-size: 35px;
+  }
+  .item-grid {
     /* grid styles */
     display: grid;
     column-gap: 1rem;
@@ -67,10 +70,6 @@
     justify-items: center;
     /* justify-content: space-between; */
     margin: 40px;
-  }
-
-  h1 {
-    font-size: 35px;
   }
 
   /* changes color of selected text option in menu */

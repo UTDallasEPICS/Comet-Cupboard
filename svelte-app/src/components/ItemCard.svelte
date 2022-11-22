@@ -1,13 +1,17 @@
 <!-- item card displayed in checkout history -->
 <script>
-
+  let itemName = 'Item name'; /* placeholder */
+  let hasDeal = true;         /* placeholder ; does the item have a deal */
 </script>
 
 <div>
     <div class="white-box">
-      <h1>Image Coming Soon</h1>
+      <div class="deal-label">
+        <p>Deal: 2 for 1</p>
+      </div>
+      <p>Image Coming Soon</p>
     </div>
-    <p><b>Item name</b></p>
+    <p class="item-name"><b>{itemName}</b></p>
 </div>
 
 <style>
@@ -21,12 +25,14 @@
     background-size: cover;
 
     box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+
+    /* makes deal label in front of white box */
+    position: relative;
+    z-index: 0;
   }
 
-  .white-box h1 {
-    font-weight: normal; /* unbold the header text */
-
-    /* centers h1 vertically */
+  .white-box p {
+    /* centers text vertically */
     display: inline-block;
     vertical-align: middle;
     line-height: normal;
@@ -38,9 +44,34 @@
     font-size: 20px;
   }
 
-  p {
+  .item-name {
     font-size: 20px;
     word-wrap: break-word;
     width: 130px;
+  }
+
+  .deal-label {
+    background-color: #E87500;
+    border-radius: 35px;
+    box-shadow: 0 3px 4px rgb(0 0 0 / 0.2);
+
+    line-height: 1.7;  /* centers line height for text */
+    height: 30px;
+    width: 130px;
+    top: 0;
+
+    /* makes deal label in front of white box */
+    position: absolute;
+    z-index: 1;
+
+    transform: translateY(-50%); /* positions deal label halfway above white box */
+  }
+
+  .deal-label p {
+    position: relative;
+    font-weight: bold;
+    color: white;
+    font-size: 15px;
+    margin: 0;
   }
 </style>

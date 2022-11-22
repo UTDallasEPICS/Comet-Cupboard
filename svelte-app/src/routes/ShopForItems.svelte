@@ -94,7 +94,11 @@
       top: 0;
 
       /* make header stay in front of all items */
-      z-index: 1;
+      z-index: 2;
+    }
+
+    .content {
+      z-index: 0;  /* make header stay in front of all items */
     }
   
     .footer {
