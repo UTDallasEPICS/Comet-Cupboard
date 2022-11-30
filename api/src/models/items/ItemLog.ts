@@ -1,6 +1,7 @@
 import { Schema, Document, model } from "mongoose";
 // Could be intake, checkout, removing expired items, or something else
 export interface IItemLog {
+   checkoutID: Schema.Types.ObjectId,
    expDate: string,
    item: string, //objectid
    quantity: number,
@@ -15,6 +16,7 @@ export interface IItemLog {
   
   const schema = new Schema(
     {
+      checkoutID: { type: String, ref: "CheckoutLog", required: true },
       expDate: { type: String, required: true },
       item: {type: String, required: true},
       quantity:{type: Number, required: true},
