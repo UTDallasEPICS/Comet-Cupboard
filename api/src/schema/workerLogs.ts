@@ -3,12 +3,11 @@ import express from "express";
 
 import { MongoIdSchema } from ".";
 
+
 export interface ICreateWorkerLogSchema extends express.Request {
-  query:{
-    date?: string;
-   };
+
   body: {
-    name: string;
+    date?: string
    timeWorked: number;
   };
   params: {
@@ -19,12 +18,10 @@ export interface ICreateWorkerLogSchema extends express.Request {
 }
 export const CreateWorkerLogSchema = Joi.object({
   body: Joi.object({
-    name: Joi.string().required(),
-    timeWorked:Joi.number().required(),
+    date: Joi.string(),
+    timeWorked:Joi.number(),
   }),
-  query: Joi.object({
-    date: Joi.string()
-  }),
+
   params: MongoIdSchema,
 });
 

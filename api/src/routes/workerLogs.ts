@@ -6,12 +6,13 @@ import { WorkerLogs } from "../models";
 
 export const router = express.Router();
 
-router.post("/", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
+router.post("/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
    try
    {
     const workerLogs = new WorkerLogs({
-      ...req.body,    
-      date: req.query.date
+      employeeID: req.params.id,
+      timeWorked: req.body.timeWorked,
+      date: req.body.date,
     });
     await workerLogs.save();
     res.send({message: "ha swag"});
@@ -33,12 +34,12 @@ router.get("/", async (req, res, next) => {
       }
 });
 
-router.get("/name", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
+router.get("/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
   try {
-    if (!req.body.name) {
-      return next({ message: "Name is required", status: status.BAD_REQUEST });
+    if (!req.params.id) {
+      return next({ message: "id is required", status: status.BAD_REQUEST });
     }
-    const existingLog = await WorkerLogs.findOne({ name: req.body.name });
+    const existingLog = await WorkerLogs.findOne({ employeeID: req.params.id });
     if (!existingLog) {
       return next({
         message: "Log not found",
@@ -53,12 +54,14 @@ router.get("/name", validateSchema(schema.CreateWorkerLogSchema), async (req: sc
 });
 
 
+
+
 router.get("/date", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
   try {
-    if (!req.query.date) {
+    if (!req.body.date) {
       return next({ message: "date  is required", status: status.BAD_REQUEST });
     }
-    const existingLog = await WorkerLogs.find({ date: req.query.date });
+    const existingLog = await WorkerLogs.find({ date: req.body.date });
     if (!existingLog) {
       return next({
         message: "Log not found",
@@ -71,6 +74,12 @@ router.get("/date", validateSchema(schema.CreateWorkerLogSchema), async (req: sc
     next(e);
   }
 });
+
+router.get("/employee", validateSchema(schema.CreateWorkerLogSchema), async(req: schema.ICreateWorkerLogSchema, res, next) => {
+
+
+
+}) 
 
 
 

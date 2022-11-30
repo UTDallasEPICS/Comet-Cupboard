@@ -1,10 +1,11 @@
-import { Schema, Document, model } from "mongoose";
+import { Schema, Document, model, Date } from "mongoose";
 
 
 export interface IWorkerLogs{
-    name: string;
-    timeWorked: number
-    //probably have to change this later to use document, but i wasn't sure.
+    employeeID: Schema.Types.ObjectId;
+    timeWorked: number;
+    date: Date
+   
   }
 
 export interface IWorkerLogsDocument extends IWorkerLogs, Document {
@@ -13,8 +14,9 @@ export interface IWorkerLogsDocument extends IWorkerLogs, Document {
   
   const schema = new Schema(
     {
-      name: {type: String, required: true, unique: false},
+      employeeID: {type: Schema.Types.ObjectId, ref:"Employee", required: true, unique: false},
       timeWorked: {type: Number, required:true, unique: false},
+      date:{type: String, required:true, unique: false}
     },
     { timestamps: { createdAt: true} },
    
