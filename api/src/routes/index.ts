@@ -7,6 +7,15 @@ import { router as workerLogRoute } from "./workerLogs";
 
 export const router = express.Router();
 
+declare module "express-session" {
+  export interface SessionData {
+    _id: string;
+    loggedIn: boolean;
+    userId: string;
+    name: string;
+  }
+}
+
 // disable browser cache for all requests
 router.use(disableBrowserCache());
 

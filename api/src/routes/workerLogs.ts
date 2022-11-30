@@ -34,7 +34,7 @@ router.get("/", async (req, res, next) => {
             status: status.BAD_REQUEST
           });
         }
-        res.send({ accounts: WorkerLog });
+        res.send({ workerLogs: WorkerLog });
       } catch (e) {
         next(e);
       }
@@ -53,7 +53,7 @@ router.get("/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: sch
       });
     } 
 
-    res.send({ workerLogs: existingLog });
+    res.send({ workerLog: existingLog });
   } catch (e) {
     next(e);
   }

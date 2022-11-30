@@ -18,7 +18,8 @@ router.post("/", validateSchema(schema.CreateItemSchema), async (req: schema.ICr
         const item = new Items({
           name: req.body.name,
           location: req.body.location,
-          quantity: req.body.quantity
+          quantity: req.body.quantity,
+          size: req.body.size
         });
         await item.save();
         res.send({ message: "Successfully created an item" });
@@ -42,12 +43,13 @@ router.put("/", validateSchema(schema.CreateItemSchema), async(req: schema.ICrea
           },
            {
             location: req.body.location,
-            quantity: req.body.quantity
+            quantity: req.body.quantity,
+            size: req.body.size
            },
            {
             new: true
           });
-        res.send("Successfully updated form!");
+        res.send({ message: "Successfully updated item!" });
       } catch(e) {
         next(e);
       }
@@ -56,7 +58,7 @@ router.put("/", validateSchema(schema.CreateItemSchema), async(req: schema.ICrea
 router.get("/", async (req, res, next) => {
     try {
         const items = await Items.find();
-        res.send({ accounts: items });
+        res.send({ items: items });
       } catch (e) {
         next(e);
       }
@@ -75,7 +77,7 @@ router.get("/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, re
         });
       }
   
-      res.send({ account: existingItem });
+      res.send({ item: existingItem });
     } catch (e) {
       next(e);
     }

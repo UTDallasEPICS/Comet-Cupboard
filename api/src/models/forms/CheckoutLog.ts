@@ -1,10 +1,8 @@
 
 import { Schema, Document, model } from "mongoose";
-import { IItemLog } from "../items/ItemLog";
 
 export interface ICheckoutLog {
-   recipientID: string,
-   itemLogs: IItemLog[];
+   recipientID: Schema.Types.ObjectId,
    workerID: string,
    dateOfCheckout: string,
  
@@ -16,7 +14,7 @@ export interface ICheckoutLog {
   
   const schema = new Schema(
     {
-        recipientID:  { type: String, required: true },
+        recipientID:  { type: Schema.Types.ObjectId, ref:"User", required: true },
         itemLogs:  { type: String, required: true },
         workerID:  { type: String, required: true },
         dateOfCheckout: {type: String, required: true}
@@ -25,4 +23,4 @@ export interface ICheckoutLog {
     { timestamps: { createdAt: true } }
   );
   
-  export default model<ICheckoutLogDocument>("Item", schema);
+  export default model<ICheckoutLogDocument>("CheckoutLog", schema);
