@@ -1,13 +1,13 @@
 import Joi from "joi";
 import express from "express";
 
-import { MongoIdSchema } from ".";
+import {  MONGO_ID_REGEX } from ".";
 
 
 export interface ICreateWorkerLogSchema extends express.Request {
 
   body: {
-    date?: string
+    
    timeWorked: number;
   };
   params: {
@@ -18,10 +18,12 @@ export interface ICreateWorkerLogSchema extends express.Request {
 }
 export const CreateWorkerLogSchema = Joi.object({
   body: Joi.object({
-    date: Joi.string(),
+   
     timeWorked:Joi.number(),
   }),
 
-  params: MongoIdSchema,
+  params: Joi.object({ 
+    id: Joi.string().required().regex(MONGO_ID_REGEX)
+  })
 });
 
