@@ -6,7 +6,9 @@
 
 <header class="flex-container">
   <div class="header-left">
+    <a href="#/"> <!-- takes user to Shop for Items page (home page) -->
       <img src={CometCupboardLogo} class="logo" alt="Comet Cupboard logo." />
+    </a>
   </div>
 
   <div class="header-right">
