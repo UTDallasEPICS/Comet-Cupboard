@@ -123,7 +123,7 @@
       position: sticky;
       top: 0;
 
-      /* make header stay at the front of all items */
+      /* puts header above other content on page */
       z-index: 1;
     }
   
