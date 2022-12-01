@@ -20,5 +20,6 @@
 <style>
     p {
         text-align: center;
+        color: white;
     }
 </style>

@@ -43,42 +43,12 @@
     <div class="content">
       <HeaderImage />
       <div class="container">
-        <div class="inline" id="category-tab">
+        <div id="category-tab">
           <CategoryTabs />
         </div>
-        <div class="inline" id="checkout-history">
+        <div id="checkout-history">
           <CheckoutHistory />
         </div>
-      </div>
-      <div class="content-text">
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
-        <p>content</p>
       </div>
     </div>
     <div class="footer">
@@ -123,30 +93,32 @@
       position: sticky;
       top: 0;
 
-      /* puts header above other content on page */
-      z-index: 1;
+      /* make header stay in front of all items */
+      z-index: 2;
+    }
+
+    .content {
+      z-index: 0;  /* make header stay in front of all items */
     }
   
     .footer {
       margin-top: auto; /* push footer to the bottom when content overflows the page and when content is short */
     }
 
-    .container { /* have category tab  */
+    .container { /* contains category tab and checkout history */
       text-align: center;
-      position: relative;
+
+      /* positions category tab and checkout history side-by-side */
+      display: flex;
+      justify-content: space-between;
     }
 
     #category-tab {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 250px;
       background: #154734;
     }
 
     #checkout-history {
-      display: inline-block;
-      float: right;
-      width: 100%;
+      flex-grow: 100;   /* expands the width of checkout history to fill the remaining width  */
     }
   </style>
