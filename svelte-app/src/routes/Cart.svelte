@@ -8,7 +8,8 @@
     import TopBar from '../components/TopBar.svelte'
     import Footer from '../components/Footer.svelte'
 
-  //imports button from svelte material UI (smui)
+  //imports elements needed for buttons from SMUI
+    import Wrapper from '@smui/touch-target';
     import Button, { Label, Icon } from '@smui/button';
     let clicked = 0;
 </script>
@@ -22,13 +23,15 @@
   </div>
 
   <!-- Shop for Items back button -->
-  <div class="shop-for-items-button">
-    <a href="#/">
-      <Button on:click={() => clicked++} variant="raised">
+  <div class="shop-for-items-button" style="display:flex; flex-wrap:wrap; align-items:center;">
+    <Wrapper>
+      <a href="#/">
+      <Button on:click={() => clicked++} variant="raised" touch>
         <Icon class="material-icons">arrow_back_ios</Icon>
         <Label>Shop for Items</Label>
       </Button>
-    </a>
+      </a>
+    </Wrapper>
   </div>
 
   <!-- title of page-->
@@ -74,7 +77,7 @@
 
 <!-- CSS HERE -->
 <style>
-  
+
   /*styles header*/
   .header {
     position: sticky;
@@ -87,7 +90,7 @@
     margin-top: auto; 
   }
 
-/*styles Cart title*/
+  /*styles Cart title*/
   h1{
     position: relative;
     left: -90px;
@@ -96,7 +99,7 @@
   /*styles Shop for Items button*/
   .shop-for-items-button {
     float: left;
-    margin: 20px 10px;
+    margin: 20px 15px;
   }
 
   :global(.mdc-button--raised:not(:disabled)) {
