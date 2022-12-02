@@ -2,7 +2,7 @@
 <!-- allows user to select type and size (if applicable), see item's expiration date, and add item to cart -->
 <script lang="ts">
     // import MenuSurface from '@smui/menu-surface';
-    import Dialog, { Title, Content, Actions } from '@smui/dialog';
+    // import Dialog, { Title, Content, Actions } from '@smui/dialog';
 
     //export let item;
 
@@ -20,12 +20,11 @@
     }
 </script>
 
-<Dialog
+<!-- <Dialog
 bind:open
 aria-labelledby="simple-title"
 aria-describedby="simple-content"
 >
-    <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
     <Title id="simple-title">Dialog Title</Title>
     <Content id="simple-content">Super awesome dialog body text?</Content>
     <Actions>
@@ -36,7 +35,7 @@ aria-describedby="simple-content"
         <Label>Yes</Label>
         </Button>
     </Actions>
-</Dialog>
+</Dialog> -->
 
 <style>
 
