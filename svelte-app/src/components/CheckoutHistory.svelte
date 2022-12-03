@@ -30,9 +30,9 @@
 	//	  obj - item to display to user in pop up
   function handleItemCardClick(obj) { /* sets and updates the item clicked's attributes to store into store.js */
 		// item_clicked = obj.name;
-		// let str = JSON.stringify(obj, null, 4); // outputs object into a formatted string for debugging
-		// console.log(str); // Logs output to dev tools console.
-		// console.log(obj.name);
+		let str = JSON.stringify(obj, null, 4); // outputs object into a formatted string for debugging
+		console.log(str); // Logs output to dev tools console.
+		console.log(obj.image_src);
 		itemClickedName.set(obj.name);
 		itemClickedImageSrc.set(obj.image_src);
 		itemClickedDeal.set(obj.deal);
@@ -40,9 +40,9 @@
 		itemClickedExpDates.update(expDates => expDates = obj.expiration_dates.slice(0));
 		itemClickedCat.set(obj.category);
 
-		// console.log("after handleitem", $itemClickedName);
+		console.log("after handleitem", $itemClickedImageSrc);
 		open = true; // sets open to true to open the pop up once it knows which item to open
-		// console.log("after open", $itemClickedName);
+		console.log("after open", $itemClickedImageSrc);
     }
 </script>
 
@@ -102,7 +102,7 @@
     /* grid styles */
     display: grid;
     column-gap: 1rem;
-    row-gap: 2.5rem;
+    row-gap: 2rem;
     grid-template-columns: repeat(3, minmax(150px, 1fr));
     /* grid-template-rows: repeat(4, 1fr); */
     grid-auto-flow: dense;

@@ -8,7 +8,7 @@ export const cartContents = writable([]);   // items in the cart
 export const inventory = writable([         // items in demo inventory
     {
         "name": "Canned Tuna",
-        "image_src": "./images/canned-tuna.svg",
+        "image_src": './public/demo_item_images/canned-tuna.svg',
         "deal": "Deal: 2 for 1",
         "sizes": ["1 oz", "2 oz", "3 oz"],
         "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
@@ -16,7 +16,7 @@ export const inventory = writable([         // items in demo inventory
     },
     {
         "name": "Mac n Cheese",
-        "image_src": "./images/mac-n-cheese.svg",
+        "image_src": "./public/demo_item_images/mac-n-cheese.svg",
         "deal": "",
         "sizes": ["1 oz", "2 oz"],
         "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
@@ -24,7 +24,7 @@ export const inventory = writable([         // items in demo inventory
     },
     {
         "name": "Mayonnaise",
-        "image_src": "./images/mayonnaise.svg",
+        "image_src": "./public/demo_item_images/mayonnaise.svg",
         "deal": "",
         "sizes": ["1 oz", "2 oz", "3 oz"],
         "expiration_dates": ["01/01/2023", "02/02/2023", "03/03/2023"],
@@ -32,7 +32,7 @@ export const inventory = writable([         // items in demo inventory
     },
     {
         "name": "Oatmeal",
-        "image_src": "./images/oatmeal.svg",
+        "image_src": "./public/demo_item_images/oatmeal.svg",
         "deal": "",
         "sizes": ["1 oz", "2 oz", "3 oz"],
         "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
@@ -40,7 +40,7 @@ export const inventory = writable([         // items in demo inventory
     },
     {
         "name": "Ramen Pack",
-        "image_src": "./images/ramen-pack.svg",
+        "image_src": "./public/demo_item_images/ramen-pack.svg",
         "deal": "Deal: 2 for 1",
         "sizes": ["One Size"],
         "expiration_dates": ["01/01/2024"],
@@ -48,7 +48,7 @@ export const inventory = writable([         // items in demo inventory
     },
     {
         "name": "Razor",
-        "image_src": "./images/razor.svg",
+        "image_src": "./public/demo_item_images/razor.svg",
         "deal": "",
         "sizes": ["One Size"],
         "expiration_dates": ["n/a"],
@@ -56,7 +56,7 @@ export const inventory = writable([         // items in demo inventory
     },
     {
         "name": "Toilet Paper",
-        "image_src": "./images/toilet-paper.svg",
+        "image_src": "./public/demo_item_images/toilet-paper.svg",
         "deal": "",
         "sizes": ["One Size"],
         "expiration_dates": ["n/a"],

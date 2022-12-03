@@ -18,6 +18,11 @@
   --mdc-theme-secondary: #E87500; /* secondary color of web components from SMUI */
 }
 
+/* Rule for using icons as white on a dark background. */
+.material-icons.md-light {
+  color: rgb(255, 255, 255, 1);
+}
+
 a {
   font-weight: 500;
   color: #646cff;
