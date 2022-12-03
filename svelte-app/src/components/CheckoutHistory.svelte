@@ -1,7 +1,9 @@
 <!-- displays user's checkout history -->
 <script lang="ts">
   // sends this as a prop to ItemPopup
-  export let open = false;  // bool for if ItemPopup should be open/displayed to user
+  export let open = false;  // bool for if ItemPopUp should be open/displayed to user
+
+  import { inventory, itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates, itemClickedCat } from '../stores.js';
 
   // imports from SMUI
   import Select, { Option } from '@smui/select';
@@ -12,12 +14,10 @@
   import ItemCard from './ItemCard.svelte';
   import ItemPopUp from './ItemPopUp.svelte';
 
-  let sorts = ['Alphabetical','Frequent'];
+  let sorts = ['Alphabetical','Frequent'];  /* different sorts displayed in Sort button */
 
   let value = '';
-  let valueHelperText = '';
   let valueLeadingIcon = 'Alphabetical'; // sets default value of sort to "Alphabetical"
-  let valueInvalid = '';
 
   if (valueLeadingIcon == 'Alphabetical') {
 
@@ -25,25 +25,29 @@
   if (valueLeadingIcon == 'Frequent') {
 
   }
-</script>
 
-<!-- binds open value to ItemPopUp component so that parent 
-	component's open is updated when child component updates open -->
-<ItemPopUp bind:open={open} />
+  // @param:
+	//	  obj - item to display to user in pop up
+  function handleItemCardClick(obj) { /* sets and updates the item clicked's attributes to store into store.js */
+		// item_clicked = obj.name;
+		// let str = JSON.stringify(obj, null, 4); // outputs object into a formatted string for debugging
+		// console.log(str); // Logs output to dev tools console.
+		// console.log(obj.name);
+		itemClickedName.set(obj.name);
+		itemClickedImageSrc.set(obj.image_src);
+		itemClickedDeal.set(obj.deal);
+		itemClickedSizes.update(sizes => sizes = obj.sizes.slice(0));
+		itemClickedExpDates.update(expDates => expDates = obj.expiration_dates.slice(0));
+		itemClickedCat.set(obj.category);
+
+		// console.log("after handleitem", $itemClickedName);
+		open = true; // sets open to true to open the pop up once it knows which item to open
+		// console.log("after open", $itemClickedName);
+    }
+</script>
 
 <div>
     <h1>Checkout History</h1>
-    <!-- <Select variant="filled" bind:value={valueLeadingIcon} label="Sort">
-        <!- - <img src={SortIcon} class="sort-icon" alt="Sort icon." /> - ->
-        <Icon class="material-icons" slot="leadingIcon">sort</Icon>
-        <Option value="" />
-        {#each sorts as sort}
-          <Option value={sort}>{sort}</Option>
-        {/each}
-      </Select>
-  
-      <pre class="status">Selected: {valueLeadingIcon}</pre> -->
-
     <div>
       <Select
         class="shaped-outlined"
@@ -57,33 +61,38 @@
           <Option value={sortOption}>{sortOption}</Option>
         {/each}
       </Select>
-  
+      <!-- debugging -->
       <!-- <pre class="status">Selected: {valueLeadingIcon}</pre> -->
     </div>
     <div class="item-grid">
       <Wrapper>
-        <ItemCard on:click={() => (open = true)} /> <!-- on click, set open to true so ItemPopUp is displayed -->
+        <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
+        <ItemCard on:click={() => (handleItemCardClick($inventory[0]))} bind:item={$inventory[0]} />
       </Wrapper>
       <Wrapper>
-      <ItemCard on:click={() => (open = true)} />
+        <ItemCard on:click={() => (handleItemCardClick($inventory[1]))} bind:item={$inventory[1]} />
       </Wrapper>
       <Wrapper>
-      <ItemCard on:click={() => (open = true)} />
+        <ItemCard on:click={() => (handleItemCardClick($inventory[2]))} bind:item={$inventory[2]} />
       </Wrapper>
       <Wrapper>
-      <ItemCard on:click={() => (open = true)} />
+        <ItemCard on:click={() => (handleItemCardClick($inventory[3]))} bind:item={$inventory[3]} />
       </Wrapper>
       <Wrapper>
-      <ItemCard on:click={() => (open = true)} />
+        <ItemCard on:click={() => (handleItemCardClick($inventory[4]))} bind:item={$inventory[4]} />
       </Wrapper>
       <Wrapper>
-      <ItemCard on:click={() => (open = true)} />
+        <ItemCard on:click={() => (handleItemCardClick($inventory[5]))} bind:item={$inventory[5]} />
       </Wrapper>
       <Wrapper>
-      <ItemCard on:click={() => (open = true)} />
+        <!-- <ItemCard on:click={() => {open = true; Object.assign(item_clicked, $inventory[6]); console.log("test:" + item_clicked.name); }} bind:item={$inventory[6]} /> -->
+        <ItemCard on:click={() => (handleItemCardClick($inventory[6]))} bind:item={$inventory[6]} />
       </Wrapper>
-    </div>
+      </div>
 </div>
+
+<!-- binds open value to ItemPopUp component so that parent component's open is updated when child component updates open -->
+<ItemPopUp bind:open={open} />
 
 <style>
   h1 {

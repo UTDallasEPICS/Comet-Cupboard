@@ -11,11 +11,12 @@
 	
 	<!-- SMUI -->
 	<link rel="stylesheet" href="https://unpkg.com/svelte-material-ui/bare.css" />
+	<!-- <link rel="stylesheet" href="node_modules/svelte-material-ui/bare.css" /> -->
 </svelte:head>
 
 <script>
   import Router from 'svelte-spa-router';
-	import routes from './routes';
+  import routes from './routes';
 </script>
 
 <!-- displays all the routes -->
