@@ -102,17 +102,18 @@
     margin: 20px 15px;
   }
 
-  :global(.mdc-button--raised:not(:disabled)) {
+  * :global(.mdc-button--raised:not(:disabled)) {
       background-color: #D9D9D9 !important;
       color: #154734 !important;
   }
 
-  :global(.mdc-button--raised) {
+  * :global(.mdc-button--raised) {
       font-weight: bold !important;
       font-family: Inter, sans-serif !important;
       letter-spacing: normal !important;
       text-transform: none !important;
       line-height: 45px !important;
+      border-radius: 35px;
   }
 
 </style>
