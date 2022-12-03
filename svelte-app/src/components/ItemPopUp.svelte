@@ -25,10 +25,19 @@
     isSizeSelected = true;
   }
 
-  function handleClickMinus(deal) {
+  // handles the Minus quantity button click
+  function handleClickMinus() {
     if (quantity != 1)  // makes sure user doesn't go below 1 for item quantity
     {
       quantity--;
+    }
+  }
+
+  // handles the Add quantity button click
+  function handleClickAdd() {
+    if (quantity != 10)  // makes sure user doesn't go over 10 for item quantity
+    {
+      quantity++;
     }
   }
 
@@ -102,13 +111,13 @@
           {/if}
           <div class="green-quantity-box">
               <div style="display: flex; align-items: center;">   <!-- styles items in the quantity box in columns instead of rows -->
-                  <IconButton ripple={false} class="material-icons md-light remove-button" on:click={() => handleClickMinus($itemClickedDeal)}
+                  <IconButton ripple={false} class="material-icons md-light remove-button" on:click={handleClickMinus}
                   >remove</IconButton>
                   <!-- <div class="display-quantity"> -->
                       <!-- <span>{quantity}</span> -->
                   <!-- </div> -->
                   <Textfield variant="outlined" bind:value={quantity} />
-                  <IconButton ripple={false} class="material-icons md-light add-button" on:click={() => quantity++}
+                  <IconButton ripple={false} class="material-icons md-light add-button" on:click={handleClickAdd}
                   >add</IconButton>
               </div>
           </div>

@@ -1,4 +1,4 @@
-<!-- item card displayed in checkout history -->
+<!-- item card displayed in checkout history and category section -->
 <script>
   // receives this as a prop from CheckoutHistory
   export let item;  // item the user clicked on
