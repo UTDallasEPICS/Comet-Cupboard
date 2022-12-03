@@ -3,6 +3,7 @@
   // sends this as a prop to ItemPopup
   export let open = false;  // bool for if ItemPopUp should be open/displayed to user
 
+  // import from stores.js
   import { inventory, itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates, itemClickedCat } from '../stores.js';
 
   // imports from SMUI
@@ -43,52 +44,52 @@
 		console.log("after handleitem", $itemClickedImageSrc);
 		open = true; // sets open to true to open the pop up once it knows which item to open
 		console.log("after open", $itemClickedImageSrc);
-    }
+  }
 </script>
 
 <div>
-    <h1>Checkout History</h1>
-    <div>
-      <Select
-        class="shaped-outlined"
-        variant="outlined"
-        bind:value={valueLeadingIcon}
-        label="Sort"
-      >
-        <Icon class="material-icons" slot="leadingIcon">sort</Icon>
-        <Option value="" />
-        {#each sorts as sortOption}
-          <Option value={sortOption}>{sortOption}</Option>
-        {/each}
-      </Select>
-      <!-- debugging -->
-      <!-- <pre class="status">Selected: {valueLeadingIcon}</pre> -->
-    </div>
-    <div class="item-grid">
-      <Wrapper>
-        <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
-        <ItemCard on:click={() => (handleItemCardClick($inventory[0]))} bind:item={$inventory[0]} />
-      </Wrapper>
-      <Wrapper>
-        <ItemCard on:click={() => (handleItemCardClick($inventory[1]))} bind:item={$inventory[1]} />
-      </Wrapper>
-      <Wrapper>
-        <ItemCard on:click={() => (handleItemCardClick($inventory[2]))} bind:item={$inventory[2]} />
-      </Wrapper>
-      <Wrapper>
-        <ItemCard on:click={() => (handleItemCardClick($inventory[3]))} bind:item={$inventory[3]} />
-      </Wrapper>
-      <Wrapper>
-        <ItemCard on:click={() => (handleItemCardClick($inventory[4]))} bind:item={$inventory[4]} />
-      </Wrapper>
-      <Wrapper>
-        <ItemCard on:click={() => (handleItemCardClick($inventory[5]))} bind:item={$inventory[5]} />
-      </Wrapper>
-      <Wrapper>
-        <!-- <ItemCard on:click={() => {open = true; Object.assign(item_clicked, $inventory[6]); console.log("test:" + item_clicked.name); }} bind:item={$inventory[6]} /> -->
-        <ItemCard on:click={() => (handleItemCardClick($inventory[6]))} bind:item={$inventory[6]} />
-      </Wrapper>
-      </div>
+  <h1>Checkout History</h1>
+  <div>
+    <Select
+      class="shaped-outlined"
+      variant="outlined"
+      bind:value={valueLeadingIcon}
+      label="Sort"
+    >
+      <Icon class="material-icons" slot="leadingIcon">sort</Icon>
+      <Option value="" />
+      {#each sorts as sortOption}
+        <Option value={sortOption}>{sortOption}</Option>
+      {/each}
+    </Select>
+    <!-- debugging -->
+    <!-- <pre class="status">Selected: {valueLeadingIcon}</pre> -->
+  </div>
+  <div class="item-grid">
+    <Wrapper>
+      <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
+      <ItemCard on:click={() => (handleItemCardClick($inventory[0]))} bind:item={$inventory[0]} />
+    </Wrapper>
+    <Wrapper>
+      <ItemCard on:click={() => (handleItemCardClick($inventory[1]))} bind:item={$inventory[1]} />
+    </Wrapper>
+    <Wrapper>
+      <ItemCard on:click={() => (handleItemCardClick($inventory[2]))} bind:item={$inventory[2]} />
+    </Wrapper>
+    <Wrapper>
+      <ItemCard on:click={() => (handleItemCardClick($inventory[3]))} bind:item={$inventory[3]} />
+    </Wrapper>
+    <Wrapper>
+      <ItemCard on:click={() => (handleItemCardClick($inventory[4]))} bind:item={$inventory[4]} />
+    </Wrapper>
+    <Wrapper>
+      <ItemCard on:click={() => (handleItemCardClick($inventory[5]))} bind:item={$inventory[5]} />
+    </Wrapper>
+    <Wrapper>
+      <!-- <ItemCard on:click={() => {open = true; Object.assign(item_clicked, $inventory[6]); console.log("test:" + item_clicked.name); }} bind:item={$inventory[6]} /> -->
+      <ItemCard on:click={() => (handleItemCardClick($inventory[6]))} bind:item={$inventory[6]} />
+    </Wrapper>
+  </div>
 </div>
 
 <!-- binds open value to ItemPopUp component so that parent component's open is updated when child component updates open -->
