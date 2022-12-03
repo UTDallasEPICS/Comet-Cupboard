@@ -357,7 +357,7 @@
   /* position: absolute;
   bottom: 0; */
 
-  /* positions deal label halfway above white box */
+  /* positions iteself around halfway below white box */
   transform: translateY(-30%);
 }
 

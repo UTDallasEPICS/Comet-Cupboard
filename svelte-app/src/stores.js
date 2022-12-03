@@ -64,6 +64,81 @@ export const inventory = writable([         // items in demo inventory
     }
 ]);
 
+export const pantry_staples_inventory = writable([         // items in demo Pantry Staples category
+    {
+        "name": "Cake Mix",
+        "image_src": './public/demo_pantry_staples_item_images/cake-mix.svg',
+        "deal": "",
+        "sizes": ["1 oz", "2 oz", "3 oz"],
+        "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
+        "category": "Pantry Staples"
+    },
+    {
+        "name": "Cooking Oil",
+        "image_src": "./public/demo_pantry_staples_item_images/cooking-oil.svg",
+        "deal": "",
+        "sizes": ["1 oz", "2 oz"],
+        "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
+        "category": "Pantry Staples"
+    },
+    {
+        "name": "Flour",
+        "image_src": "./public/demo_pantry_staples_item_images/flour.svg",
+        "deal": "",
+        "sizes": ["One Size"],
+        "expiration_dates": ["n/a"],
+        "category": "Pantry Staples"
+    },
+    {
+        "name": "Ground Coffee",
+        "image_src": "./public/demo_pantry_staples_item_images/ground-coffee.svg",
+        "deal": "",
+        "sizes": ["One Size"],
+        "expiration_dates": ["n/a"],
+        "category": "Pantry Staples"
+    },
+    {
+        "name": "Ketchup",
+        "image_src": "./public/demo_pantry_staples_item_images/ketchup.svg",
+        "deal": "",
+        "sizes": ["One Size"],
+        "expiration_dates": ["n/a"],
+        "category": "Pantry Staples"
+    },
+    {
+        "name": "Mayonnaise",
+        "image_src": "./public/demo_pantry_staples_item_images/mayonnaise.svg",
+        "deal": "",
+        "sizes": ["1 oz", "2 oz", "3 oz"],
+        "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
+        "category": "Pantry Staples"
+    },
+    {
+        "name": "Mustard",
+        "image_src": "./public/demo_pantry_staples_item_images/mustard.svg",
+        "deal": "Deal: 2 for 1",
+        "sizes": ["One Size"],
+        "expiration_dates": ["01/01/2024"],
+        "category": "Pantry Staples"
+    },
+    {
+        "name": "Powder Milk",
+        "image_src": "./public/demo_pantry_staples_item_images/powder-milk.svg",
+        "deal": "",
+        "sizes": ["1 oz", "2 oz", "3 oz"],
+        "expiration_dates": ["01/01/2023", "02/02/2023", "03/03/2023"],
+        "category": "Pantry Staples"
+    },
+    {
+        "name": "Tea Bags",
+        "image_src": "./public/demo_pantry_staples_item_images/tea-bags.svg",
+        "deal": "Deal: 2 for 1",
+        "sizes": ["One Size"],
+        "expiration_dates": ["n/a"],
+        "category": "Pantry Staples"
+    }
+]);
+
 // information about the item the user clicked in Checkout History
 export const itemClickedName = writable("");
 export const itemClickedImageSrc = writable("");

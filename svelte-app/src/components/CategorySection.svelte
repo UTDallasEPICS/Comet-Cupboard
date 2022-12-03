@@ -4,7 +4,7 @@
   export let open = false;  // bool for if ItemPopUp should be open/displayed to user
 
   // import from stores.js
-  import { inventory, itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates, itemClickedCat, showCheckoutHistory } from '../stores.js';
+  import { pantry_staples_inventory, itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates, itemClickedCat, showCheckoutHistory } from '../stores.js';
 
   // imports from SMUI
   import Select, { Option } from '@smui/select';
@@ -64,18 +64,18 @@
   </div>
   <div class="popular-items-container">
     <h2>Popular Items</h2>
-    <div class="item-grid">
+    <div class="item-grid"> <!-- displays current popular items in category -->
       <Wrapper>
         <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
-        <ItemCard on:click={() => (handleItemCardClick($inventory[0]))} bind:item={$inventory[0]} />
+        <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[0]))} bind:item={$pantry_staples_inventory[0]} />
       </Wrapper>
       <Wrapper>
         <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
-        <ItemCard on:click={() => (handleItemCardClick($inventory[1]))} bind:item={$inventory[1]} />
+        <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[7]))} bind:item={$pantry_staples_inventory[7]} />
       </Wrapper>
       <Wrapper>
         <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
-        <ItemCard on:click={() => (handleItemCardClick($inventory[2]))} bind:item={$inventory[2]} />
+        <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[8]))} bind:item={$pantry_staples_inventory[8]} />
       </Wrapper>
     </div>
   </div>
@@ -95,29 +95,35 @@
     <!-- debugging -->
     <!-- <pre class="status">Selected: {valueLeadingIcon}</pre> -->
   </div>
-  <div class="item-grid">
+  <div class="item-grid"> <!-- displays all items in category -->
     <Wrapper>
       <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
-      <ItemCard on:click={() => (handleItemCardClick($inventory[0]))} bind:item={$inventory[0]} />
+      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[0]))} bind:item={$pantry_staples_inventory[0]} />
     </Wrapper>
     <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($inventory[1]))} bind:item={$inventory[1]} />
+      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[1]))} bind:item={$pantry_staples_inventory[1]} />
     </Wrapper>
     <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($inventory[2]))} bind:item={$inventory[2]} />
+      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[2]))} bind:item={$pantry_staples_inventory[2]} />
     </Wrapper>
     <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($inventory[3]))} bind:item={$inventory[3]} />
+      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[3]))} bind:item={$pantry_staples_inventory[3]} />
     </Wrapper>
     <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($inventory[4]))} bind:item={$inventory[4]} />
+      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[4]))} bind:item={$pantry_staples_inventory[4]} />
     </Wrapper>
     <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($inventory[5]))} bind:item={$inventory[5]} />
+      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[5]))} bind:item={$pantry_staples_inventory[5]} />
+    </Wrapper>
+    <Wrapper>
+      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[6]))} bind:item={$pantry_staples_inventory[6]} />
+    </Wrapper>
+    <Wrapper>
+      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[7]))} bind:item={$pantry_staples_inventory[7]} />
     </Wrapper>
     <Wrapper>
       <!-- <ItemCard on:click={() => {open = true; Object.assign(item_clicked, $inventory[6]); console.log("test:" + item_clicked.name); }} bind:item={$inventory[6]} /> -->
-      <ItemCard on:click={() => (handleItemCardClick($inventory[6]))} bind:item={$inventory[6]} />
+      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[8]))} bind:item={$pantry_staples_inventory[8]} />
     </Wrapper>
   </div>
 </div>
@@ -209,6 +215,8 @@
     width: 90%; /* aligns this item grid with other item grid */
     align-content: space-evenly;
 
+    /* fixes spacing issues */
+    margin-top: 10px;
     margin-bottom: 10px;
 
     /* justify-content: space-evenly; */

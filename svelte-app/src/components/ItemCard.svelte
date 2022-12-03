@@ -140,8 +140,8 @@
     position: absolute;
     z-index: 1;
 
-    /* positions deal label halfway above white box */
-    transform: translateY(-50%);
+    /* positions deal label around halfway above white box */
+    transform: translateY(-60%);
   }
 
   .deal-label p {
