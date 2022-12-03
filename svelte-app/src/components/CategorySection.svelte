@@ -54,13 +54,13 @@
 
 <div class="container">
   <div class="side-by-side">
-    <h1>Pantry Staples</h1>
     <div class="back-button-container">
       <Button class="back-button" variant="raised" on:click={handleBackButtonClick}>
         <ButtonIcon class="material-icons">arrow_back_ios</ButtonIcon>
         <Label>Checkout History</Label>
       </Button>
     </div>
+    <h1>Breakfast Grains</h1>
   </div>
   <div class="popular-items-container">
     <h2>Popular Items</h2>
@@ -142,7 +142,7 @@
   }
 
   h1 {
-    font-size: 35px;
+    font-size: 30px;
   }
 
   * :global(.back-button) {
@@ -154,10 +154,10 @@
   .back-button-container {
     /* positions Checkout History button to the right of h1 at all times */
     position: absolute;
-    right: 0;
+    left: 250px;
 
-    margin-right: 20px;
-    margin-top: 15px;
+    margin-left: 15px;
+    margin-top: 10px;
   }
 
   /* styles Checkout History back button */
