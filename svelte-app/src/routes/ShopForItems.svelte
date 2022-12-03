@@ -8,6 +8,9 @@
   import CategorySection from '../components/CategorySection.svelte';
   import CategoryTabs from '../components/CategoryTabs.svelte';
 
+  // importing from stores.js
+  import { showCheckoutHistory } from '../stores.js';
+
   //var height = document.getElementById('footer').offsetHeight; -- put this in console to find height of footer
   // ^^ 238px = height of footer
 </script>
@@ -47,12 +50,15 @@
       <div id="category-tab">
         <CategoryTabs />
       </div>
-      <!-- <div class="display-section">
-        <CheckoutHistory />
-      </div> -->
-       <div class="display-section">
-        <CategorySection />
-       </div>
+      {#if $showCheckoutHistory == true}
+        <div class="display-section">
+          <CheckoutHistory />
+        </div>
+      {:else}
+        <div class="display-section">
+          <CategorySection />
+        </div>
+       {/if}
     </div>
   </div>
   <div class="footer">

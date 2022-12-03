@@ -4,7 +4,7 @@
   export let open = false;  // bool for if ItemPopUp should be open/displayed to user
 
   // import from stores.js
-  import { inventory, itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates, itemClickedCat } from '../stores.js';
+  import { inventory, itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates, itemClickedCat, showCheckoutHistory } from '../stores.js';
 
   // imports from SMUI
   import Select, { Option } from '@smui/select';
@@ -46,13 +46,17 @@
     open = true; // sets open to true to open the pop up once it knows which item to open
     console.log("after open", $itemClickedImageSrc);
   }
+
+  function handleBackButtonClick() {
+    showCheckoutHistory.set(true);  // set to true so CheckoutHistory can be displayed via if-else statement in ShopForItems.svelte
+  }
 </script>
 
 <div class="container">
   <div class="side-by-side">
     <h1>Pantry Staples</h1>
     <div class="back-button-container">
-      <Button class="back-button" variant="raised">
+      <Button class="back-button" variant="raised" on:click={handleBackButtonClick}>
         <ButtonIcon class="material-icons">arrow_back_ios</ButtonIcon>
         <Label>Checkout History</Label>
       </Button>
@@ -204,6 +208,8 @@
   .popular-items-container .item-grid {
     width: 90%; /* aligns this item grid with other item grid */
     align-content: space-evenly;
+
+    margin-bottom: 10px;
 
     /* justify-content: space-evenly; */
   }
