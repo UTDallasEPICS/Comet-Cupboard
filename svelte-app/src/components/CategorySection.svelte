@@ -151,10 +151,18 @@
     font-size: 30px;
   }
 
+  /* styles Checkout History button */
   * :global(.back-button) {
     width: 120px;
     height: 50px;
     line-height: normal;
+  }
+
+  * :global(.mdc-button--raised) {
+      font-weight: bold !important;
+      font-family: Inter, sans-serif !important;
+      letter-spacing: normal !important;
+      text-transform: none !important;
   }
   
   .back-button-container {
@@ -170,13 +178,6 @@
   * :global(.mdc-button--raised:not(:disabled)) {
       background-color: #D9D9D9 !important;
       color: #154734 !important;
-  }
-
-  * :global(.mdc-button--raised) {
-      font-weight: bold !important;
-      font-family: Inter, sans-serif !important;
-      letter-spacing: normal !important;
-      text-transform: none !important;
   }
 
   .item-grid {
@@ -208,7 +209,7 @@
   }
 
   .popular-items-container h2 {
-    font-size: 30px;
+    font-size: 25px;
   }
 
   .popular-items-container .item-grid {

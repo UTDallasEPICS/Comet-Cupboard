@@ -31,9 +31,9 @@
 	//	  obj - item to display to user in pop up
   function handleItemCardClick(obj) { /* sets and updates the item clicked's attributes to store into store.js */
 		// item_clicked = obj.name;
-		let str = JSON.stringify(obj, null, 4); // outputs object into a formatted string for debugging
-		console.log(str); // Logs output to dev tools console.
-		console.log(obj.image_src);
+		// let str = JSON.stringify(obj, null, 4); // outputs object into a formatted string for debugging
+		// console.log(str); // Logs output to dev tools console.
+		// console.log(obj.image_src);
 		itemClickedName.set(obj.name);
 		itemClickedImageSrc.set(obj.image_src);
 		itemClickedDeal.set(obj.deal);

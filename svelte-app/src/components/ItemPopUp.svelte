@@ -1,7 +1,7 @@
 <!-- displayed when user clicks on item from Checkout History or Category Section -->
 <!-- allows user to select size, see item's expiration date, and add item to cart -->
 <script lang="ts">
-  // receives this as a prop from CheckoutHistory
+  // receives this as a prop from CheckoutHistory or CategorySection
   export let open;  // bool for if ItemPopUp should be open/displayed to user
   //export let item;
 
@@ -19,7 +19,8 @@
   let item_size = "";         // size of the item that the user selected
   let item_size_index = -1;   // index of the size of the item that the user selected inside itemClickedSizes array ; tracked so Dialog knows which exp date to display
 
-  function handleClickSize(size, i) {        
+  // handles the Size button click
+  function handleClickSize(size, i) {
     item_size = size;
     item_size_index = i;
     isSizeSelected = true;
@@ -43,7 +44,7 @@
 
   function handleClickAddToCart(e) {
     isSizeSelected = true;
-    }
+  }
 
   let response = 'Nothing yet.';  // for debugging
  
@@ -79,7 +80,6 @@
         break;
     }
   }
-
 </script>
 
 <Dialog
@@ -107,20 +107,21 @@
                       </div>
                   {/if}
                   <p>Image Coming Soon</p>
-              </div>
-          {/if}
-          <div class="green-quantity-box">
-              <div style="display: flex; align-items: center;">   <!-- styles items in the quantity box in columns instead of rows -->
-                  <IconButton ripple={false} class="material-icons md-light remove-button" on:click={handleClickMinus}
-                  >remove</IconButton>
-                  <!-- <div class="display-quantity"> -->
-                      <!-- <span>{quantity}</span> -->
-                  <!-- </div> -->
-                  <Textfield variant="outlined" bind:value={quantity} />
-                  <IconButton ripple={false} class="material-icons md-light add-button" on:click={handleClickAdd}
-                  >add</IconButton>
-              </div>
-          </div>
+            </div>
+        {/if}
+        <!-- display quantity to user and allow them to edit it -->
+        <div class="green-quantity-box">
+            <div style="display: flex; align-items: center;">   <!-- styles items in the quantity box in columns instead of rows -->
+                <IconButton ripple={false} class="material-icons md-light remove-button" on:click={handleClickMinus}
+                >remove</IconButton>
+                <!-- <div class="display-quantity"> -->
+                    <!-- <span>{quantity}</span> -->
+                <!-- </div> -->
+                <Textfield variant="outlined" bind:value={quantity} />
+                <IconButton ripple={false} class="material-icons md-light add-button" on:click={handleClickAdd}
+                >add</IconButton>
+            </div>
+        </div>
       </Content>
       <div class="right">
           <!-- display size(s) to user if applicable -->
