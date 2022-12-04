@@ -26,7 +26,7 @@
     <p>Vegetables</p>
     <input type="button" name = "Vegetables">
 </div>
-
+ 
 <style>
     p {
         text-align: center;
