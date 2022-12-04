@@ -10,9 +10,6 @@
 
   // importing from stores.js
   import { showCheckoutHistory } from '../stores.js';
-
-  //var height = document.getElementById('footer').offsetHeight; -- put this in console to find height of footer
-  // ^^ 238px = height of footer
 </script>
 
 <!-- sample code

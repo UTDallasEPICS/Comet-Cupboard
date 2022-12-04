@@ -4,7 +4,13 @@
   export let open = false;  // bool for if ItemPopUp should be open/displayed to user
 
   // import from stores.js
-  import { inventory, itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates, itemClickedCat } from '../stores.js';
+  import { inventory, 
+           itemClickedName, 
+           itemClickedImageSrc, 
+           itemClickedDeal, 
+           itemClickedSizes, 
+           itemClickedExpDates, 
+           itemClickedCat } from '../stores.js';
 
   // imports from SMUI
   import Select, { Option } from '@smui/select';
@@ -41,9 +47,9 @@
 		itemClickedExpDates.update(expDates => expDates = obj.expiration_dates.slice(0));
 		itemClickedCat.set(obj.category);
 
-		console.log("after handleitem", $itemClickedImageSrc);
+		// console.log("after handleitem", $itemClickedImageSrc);
 		open = true; // sets open to true to open the pop up once it knows which item to open
-		console.log("after open", $itemClickedImageSrc);
+		// console.log("after open", $itemClickedImageSrc);
   }
 </script>
 

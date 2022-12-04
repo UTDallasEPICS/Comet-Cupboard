@@ -92,7 +92,7 @@
   <div class="container">
     <Content id="event-content">
         {#if $itemClickedImageSrc != ""}    <!-- if item does have an image, then apply class 'item-image' to show it -->
-            <div class="item-image" style="--image: url({$itemClickedImageSrc});">
+            <div class="item-image" style="--image: url({$itemClickedImageSrc});">   <!-- passes image url of item clicked as a variable -->
                 {#if $itemClickedDeal != ""} <!-- if item has a deal, then show its deal label -->
                     <div class="deal-label">
                         <p>{$itemClickedDeal}</p>
@@ -114,9 +114,6 @@
             <div style="display: flex; align-items: center;">   <!-- styles items in the quantity box in columns instead of rows -->
                 <IconButton ripple={false} class="material-icons md-light remove-button" on:click={handleClickMinus}
                 >remove</IconButton>
-                <!-- <div class="display-quantity"> -->
-                    <!-- <span>{quantity}</span> -->
-                <!-- </div> -->
                 <Textfield variant="outlined" bind:value={quantity} />
                 <IconButton ripple={false} class="material-icons md-light add-button" on:click={handleClickAdd}
                 >add</IconButton>
@@ -147,14 +144,6 @@
               </Group>
           {/if}
           <!-- display expiration date(s) to user -->
-          <!-- <span class="heading-text exp-date-heading">Expiration Date</span>
-          {#if $itemClickedExpDates.length == 1}      <!- - if item has only 1 exp date, then display only that - ->
-              <span class="exp-date">{$itemClickedExpDates[0]}</span>
-          {:else if $itemClickedExpDates.length != 0 && item_size_index == -1} <!- - else if item has multiple exp dates and the size hasn't been selected - ->
-              <span class="exp-date">Please select a size.</span>
-          {:else if $itemClickedExpDates.length != 0 && item_size_index != -1} <!- - else if item has multiple exp dates and size has been selected, then display the correct one depending on which size the user has selected - ->
-                  <span class="exp-date">{$itemClickedExpDates[item_size_index]}</span>
-          {/if} -->
           {#if item_size_index != -1} <!-- if user has selected a size, then display expiration date(s) -->
               <span class="heading-text exp-date-heading">Expiration Date</span>
               {#if $itemClickedExpDates.length == 1}      <!-- if item has only 1 exp date, then display only that -->
@@ -166,17 +155,6 @@
           <Actions>
               <!-- display Add to cart button -->
               {#if item_size_index != -1}  <!-- if user has selected a size, then display button -->
-                  <!-- {#if $itemClickedSizes.length == 1} <!- - if item has only 1 size, then don't disable the Add To Cart button - ->
-                      <Button on:click={handleClickAddToCart} variant="raised" action="add">
-                          <Icon class="material-icons">add</Icon>
-                          <Label>Add to cart</Label>
-                      </Button>
-                  {:else} <!- - button is disabled until size is selected - ->
-                      <Button on:click={handleClickAddToCart} variant="raised" disabled={!isSizeSelected} action="add">
-                          <Icon class="material-icons" color=#154734>add</Icon>
-                          <Label>Add to cart</Label>
-                      </Button>
-                  {/if} -->
                   <Button color="primary" class="add-to-cart-button" on:click={handleClickAddToCart} variant="raised" action="add">
                       <Icon class="material-icons">add</Icon>
                       <Label>Add to cart</Label>
@@ -192,10 +170,6 @@
 </Dialog>
 
 <style>
-  /* :global(.mdc-dialog) {
-      display: flex !important;
-  } */
-
   /* styles the whole Dialog */
   :global(.mdc-dialog__surface) {
       padding: 40px;
@@ -209,8 +183,6 @@
 
       justify-content: center;
       align-content: center;
-      /* display: inline-block; have both divs be side by side */
-      /* justify-content: space-between; */
   }
 
   /* styles Action of Dialog (just Add to cart button) */
@@ -239,46 +211,6 @@
   * :global(.add-to-cart-button) {
       background-color: #154726;
   }
-
-  /* :global(.mdc-dialog--stacked .mdc-dialog__actions) {
-      flex-direction: column !important;
-      align-items: center !important;
-      
-  } */
-
-  /* :global(.mdc-button) {
-      line-height: 0 !important;
-      vertical-align: middle !important;
-  } */
-
-  /* :global(.smui-button__group) {
-      vertical-align: top !important;
-      line-height: 0 !important;
-  } */
-
-  /* :global(.mdc-touch-target-wrapper) {
-      display: block !important;
-      line-height: 0 !important;
-  } */
-
-  /* :global(.mdc-button .mdc-button__icon) {
-      vertical-align: middle !important;
-      display: block !important;
-  } */
-
-  /* .size-buttons {
-      flex-direction: column;
-      display: inline-block;
-      vertical-align: middle;
-  } */
-
-  /* :global(.mdc-button--outlined.mdc-ripple-upgraded--background-focused .mdc-button__ripple::before, .mdc-button--outlined:not(.mdc-ripple-upgraded):focus .mdc-button__ripple::before) {
-      opacity: 0.70 !important;
-  }
-
-  * :global(.selected-size) {
-      color: white;
-} */
 
   .white-box {
   width: 200px;
@@ -354,41 +286,16 @@
   border-radius: 10px;
   box-shadow: 0 4px 4px rgb(0 0 0 / 0.2);
 
-  /* anchors this quantity bar to the bottom of image card */
-  /* position: absolute;
-  bottom: 0; */
-
   /* positions iteself around halfway below white box */
   transform: translateY(-30%);
 }
-
-  /* .display-quantity {
-    makes itself grow from the center outwards until - and + are at the start and end respectively
-    display: flex;
-    flex-grow: 100;
-
-    height: 30px;
-    background-color: #0F3225;
-    border-radius: 10px;
-
-    justify-content: center;
-    align-items: center;
-
-    padding-bottom: 0;
-  } */
-
-  /* .display-quantity span {
-    line-height: normal;  fixes spacing of text 
-    color: white;
-
-    padding-bottom: 0;
-  } */
 
   /* set text field outline to not appear */
   :global(.mdc-text-field--outlined .mdc-notched-outline) {
     opacity: 0;
   }
 
+  /* styles text field that displays item quantity to user */
   :global(.mdc-text-field) {
     height: 30px !important;
     background-color: #0F3225 !important;
