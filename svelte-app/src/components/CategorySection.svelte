@@ -3,6 +3,9 @@
   // sends this as a prop to ItemPopup
   export let open = false;  // bool for if ItemPopUp should be open/displayed to user
 
+  // receives this as a prop from PantryStaples - for next semester to implement
+  export let category;      // category of items to display to user
+
   // import from stores.js
   import { pantry_staples_inventory, 
            itemClickedName, 

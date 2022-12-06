@@ -147,4 +147,4 @@ export const itemClickedSizes = writable([]);
 export const itemClickedExpDates = writable(["n/a"]);
 export const itemClickedCat = writable("");
 
-export const showCheckoutHistory = writable(false);  /* for back button in CategorySection.svelte */
+export const showCheckoutHistory = writable(true);  /* for back button in CategorySection.svelte */

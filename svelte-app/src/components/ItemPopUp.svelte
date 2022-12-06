@@ -6,7 +6,7 @@
   //export let item;
 
   // imports from SMUI
-  import Dialog, { Title, Content, Actions, InitialFocus } from '@smui/dialog';
+  import Dialog, { Content, Actions } from '@smui/dialog';
   import Button, { Group, Label, Icon } from '@smui/button';
   import IconButton from '@smui/icon-button';
   import Textfield from '@smui/textfield';

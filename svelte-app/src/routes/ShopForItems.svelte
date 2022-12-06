@@ -5,7 +5,7 @@
   import HeaderImage from '../components/HeaderImage.svelte';
   import Footer from '../components/Footer.svelte';
   import CheckoutHistory from '../components/CheckoutHistory.svelte';
-  import CategorySection from '../components/CategorySection.svelte';
+  // import CategorySection from '../components/CategorySection.svelte';
   import CategoryTabs from '../components/CategoryTabs.svelte';
 
   // importing from stores.js
@@ -52,9 +52,9 @@
           <CheckoutHistory />
         </div>
       {:else}
-        <div class="display-section">
-          <CategorySection />
-        </div>
+        <!-- <div class="display-section">
+          <CategorySection category={"Pantry Staples"} />
+        </div> -->
        {/if}
     </div>
   </div>
