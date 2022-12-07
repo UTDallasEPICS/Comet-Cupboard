@@ -82,11 +82,6 @@ router.get("/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: sch
 });
 */
 
-router.get("/employee", validateSchema(schema.CreateWorkerLogSchema), async(req: schema.ICreateWorkerLogSchema, res, next) => {
-
-
-
-}) 
 
 
 
