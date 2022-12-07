@@ -138,8 +138,6 @@
                         <p id="output_text">Vegetables</p>
                         </head>
 
-
-
 <div>  
     <p><a href='./routes/PantryStaples.svelte' rel="noopener noreferrer">Pantry Staples</a></p>
     <input type="button" name = "Pantry Staples">
