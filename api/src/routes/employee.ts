@@ -46,15 +46,27 @@ router.get("/", async (req, res, next) => {
           if (!req.params.id) {
             return next({ message: "Id is required", status: status.BAD_REQUEST });
           }
-          const existingUser = await Employee.findOne({ _id: req.params.id });
-          if (!existingUser) {
-            return next({
-              message: "Account not found",
-              status: status.BAD_REQUEST
-            });
-          }
+          const employeeInformation = await Employee.aggregate([
+            {
+              '$lookup': {
+                'from': 'workerlogs', 
+                'localField': '_id', 
+                'foreignField': 'employeeID', 
+                'as': 'employeeData'
+              }
+            }, {
+              '$project': {
+                'netID': '$netID', 
+                'totalHours': {
+                  '$sum': '$employeeData.timeWorked'
+                }
+              }
+            }
+          ])
+        
+          
       
-          res.send({ account: existingUser });
+          res.send({ employeeData: employeeInformation });
         } catch (e) {
           next(e);
         }

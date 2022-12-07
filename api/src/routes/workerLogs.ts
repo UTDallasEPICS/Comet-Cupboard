@@ -12,10 +12,10 @@ router.post("/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: sc
     const workerLogs = new WorkerLogs({
       employeeID: req.params.id,
       timeWorked: req.body.timeWorked,
-      date: req.body.date,
+     
     });
     await workerLogs.save();
-    res.send({message: "ha swag"});
+    res.send({message: "Successfully created worker log"});
    }
    catch(e)
    {
@@ -28,7 +28,13 @@ router.post("/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: sc
 router.get("/", async (req, res, next) => {
     try {
         const WorkerLog = await WorkerLogs.find();
-        res.send({ accounts: WorkerLog });
+        if(!WorkerLog) {
+          return next({
+            message: "Could not find worker logs",
+            status: status.BAD_REQUEST
+          });
+        }
+        res.send({ workerLogs: WorkerLog });
       } catch (e) {
         next(e);
       }
@@ -42,12 +48,12 @@ router.get("/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: sch
     const existingLog = await WorkerLogs.findOne({ employeeID: req.params.id });
     if (!existingLog) {
       return next({
-        message: "Log not found",
+        message: "Log(s) not found",
         status: status.BAD_REQUEST
       });
     } 
 
-    res.send({ account: existingLog });
+    res.send({ workerLog: existingLog });
   } catch (e) {
     next(e);
   }
@@ -56,7 +62,7 @@ router.get("/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: sch
 
 
 
-router.get("/date", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
+/*router.get("/date", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
   try {
     if (!req.body.date) {
       return next({ message: "date  is required", status: status.BAD_REQUEST });
@@ -74,12 +80,8 @@ router.get("/date", validateSchema(schema.CreateWorkerLogSchema), async (req: sc
     next(e);
   }
 });
+*/
 
-router.get("/employee", validateSchema(schema.CreateWorkerLogSchema), async(req: schema.ICreateWorkerLogSchema, res, next) => {
-
-
-
-}) 
 
 
 

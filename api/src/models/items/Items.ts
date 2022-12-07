@@ -3,7 +3,8 @@ import { Schema, Document, model } from "mongoose";
 export interface IItems {
    name: string,
    location: string,
-   quantity: number    
+   quantity: number,
+   size: string   
   }
   export interface IItemsDocument extends IItems, Document {
     createdAt: Date;
@@ -15,6 +16,7 @@ export interface IItems {
       name: { type: String, required: true },
       location: {type: String, required: true},
       quantity: {type: Number, required: true},
+      size: { type: String, required: true}
     },
     { timestamps: { createdAt: true } }
   );

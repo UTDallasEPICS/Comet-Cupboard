@@ -88,7 +88,7 @@ router.get("/demographics/:id", validateSchema(MongoIdSchema), async (req: IMong
       });
     }
 
-    res.send({ account: existingForm });
+    res.send({ demographic: existingForm });
   } catch (e) {
     next(e);
   }
@@ -152,7 +152,7 @@ router.put("/demographics", validateSchema(demographicsSchema.CreateDemographics
        {
         new: true
       });
-    res.send("Successfully updated form!");
+    res.send({ message: "Successfully updated form!" });
   } catch(e) {
     next(e);
   }
