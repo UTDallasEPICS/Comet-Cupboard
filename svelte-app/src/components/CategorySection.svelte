@@ -13,8 +13,8 @@
            itemClickedDeal, 
            itemClickedSizes, 
            itemClickedExpDates, 
-           itemClickedCat, 
-           showCheckoutHistory } from '../stores.js';
+           itemClickedCat
+          } from '../stores.js';
 
   // imports from SMUI
   import Select, { Option } from '@smui/select';
@@ -58,17 +58,19 @@
   }
 
   function handleBackButtonClick() {
-    showCheckoutHistory.set(true);  // set to true so CheckoutHistory can be displayed via if-else statement in ShopForItems.svelte
+    // showCheckoutHistory.set(true);  // set to true so CheckoutHistory can be displayed via if-else statement in ShopForItems.svelte
   }
 </script>
 
 <div class="container">
   <div class="side-by-side">
     <div class="back-button-container">
-      <Button class="back-button" variant="raised" on:click={handleBackButtonClick}>
-        <ButtonIcon class="material-icons">arrow_back_ios</ButtonIcon>
-        <Label>Checkout History</Label>
-      </Button>
+      <a href="#/"> <!-- back button (takes user back to their Checkout History) -->
+        <Button class="back-button" variant="raised" on:click={handleBackButtonClick}>
+          <ButtonIcon class="material-icons">arrow_back_ios</ButtonIcon>
+          <Label>Checkout History</Label>
+        </Button>
+      </a>
     </div>
     <h1>Breakfast Grains</h1>
   </div>
@@ -176,7 +178,7 @@
   }
   
   .back-button-container {
-    /* positions Checkout History button to the right of h1 at all times */
+    /* positions Checkout History button to the left of h1 at all times */
     position: absolute;
     left: 250px;
 

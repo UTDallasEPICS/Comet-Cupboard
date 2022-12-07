@@ -5,13 +5,9 @@
     import TopBar from '../components/TopBar.svelte';
     import HeaderImage from '../components/HeaderImage.svelte';
     import Footer from '../components/Footer.svelte';
-    import CheckoutHistory from '../components/CheckoutHistory.svelte';
     import CategorySection from '../components/CategorySection.svelte';
     import CategoryTabs from '../components/CategoryTabs.svelte';
-  
-    // importing from stores.js
-    import { showCheckoutHistory } from '../stores.js';
-  </script>
+    </script>
 
 <div class="flex-wrapper">
     <div class="header">
@@ -23,15 +19,9 @@
         <div id="category-tab">
           <CategoryTabs />
         </div>
-        {#if $showCheckoutHistory == true}
-          <div class="display-section">
-            <CheckoutHistory />
-          </div>
-        {:else}
-          <div class="display-section">
-            <CategorySection category={"Pantry Staples"} />
-          </div>
-         {/if}
+        <div class="display-section">
+          <CategorySection category={"Pantry Staples"} />
+        </div>
       </div>
     </div>
     <div class="footer">
