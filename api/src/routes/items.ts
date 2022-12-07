@@ -3,6 +3,7 @@ import status from "http-status";
 import { validate as validateSchema, MongoIdSchema, IMongoIdSchema } from "../schema";
 import * as schema from "../schema/items";
 import { Items } from "../models";
+//import * as ItemLogSchema from "../schema/itemLog";
 
 export const router = express.Router();
 
@@ -63,6 +64,26 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, res, next) => {
+    try {
+      if (!req.params.id) {
+        return next({ message: "Id is required", status: status.BAD_REQUEST });
+      }
+      const existingItem = await Items.findOne({ _id: req.params.id });
+      if (!existingItem) {
+        return next({
+          message: "Item not found",
+          status: status.BAD_REQUEST
+        });
+      }
+  
+      res.send({ account: existingItem });
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  //ItemLog Routes --------------------------------------------------------------------------------------
+  router.get("/logs", async (req, res, next) => {
     try {
       if (!req.params.id) {
         return next({ message: "Id is required", status: status.BAD_REQUEST });

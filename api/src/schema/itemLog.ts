@@ -1,5 +1,6 @@
 import Joi from "joi";
 import express from "express";
+import { MongoIdSchema } from ".";
 
 export interface ICreateItemLogSchema extends express.Request {
   body: {
@@ -9,6 +10,9 @@ export interface ICreateItemLogSchema extends express.Request {
     donor: string, //donors
     actionType: string, //Tracking the changes
   };
+  params: {
+    id: string,
+  }
 }
 export const CreateItemLogSchema = Joi.object({
   body: Joi.object({
@@ -17,5 +21,7 @@ export const CreateItemLogSchema = Joi.object({
     quantity: Joi.number().required(),
     donor: Joi.string().required(),
     actionType: Joi.string().required()
-  })
+  }),
+  params: MongoIdSchema
+  
 });
