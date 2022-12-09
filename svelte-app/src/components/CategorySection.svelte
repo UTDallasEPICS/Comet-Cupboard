@@ -13,8 +13,7 @@
            itemClickedDeal, 
            itemClickedSizes, 
            itemClickedExpDates, 
-           itemClickedCat
-          } from '../stores.js';
+           itemClickedCat} from '../stores.js';
 
   // imports from SMUI
   import Select, { Option } from '@smui/select';
@@ -56,23 +55,19 @@
     open = true; // sets open to true to open the pop up once it knows which item to open
     // console.log("after open", $itemClickedImageSrc);
   }
-
-  function handleBackButtonClick() {
-    // showCheckoutHistory.set(true);  // set to true so CheckoutHistory can be displayed via if-else statement in ShopForItems.svelte
-  }
 </script>
 
 <div class="container">
   <div class="side-by-side">
     <div class="back-button-container">
       <a href="#/"> <!-- back button (takes user back to their Checkout History) -->
-        <Button class="back-button" variant="raised" on:click={handleBackButtonClick}>
+        <Button class="back-button" variant="raised">
           <ButtonIcon class="material-icons">arrow_back_ios</ButtonIcon>
           <Label>Checkout History</Label>
         </Button>
       </a>
     </div>
-    <h1>Breakfast Grains</h1>
+    <h1>{category}</h1>
   </div>
   <div class="popular-items-container">
     <h2>Popular Items</h2>
@@ -190,6 +185,7 @@
   * :global(.mdc-button--raised:not(:disabled)) {
       background-color: #D9D9D9 !important;
       color: #154734 !important;
+      border-radius: 10px;
   }
 
   .item-grid {

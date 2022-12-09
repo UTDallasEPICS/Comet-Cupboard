@@ -5,7 +5,6 @@
   import HeaderImage from '../components/HeaderImage.svelte';
   import Footer from '../components/Footer.svelte';
   import CheckoutHistory from '../components/CheckoutHistory.svelte';
-  // import CategorySection from '../components/CategorySection.svelte';
   import CategoryTabs from '../components/CategoryTabs.svelte';
 </script>
 
