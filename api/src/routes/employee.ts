@@ -5,6 +5,8 @@ import { validate as validateSchema, MongoIdSchema, IMongoIdSchema } from "../sc
 import * as schema from "../schema/employee";
 import { Employee } from "../models";
 
+
+
 export const router = express.Router();
 
 //NetID
@@ -30,22 +32,12 @@ router.post("/", validateSchema(schema.CreateEmployeeSchema), async (req: schema
     }
   });
   
-    // get all accounts
-router.get("/", async (req, res, next) => {
-    try {
-      const employees = await Employee.find();
-      res.send({ accounts: employees });
-    } catch (e) {
-      next(e);
-    }
-  });
     
-    // get one account
-    router.get("/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, res, next) => {
+    
+    // get all accounts
+    router.get("/", async (req, res, next) => {
         try {
-          if (!req.params.id) {
-            return next({ message: "Id is required", status: status.BAD_REQUEST });
-          }
+          
           const employeeInformation = await Employee.aggregate([
             {
               '$lookup': {
@@ -70,6 +62,47 @@ router.get("/", async (req, res, next) => {
         } catch (e) {
           next(e);
         }
+    });
+
+    //get one account//
+    //!!! This route currently does not work, to fix later (does not return any data, though it doesn't break)//
+    router.get("/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, res, next) => {
+      
+      try {
+          
+          const employeeInformation = await Employee.aggregate([
+            {
+              '$match': {
+                '_id': req.params.id,
+              }
+              
+            }])
+            console.log(employeeInformation);
+            console.log(req.params.id);
+            /*
+           {
+              '$lookup': {
+                'from': 'workerlogs', 
+                'localField': '_id', 
+                'foreignField': 'employeeID', 
+                'as': 'employeeData'
+              }
+            }])
+           
+            /*  {
+              '$project': {
+                'netID': '$netID', 
+                'totalHours': {
+                  '$sum': '$employeeData.timeWorked'
+                }
+              }
+            }
+          ])
+*/
+          res.send({ employeeData: employeeInformation });
+      } catch (e) {
+        next(e);
+      }
     });
 
     // delete new account
