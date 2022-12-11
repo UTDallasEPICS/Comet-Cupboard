@@ -5,7 +5,7 @@
 </head>
 
 <body>
-    <button id="toBlue">Blue</button>
+    <button id="toBlue">Pantry Staples</button>
     
     <script lang="ts">
 
