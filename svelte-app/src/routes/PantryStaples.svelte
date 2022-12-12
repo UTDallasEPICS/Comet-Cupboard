@@ -58,12 +58,22 @@
   
       /* positions category tab and checkout history side-by-side */
       display: flex;
-      justify-content: space-between;
-    }
+      flex-direction: row;
+    justify-content: space-between;
+    /* flex: 1; */
+
+    /* flex: 1 1 auto; */
+    height:100%;    }
   
     #category-tab {
       width: 250px;    /* this is needed in order to get flex-grow to work */
       background: #154734;
+
+      align-self: flex-start;
+
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1000;
     }
   
     .display-section {

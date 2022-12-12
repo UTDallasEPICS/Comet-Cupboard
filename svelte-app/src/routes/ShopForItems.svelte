@@ -43,9 +43,9 @@
       <div id="category-tab">
         <CategoryTabs />
       </div>
-        <div class="display-section">
-          <CheckoutHistory />
-        </div>
+      <div class="display-section">
+        <CheckoutHistory />
+      </div>
     </div>
   </div>
   <div class="footer">
@@ -99,20 +99,31 @@
   }
 
   .footer {
-    margin-top: auto; /* push footer to the bottom when content overflows the page and when content is short */
-  }
+    margin-top: auto; /* push footer to the bottom when content overflows the page and when content is short */  }
 
   .container { /* contains category tab and checkout history */
     text-align: center;
 
     /* positions category tab and checkout history side-by-side */
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
+    /* flex: 1; */
+
+    /* flex: 1 1 auto; */
+    height:100%;
   }
 
   #category-tab {
     width: 250px;    /* this is needed in order to get flex-grow to work */
     background: #154734;
+    align-self: flex-start;
+
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1000;
+    /* flex: 1 1 auto; */
+    height: 100%;
   }
 
   .display-section {
