@@ -51,7 +51,7 @@ export const inventory = writable([         // items in demo inventory
       "image_src": "./public/demo_item_images/razor.svg",
       "deal": "",
       "sizes": ["One Size"],
-      "expiration_dates": ["n/a"],
+      "expiration_dates": ["N/A"],
       "category": ""
   },
   {
@@ -59,7 +59,7 @@ export const inventory = writable([         // items in demo inventory
       "image_src": "./public/demo_item_images/toilet-paper.svg",
       "deal": "",
       "sizes": ["One Size"],
-      "expiration_dates": ["n/a"],
+      "expiration_dates": ["N/A"],
       "category": ""
   }
 ]);
@@ -86,7 +86,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
       "image_src": "./public/demo_pantry_staples_item_images/flour.svg",
       "deal": "",
       "sizes": ["One Size"],
-      "expiration_dates": ["n/a"],
+      "expiration_dates": ["N/A"],
       "category": "Pantry Staples"
   },
   {
@@ -94,7 +94,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
       "image_src": "./public/demo_pantry_staples_item_images/ground-coffee.svg",
       "deal": "",
       "sizes": ["One Size"],
-      "expiration_dates": ["n/a"],
+      "expiration_dates": ["N/A"],
       "category": "Pantry Staples"
   },
   {
@@ -102,7 +102,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
       "image_src": "./public/demo_pantry_staples_item_images/ketchup.svg",
       "deal": "",
       "sizes": ["One Size"],
-      "expiration_dates": ["n/a"],
+      "expiration_dates": ["N/A"],
       "category": "Pantry Staples"
   },
   {
@@ -134,7 +134,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
       "image_src": "./public/demo_pantry_staples_item_images/tea-bags.svg",
       "deal": "Deal: 2 for 1",
       "sizes": ["One Size"],
-      "expiration_dates": ["n/a"],
+      "expiration_dates": ["N/A"],
       "category": "Pantry Staples"
   }
 ]);

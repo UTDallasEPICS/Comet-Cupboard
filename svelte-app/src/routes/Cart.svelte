@@ -7,11 +7,16 @@
   //components that are imported from src/components
     import TopBar from '../components/TopBar.svelte'
     import Footer from '../components/Footer.svelte'
+    import ItemCardCart from '../components/ItemCardCart.svelte'
 
   //imports elements needed for buttons from SMUI
     import Wrapper from '@smui/touch-target';
     import Button, { Label, Icon } from '@smui/button';
     let clicked = 0;
+
+  //stuff i copied from checkout history
+  import { inventory } from '../stores.js';
+  
 </script>
 
 <!-- HTML HERE-->
@@ -34,11 +39,12 @@
         </Wrapper>
       </div>
       <!-- title of page-->
-      <!-- <div class=""> -->
       <h1>Cart</h1>
-      <!-- </div> -->
     </div>
-  </div>
+      {#each $inventory as _, index}
+        <ItemCardCart bind:item={$inventory[index]}/>
+      {/each}
+    </div>
   <!-- footer -->
   <div class="footer">
     <Footer />
@@ -73,11 +79,7 @@
     align-items: center;
   }
 
-  /*styles footer*/
-  .footer {
-    margin-top: auto; 
-  }
-
+  /*makes everything within it lay side-by-side w/o interference w/ each other*/
   .side-by-side {
     text-align: center;
     /* align-items: center; */
@@ -85,12 +87,6 @@
     /* positions both elements side-by-side */
     display: flex;
     justify-content: space-between;
-  }
-
-  /*styles Cart title*/
-  h1{
-    text-align: center;
-    margin-top: 25px;
   }
 
   /*styles Shop for Items button*/
@@ -114,4 +110,14 @@
       border-radius: 35px;
   }
 
+ /*styles Cart title*/
+ h1 {
+    text-align: center;
+    margin-top: 25px;
+  }
+
+ /*styles footer*/
+ .footer {
+    margin-top: auto; 
+  }
 </style>
