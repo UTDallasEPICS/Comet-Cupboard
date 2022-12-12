@@ -18,7 +18,7 @@ export interface IItems {
       location: {type: String, required: true},
       quantity: {type: Number, required: true},
       size: { type: String, required: true},
-      Category: { type: Schema.Types.ObjectId, ref: "Category", required: true}
+      categoryID: { type: Schema.Types.ObjectId, ref: "Category", required: true}
     },
     { timestamps: { createdAt: true } }
   );
