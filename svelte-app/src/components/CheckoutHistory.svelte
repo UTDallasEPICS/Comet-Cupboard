@@ -72,29 +72,12 @@
     <!-- <pre class="status">Selected: {valueLeadingIcon}</pre> -->
   </div>
   <div class="item-grid">
-    <Wrapper>
-      <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
-      <ItemCard on:click={() => (handleItemCardClick($inventory[0]))} bind:item={$inventory[0]} />
-    </Wrapper>
-    <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($inventory[1]))} bind:item={$inventory[1]} />
-    </Wrapper>
-    <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($inventory[2]))} bind:item={$inventory[2]} />
-    </Wrapper>
-    <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($inventory[3]))} bind:item={$inventory[3]} />
-    </Wrapper>
-    <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($inventory[4]))} bind:item={$inventory[4]} />
-    </Wrapper>
-    <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($inventory[5]))} bind:item={$inventory[5]} />
-    </Wrapper>
-    <Wrapper>
-      <!-- <ItemCard on:click={() => {open = true; Object.assign(item_clicked, $inventory[6]); console.log("test:" + item_clicked.name); }} bind:item={$inventory[6]} /> -->
-      <ItemCard on:click={() => (handleItemCardClick($inventory[6]))} bind:item={$inventory[6]} />
-    </Wrapper>
+    {#each $inventory as _, index}
+      <Wrapper>
+        <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
+        <ItemCard on:click={() => (handleItemCardClick($inventory[index]))} bind:item={$inventory[index]} />
+      </Wrapper>
+    {/each}
   </div>
 </div>
 

@@ -103,35 +103,12 @@
     <!-- <pre class="status">Selected: {valueLeadingIcon}</pre> -->
   </div>
   <div class="item-grid"> <!-- displays all items in category -->
-    <Wrapper>
-      <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
-      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[0]))} bind:item={$pantry_staples_inventory[0]} />
-    </Wrapper>
-    <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[1]))} bind:item={$pantry_staples_inventory[1]} />
-    </Wrapper>
-    <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[2]))} bind:item={$pantry_staples_inventory[2]} />
-    </Wrapper>
-    <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[3]))} bind:item={$pantry_staples_inventory[3]} />
-    </Wrapper>
-    <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[4]))} bind:item={$pantry_staples_inventory[4]} />
-    </Wrapper>
-    <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[5]))} bind:item={$pantry_staples_inventory[5]} />
-    </Wrapper>
-    <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[6]))} bind:item={$pantry_staples_inventory[6]} />
-    </Wrapper>
-    <Wrapper>
-      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[7]))} bind:item={$pantry_staples_inventory[7]} />
-    </Wrapper>
-    <Wrapper>
-      <!-- <ItemCard on:click={() => {open = true; Object.assign(item_clicked, $inventory[6]); console.log("test:" + item_clicked.name); }} bind:item={$inventory[6]} /> -->
-      <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[8]))} bind:item={$pantry_staples_inventory[8]} />
-    </Wrapper>
+    {#each $pantry_staples_inventory as _, index}
+      <Wrapper>
+        <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
+        <ItemCard on:click={() => (handleItemCardClick($pantry_staples_inventory[index]))} bind:item={$pantry_staples_inventory[index]} />
+      </Wrapper>
+    {/each}
   </div>
 </div>
 
