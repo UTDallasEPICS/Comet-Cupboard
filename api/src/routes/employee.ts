@@ -106,7 +106,7 @@ router.post("/", validateSchema(schema.CreateEmployeeSchema), async (req: schema
     });
 
     // delete new account
-    router.delete("/:id", validateSchema(schema.CreateEmployeeSchema), async (req, res, next) => {
+    router.delete("/:id", validateSchema(MongoIdSchema), async (req, res, next) => {
       try {
       if (!req.params.id) {
         return next({ message: "Id is required", status: status.BAD_REQUEST });
@@ -119,10 +119,3 @@ router.post("/", validateSchema(schema.CreateEmployeeSchema), async (req: schema
     }
   });
 
-// router.get("/", async (req, res, next) => {
-//     res.status(501).send({message: "NOT_IMPLEMENTED"});
-// });
-
-// router.get("/:id", validateSchema(MongoIdSchema), async(req: IMongoIdSchema, res, next) => {
-//     res.status(501).send({message: "NOT_IMPLEMENTED"});
-// });

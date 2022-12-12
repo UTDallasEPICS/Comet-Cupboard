@@ -52,6 +52,7 @@ router.get("/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: sch
         status: status.BAD_REQUEST
       });
     } 
+    
 
     res.send({ workerLog: existingLog });
   } catch (e) {
@@ -62,25 +63,6 @@ router.get("/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: sch
 
 
 
-/*router.get("/date", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
-  try {
-    if (!req.body.date) {
-      return next({ message: "date  is required", status: status.BAD_REQUEST });
-    }
-    const existingLog = await WorkerLogs.find({ date: req.body.date });
-    if (!existingLog) {
-      return next({
-        message: "Log not found",
-        status: status.BAD_REQUEST
-      });
-    }
-
-    res.send({ account: existingLog });
-  } catch (e) {
-    next(e);
-  }
-});
-*/
 
 
 
