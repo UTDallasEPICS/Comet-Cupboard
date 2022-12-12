@@ -6,7 +6,8 @@ export interface ICreateItemSchema extends express.Request {
     name: string,
     location: string,
     quantity: number,
-    size: string  
+    size: string,
+    categoryID: string
   };
 }
 export const CreateItemSchema = Joi.object({
@@ -14,6 +15,7 @@ export const CreateItemSchema = Joi.object({
     name: Joi.string().required(),
     location: Joi.string().required(),
     quantity: Joi.number().required(),
-    size: Joi.number().required()
+    size: Joi.string().required(),
+    categoryID: Joi.string().required()
   })
 });

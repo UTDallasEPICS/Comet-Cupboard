@@ -4,7 +4,8 @@ export interface IItems {
    name: string,
    location: string,
    quantity: number,
-   size: string   
+   size: string,
+   categoryID: Schema.Types.ObjectId
   }
   export interface IItemsDocument extends IItems, Document {
     createdAt: Date;
@@ -16,7 +17,8 @@ export interface IItems {
       name: { type: String, required: true },
       location: {type: String, required: true},
       quantity: {type: Number, required: true},
-      size: { type: String, required: true}
+      size: { type: String, required: true},
+      Category: { type: Schema.Types.ObjectId, ref: "Category", required: true}
     },
     { timestamps: { createdAt: true } }
   );
