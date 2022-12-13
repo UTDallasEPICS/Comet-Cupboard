@@ -45,7 +45,7 @@ router.get("/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, re
     if (!req.params.id) {
       return next({ message: "id is required", status: status.BAD_REQUEST });
     }
-    const existingLog = await WorkerLogs.findOne({ employeeID: req.params.id });
+    const existingLog = await WorkerLogs.find({ employeeID: req.params.id });
     if (!existingLog) {
       return next({
         message: "Log(s) not found",
