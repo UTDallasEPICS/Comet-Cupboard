@@ -1,6 +1,6 @@
 import express from "express";
 import status from "http-status";
-import { validate as validateSchema} from "../schema";
+import { MongoIdSchema, validate as validateSchema} from "../schema";
 import * as schema from "../schema/workerLogs";
 import { WorkerLogs } from "../models";
 
@@ -40,7 +40,7 @@ router.get("/", async (req, res, next) => {
       }
 });
 
-router.get("/:id", validateSchema(schema.CreateWorkerLogSchema), async (req: schema.ICreateWorkerLogSchema, res, next) => {
+router.get("/:id", validateSchema(MongoIdSchema), async (req, res, next) => {
   try {
     if (!req.params.id) {
       return next({ message: "id is required", status: status.BAD_REQUEST });
