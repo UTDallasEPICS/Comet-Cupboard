@@ -180,7 +180,7 @@
   .container {
       /* align-items: center;    vertically centers the Content and .right columns */
       display: flex; /* displays Content and .right class as columns */
-
+      flex-direction: row;
       justify-content: center;
       align-content: center;
   }
@@ -204,6 +204,7 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
+      align-self: flex-start;
 
       margin-left: 25px; /* adds space between Content and right column */
   }

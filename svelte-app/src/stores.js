@@ -10,7 +10,7 @@ export const inventory = writable([         // items in demo inventory
       "name": "Canned Tuna",
       "image_src": './public/demo_item_images/canned-tuna.svg',
       "deal": "Deal: 2 for 1",
-      "sizes": ["1 oz", "2 oz", "3 oz"],
+      "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
       "category": ""
   },
@@ -18,7 +18,7 @@ export const inventory = writable([         // items in demo inventory
       "name": "Mac n Cheese",
       "image_src": "./public/demo_item_images/mac-n-cheese.svg",
       "deal": "",
-      "sizes": ["1 oz", "2 oz"],
+      "sizes": ["S", "M"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
       "category": ""
   },
@@ -26,7 +26,7 @@ export const inventory = writable([         // items in demo inventory
       "name": "Mayonnaise",
       "image_src": "./public/demo_item_images/mayonnaise.svg",
       "deal": "",
-      "sizes": ["1 oz", "2 oz", "3 oz"],
+      "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2023", "02/02/2023", "03/03/2023"],
       "category": ""
   },
@@ -34,7 +34,7 @@ export const inventory = writable([         // items in demo inventory
       "name": "Oatmeal",
       "image_src": "./public/demo_item_images/oatmeal.svg",
       "deal": "",
-      "sizes": ["1 oz", "2 oz", "3 oz"],
+      "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
       "category": ""
   },
@@ -69,7 +69,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
       "name": "Cake Mix",
       "image_src": './public/demo_pantry_staples_item_images/cake-mix.svg',
       "deal": "",
-      "sizes": ["1 oz", "2 oz", "3 oz"],
+      "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
       "category": "Pantry Staples"
   },
@@ -77,7 +77,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
       "name": "Cooking Oil",
       "image_src": "./public/demo_pantry_staples_item_images/cooking-oil.svg",
       "deal": "",
-      "sizes": ["1 oz", "2 oz"],
+      "sizes": ["S", "M"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
       "category": "Pantry Staples"
   },
@@ -109,7 +109,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
       "name": "Mayonnaise",
       "image_src": "./public/demo_pantry_staples_item_images/mayonnaise.svg",
       "deal": "",
-      "sizes": ["1 oz", "2 oz", "3 oz"],
+      "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
       "category": "Pantry Staples"
   },
@@ -125,7 +125,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
       "name": "Powder Milk",
       "image_src": "./public/demo_pantry_staples_item_images/powder-milk.svg",
       "deal": "",
-      "sizes": ["1 oz", "2 oz", "3 oz"],
+      "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2023", "02/02/2023", "03/03/2023"],
       "category": "Pantry Staples"
   },

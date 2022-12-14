@@ -175,6 +175,8 @@ export let item;  // item inside the cart
   z-index: 0;
 
   margin: 0;
+
+  /* padding-top: 10px; */
 }
 
 .item-image p {
@@ -247,7 +249,7 @@ export let item;  // item inside the cart
 /*styles remove button*/
 .remove-button {
   position: relative;
-  left: 265px;
+  left: 290px;
   bottom: 83px;
   justify-content: flex-end !important;
 }

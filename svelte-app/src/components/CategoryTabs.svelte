@@ -71,5 +71,7 @@
       text-align: center;
       color: white;
       cursor: pointer;
+
+      padding: 5px;
   }
 </style>
