@@ -1,5 +1,5 @@
 <!--item cards for each item on the Cart page-->
-<!--JAVSCRIPT-->
+
 <script>
 //import from SMUI
 import IconButton from '@smui/icon-button';
@@ -35,11 +35,10 @@ export let item;  // item inside the cart
   }
 </script>
 
-<!--HTML-->
 <div> <!--item card-->
   <div class="item-card-container"> <!--item card background-->
     <div class="side-by-side">
-      <div class="left">
+      <div class="left"> <!--item photo on cards-->
         {#if hasImage == true}<!-- if item does have an image, then apply class 'item-image' to show it -->
         <div class="white-box" class:item-image={hasImage}>
           <div class="item-image" style="--image: url({image_url});"> <!-- passes image_url as a variable -->
@@ -61,7 +60,7 @@ export let item;  // item inside the cart
           </div>
         {/if}
       </div>
-      <div class="right">
+      <div class="right"> <!--text + icons on item card-->
         <div class="side-by-side">
           <div class="item-text">
             <p id="item-detail-title"><strong>Item Name: </strong><br>Size: <br>Expiration Date: </p>
@@ -76,7 +75,6 @@ export let item;  // item inside the cart
   </div>
 </div>    
 
-<!--CSS-->
 <style>
 /*styles item card background*/
 .item-card-container {
@@ -212,17 +210,15 @@ export let item;  // item inside the cart
   margin: 0;
 }
 
-/*styled right side of the content in item cards*/
+/*styled right side of the content in item cards (text, icons)*/
 .right {
   /*paragraph text style*/
   font-size: 15pt;
 
-  /* position: relative; */
   display: flex;
   flex-direction: row;
   margin: 0;
 
-  /* justify-content: last baseline; */
   align-content: flex-end;
   width: 100%;
 }

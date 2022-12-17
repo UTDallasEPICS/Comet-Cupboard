@@ -8,7 +8,7 @@
   import CategoryTabs from '../components/CategoryTabs.svelte';
 </script>
 
-<!-- sample code
+<!-- sample code from Svelte to get started
   <main>
   <div>
     <a href="https://vitejs.dev" target="_blank"> 

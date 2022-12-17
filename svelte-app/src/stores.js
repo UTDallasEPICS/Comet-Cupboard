@@ -8,7 +8,7 @@ export const cartContents = writable([]);   // items in the cart
 export const inventory = writable([         // items in demo inventory
   {
       "name": "Canned Tuna",
-      "image_src": './public/demo_item_images/canned-tuna.svg',
+      "image_src": './demo_item_images/canned-tuna.svg',
       "deal": "Deal: 2 for 1",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
@@ -16,7 +16,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
       "name": "Mac n Cheese",
-      "image_src": "./public/demo_item_images/mac-n-cheese.svg",
+      "image_src": "./demo_item_images/mac-n-cheese.svg",
       "deal": "",
       "sizes": ["S", "M"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
@@ -24,7 +24,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
       "name": "Mayonnaise",
-      "image_src": "./public/demo_item_images/mayonnaise.svg",
+      "image_src": "./demo_item_images/mayonnaise.svg",
       "deal": "",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2023", "02/02/2023", "03/03/2023"],
@@ -32,7 +32,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
       "name": "Oatmeal",
-      "image_src": "./public/demo_item_images/oatmeal.svg",
+      "image_src": "./demo_item_images/oatmeal.svg",
       "deal": "",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
@@ -40,7 +40,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
       "name": "Ramen Pack",
-      "image_src": "./public/demo_item_images/ramen-pack.svg",
+      "image_src": "./demo_item_images/ramen-pack.svg",
       "deal": "Deal: 2 for 1",
       "sizes": ["One Size"],
       "expiration_dates": ["01/01/2024"],
@@ -48,7 +48,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
       "name": "Razor",
-      "image_src": "./public/demo_item_images/razor.svg",
+      "image_src": "./demo_item_images/razor.svg",
       "deal": "",
       "sizes": ["One Size"],
       "expiration_dates": ["N/A"],
@@ -56,7 +56,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
       "name": "Toilet Paper",
-      "image_src": "./public/demo_item_images/toilet-paper.svg",
+      "image_src": "./demo_item_images/toilet-paper.svg",
       "deal": "",
       "sizes": ["One Size"],
       "expiration_dates": ["N/A"],
@@ -67,7 +67,7 @@ export const inventory = writable([         // items in demo inventory
 export const pantry_staples_inventory = writable([         // items in demo Pantry Staples category
   {
       "name": "Cake Mix",
-      "image_src": './public/demo_pantry_staples_item_images/cake-mix.svg',
+      "image_src": './demo_pantry_staples_item_images/cake-mix.svg',
       "deal": "",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
@@ -75,7 +75,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
   },
   {
       "name": "Cooking Oil",
-      "image_src": "./public/demo_pantry_staples_item_images/cooking-oil.svg",
+      "image_src": "./demo_pantry_staples_item_images/cooking-oil.svg",
       "deal": "",
       "sizes": ["S", "M"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
@@ -83,7 +83,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
   },
   {
       "name": "Flour",
-      "image_src": "./public/demo_pantry_staples_item_images/flour.svg",
+      "image_src": "./demo_pantry_staples_item_images/flour.svg",
       "deal": "",
       "sizes": ["One Size"],
       "expiration_dates": ["N/A"],
@@ -91,7 +91,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
   },
   {
       "name": "Ground Coffee",
-      "image_src": "./public/demo_pantry_staples_item_images/ground-coffee.svg",
+      "image_src": "./demo_pantry_staples_item_images/ground-coffee.svg",
       "deal": "",
       "sizes": ["One Size"],
       "expiration_dates": ["N/A"],
@@ -99,7 +99,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
   },
   {
       "name": "Ketchup",
-      "image_src": "./public/demo_pantry_staples_item_images/ketchup.svg",
+      "image_src": "./demo_pantry_staples_item_images/ketchup.svg",
       "deal": "",
       "sizes": ["One Size"],
       "expiration_dates": ["N/A"],
@@ -107,7 +107,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
   },
   {
       "name": "Mayonnaise",
-      "image_src": "./public/demo_pantry_staples_item_images/mayonnaise.svg",
+      "image_src": "./demo_pantry_staples_item_images/mayonnaise.svg",
       "deal": "",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
@@ -115,7 +115,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
   },
   {
       "name": "Mustard",
-      "image_src": "./public/demo_pantry_staples_item_images/mustard.svg",
+      "image_src": "./demo_pantry_staples_item_images/mustard.svg",
       "deal": "Deal: 2 for 1",
       "sizes": ["One Size"],
       "expiration_dates": ["01/01/2024"],
@@ -123,7 +123,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
   },
   {
       "name": "Powder Milk",
-      "image_src": "./public/demo_pantry_staples_item_images/powder-milk.svg",
+      "image_src": "./demo_pantry_staples_item_images/powder-milk.svg",
       "deal": "",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2023", "02/02/2023", "03/03/2023"],
@@ -131,7 +131,7 @@ export const pantry_staples_inventory = writable([         // items in demo Pant
   },
   {
       "name": "Tea Bags",
-      "image_src": "./public/demo_pantry_staples_item_images/tea-bags.svg",
+      "image_src": "./demo_pantry_staples_item_images/tea-bags.svg",
       "deal": "Deal: 2 for 1",
       "sizes": ["One Size"],
       "expiration_dates": ["N/A"],
