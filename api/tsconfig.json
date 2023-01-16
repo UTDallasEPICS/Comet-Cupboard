@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "strictNullChecks": true,
+      "noUnusedLocals": true,
+      "noImplicitReturns": true,
+      "noImplicitAny": true,
+      "incremental": true,
+      "target": "ES2015",
+      "lib": ["ES2015"],
+      "sourceMap": true,
+      "alwaysStrict": true,
+      "moduleResolution": "node",
+      "skipLibCheck": true,
+      "esModuleInterop": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "plugins": [{ "name": "typescript-eslint-language-service" }],
+      "outDir": "./dist"
+    },
+    "types": ["node"],
+    "include": ["src/**/*"]
+  }
