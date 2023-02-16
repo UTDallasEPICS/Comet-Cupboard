@@ -2,7 +2,7 @@ version: '3'
 services:
   ui:
     container_name: example_ui
-    image: node:16
+    image: node:18
     working_dir: /example-ui/
     command: ./start.sh 
     volumes:
@@ -15,7 +15,7 @@ services:
 
   api:
     container_name: example_api
-    image: node:16
+    image: node:18
     working_dir: /example-api/
     command: yarn start
     volumes:
