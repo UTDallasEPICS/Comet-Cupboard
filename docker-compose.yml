@@ -4,7 +4,7 @@ services:
     container_name: example_ui
     image: node:16
     working_dir: /example-ui/
-    command: yarn dev
+    command: ./start.sh 
     volumes:
       - ./ui/:/example-ui/
     networks:
