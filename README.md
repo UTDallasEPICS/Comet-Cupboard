@@ -11,7 +11,7 @@ Recommended: VSCode, Postman, Mongo Compass, Redis Insight
 docker run --rm --mount type=bind,source=$PWD/ui,target=/app node:18 yarn --cwd /app
 docker run --rm --mount type=bind,source=$PWD/api,target=/app node:18 yarn --cwd /app
 ```
-
+If on Windows, use PowerShell
 # To Run
 ```
 docker compose up
