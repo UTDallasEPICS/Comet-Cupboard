@@ -10,7 +10,7 @@ services:
     networks:
       - internal
     ports:
-      - "5000:5000"
+      - "3001:3001"
     restart: unless-stopped
 
   api:
