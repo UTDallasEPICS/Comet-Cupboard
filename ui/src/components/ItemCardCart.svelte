@@ -4,7 +4,6 @@
 //import from SMUI
 import IconButton from '@smui/icon-button';
   let clicked = 0; 
-
 // passed as a prop from Cart
 export let item;  // item inside the cart
 

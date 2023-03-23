@@ -63,7 +63,7 @@
   {#each categories as category, index}
     <!-- svelte-ignore a11y-click-events-have-key-events - next semester -->
       <p id="category-text" on:click={() => handleCategoryClick(categories[index])}>{category.name}</p>
-    <!-- rough color coding list for colored rectangles under category text -->
+    <!-- rough color coding list for colored rectangles under category text, change colors to preferred and ensure color blind can see differences -->
       {#if category.name === "Pantry Staples"}
         <div class="pantry"></div>
       {:else if category.name === "Snacks"}

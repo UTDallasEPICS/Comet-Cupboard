@@ -14,6 +14,7 @@
   <div class="header-right">
 
     <a href="#/cart"> <!-- takes user to cart page -->
+      <span class="cart-items">1</span>
       <img src={CartIcon} class="cart" alt="Cart icon." />
     </a>
     <!-- <div> -->
@@ -62,5 +63,25 @@
   .header-right {
     align-self: flex-end;
     /* flex: 1 1 0%; */
+  }
+
+  /*Not connected to cart page yet, will only show 1*/
+  .cart-items {
+    /* circle shape, size and position */
+    position: absolute;
+    right: 8.7em;
+    top: 1.7em;
+    min-width: 1.6em;
+    height: 1.6em;
+    border-radius: 0.8em;
+    border: 0.05em solid white;
+    background-color: #E87500;
+
+    /* number size and position */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8em;
+    color: white;
   }
   </style>
