@@ -118,7 +118,7 @@
     width: 250px;    /* this is needed in order to get flex-grow to work */
     background: #154734;
     align-self: flex-start;
-
+    
     display: flex;
     flex-direction: column;
     flex-grow: 1000;

@@ -63,6 +63,7 @@
   {#each categories as category, index}
     <!-- svelte-ignore a11y-click-events-have-key-events - next semester -->
       <p id="category-text" on:click={() => handleCategoryClick(categories[index])}>{category.name}</p>
+      <hr>
   {/each}
 </div>
  

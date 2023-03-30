@@ -31,12 +31,13 @@
   let valueLeadingIcon = 'Alphabetical'; // sets default value of sort to "Alphabetical"
 
   if (valueLeadingIcon == 'Alphabetical') {
-
+   
   }
   if (valueLeadingIcon == 'Frequent') {
 
   }
-
+ 
+  
   // @param:
   //	  obj - item to display to user in pop up
   function handleItemCardClick(obj) { /* sets and updates the item clicked's attributes to store into store.js */
