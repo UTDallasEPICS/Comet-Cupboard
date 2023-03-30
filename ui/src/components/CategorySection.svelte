@@ -7,7 +7,16 @@
   export let category;      // category of items to display to user
 
   // import from stores.js
-  import { pantry_staples_inventory, 
+  import { pantry_staples_inventory,
+           snacks_inventory,
+           grains_inventory,
+           breakfast_grains_inventory,
+           soup_inventory,
+           protein_inventory,
+           household_items_inventory,
+           personal_care_inventory,
+           fruits_inventory,
+           vegetables_inventory, 
            itemClickedName, 
            itemClickedImageSrc, 
            itemClickedDeal, 

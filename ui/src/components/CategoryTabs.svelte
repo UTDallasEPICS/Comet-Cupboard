@@ -10,47 +10,47 @@
     {
       "name": "Snacks",
       "color": "#9EDBFF",
-      "target": "",
+      "target": "#/category/snacks",
     },
     {
       "name": "Grains",
       "color": "#FED111",
-      "target": "",
+      "target": "#/category/grains",
     },
     {
       "name": "Breakfast Grains",
       "color": "#FFEB95",
-      "target": "",
+      "target": "#/category/breakfast-grains",
     },
     {
       "name": "Soup",
       "color": "#E57528",
-      "target": "",
+      "target": "#/category/soup",
     },
     {
       "name": "Protein",
       "color": "#DC4631",
-      "target": "",
+      "target": "#/category/protein",
     },
     {
       "name": "Household Items",
       "color": "#F6F6ED",
-      "target": "",
+      "target": "#/category/household-items",
     },
     {
       "name": "Personal Care",
       "color": "#929292",
-      "target": "",
+      "target": "#/category/personal-care",
     },
     {
       "name": "Fruits",
       "color": "#DA6F61",
-      "target": "",
+      "target": "#/category/fruits",
     },
     {
       "name": "Vegetables",
       "color": "#929292",
-      "target": "",
+      "target": "#/category/vegetables",
     }
   ];
   function handleCategoryClick(category) {
@@ -99,62 +99,62 @@
       margin: auto;
       height: 5px;
       width: 65%;
-      background-color: rgb(36, 100, 180);
+      background-color: #38B6FF;
   }
 
   .snacks {
       margin: auto;
       height: 5px;
       width: 65%;
-      background-color: rgb(114, 204, 223);
+      background-color: #9EDBFF;
   }
 
   .grains {
       margin: auto;
       height: 5px;
       width: 65%;
-      background-color: rgb(209, 193, 19);
+      background-color: #FED111;
   }
 
   .breakfast {
       margin: auto;
       height: 5px;
       width: 65%;
-      background-color: rgb(172, 177, 99);
+      background-color: #FFEB95;
   }
 
   .soup {
       margin: auto;
       height: 5px;
       width: 65%;
-      background-color: rgb(255, 170, 0);
+      background-color: #E57528;
   }
 
   .protein {
       margin: auto;
       height: 5px;
       width: 65%;
-      background-color: rgb(255, 0, 0);
+      background-color: #DC4631;
   }
 
   .house {
       margin: auto;
       height: 5px;
       width: 65%;
-      background-color: rgb(255, 255, 255);
+      background-color: #F6F6ED;
   }
 
   .care {
       margin: auto;
       height: 5px;
       width: 65%;
-      background-color: rgb(52, 196, 83);
+      background-color: #929292;
   }
 
   .fruit {
       margin: auto;
       height: 5px;
       width: 65%;
-      background-color: rgb(205, 118, 156);
+      background-color: #DA6F61;
   }
 </style>
