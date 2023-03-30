@@ -54,22 +54,6 @@
 </div>
 
 <style>
-  /* sample code
-    .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
-  */
 
   .flex-wrapper {
     /* min-height: 100%;
@@ -114,12 +98,14 @@
     height:100%;
   }
 
+  /*Invisible flex box under category tab */
   #category-tab {
     width: 250px;    /* this is needed in order to get flex-grow to work */
-    background: #154734;
+    top: 0;
     align-self: flex-start;
-    
-    display: flex;
+    background: #154734;
+
+    /*display: flex;*/
     flex-direction: column;
     flex-grow: 1000;
     /* flex: 1 1 auto; */

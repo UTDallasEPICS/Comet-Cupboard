@@ -12,7 +12,7 @@
   import Textfield from '@smui/textfield';
 
   // imports from stores.js
-  import { itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates } from '../stores.js';
+  import { itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates, itemsInCart, cartContents } from '../stores.js';
 
   let quantity = 0;           // quantity of item clicked
   let isSizeSelected = false; // bool for if user has selected a size in Dialog
@@ -42,8 +42,11 @@
     }
   }
 
-  function handleClickAddToCart(e) {
+  // handles adding the item, its size, and its quantity to cart
+  function handleClickAddToCart(e, N, itemSize) {
     isSizeSelected = true;
+    $cartContents = [...$cartContents, {name: e, number: N, size: itemSize}];
+    itemsInCart.update(n => n + N);
   }
 
   let response = 'Nothing yet.';  // for debugging
@@ -155,7 +158,7 @@
           <Actions>
               <!-- display Add to cart button -->
               {#if item_size_index != -1}  <!-- if user has selected a size, then display button -->
-                  <Button color="primary" class="add-to-cart-button" on:click={handleClickAddToCart} variant="raised" action="add">
+                  <Button color="primary" class="add-to-cart-button" on:click={() => handleClickAddToCart(itemClickedName, quantity, item_size)} variant="raised" action="add">
                       <Icon class="material-icons">add</Icon>
                       <Label>Add to cart</Label>
                   </Button>
