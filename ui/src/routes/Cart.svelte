@@ -2,10 +2,11 @@
 
 <script lang="ts">
   //importing components
+  //import IconButton from '@smui/icon-button';
     import TopBar from '../components/TopBar.svelte'
     import Footer from '../components/Footer.svelte'
     import ItemCardCart from '../components/ItemCardCart.svelte'
-
+   // export let item;
   //importing from SMUI
     import Wrapper from '@smui/touch-target';
     import Button, { Label, Icon } from '@smui/button';
@@ -13,6 +14,10 @@
 
   //importing sample data
   import { inventory } from '../stores.js';
+  function handleClick() {
+		alert('Are these items ready to be checked out')
+		
+	}
 </script>
 
 <div class="flex-wrapper">
@@ -35,10 +40,18 @@
     </div> 
       {#each $inventory as _, index} <!--adds sample data  from stores.js-->
         <ItemCardCart bind:item={$inventory[index]}/>
-      {/each}
+       
+        {/each}
   </div>
   <div class="footer"> <!-- footer -->
     <Footer />
+  </div>
+  <div class="Checkoutbutton">
+  
+
+<button on:click={handleClick}>
+	Checkout 
+</button>
   </div>
 </div>
 
@@ -98,9 +111,12 @@
     text-align: center;
     margin-top: 25px;
   }
-
+ 
  /*styles footer*/
  .footer {
-    margin-top: auto; 
+   /* margin-top: auto; */
+   position: sticky;
+
   }
+  
 </style>

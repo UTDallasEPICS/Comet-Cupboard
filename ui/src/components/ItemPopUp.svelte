@@ -14,7 +14,7 @@
   // imports from stores.js
   import { itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates } from '../stores.js';
 
-  let quantity = 1;           // quantity of item clicked
+  let quantity = 0;           // quantity of item clicked
   let isSizeSelected = false; // bool for if user has selected a size in Dialog
   let item_size = "";         // size of the item that the user selected
   let item_size_index = -1;   // index of the size of the item that the user selected inside itemClickedSizes array ; tracked so Dialog knows which exp date to display
@@ -28,7 +28,7 @@
 
   // handles the Minus quantity button click
   function handleClickMinus() {
-    if (quantity != 1)  // makes sure user doesn't go below 1 for item quantity
+    if (quantity != 0)  // makes sure user doesn't go below 1 for item quantity
     {
       quantity--;
     }
@@ -75,7 +75,7 @@
         isSizeSelected = false;    // sets this to false so add to cart button is disabled next time ItemPopUp opens
         item_size = "";            // clears item selected
         item_size_index = -1;      // resets index for next item selected
-        quantity = 1;              // resets quantity
+        quantity = 0;              // resets quantity
         response = "Closed dialog.";
         break;
     }

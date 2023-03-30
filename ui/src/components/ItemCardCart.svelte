@@ -1,6 +1,7 @@
 <!--item cards for each item on the Cart page-->
 
 <script>
+   import {inventory} from '../stores'
 //import from SMUI
 import IconButton from '@smui/icon-button';
   let clicked = 0; 
@@ -33,6 +34,12 @@ export let item;  // item inside the cart
   {
     hasImage = false;
   }
+  const handleDelete = (itemId) =>{
+    alert('Are you sure you want to delete these')
+    inventory.update((currentFeedback) => {
+      return currentFeedback.filter(item => item.Id !== itemId)
+    })
+  }
 </script>
 
 <div> <!--item card-->
@@ -64,16 +71,18 @@ export let item;  // item inside the cart
         <div class="side-by-side">
           <div class="item-text">
             <p id="item-detail-title"><strong>Item Name: </strong><br>Size: <br>Expiration Date: </p>
-            <p id="item-details"><strong>{itemName}</strong><br><br>{item.expiration_dates[0]}</p>
+            <p id="item-details"><strong>{itemName}</strong><br>{item.sizes[0]}<br>{item.expiration_dates[0]}</p>
+            
           </div>
         </div>
         <div class="remove-button" style="display: flex; align-items: center;"> <!--remove button-->
-          <IconButton class="material-icons" on:click={() => clicked++} ripple={false}>close</IconButton>
+          <IconButton class="material-icons" on:click={() => handleDelete(item.id)} ripple={false}>close</IconButton>
         </div>
+      </div>
       </div>
     </div>
   </div>
-</div>    
+   
 
 <style>
 /*styles item card background*/
@@ -243,13 +252,13 @@ export let item;  // item inside the cart
 }
 
 /*styles remove button*/
+
 .remove-button {
   position: relative;
-  left: 290px;
-  bottom: 83px;
+  left: 600px;
+  bottom: 86px;
   justify-content: flex-end !important;
 }
-
 :global(.mdc-icon-button) {
   font-size: 36px !important;
 }
