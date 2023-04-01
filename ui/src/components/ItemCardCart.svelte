@@ -2,6 +2,9 @@
 
 <script>
    import {inventory} from '../stores'
+   import {itemsInCart} from '../stores'
+   import {cartContents} from '../stores'
+
 //import from SMUI
 import IconButton from '@smui/icon-button';
   let clicked = 0; 
@@ -33,11 +36,9 @@ export let item;  // item inside the cart
   {
     hasImage = false;
   }
-  const handleDelete = (itemId) =>{
-    alert('Are you sure you want to delete these')
-    inventory.update((currentFeedback) => {
-      return currentFeedback.filter(item => item.Id !== itemId)
-    })
+  const handleDelete = (itemName) =>{
+    alert('Are you sure you want to delete ' + itemName + '?');
+    cartContents.update(item => item.splice(/*REQUIRES AN INDEX*/, 1))
   }
 </script>
 
@@ -75,7 +76,7 @@ export let item;  // item inside the cart
           </div>
         </div>
         <div class="remove-button" style="display: flex; align-items: center;"> <!--remove button-->
-          <IconButton class="material-icons" on:click={() => handleDelete(item.id)} ripple={false}>close</IconButton>
+          <IconButton class="material-icons" on:click={() => handleDelete(itemName)} ripple={false}>close</IconButton>
         </div>
       </div>
       </div>
