@@ -14,7 +14,7 @@
   // imports from stores.js
   import { itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates, itemsInCart, cartContents } from '../stores.js';
 
-  let quantity = 0;           // quantity of item clicked
+  let quantity = 1;           // quantity of item clicked
   let isSizeSelected = false; // bool for if user has selected a size in Dialog
   let item_size = "";         // size of the item that the user selected
   let item_size_index = -1;   // index of the size of the item that the user selected inside itemClickedSizes array ; tracked so Dialog knows which exp date to display
@@ -28,7 +28,7 @@
 
   // handles the Minus quantity button click
   function handleClickMinus() {
-    if (quantity != 0)  // makes sure user doesn't go below 1 for item quantity
+    if (quantity != 0)  // makes sure user doesn't go below 0 for item quantity
     {
       quantity--;
     }
@@ -46,7 +46,8 @@
   function handleClickAddToCart(e, N, itemSize) {
     isSizeSelected = true;
     $cartContents = [...$cartContents, {name: e, number: N, size: itemSize}];
-    itemsInCart.update(n => n + N);
+    itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
+ // itemsInCart.update(n => n + 1); // adds items (based on number of items chosen (ie: chose 2 of an item, adds 1))
   }
 
   let response = 'Nothing yet.';  // for debugging
@@ -78,7 +79,7 @@
         isSizeSelected = false;    // sets this to false so add to cart button is disabled next time ItemPopUp opens
         item_size = "";            // clears item selected
         item_size_index = -1;      // resets index for next item selected
-        quantity = 0;              // resets quantity
+        quantity = 1;              // resets quantity
         response = "Closed dialog.";
         break;
     }
@@ -158,7 +159,7 @@
           <Actions>
               <!-- display Add to cart button -->
               {#if item_size_index != -1}  <!-- if user has selected a size, then display button -->
-                  <Button color="primary" class="add-to-cart-button" on:click={() => handleClickAddToCart(itemClickedName, quantity, item_size)} variant="raised" action="add">
+                  <Button color="primary" class="add-to-cart-button" on:click={() => handleClickAddToCart($itemClickedName, quantity, item_size)} variant="raised" action="add">
                       <Icon class="material-icons">add</Icon>
                       <Label>Add to cart</Label>
                   </Button>
