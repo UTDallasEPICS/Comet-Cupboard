@@ -3,6 +3,8 @@
 <script lang="ts">
   //importing components
   //import IconButton from '@smui/icon-button';
+  
+  import ProfilePage from '../components/ProfilePage.svelte';
     import TopBar from '../components/TopBar.svelte'
     import Footer from '../components/Footer.svelte'
     import ItemCardCart from '../components/ItemCardCart.svelte'
@@ -46,10 +48,8 @@
   <div class="footer"> <!-- footer -->
     <Footer />
   </div>
-  <div class="Checkoutbutton">
-  
-
-<button on:click={handleClick}>
+  <div class="checkoutbutton">
+  <button on:click={handleClick}>
 	Checkout 
 </button>
   </div>
@@ -113,6 +113,7 @@
   }
  
  /*styles footer*/
+
  .footer {
    /* margin-top: auto; */
    position: sticky;
