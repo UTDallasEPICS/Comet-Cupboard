@@ -2,6 +2,7 @@
 
 <script>
    import {inventory} from '../stores'
+   import { Confirm } from 'svelte-confirm'
 //import from SMUI
 import IconButton from '@smui/icon-button';
   // @ts-ignore
