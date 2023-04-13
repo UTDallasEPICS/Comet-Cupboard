@@ -12,7 +12,7 @@ export const inventory = writable([         // items in demo inventory
       "deal": "Deal: 2 for 1",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
-      "category": "Snacks",
+      "category": "Protein",
       "id": "1"
   },
   {
@@ -68,6 +68,60 @@ export const inventory = writable([         // items in demo inventory
       "expiration_dates": ["N/A"],
       "category": "Household Items",
       "id": "7"
+  },
+  {
+    "name": "Ground Beef",
+    "image_src": "",
+    "deal": "",
+    "sizes": ["S", "M", "L"],
+    "expiration_dates": ["01/01/2099"],
+    "category": "Protein",
+    "id": "8"
+  },
+  {
+    "name": "Potato Chips",
+    "image_src": "",
+    "deal": "",
+    "sizes": ["One Size"],
+    "expiration_dates": ["01/01/2099"],
+    "category": "Snacks",
+    "id": "9"
+  },
+  {
+    "name": "White Bread",
+    "image_src": "",
+    "deal": "",
+    "sizes": ["One Size"],
+    "expiration_dates": ["01/01/2099"],
+    "category": "Grains",
+    "id": "10"
+  },
+  {
+    "name": "Chicken Noodle Soup",
+    "image_src": "",
+    "deal": "",
+    "sizes": ["One Size"],
+    "expiration_dates": ["01/01/2099"],
+    "category": "Soup",
+    "id": "11"
+  },
+  {
+    "name": "Apple",
+    "image_src": "",
+    "deal": "",
+    "sizes": ["One Size"],
+    "expiration_dates": ["01/01/2099"],
+    "category": "Fruits",
+    "id": "12"
+  },
+  {
+    "name": "Green Beans",
+    "image_src": "",
+    "deal": "Deal: 3 for 1",
+    "sizes": ["One Size"],
+    "expiration_dates": ["01/01/2099"],
+    "category": "Vegetables",
+    "id": "13"
   }
 ]);
 
