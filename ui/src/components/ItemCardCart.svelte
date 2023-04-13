@@ -104,7 +104,7 @@ export let item;  // item inside the cart
       
     </div>
   </div>
-   
+  </div>
 
 <style>
 /*styles item card background*/

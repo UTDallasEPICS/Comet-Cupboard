@@ -3,7 +3,8 @@
 <script lang="ts">
   //importing components
   //import IconButton from '@smui/icon-button';
-  
+  import { Confirm } from 'svelte-confirm'
+
   import ProfilePage from '../components/ProfilePage.svelte';
     import TopBar from '../components/TopBar.svelte'
     import Footer from '../components/Footer.svelte'
@@ -27,6 +28,8 @@
     <TopBar />
   </div>
   <div class="container">
+   
+    </div>
     <div class="side-by-side">
       <div class="shop-for-items-button" style="display:flex; flex-wrap:wrap; align-items:center;"> <!-- Shop for Items back button -->
         <Wrapper>
@@ -45,15 +48,18 @@
        
         {/each}
   </div>
+   
+  <div class="checkoutbutton">
+   <button on:click={handleClick}>
+    Checkout
+    </button>
+  </div>
+  
   <div class="footer"> <!-- footer -->
     <Footer />
   </div>
-  <div class="checkoutbutton">
-  <button on:click={handleClick}>
-	Checkout 
-</button>
-  </div>
-</div>
+  
+
 
 <style>
   /*styles flex box*/
@@ -113,11 +119,11 @@
   }
  
  /*styles footer*/
-
- .footer {
-   /* margin-top: auto; */
-   position: sticky;
-
-  }
+ .checkoutbutton{
+  padding: 15px;
+  padding-left: 35px;
+ 
+ }
+ 
   
 </style>
