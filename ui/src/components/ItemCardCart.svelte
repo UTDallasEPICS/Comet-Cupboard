@@ -38,7 +38,12 @@ export let item;  // item inside the cart
   }
   const handleDelete = (itemName) =>{
     alert('Are you sure you want to delete ' + itemName + '?');
-    cartContents.update(item => item.splice(/*REQUIRES AN INDEX*/, 1))
+    let index = $cartContents.indexOf(item, 0);
+    console.log(index);
+    $cartContents.splice(index, 1);
+    $cartContents = $cartContents;  
+    itemsInCart.update(n => n - item.amount);
+    console.log($cartContents);
   }
 </script>
 
@@ -71,8 +76,7 @@ export let item;  // item inside the cart
         <div class="side-by-side">
           <div class="item-text">
             <p id="item-detail-title"><strong>Item Name: </strong><br>Size: <br>Expiration Date: </p>
-            <p id="item-details"><strong>{itemName}</strong><br>{item.sizes[0]}<br>{item.expiration_dates[0]}</p>
-            
+            <p id="item-details"><strong>{itemName}</strong><br>{item.sizes}<br>{item.expiration_dates[0]}</p>
           </div>
         </div>
         <div class="remove-button" style="display: flex; align-items: center;"> <!--remove button-->

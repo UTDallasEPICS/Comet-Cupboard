@@ -13,7 +13,8 @@
     let clicked = 0;
 
   //importing sample data
-  import { inventory } from '../stores.js';
+  import { cartContents, inventory } from '../stores.js';
+    import { loop_guard } from 'svelte/internal';
   function handleClick() {
 		alert('Are these items ready to be checked out')
 		
@@ -38,10 +39,11 @@
       </div>
       <h1>Cart</h1> <!-- title of page-->
     </div> 
-      {#each $inventory as _, index} <!--adds sample data  from stores.js-->
-        <ItemCardCart bind:item={$inventory[index]}/>
-       
-        {/each}
+      {#each $cartContents as cartItem, index (cartItem.id)} <!--adds sample data  from stores.js-->
+        <!--<ItemCardCart bind:item={$cartContents[index]}/>-->
+        <ItemCardCart bind:item={$cartContents[index]}></ItemCardCart>
+        <p hidden>{$cartContents = $cartContents}</p> <!--updates cartContents array-->
+      {/each}
   </div>
   <div class="footer"> <!-- footer -->
     <Footer />
