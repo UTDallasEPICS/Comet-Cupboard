@@ -16,12 +16,14 @@
     let clicked = 0;
 
   //importing sample data
-  import { cartContents, inventory } from '../stores.js';
+  import { cartContents, inventory, itemsInCart } from '../stores.js';
     import { loop_guard } from 'svelte/internal';
-  function handleClick() {
-		alert('Are these items ready to be checked out')
-		
-	}
+    function confirmation() {
+    if (confirm("Hi Volunteer! Are these '6' items ready to be checked out?"))
+      return true;
+    else
+      return false;
+  }
 </script>
 
 <div class="flex-wrapper">
@@ -44,6 +46,7 @@
       </div>
       <h1>Cart</h1> <!-- title of page-->
     </div> 
+   
       {#each $cartContents as cartItem, index (cartItem.id)} <!--adds sample data  from stores.js-->
         <!--<ItemCardCart bind:item={$cartContents[index]}/>-->
         <ItemCardCart bind:item={$cartContents[index]}></ItemCardCart>
@@ -52,7 +55,7 @@
   </div>
    
   <div class="checkoutbutton">
-   <button on:click={handleClick}>
+   <button on:click={confirmation}>
     Checkout
     </button>
   </div>

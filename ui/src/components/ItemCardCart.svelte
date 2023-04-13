@@ -40,7 +40,7 @@ export let item;  // item inside the cart
     hasImage = false;
   }
   const handleDelete = (itemName) =>{
-    alert('Are you sure you want to delete ' + itemName + '?');
+   
     let index = $cartContents.indexOf(item, 0);
     console.log(index);
     $cartContents.splice(index, 1);
@@ -88,7 +88,7 @@ export let item;  // item inside the cart
   let:confirm="{confirmThis}"
 >  
         <div class="remove-button" style="display: flex; align-items: center;"> <!--remove button-->
-          <IconButton class="material-icons" on:click={() => handleDelete(item.id)} ripple={false}>close</IconButton>
+          <IconButton class="material-icons" on:click={() => confirmThis(handleDelete,item.id)} ripple={false}>close</IconButton>
         </div>
         
         <span slot="title">
