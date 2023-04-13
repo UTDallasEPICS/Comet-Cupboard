@@ -1,11 +1,8 @@
 <!--item cards for each item on the Cart page-->
 
 <script>
-   import {cartContents, inventory, itemsInCart} from '../stores'
-   // @ts-ignore
-   import { Confirm } from 'svelte-confirm'
-
-   //import from SMUI
+   import {inventory} from '../stores'
+//import from SMUI
 import IconButton from '@smui/icon-button';
   // @ts-ignore
    
@@ -40,10 +37,10 @@ export let item;  // item inside the cart
   {
     hasImage = false;
   }
-  function handleDelete  (itemId) {
-   Deleted=true;
-   inventory.update((currentFeedback) => {
-      return currentFeedback=currentFeedback.filter(item => item.id !== itemId)
+  const handleDelete = (itemId) =>{
+    alert('Are you sure you want to delete these')
+    inventory.update((currentFeedback) => {
+      return currentFeedback.filter(item => item.Id !== itemId)
     })
   }
 </script>
@@ -87,8 +84,7 @@ export let item;  // item inside the cart
   let:confirm="{confirmThis}"
 >  
         <div class="remove-button" style="display: flex; align-items: center;"> <!--remove button-->
-          <IconButton class="material-icons" on:click={() =>  confirmThis(handleDelete, item.id)} ripple={false}>close</IconButton>
-          
+          <IconButton class="material-icons" on:click={() => handleDelete(item.id)} ripple={false}>close</IconButton>
         </div>
         
         <span slot="title">
