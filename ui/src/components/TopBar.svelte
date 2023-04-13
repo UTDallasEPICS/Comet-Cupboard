@@ -21,7 +21,7 @@
       <img src={CartIcon} class="cart" alt="Cart icon." />
     </a>
     <!-- <div> -->
-      <a href="#/"> <!-- takes user to Shop for Items page (home page) -->
+      <a href="#/profilepage"> <!-- takes user to Shop for Items page (home page) -->
       <img src={AccountIcon} class="account" alt="Account icon." />
       </a>
     <!-- </div> -->

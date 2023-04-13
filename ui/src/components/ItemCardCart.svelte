@@ -2,11 +2,14 @@
 
 <script>
    import {inventory} from '../stores'
-   import {itemsInCart} from '../stores'
-   import {cartContents} from '../stores'
-
+   import { Confirm } from 'svelte-confirm'
+   import {cartContents, itemsInCart} from '../stores'
 //import from SMUI
 import IconButton from '@smui/icon-button';
+  // @ts-ignore
+   
+   
+  let Deleted = false ;
   let clicked = 0; 
 // passed as a prop from Cart
 export let item;  // item inside the cart
@@ -79,14 +82,29 @@ export let item;  // item inside the cart
             <p id="item-details"><strong>{itemName}</strong><br>{item.sizes}<br>{item.expiration_dates[0]}</p>
           </div>
         </div>
+        <Confirm
+        confirmTitle="Delete"
+        cancelTitle="Cancel"
+  let:confirm="{confirmThis}"
+>  
         <div class="remove-button" style="display: flex; align-items: center;"> <!--remove button-->
-          <IconButton class="material-icons" on:click={() => handleDelete(itemName)} ripple={false}>close</IconButton>
+          <IconButton class="material-icons" on:click={() => handleDelete(item.id)} ripple={false}>close</IconButton>
         </div>
+        
+        <span slot="title">
+          Delete this item?
+        </span>
+        <span slot="description">
+          You won't be able to revert this!
+        </span>
+    </Confirm>
+  
+     
       </div>
-      </div>
+      
     </div>
   </div>
-   
+  </div>
 
 <style>
 /*styles item card background*/
