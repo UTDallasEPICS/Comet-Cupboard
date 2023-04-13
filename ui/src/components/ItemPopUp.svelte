@@ -75,7 +75,7 @@ let reduce=1;
       $cartContents[index].amount += N;
       itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
     }
-    else if (doesNameExist == true && doesSizeExist == false)
+    else if (doesNameExist == true && doesSizeExist == false) // executes only if item already exists, but size of item does
     {
       $cartContents[justNameIndex].sizes = [...$cartContents[justNameIndex].sizes, itemSize];
       $cartContents[justNameIndex].amount += N;
