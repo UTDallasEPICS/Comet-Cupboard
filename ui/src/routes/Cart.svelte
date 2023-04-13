@@ -5,7 +5,7 @@
   //import IconButton from '@smui/icon-button';
   import { Confirm } from 'svelte-confirm'
 
-  import ProfilePage from '../components/ProfilePage.svelte';
+    import ProfilePage from '../components/ProfilePage.svelte';
     import TopBar from '../components/TopBar.svelte'
     import Footer from '../components/Footer.svelte'
     import ItemCardCart from '../components/ItemCardCart.svelte'
@@ -63,69 +63,67 @@
   
 
 
-<style>
-  /*styles flex box*/
-   .flex-wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
+  <style>
+    /*styles flex box*/
+     .flex-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 74vh;
+    }
+    /*styles header*/
+    .header {
+      position: sticky; /* make header stay on top of page at all times */
+      top: 0;
+      z-index: 2;       /* make header stay in front of all items */
+    }
+    /*holds all of the content on page*/
+    .container {
+      z-index: 0;             /* make header stay in front of all items */
+      display: flex;          /* using flex box to align items to center */
+      flex-direction: column;
+      align-items: center;
+    }
+    /*makes everything within it lay side-by-side w/o interference w/ each other*/
+    .side-by-side {
+      text-align: center;
+      /*display: flex;                  /* positions both elements side-by-side */
+      justify-content: space-between;
+    }
+    /*styles Shop for Items button*/
+    .shop-for-items-button {
+      margin: 20px 15px;
+      position: absolute;
+      left: 0;
+    }
+    * :global(.mdc-button--raised:not(:disabled)) {
+        background-color: #D9D9D9 !important;
+        color: #154734 !important;
+    }
+    * :global(.mdc-button--raised) {
+        font-weight: bold !important;
+        font-family: Inter, sans-serif !important;
+        letter-spacing: normal !important;
+        text-transform: none !important;
+        line-height: 45px !important;
+        border-radius: 35px;
+    }
+   /*styles Cart title*/
+   h1 {
+      text-align: center;
+      margin-top: 25px;
+    }
+   
+   /*styles footer*/
+   .footer {
+     /* margin-top: auto; */
+     position: sticky;
+    }
 
-  /*styles header*/
-  .header {
-    position: sticky; /* make header stay on top of page at all times */
-    top: 0;
-    z-index: 2;       /* make header stay in front of all items */
-  }
-
-  /*holds all of the content on page*/
-  .container {
-    z-index: 0;             /* make header stay in front of all items */
-    display: flex;          /* using flex box to align items to center */
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /*makes everything within it lay side-by-side w/o interference w/ each other*/
-  .side-by-side {
-    text-align: center;
-    display: flex;                  /* positions both elements side-by-side */
-    justify-content: space-between;
-  }
-
-  /*styles Shop for Items button*/
-  .shop-for-items-button {
-    margin: 20px 15px;
-    position: absolute;
-    left: 0;
-  }
-
-  * :global(.mdc-button--raised:not(:disabled)) {
-      background-color: #D9D9D9 !important;
-      color: #154734 !important;
-  }
-
-  * :global(.mdc-button--raised) {
-      font-weight: bold !important;
-      font-family: Inter, sans-serif !important;
-      letter-spacing: normal !important;
-      text-transform: none !important;
-      line-height: 45px !important;
-      border-radius: 35px;
-  }
-
- /*styles Cart title*/
- h1 {
-    text-align: center;
-    margin-top: 25px;
-  }
- 
- /*styles footer*/
- .checkoutbutton{
-  padding: 15px;
-  padding-left: 35px;
- 
- }
- 
+    /*styles checkout button*/
+  .checkoutbutton{
+    padding: 15px;
+    padding-left: 35px;
   
-</style>
+  }
+    
+  </style>

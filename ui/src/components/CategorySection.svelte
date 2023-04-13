@@ -8,7 +8,6 @@
 
   // import from stores.js
   import { inventory,
-           pantry_staples_inventory,
            itemClickedName, 
            itemClickedImageSrc, 
            itemClickedDeal, 
