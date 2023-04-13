@@ -1,22 +1,26 @@
 <script>
     // importing components
     import TopBar from '../components/TopBar.svelte';
-    import HeaderImage from '../components/HeaderImage.svelte';
+   
     import Footer from '../components/Footer.svelte';
 </script>
 <div class="flex-wrapper">
     <div class="header">
       <TopBar />
     </div>
-    <div class="content">
-      <HeaderImage />
+    
       </div>
-      </div>
+      <div class="profilepage">
 <h1>Your Profile Page</h1>
 <p>Name: Unkown Unknown</p>
 <p>Netid: UUU12345</p>
 <p>unkown@utdallas.edu</p>
+<div class="footer">
+    <Footer />
+</div>
+</div>
 <style>
+    
 
     .flex-wrapper {
       /* min-height: 100%;
@@ -24,7 +28,7 @@
       height: 100%; */
   
       display: flex;
-      min-height: 100vh;
+     
       flex-direction: column;
       
       /*this doesn't work*/
@@ -39,5 +43,8 @@
   
       /* make header stay in front of all items */
       z-index: 2;
+    }
+    .profilepage{
+        padding-bottom: 200px;
     }
     </style>

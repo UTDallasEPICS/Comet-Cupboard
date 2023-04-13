@@ -11,11 +11,13 @@ import HouseholdItems from './routes/HouseholdItems.svelte';
 import PersonalCare from './routes/PersonalCare.svelte';
 import Fruits from './routes/Fruits.svelte';
 import Vegetables from './routes/Vegetables.svelte';
+import ProfilePage from './components/ProfilePage.svelte';
 
 export default {
     // exact path
     '/': ShopForItems,
     '/cart': Cart,
+    '/profilePage': ProfilePage,
     '/category/pantry-staples': PantryStaples,
     '/category/snacks': Snacks,
     '/category/grains': Grains,
