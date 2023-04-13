@@ -8,11 +8,12 @@
   // imports from SMUI
   import Dialog, { Content, Actions } from '@smui/dialog';
   import Button, { Group, Label, Icon } from '@smui/button';
+  import {inventory} from '../stores'
   import IconButton from '@smui/icon-button';
   import Textfield from '@smui/textfield';
 
   // imports from stores.js
-  import { itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates } from '../stores.js';
+  import { itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates, itemsInCart, cartContents, itemClickedCat, itemClickedId } from '../stores.js';
 
   let quantity = 1;           // quantity of item clicked
   let isSizeSelected = false; // bool for if user has selected a size in Dialog
@@ -36,14 +37,72 @@
 
   // handles the Add quantity button click
   function handleClickAdd() {
-    if (quantity != 10)  // makes sure user doesn't go over 10 for item quantity
+    if (quantity != 30)  // makes sure user doesn't go over 30 for item quantity
     {
       quantity++;
     }
   }
-
-  function handleClickAddToCart(e) {
+let reduce=1;
+  $: if (quantity >= 2) {
+		alert('You cannot add more than 2 items!');
+		itemsInCart.update = (n=> -reduce);
+	}
+  // handles adding the item, quantity, size of item, expiration date, 
+  // deal for item, category of item, item image source, and item id to the cart
+  function handleClickAddToCart(e, N, itemSize, expDate, itemDeal, itemCategory, itemImage, itemId) {
     isSizeSelected = true;
+    let doesNameExist = false;
+    let doesSizeExist = false;
+    let index = -1;
+    let justNameIndex = -1;
+
+    for (let i = 0; i < $cartContents.length; i++)
+    {
+      if (e == $cartContents[i].name)
+      {
+        doesNameExist = true;
+        justNameIndex = i;
+        if (itemSize == $cartContents[i].sizes)
+        {
+          doesSizeExist = true;
+          console.log("Size exists");
+          index = i;
+        }
+      }
+    }
+
+    if (doesNameExist == true && doesSizeExist == true)
+    {
+      $cartContents[index].amount += N;
+      itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
+    }
+    else if (doesNameExist == true && doesSizeExist == false) // executes only if item already exists, but size of item doesn't
+    {
+      let newId = $inventory.length + 1;
+      $cartContents = [...$cartContents, 
+                  {name: e, amount: N, sizes: itemSize, deal: itemDeal, 
+                  expiration_dates: expDate, category: itemCategory, 
+                  image_src: itemImage, id: newId}];
+      console.log("sizes " + $cartContents[justNameIndex].sizes);
+      console.log("Item added: " + e + " Num added: " + N + " Size: " + itemSize);
+      console.log("item exp: " + expDate + " item deal: " + itemDeal + " item cat: " + itemCategory + " item id: " + itemId);
+      console.log($cartContents);
+      itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
+    }
+    else if (doesNameExist == false)
+    {
+      $cartContents = [...$cartContents, 
+                  {name: e, amount: N, sizes: itemSize, deal: itemDeal, 
+                  expiration_dates: expDate, category: itemCategory, 
+                  image_src: itemImage, id: itemId}];
+      console.log("Item added: " + e + " Num added: " + N + " Size: " + itemSize);
+      console.log("item exp: " + expDate + " item deal: " + itemDeal + " item cat: " + itemCategory + " item id: " + itemId);
+      console.log($cartContents);
+      itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
+    }
+    
+ //  itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
+ // itemsInCart.update(n => n + 1); // adds items (based on number of items chosen (ie: chose 2 of an item, adds 1))
   }
 
   let response = 'Nothing yet.';  // for debugging
@@ -155,7 +214,10 @@
           <Actions>
               <!-- display Add to cart button -->
               {#if item_size_index != -1}  <!-- if user has selected a size, then display button -->
-                  <Button color="primary" class="add-to-cart-button" on:click={handleClickAddToCart} variant="raised" action="add">
+                  <Button color="primary" class="add-to-cart-button" on:click={() => 
+                            handleClickAddToCart($itemClickedName, quantity, item_size, $itemClickedExpDates, 
+                                                 $itemClickedDeal, $itemClickedCat, $itemClickedImageSrc, $itemClickedId)} 
+                                                 variant="raised" action="add">
                       <Icon class="material-icons">add</Icon>
                       <Label>Add to cart</Label>
                   </Button>

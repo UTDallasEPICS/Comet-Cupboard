@@ -2,9 +2,7 @@
 <script>
   // receives this as a prop from CheckoutHistory
   export let item;  // item the user clicked on
-
   let itemName = item.name;
-
   let hasDeal;        // does the item have a deal
   let itemDeal = "";  // deal for item text
   if (item.deal != "")  // if item has a deal label

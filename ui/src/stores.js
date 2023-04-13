@@ -3,6 +3,7 @@
 
 import { writable } from 'svelte/store';    // allows for setting and updating
 
+
 export const itemsInCart = writable(0);     // quantity of items in cart
 export const cartContents = writable([]);   // items in the cart
 export const inventory = writable([         // items in demo inventory
@@ -12,7 +13,8 @@ export const inventory = writable([         // items in demo inventory
       "deal": "Deal: 2 for 1",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
-      "category": ""
+      "category": "Protein",
+      "id": "1"
   },
   {
       "name": "Mac n Cheese",
@@ -20,7 +22,8 @@ export const inventory = writable([         // items in demo inventory
       "deal": "",
       "sizes": ["S", "M"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
-      "category": ""
+      "category": "Pantry Staples",
+      "id": "2"
   },
   {
       "name": "Mayonnaise",
@@ -28,7 +31,8 @@ export const inventory = writable([         // items in demo inventory
       "deal": "",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2023", "02/02/2023", "03/03/2023"],
-      "category": ""
+      "category": "Pantry Staples",
+      "id": "3"
   },
   {
       "name": "Oatmeal",
@@ -36,7 +40,8 @@ export const inventory = writable([         // items in demo inventory
       "deal": "",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
-      "category": ""
+      "category": "Breakfast Grains",
+      "id": "4"
   },
   {
       "name": "Ramen Pack",
@@ -44,7 +49,8 @@ export const inventory = writable([         // items in demo inventory
       "deal": "Deal: 2 for 1",
       "sizes": ["One Size"],
       "expiration_dates": ["01/01/2024"],
-      "category": ""
+      "category": "Pantry Staples",
+      "id": "5"
   },
   {
       "name": "Razor",
@@ -52,7 +58,8 @@ export const inventory = writable([         // items in demo inventory
       "deal": "",
       "sizes": ["One Size"],
       "expiration_dates": ["N/A"],
-      "category": ""
+      "category": "Personal Care",
+      "id": "6"
   },
   {
       "name": "Toilet Paper",
@@ -60,83 +67,93 @@ export const inventory = writable([         // items in demo inventory
       "deal": "",
       "sizes": ["One Size"],
       "expiration_dates": ["N/A"],
-      "category": ""
+      "category": "Household Items",
+      "id": "7"
+  },
+  {
+    "name": "Ground Beef",
+    "image_src": "",
+    "deal": "",
+    "sizes": ["S", "M", "L"],
+    "expiration_dates": ["01/01/2099"],
+    "category": "Protein",
+    "id": "8"
+  },
+  {
+    "name": "Potato Chips",
+    "image_src": "",
+    "deal": "",
+    "sizes": ["One Size"],
+    "expiration_dates": ["01/01/2099"],
+    "category": "Snacks",
+    "id": "9"
+  },
+  {
+    "name": "White Bread",
+    "image_src": "",
+    "deal": "",
+    "sizes": ["One Size"],
+    "expiration_dates": ["01/01/2099"],
+    "category": "Grains",
+    "id": "10"
+  },
+  {
+    "name": "Chicken Noodle Soup",
+    "image_src": "",
+    "deal": "",
+    "sizes": ["One Size"],
+    "expiration_dates": ["01/01/2099"],
+    "category": "Soup",
+    "id": "11"
+  },
+  {
+    "name": "Apple",
+    "image_src": "",
+    "deal": "",
+    "sizes": ["One Size"],
+    "expiration_dates": ["01/01/2099"],
+    "category": "Fruits",
+    "id": "12"
+  },
+  {
+    "name": "Green Beans",
+    "image_src": "",
+    "deal": "Deal: 3 for 1",
+    "sizes": ["One Size"],
+    "expiration_dates": ["01/01/2099"],
+    "category": "Vegetables",
+    "id": "13"
   }
 ]);
 
-export const pantry_staples_inventory = writable([         // items in demo Pantry Staples category
-  {
-      "name": "Cake Mix",
-      "image_src": './demo_pantry_staples_item_images/cake-mix.svg',
-      "deal": "",
-      "sizes": ["S", "M", "L"],
-      "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
-      "category": "Pantry Staples"
-  },
-  {
-      "name": "Cooking Oil",
-      "image_src": "./demo_pantry_staples_item_images/cooking-oil.svg",
+export const pantry_staples_inventory = writable([
+{
+      "name": "Mac n Cheese",
+      "image_src": "./demo_item_images/mac-n-cheese.svg",
       "deal": "",
       "sizes": ["S", "M"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
-      "category": "Pantry Staples"
-  },
-  {
-      "name": "Flour",
-      "image_src": "./demo_pantry_staples_item_images/flour.svg",
-      "deal": "",
-      "sizes": ["One Size"],
-      "expiration_dates": ["N/A"],
-      "category": "Pantry Staples"
-  },
-  {
-      "name": "Ground Coffee",
-      "image_src": "./demo_pantry_staples_item_images/ground-coffee.svg",
-      "deal": "",
-      "sizes": ["One Size"],
-      "expiration_dates": ["N/A"],
-      "category": "Pantry Staples"
-  },
-  {
-      "name": "Ketchup",
-      "image_src": "./demo_pantry_staples_item_images/ketchup.svg",
-      "deal": "",
-      "sizes": ["One Size"],
-      "expiration_dates": ["N/A"],
-      "category": "Pantry Staples"
-  },
-  {
+      "category": "Pantry Staples",
+      "id": "8"
+},
+{
       "name": "Mayonnaise",
-      "image_src": "./demo_pantry_staples_item_images/mayonnaise.svg",
-      "deal": "",
-      "sizes": ["S", "M", "L"],
-      "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
-      "category": "Pantry Staples"
-  },
-  {
-      "name": "Mustard",
-      "image_src": "./demo_pantry_staples_item_images/mustard.svg",
-      "deal": "Deal: 2 for 1",
-      "sizes": ["One Size"],
-      "expiration_dates": ["01/01/2024"],
-      "category": "Pantry Staples"
-  },
-  {
-      "name": "Powder Milk",
-      "image_src": "./demo_pantry_staples_item_images/powder-milk.svg",
+      "image_src": "./demo_item_images/mayonnaise.svg",
       "deal": "",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2023", "02/02/2023", "03/03/2023"],
-      "category": "Pantry Staples"
-  },
-  {
-      "name": "Tea Bags",
-      "image_src": "./demo_pantry_staples_item_images/tea-bags.svg",
+      "category": "Pantry Staples",
+      "id": "9"
+},
+{
+      "name": "Ramen Pack",
+      "image_src": "./demo_item_images/ramen-pack.svg",
       "deal": "Deal: 2 for 1",
       "sizes": ["One Size"],
-      "expiration_dates": ["N/A"],
-      "category": "Pantry Staples"
-  }
+      "expiration_dates": ["01/01/2024"],
+      "category": "Pantry Staples",
+      "id": "10"
+}    
 ]);
 
 // information about the item the user clicked in Checkout History
@@ -146,3 +163,4 @@ export const itemClickedDeal = writable("");
 export const itemClickedSizes = writable([]);
 export const itemClickedExpDates = writable(["n/a"]);
 export const itemClickedCat = writable("");
+export const itemClickedId = writable("-1");

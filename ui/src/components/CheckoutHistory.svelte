@@ -10,7 +10,8 @@
            itemClickedDeal, 
            itemClickedSizes, 
            itemClickedExpDates, 
-           itemClickedCat } from '../stores.js';
+           itemClickedCat, 
+           itemClickedId} from '../stores.js';
 
   // imports from SMUI
   import Select, { Option } from '@smui/select';
@@ -46,6 +47,7 @@
 		itemClickedSizes.update(sizes => sizes = obj.sizes.slice(0));
 		itemClickedExpDates.update(expDates => expDates = obj.expiration_dates.slice(0));
 		itemClickedCat.set(obj.category);
+    itemClickedId.set(obj.id);
 
 		// console.log("after handleitem", $itemClickedImageSrc);
 		open = true; // sets open to true to open the pop up once it knows which item to open
