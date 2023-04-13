@@ -42,9 +42,13 @@
       quantity++;
     }
   }
-
+let reduce=1;
+  $: if (quantity >= 2) {
+		alert('You cannot add more than 2 items!');
+		itemsInCart.update = (n=> -reduce);
+	}
   // handles adding the item, quantity, size of item, expiration date, 
-  // deal for item, category of item, item image source, and item id to the car
+  // deal for item, category of item, item image source, and item id to the cart
   function handleClickAddToCart(e, N, itemSize, expDate, itemDeal, itemCategory, itemImage, itemId) {
     isSizeSelected = true;
     let doesNameExist = false;
