@@ -7,6 +7,7 @@
     import Footer from '../components/Footer.svelte';
     import CategorySection from '../components/CategorySection.svelte';
     import CategoryTabs from '../components/CategoryTabs.svelte';
+  
     </script>
 
 <div class="flex-wrapper">
@@ -24,6 +25,7 @@
         </div>
       </div>
     </div>
+    
     <div class="footer">
       <Footer />
     </div>

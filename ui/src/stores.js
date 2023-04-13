@@ -3,6 +3,7 @@
 
 import { writable } from 'svelte/store';    // allows for setting and updating
 
+
 export const itemsInCart = writable(0);     // quantity of items in cart
 export const cartContents = writable([]);   // items in the cart
 export const inventory = writable([         // items in demo inventory
