@@ -15,15 +15,20 @@
     import Button, { Label, Icon } from '@smui/button';
     let clicked = 0;
 
+  let dropDownOpen = false;
+
   //importing sample data
-  import { cartContents, inventory, itemsInCart } from '../stores.js';
+  import { cartContents, inventory, itemsInCart, pantryInCart, snacksInCart, grainsInCart,
+           breakInCart, soupInCart, proteinInCart, houseInCart, personalInCart, fruitsInCart,
+           vegInCart } from '../stores.js';
     import { loop_guard } from 'svelte/internal';
     function confirmation() {
-    if (confirm("Hi Volunteer! Are these '6' items ready to be checked out?"))
+    if (confirm("Hi Volunteer! Are these " + $itemsInCart + " items ready to be checked out?"))
       return true;
     else
       return false;
   }
+
 </script>
 
 <div class="flex-wrapper">
@@ -45,6 +50,22 @@
         </Wrapper>
       </div>
       <h1>Cart</h1> <!-- title of page-->
+      <div class="item-dropdown">
+        <button on:click class ="item-button">Item Totals</button>
+        <div id="dropdown-list" class="item-dropdown-cat">
+          Total: {$itemsInCart} <br>
+          Pantry Staples: {$pantryInCart} <br>
+          Snacks: {$snacksInCart} <br>
+          Grains: {$grainsInCart} <br>
+          Breakfast Grains: {$breakInCart} <br>
+          Soup: {$soupInCart} <br>
+          Protein: {$proteinInCart} <br>
+          Household Items: {$houseInCart} <br>
+          Personal Care: {$personalInCart} <br>
+          Fruits: {$fruitsInCart} <br>
+          Vegetables: {$vegInCart}
+        </div>
+      </div>
     </div> 
    
       {#each $cartContents as cartItem, index (cartItem.id)} <!--adds sample data  from stores.js-->
@@ -123,10 +144,58 @@
     }
 
     /*styles checkout button*/
-  .checkoutbutton{
+  .checkoutbutton {
     padding: 15px;
     padding-left: 35px;
   
   }
+
+  .item-dropdown {
+    display: block;
+    position: relative;
+    text-align: center;
+    background-color: #d9d9d900;
+    color: #154734;
+    font-weight: bold;
+    font-family: Inter, sans-serif;
+    letter-spacing: normal;
+    text-transform: none;
+    line-height: 45px;
+    border-radius: 35px;
+  }
+
+  .item-dropdown-cat {
+    display: none;
+    margin: auto;
+    width: 175px;
+    text-align: left;
+    z-index: 2;
+    display: none;
+    overflow: auto;
+    background-color:#fff;
+    border-radius: 25px;
+    box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.4);
+    padding: 10px;
+  }
+
+  .item-dropdown:hover .item-dropdown-cat {
+    display: block;
+  }
+
+  .item-button {
+    display: inline-block;
+    text-align: center;
+    background-color: #D9D9D9;
+    color: #154734;
+    font-weight: bold;
+    font-family: Inter, sans-serif;
+    letter-spacing: normal;
+    text-transform: none;
+    line-height: 15px;
+    border-radius: 35px;
+    box-shadow: 0px 2px 4px 0px rgb(169, 169, 169);
+  }
+
+  .show {display:block;}
     
   </style>

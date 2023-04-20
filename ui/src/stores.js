@@ -5,6 +5,17 @@ import { writable } from 'svelte/store';    // allows for setting and updating
 
 
 export const itemsInCart = writable(0);     // quantity of items in cart
+export const pantryInCart = writable(0);    // num of items in cart per category
+export const snacksInCart = writable(0);
+export const grainsInCart = writable(0);
+export const breakInCart = writable(0);
+export const soupInCart = writable(0);
+export const proteinInCart = writable(0);
+export const houseInCart = writable(0);
+export const personalInCart = writable(0);
+export const fruitsInCart = writable(0);
+export const vegInCart = writable(0);       // end of num of items in cart per category
+export const check = writable(false);       
 export const cartContents = writable([]);   // items in the cart
 export const inventory = writable([         // items in demo inventory
   {
@@ -98,7 +109,7 @@ export const inventory = writable([         // items in demo inventory
     "id": "10"
   },
   {
-    "name": "Chicken Noodle Soup",
+    "name": "Chicken Noodle",
     "image_src": "",
     "deal": "",
     "sizes": ["One Size"],

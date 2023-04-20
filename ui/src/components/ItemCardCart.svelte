@@ -2,7 +2,8 @@
 
 <script>
    import { Confirm } from 'svelte-confirm'
-   import {cartContents, itemsInCart} from '../stores'
+   import {cartContents, itemsInCart, pantryInCart, snacksInCart, grainsInCart,
+           breakInCart, soupInCart, proteinInCart, houseInCart, personalInCart, fruitsInCart, vegInCart} from '../stores'
    //import from SMUI
    import IconButton from '@smui/icon-button'
    // @ts-ignore
@@ -43,10 +44,57 @@ export let item;  // item inside the cart
     {
       let index = $cartContents.indexOf(item, 0);
       $cartContents.splice(index, 1);
-      $cartContents = $cartContents;  
+      $cartContents = $cartContents;
+      categorySubtraction(item.category, item.amount);
       itemsInCart.update(n => n - item.amount);
     }
     console.log($cartContents);
+    
+  }
+
+  // subtracts from category count
+  function categorySubtraction(cat, N)
+  {
+    if (cat === "Pantry Staples")
+    {
+      $pantryInCart -= N;
+    }
+    else if (cat === "Snacks")
+    {
+      $snacksInCart -= N;
+    }
+    else if (cat === "Grains")
+    {
+      $grainsInCart -= N;
+    }
+    else if (cat === "Breakfast Grains")
+    {
+      $breakInCart -= N;
+    }
+    else if (cat === "Soup")
+    {
+      $soupInCart -= N;
+    }
+    else if (cat === "Protein")
+    {
+      $proteinInCart -= N;
+    }
+    else if (cat === "Household Items")
+    {
+      $houseInCart -= N;
+    }
+    else if (cat === "Personal Care")
+    {
+      $personalInCart -= N;
+    }
+    else if (cat === "Fruits")
+    {
+      $fruitsInCart -= N;
+    }
+    else if (cat === "Vegetables")
+    {
+      $vegInCart -= N;
+    }   
   }
 </script>
 
@@ -226,13 +274,16 @@ export let item;  // item inside the cart
   .item-text {
     position: relative;
     top: 15px;
-    white-space: nowrap;
+    white-space: normal;
   }
   #item-detail-title {
     text-align: right;
     right: 0px;
   }
   #item-details {
+    box-sizing: border-box;
+    width: 100%;
+    word-break: break-word;
     text-align: left;
     position: inherit;
     left: 170px;

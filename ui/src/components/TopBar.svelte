@@ -66,7 +66,6 @@
     /* flex: 1 1 0%; */
   }
 
-  /*Not connected to cart page yet, will only show 1*/
   .cart-items {
     /* circle shape, size and position */
     position: absolute;

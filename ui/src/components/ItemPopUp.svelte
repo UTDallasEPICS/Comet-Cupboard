@@ -13,7 +13,11 @@
   import Textfield from '@smui/textfield';
 
   // imports from stores.js
-  import { itemClickedName, itemClickedImageSrc, itemClickedDeal, itemClickedSizes, itemClickedExpDates, itemsInCart, cartContents, itemClickedCat, itemClickedId } from '../stores.js';
+  import { itemClickedName, itemClickedImageSrc, itemClickedDeal, 
+           itemClickedSizes, itemClickedExpDates, itemsInCart, cartContents, 
+           itemClickedCat, itemClickedId, pantryInCart, snacksInCart,
+           grainsInCart, breakInCart, soupInCart, proteinInCart, houseInCart,
+           personalInCart, fruitsInCart, vegInCart } from '../stores.js';
 
   let quantity = 1;           // quantity of item clicked
   let isSizeSelected = false; // bool for if user has selected a size in Dialog
@@ -43,10 +47,10 @@
     }
   }
 let reduce=1;
-  $: if (quantity >= 2) {
+  /*$: if (quantity >= 2) {
 		alert('You cannot add more than 2 items!');
 		itemsInCart.update = (n=> -reduce);
-	}
+	}*/
   // handles adding the item, quantity, size of item, expiration date, 
   // deal for item, category of item, item image source, and item id to the cart
   function handleClickAddToCart(e, N, itemSize, expDate, itemDeal, itemCategory, itemImage, itemId) {
@@ -65,7 +69,6 @@ let reduce=1;
         if (itemSize == $cartContents[i].sizes)
         {
           doesSizeExist = true;
-          console.log("Size exists");
           index = i;
         }
       }
@@ -74,6 +77,7 @@ let reduce=1;
     if (doesNameExist == true && doesSizeExist == true)
     {
       $cartContents[index].amount += N;
+      categoryAddition(itemCategory, N);
       itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
     }
     else if (doesNameExist == true && doesSizeExist == false) // executes only if item already exists, but size of item doesn't
@@ -83,10 +87,7 @@ let reduce=1;
                   {name: e, amount: N, sizes: itemSize, deal: itemDeal, 
                   expiration_dates: expDate, category: itemCategory, 
                   image_src: itemImage, id: newId}];
-      console.log("sizes " + $cartContents[justNameIndex].sizes);
-      console.log("Item added: " + e + " Num added: " + N + " Size: " + itemSize);
-      console.log("item exp: " + expDate + " item deal: " + itemDeal + " item cat: " + itemCategory + " item id: " + itemId);
-      console.log($cartContents);
+      categoryAddition(itemCategory, N);
       itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
     }
     else if (doesNameExist == false)
@@ -95,9 +96,7 @@ let reduce=1;
                   {name: e, amount: N, sizes: itemSize, deal: itemDeal, 
                   expiration_dates: expDate, category: itemCategory, 
                   image_src: itemImage, id: itemId}];
-      console.log("Item added: " + e + " Num added: " + N + " Size: " + itemSize);
-      console.log("item exp: " + expDate + " item deal: " + itemDeal + " item cat: " + itemCategory + " item id: " + itemId);
-      console.log($cartContents);
+      categoryAddition(itemCategory, N);
       itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
     }
     
@@ -138,6 +137,51 @@ let reduce=1;
         response = "Closed dialog.";
         break;
     }
+  }
+
+  // Adds items to specific category counts
+  function categoryAddition(cat, N)
+  {
+    if (cat === "Pantry Staples")
+    {
+      $pantryInCart += N;
+    }
+    else if (cat === "Snacks")
+    {
+      $snacksInCart += N;
+    }
+    else if (cat === "Grains")
+    {
+      $grainsInCart += N;
+    }
+    else if (cat === "Breakfast Grains")
+    {
+      $breakInCart += N;
+    }
+    else if (cat === "Soup")
+    {
+      $soupInCart += N;
+    }
+    else if (cat === "Protein")
+    {
+      $proteinInCart += N;
+    }
+    else if (cat === "Household Items")
+    {
+      $houseInCart += N;
+    }
+    else if (cat === "Personal Care")
+    {
+      $personalInCart += N;
+    }
+    else if (cat === "Fruits")
+    {
+      $fruitsInCart += N;
+    }
+    else if (cat === "Vegetables")
+    {
+      $vegInCart += N;
+    }   
   }
 </script>
 
