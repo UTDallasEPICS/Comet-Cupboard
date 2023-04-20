@@ -12,10 +12,12 @@ import PersonalCare from './routes/PersonalCare.svelte';
 import Fruits from './routes/Fruits.svelte';
 import Vegetables from './routes/Vegetables.svelte';
 import ProfilePage from './components/ProfilePage.svelte';
+import Inventory from './routes/Inventory.svelte'
 
 export default {
     // exact path
     '/': ShopForItems,
+    '/inventory': Inventory,
     '/cart': Cart,
     '/profilePage': ProfilePage,
     '/category/pantry-staples': PantryStaples,
