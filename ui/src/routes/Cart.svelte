@@ -4,7 +4,8 @@
   //importing components
   //import IconButton from '@smui/icon-button';
   import { Confirm } from 'svelte-confirm'
-
+  
+  
     import ProfilePage from '../components/ProfilePage.svelte';
     import TopBar from '../components/TopBar.svelte'
     import Footer from '../components/Footer.svelte'
@@ -14,17 +15,27 @@
     import Wrapper from '@smui/touch-target';
     import Button, { Label, Icon } from '@smui/button';
     let clicked = 0;
-
+    let count=0;
   //importing sample data
-  import { cartContents, inventory, itemsInCart } from '../stores.js';
+  import { cartContents, inventory, itemsInCart} from '../stores.js';
     import { loop_guard } from 'svelte/internal';
     function confirmation() {
-    if (confirm("Hi Volunteer! Are these '6' items ready to be checked out?"))
+    if (confirm("Hi Volunteer! Are these items ready to be checked out?"))
       return true;
     else
       return false;
   }
+  let check=false;
+ 
+  if ($cartContents.length!=0) {
+    check = true;
+  }
+  else {
+     check=false;
+  }
+
 </script>
+
 
 <div class="flex-wrapper">
   <div class="header"> <!--header-->
@@ -46,19 +57,28 @@
       </div>
       <h1>Cart</h1> <!-- title of page-->
     </div> 
-   
+    {#if $cartContents.length==0}
+    <h3><b> PLEASE ADD ITEMS TO YOUR CART</b></h3> 
+    
+    {/if}
+ 
       {#each $cartContents as cartItem, index (cartItem.id)} <!--adds sample data  from stores.js-->
         <!--<ItemCardCart bind:item={$cartContents[index]}/>-->
+        
         <ItemCardCart bind:item={$cartContents[index]}></ItemCardCart>
         <p hidden>{$cartContents = $cartContents}</p> <!--updates cartContents array-->
       {/each}
   </div>
-   
-  <div class="checkoutbutton">
-   <button on:click={confirmation}>
-    Checkout
-    </button>
-  </div>
+
+{#if $cartContents.length!=0}
+
+<div class="checkoutbutton">
+  <button on:click={confirmation}>
+   Checkout
+   </button>
+ </div>
+{/if}
+ 
   
   <div class="footer"> <!-- footer -->
     <Footer />
@@ -85,6 +105,9 @@
       display: flex;          /* using flex box to align items to center */
       flex-direction: column;
       align-items: center;
+    }
+    h3{
+      
     }
     /*makes everything within it lay side-by-side w/o interference w/ each other*/
     .side-by-side {
@@ -115,7 +138,11 @@
       text-align: center;
       margin-top: 25px;
     }
-   
+   h3{
+    text-align: center;
+     padding-top: 150px;
+     color: gray;
+   }
    /*styles footer*/
    .footer {
      /* margin-top: auto; */
