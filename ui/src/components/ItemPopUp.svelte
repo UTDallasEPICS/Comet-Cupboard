@@ -9,6 +9,7 @@
   // imports from SMUI
   import Dialog, { Content, Actions } from '@smui/dialog';
   import Button, { Group, Label, Icon } from '@smui/button';
+  import {inventory} from '../stores'
   import IconButton from '@smui/icon-button';
   import Textfield from '@smui/textfield';
 
@@ -77,10 +78,13 @@ let reduce=1;
       $cartContents[index].amount += totalNumOfitems;
       itemsInCart.update(n => n + totalNumOfitems); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
     }
-    else if (doesNameExist == true && doesSizeExist == false) // executes only if item already exists, but size of item does
+    else if (doesNameExist == true && doesSizeExist == false) // executes only if item already exists, but size of item doesn't
     {
-      $cartContents[justNameIndex].sizes = [...$cartContents[justNameIndex].sizes, itemSize];
-      $cartContents[justNameIndex].amount += totalNumOfitems;
+      let newId = $inventory.length + 1;
+      $cartContents = [...$cartContents, 
+                  {name: e, amount: N, sizes: itemSize, deal: itemDeal, 
+                  expiration_dates: expDate, category: itemCategory, 
+                  image_src: itemImage, id: newId}];
       console.log("sizes " + $cartContents[justNameIndex].sizes);
       console.log("Item added: " + nameOfItem + " Num added: " + totalNumOfitems + " Size: " + itemSize);
       console.log("item exp: " + expDate + " item deal: " + itemDeal + " item cat: " + itemCategory + " item id: " + itemId);

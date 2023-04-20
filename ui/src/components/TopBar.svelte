@@ -1,5 +1,6 @@
 <script>
     import CometCupboardLogo from '../../src/images/CometCupboard_transparent_orange.png';
+    import InventoryIcon from '../../src/images/WarehouseInventory.png'
     import CartIcon from "../../src/images/cart-icon.png"
     import AccountIcon from "../../src/images/account-circle-icon.png"
     import { itemsInCart } from '../stores.js';
@@ -25,6 +26,9 @@
       <img src={AccountIcon} class="account" alt="Account icon." />
       </a>
     <!-- </div> -->
+      <a href="#/inventory">
+      <img src={InventoryIcon} class="inventory" alt="Inventory icon" />
+    </a>
     <!-- <p>NetID</p> -->
   </div>
   <!-- <div class="header-right">
@@ -43,6 +47,14 @@
 
   .logo {
     width: 160px;
+    padding: 15px;
+    padding-top: 20px;
+
+    align-self: flex-start;
+  }
+
+  .inventory{
+    width: 48px;
     padding: 15px;
     padding-top: 20px;
 
