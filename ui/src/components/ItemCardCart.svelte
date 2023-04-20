@@ -1,6 +1,8 @@
 <!--item cards for each item on the Cart page-->
 
 <script>
+// @ts-nocheck
+
    import { Confirm } from 'svelte-confirm'
    import {cartContents, itemsInCart, pantryInCart, snacksInCart, grainsInCart,
            breakInCart, soupInCart, proteinInCart, houseInCart, personalInCart, fruitsInCart, vegInCart} from '../stores'
@@ -8,7 +10,7 @@
    import IconButton from '@smui/icon-button'
    // @ts-ignore
    
-   
+
   let deleted = false ;
 // passed as a prop from Cart
 export let item;  // item inside the cart
@@ -133,6 +135,8 @@ export let item;  // item inside the cart
         <Confirm
           confirmTitle="Delete"
           cancelTitle="Cancel"
+          themeColor="165"
+
           let:confirm="{confirmThis}"
 >  
           <div class="remove-button" style="display: flex; align-items: center;"> <!--remove button-->

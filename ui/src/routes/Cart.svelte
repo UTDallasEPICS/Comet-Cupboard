@@ -4,7 +4,8 @@
   //importing components
   //import IconButton from '@smui/icon-button';
   import { Confirm } from 'svelte-confirm'
-
+  
+  
     import ProfilePage from '../components/ProfilePage.svelte';
     import TopBar from '../components/TopBar.svelte'
     import Footer from '../components/Footer.svelte'
@@ -14,6 +15,7 @@
     import Wrapper from '@smui/touch-target';
     import Button, { Label, Icon } from '@smui/button';
     let clicked = 0;
+    let count=0;
 
   let dropDownOpen = false;
 
@@ -30,6 +32,7 @@
   }
 
 </script>
+
 
 <div class="flex-wrapper">
   <div class="header"> <!--header-->
@@ -67,19 +70,28 @@
         </div>
       </div>
     </div> 
-   
+    {#if $cartContents.length==0}
+    <h3><b> PLEASE ADD ITEMS TO YOUR CART</b></h3> 
+    
+    {/if}
+ 
       {#each $cartContents as cartItem, index (cartItem.id)} <!--adds sample data  from stores.js-->
         <!--<ItemCardCart bind:item={$cartContents[index]}/>-->
+        
         <ItemCardCart bind:item={$cartContents[index]}></ItemCardCart>
         <p hidden>{$cartContents = $cartContents}</p> <!--updates cartContents array-->
       {/each}
   </div>
-   
-  <div class="checkoutbutton">
-   <button on:click={confirmation}>
-    Checkout
-    </button>
-  </div>
+
+{#if $cartContents.length!=0}
+
+<div class="checkoutbutton">
+  <button on:click={confirmation}>
+   Checkout
+   </button>
+ </div>
+{/if}
+ 
   
   <div class="footer"> <!-- footer -->
     <Footer />
@@ -106,6 +118,9 @@
       display: flex;          /* using flex box to align items to center */
       flex-direction: column;
       align-items: center;
+    }
+    h3{
+      
     }
     /*makes everything within it lay side-by-side w/o interference w/ each other*/
     .side-by-side {
@@ -136,7 +151,11 @@
       text-align: center;
       margin-top: 25px;
     }
-   
+   h3{
+    text-align: center;
+     padding-top: 150px;
+     color: gray;
+   }
    /*styles footer*/
    .footer {
      /* margin-top: auto; */
