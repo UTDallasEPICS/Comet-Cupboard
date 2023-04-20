@@ -14,7 +14,7 @@
 <h1>Your Profile Page</h1>
 <p>Name: Unkown Unknown</p>
 <p>Netid: UUU12345</p>
-<p>unkown@utdallas.edu</p>
+<p>Email: unkown@utdallas.edu</p>
 <div class="footer">
     <Footer />
 </div>

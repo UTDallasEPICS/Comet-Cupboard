@@ -4,7 +4,8 @@
   // receives this as a prop from CheckoutHistory or CategorySection
   export let open;  // bool for if ItemPopUp should be open/displayed to user
   //export let item;
-
+ 
+  
   // imports from SMUI
   import Dialog, { Content, Actions } from '@smui/dialog';
   import Button, { Group, Label, Icon } from '@smui/button';
@@ -48,7 +49,8 @@ let reduce=1;
 	}
   // handles adding the item, quantity, size of item, expiration date, 
   // deal for item, category of item, item image source, and item id to the cart
-  function handleClickAddToCart(e, N, itemSize, expDate, itemDeal, itemCategory, itemImage, itemId) {
+  function handleClickAddToCart(nameOfItem, totalNumOfitems, itemSize, expDate, itemDeal, itemCategory, itemImage, itemId) {
+   
     isSizeSelected = true;
     let doesNameExist = false;
     let doesSizeExist = false;
@@ -57,7 +59,7 @@ let reduce=1;
 
     for (let i = 0; i < $cartContents.length; i++)
     {
-      if (e == $cartContents[i].name)
+      if (nameOfItem == $cartContents[i].name)
       {
         doesNameExist = true;
         justNameIndex = i;
@@ -72,29 +74,29 @@ let reduce=1;
 
     if (doesNameExist == true && doesSizeExist == true)
     {
-      $cartContents[index].amount += N;
-      itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
+      $cartContents[index].amount += totalNumOfitems;
+      itemsInCart.update(n => n + totalNumOfitems); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
     }
     else if (doesNameExist == true && doesSizeExist == false) // executes only if item already exists, but size of item does
     {
       $cartContents[justNameIndex].sizes = [...$cartContents[justNameIndex].sizes, itemSize];
-      $cartContents[justNameIndex].amount += N;
+      $cartContents[justNameIndex].amount += totalNumOfitems;
       console.log("sizes " + $cartContents[justNameIndex].sizes);
-      console.log("Item added: " + e + " Num added: " + N + " Size: " + itemSize);
+      console.log("Item added: " + nameOfItem + " Num added: " + totalNumOfitems + " Size: " + itemSize);
       console.log("item exp: " + expDate + " item deal: " + itemDeal + " item cat: " + itemCategory + " item id: " + itemId);
       console.log($cartContents);
-      itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
+      itemsInCart.update(n => n + totalNumOfitems); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
     }
     else if (doesNameExist == false)
     {
       $cartContents = [...$cartContents, 
-                  {name: e, amount: N, sizes: itemSize, deal: itemDeal, 
+                  {name: nameOfItem, amount: totalNumOfitems, sizes: itemSize, deal: itemDeal, 
                   expiration_dates: expDate, category: itemCategory, 
                   image_src: itemImage, id: itemId}];
-      console.log("Item added: " + e + " Num added: " + N + " Size: " + itemSize);
+      console.log("Item added: " + nameOfItem + " Num added: " + totalNumOfitems + " Size: " + itemSize);
       console.log("item exp: " + expDate + " item deal: " + itemDeal + " item cat: " + itemCategory + " item id: " + itemId);
       console.log($cartContents);
-      itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
+      itemsInCart.update(n => n + totalNumOfitems); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
     }
     
  //  itemsInCart.update(n => n + N); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
@@ -135,6 +137,7 @@ let reduce=1;
         break;
     }
   }
+
 </script>
 
 <Dialog
