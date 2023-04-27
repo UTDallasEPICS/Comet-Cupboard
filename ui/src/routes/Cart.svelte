@@ -31,6 +31,20 @@
       return false;
   }
 
+  function dropDown()
+  {
+    if (dropDownOpen == false)
+    {
+      document.getElementById("dropdown-list").style.display = "block";
+      dropDownOpen = true;
+    }
+    else
+    {
+      document.getElementById("dropdown-list").style.display = "none";
+      dropDownOpen = false;
+    }
+  }
+
 </script>
 
 
@@ -53,8 +67,9 @@
         </Wrapper>
       </div>
       <h1>Cart</h1> <!-- title of page-->
+      {#if $cartContents.length != 0}
       <div class="item-dropdown">
-        <button on:click class ="item-button">Item Totals</button>
+        <button on:click={() => dropDown()} class ="item-button">Item Totals</button>
         <div id="dropdown-list" class="item-dropdown-cat">
           Total: {$itemsInCart} <br>
           Pantry Staples: {$pantryInCart} <br>
@@ -69,6 +84,7 @@
           Vegetables: {$vegInCart}
         </div>
       </div>
+      {/if}
     </div> 
     {#if $cartContents.length==0}
     <h3><b> PLEASE ADD ITEMS TO YOUR CART</b></h3> 
@@ -162,46 +178,7 @@
      position: sticky;
     }
 
-    /*styles checkout button*/
-  .checkoutbutton {
-    padding: 15px;
-    padding-left: 35px;
-  
-  }
-
-  .item-dropdown {
-    display: block;
-    position: relative;
-    text-align: center;
-    background-color: #d9d9d900;
-    color: #154734;
-    font-weight: bold;
-    font-family: Inter, sans-serif;
-    letter-spacing: normal;
-    text-transform: none;
-    line-height: 45px;
-    border-radius: 35px;
-  }
-
-  .item-dropdown-cat {
-    display: none;
-    margin: auto;
-    width: 175px;
-    text-align: left;
-    z-index: 2;
-    display: none;
-    overflow: auto;
-    background-color:#fff;
-    border-radius: 25px;
-    box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.4);
-    padding: 10px;
-  }
-
-  .item-dropdown:hover .item-dropdown-cat {
-    display: block;
-  }
-
-  .item-button {
+  button {
     display: inline-block;
     text-align: center;
     background-color: #D9D9D9;
@@ -214,7 +191,40 @@
     border-radius: 35px;
     box-shadow: 0px 2px 4px 0px rgb(169, 169, 169);
   }
+    /*styles checkout button*/
+  .checkoutbutton {
+    display: hidden;
+    padding: 15px;
+    padding-left: 35px;
+  }
 
-  .show {display:block;}
-    
+  .item-dropdown {
+    display: block;
+    position: relative;
+    line-height: 45px;
+    border-radius: 35px;
+  }
+
+  .item-dropdown-cat {
+    display: none;
+    font-weight: bold;
+    margin: auto;
+    position: absolute;
+    width: 175px;
+    text-align: left;
+    z-index: 2;
+    overflow: auto;
+    background-color:#fff;
+    border-radius: 25px;
+    box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.4);
+    padding: 10px;
+  }
+
+  .item-button {
+    display: inline-block;
+    text-align: center;
+    position: absolute;
+    right: 81vw;
+    bottom: .5vw;
+  }    
   </style>
