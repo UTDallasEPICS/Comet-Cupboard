@@ -135,7 +135,7 @@ export let item;  // item inside the cart
         <Confirm
           confirmTitle="Delete"
           cancelTitle="Cancel"
-          themeColor="165"
+          themeColor="140"
 
           let:confirm="{confirmThis}"
 >  
@@ -144,10 +144,10 @@ export let item;  // item inside the cart
           </div>
           
           <span slot="title">
-            Delete this item?
+            Delete
           </span>
           <span slot="description">
-            You won't be able to revert this!
+            Are you sure you want to delete this item?
           </span>
         </Confirm>
       </div>
