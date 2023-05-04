@@ -49,9 +49,7 @@ export let item;  // item inside the cart
       $cartContents = $cartContents;
       categorySubtraction(item.category, item.amount);
       itemsInCart.update(n => n - item.amount);
-    }
-    console.log($cartContents);
-    
+    }    
   }
 
   // subtracts from category count

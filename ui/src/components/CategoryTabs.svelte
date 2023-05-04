@@ -1,61 +1,62 @@
 <!--The different category tabs that will be on the left side of the screen-->
-
 <script>
+  import {catClicked} from '../stores.js';
+
   let categories = [
     {
       "name": "Pantry Staples",
       "color": "#38B6FF",
-      "target": "#/category/pantry-staples"
+      "target": "#/categories"
     },
     {
       "name": "Snacks",
       "color": "#9EDBFF",
-      "target": "#/category/snacks",
+      "target": "#/categories",
     },
     {
       "name": "Grains",
       "color": "#FED111",
-      "target": "#/category/grains",
+      "target": "#/categories",
     },
     {
       "name": "Breakfast Grains",
       "color": "#FFEB95",
-      "target": "#/category/breakfast-grains",
+      "target": "#/categories",
     },
     {
       "name": "Soup",
       "color": "#E57528",
-      "target": "#/category/soup",
+      "target": "#/categories",
     },
     {
       "name": "Protein",
       "color": "#DC4631",
-      "target": "#/category/protein",
+      "target": "#/categories",
     },
     {
       "name": "Household Items",
       "color": "#F6F6ED",
-      "target": "#/category/household-items",
+      "target": "#/categories",
     },
     {
       "name": "Personal Care",
       "color": "#929292",
-      "target": "#/category/personal-care",
+      "target": "#/categories",
     },
     {
       "name": "Fruits",
       "color": "#DA6F61",
-      "target": "#/category/fruits",
+      "target": "#/categories",
     },
     {
       "name": "Vegetables",
       "color": "#929292",
-      "target": "#/category/vegetables",
+      "target": "#/categories",
     }
   ];
   function handleCategoryClick(category) {
+    $catClicked = category.name;
     window.location.href = category.target;
-    document.getElementById("category-text").style.color = category.color;
   }
 </script>
 
@@ -63,7 +64,7 @@
   {#each categories as category, index}
     <!-- svelte-ignore a11y-click-events-have-key-events - next semester -->
       <p id="category-text" on:click={() => handleCategoryClick(categories[index])}>{category.name}</p>
-    <!-- rough color coding list for colored rectangles under category text, change colors to preferred and ensure color blind can see differences -->
+    <!-- color coding list for colored rectangles under category text -->
       {#if category.name === "Pantry Staples"}
         <div class="pantry"></div>
       {:else if category.name === "Snacks"}

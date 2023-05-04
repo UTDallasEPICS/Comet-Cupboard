@@ -54,9 +54,7 @@
     itemClickedCat.set(obj.category);
     itemClickedId.set(obj.id);
 
-    // console.log("after handleitem", $itemClickedImageSrc);
     open = true; // sets open to true to open the pop up once it knows which item to open
-    // console.log("after open", $itemClickedImageSrc);
   }
 </script>
 

@@ -1,4 +1,4 @@
-<!-- shows demo page for Personal Care category -->
+<!-- shows demo page for Breakfast Grains category -->
 
 <script>
     // importing components
@@ -7,6 +7,8 @@
     import Footer from '../components/Footer.svelte';
     import CategorySection from '../components/CategorySection.svelte';
     import CategoryTabs from '../components/CategoryTabs.svelte';
+    import { catClicked } from '../stores.js';
+
     </script>
 
 <div class="flex-wrapper">
@@ -20,7 +22,27 @@
           <CategoryTabs />
         </div>
         <div class="display-section">
-          <CategorySection category={"Personal Care"} />
+          {#if $catClicked === "Breakfast Grains"}
+          <CategorySection category={"Breakfast Grains"} />
+          {:else if $catClicked === "Fruits"}
+          <CategorySection category={"Fruits"} />
+          {:else if $catClicked === "Grains"}
+          <CategorySection category={"Grains"} />
+          {:else if $catClicked === "Household Items"}
+          <CategorySection category={"Household Items"} />
+          {:else if $catClicked === "Pantry Staples"}
+          <CategorySection category = "Pantry Staples" />
+          {:else if $catClicked === "Personal Care"}
+          <CategorySection category = "Personal Care" />
+          {:else if $catClicked === "Protein"}
+          <CategorySection category = "Protein" />
+          {:else if $catClicked === "Snacks"}
+          <CategorySection category = "Snacks" />
+          {:else if $catClicked === "Soup"}
+          <CategorySection category = "Soup" />
+          {:else if $catClicked === "Vegetables"}
+          <CategorySection category = "Vegetables" />
+        {/if}
         </div>
       </div>
     </div>

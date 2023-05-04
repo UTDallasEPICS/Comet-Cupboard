@@ -174,3 +174,4 @@ export const itemClickedSizes = writable([]);
 export const itemClickedExpDates = writable(["n/a"]);
 export const itemClickedCat = writable("");
 export const itemClickedId = writable("-1");
+export const catClicked = writable("");

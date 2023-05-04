@@ -23,11 +23,25 @@
            breakInCart, soupInCart, proteinInCart, houseInCart, personalInCart, fruitsInCart,
            vegInCart } from '../stores.js';
 
+    // resets cart for demo
     function confirmation() {
-    if (confirm("Hi Volunteer! Are these " + $itemsInCart + " items ready to be checked out?"))
+    if (confirm("You're checked out!"))
+    {
+      $cartContents = [];
+      $itemsInCart = 0;
+      $pantryInCart = 0;
+      $snacksInCart = 0;
+      $grainsInCart = 0;
+      $breakInCart = 0;
+      $soupInCart = 0;
+      $grainsInCart = 0;
+      $vegInCart = 0;
+      $personalInCart = 0;
+      $houseInCart = 0;
+      $proteinInCart = 0;
+
       return true;
-    else
-      return false;
+    }
   }
 
   function dropDown()
@@ -125,7 +139,7 @@
           let:confirm="{confirmThis}"
 >  
           <div class="checkoutbutton"> <!--checkout button-->
-            <button on:click={() => confirmThis()}>Checkout</button>
+            <button on:click={() => confirmThis(confirmation)}>Checkout</button>
           </div>
           
           <span slot="title">
