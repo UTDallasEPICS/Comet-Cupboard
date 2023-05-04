@@ -15,15 +15,14 @@
     import Wrapper from '@smui/touch-target';
     import Button, { Label, Icon } from '@smui/button';
     let clicked = 0;
-    let count=0;
 
   let dropDownOpen = false;
 
   //importing sample data
-  import { cartContents, inventory, itemsInCart, pantryInCart, snacksInCart, grainsInCart,
+  import { cartContents, itemsInCart, pantryInCart, snacksInCart, grainsInCart,
            breakInCart, soupInCart, proteinInCart, houseInCart, personalInCart, fruitsInCart,
            vegInCart } from '../stores.js';
-    import { loop_guard } from 'svelte/internal';
+
     function confirmation() {
     if (confirm("Hi Volunteer! Are these " + $itemsInCart + " items ready to be checked out?"))
       return true;
@@ -45,16 +44,32 @@
     }
   }
 
+  /*function checkoutPop()
+  {
+    if (checkOutOpen == false)
+    {
+      document.getElementById("checkout-box").style.display = "block";
+      document.getElementById("op").style.background = "black, 0, 0, 0, 0.5";
+      checkOutOpen = true;
+    }
+    else
+    {
+      document.getElementById("checkout-box").style.display = "none";
+      document.getElementById("op").style.background = "black, 0, 0, 0, 1";
+      checkOutOpen = false;
+    }
+  }*/
+
 </script>
 
-
-<div class="flex-wrapper">
-  <div class="header"> <!--header-->
-    <TopBar />
-  </div>
+<div id="op" class="opacity">
+  <div class="flex-wrapper">
+    <div class="header"> <!--header-->
+      <TopBar />
+    </div>
   <div class="container">
    
-    </div>
+  </div>
     <div class="side-by-side">
       <div class="shop-for-items-button" style="display:flex; flex-wrap:wrap; align-items:center;"> <!-- Shop for Items back button -->
         <Wrapper>
@@ -97,22 +112,36 @@
         <ItemCardCart bind:item={$cartContents[index]}></ItemCardCart>
         <p hidden>{$cartContents = $cartContents}</p> <!--updates cartContents array-->
       {/each}
-  </div>
+</div>
 
 {#if $cartContents.length!=0}
 
-<div class="checkoutbutton">
-  <button on:click={confirmation}>
-   Checkout
-   </button>
- </div>
+<!-- ignore error squiggles on themeColor, it is working-->
+<Confirm
+          confirmTitle="Checkout"
+          cancelTitle="Cancel"
+          themeColor="140"
+
+          let:confirm="{confirmThis}"
+>  
+          <div class="checkoutbutton"> <!--checkout button-->
+            <button on:click={() => confirmThis()}>Checkout</button>
+          </div>
+          
+          <span slot="title">
+            Checkout
+          </span>
+          <span slot="description">
+            Are you ready to checkout?
+          </span>
+        </Confirm>
 {/if}
  
   
   <div class="footer"> <!-- footer -->
     <Footer />
   </div>
-  
+</div>
 
 
   <style>
@@ -134,9 +163,6 @@
       display: flex;          /* using flex box to align items to center */
       flex-direction: column;
       align-items: center;
-    }
-    h3{
-      
     }
     /*makes everything within it lay side-by-side w/o interference w/ each other*/
     .side-by-side {
@@ -226,5 +252,55 @@
     position: absolute;
     right: 81vw;
     bottom: .5vw;
-  }    
+  }   
+  
+  /*
+  If making a custom checkout button format, here is a white box that pops up on top of the cart page
+
+  .checkout-popup
+  {
+    display: none;
+    vertical-align: middle;
+    position: absolute;
+
+    line-height: normal; /* fixes spacing of text */
+    /*
+    left: 0;
+    right: 0;
+
+    box-shadow: 0px 0px 100px 30px rgba(0.4,0.4,0.4,0.4);
+    margin-left: auto;
+    margin-right: auto;
+    border:rgb(180, 180, 180);
+    border-width: 10px;
+    border-radius: 25px;
+
+    transform: translateY(-180%);
+
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    height: 300px;
+    /* makes text have 1 word per line */
+    /*
+    padding-left: 15px;
+    padding-right: 15px;
+
+    color: rgb(182, 60, 60);
+
+    background-color: #F5F4F4;
+    font-size: 20px;
+    z-index: 4;
+  }*/
+
+  .opacity
+  {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black, 0, 0, 0, 1;
+    z-index: 10;
+  }
+
   </style>
