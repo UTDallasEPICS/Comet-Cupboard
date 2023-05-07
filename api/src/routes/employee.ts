@@ -3,7 +3,7 @@ import express from "express";
 import status from "http-status";
 import { validate as validateSchema, MongoIdSchema, IMongoIdSchema } from "../schema";
 import * as schema from "../schema/employee";
-import { Employee } from "../models";
+import { Employee, WorkerLogs } from "../models";
 
 
 
@@ -21,8 +21,9 @@ router.post("/", validateSchema(schema.CreateEmployeeSchema), async (req: schema
       }
       const employee = new Employee({
         netID: req.body.netID, 
-        password: req.body.password
-        
+        password: req.body.password,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
       });
       await employee.save();
       // remember to send a response back to whoever is requesting or else it will infinitely wait
@@ -31,75 +32,70 @@ router.post("/", validateSchema(schema.CreateEmployeeSchema), async (req: schema
       next(e);
     }
   });
-  
-    
     
     // get all accounts
     router.get("/", async (req, res, next) => {
-        try {
-          
-          const employeeInformation = await Employee.aggregate([
-            {
-              '$lookup': {
-                'from': 'workerlogs', 
-                'localField': '_id', 
-                'foreignField': 'employeeID', 
-                'as': 'employeeData'
-              }
-            }, {
-              '$project': {
-                'netID': '$netID', 
-                'totalHours': {
-                  '$sum': '$employeeData.timeWorked'
-                }
-              }
-            }
-          ])
-        
-          
-      
-          res.send({ employeeData: employeeInformation });
-        } catch (e) {
-          next(e);
-        }
+      try{
+        const employees = await Employee.find();
+        res.send({ accounts: employees});
+      } catch(e){
+        next(e);
+      }
     });
+
+  //update route
+  router.put("/", validateSchema(schema.CreateEmployeeSchema), async ( req: schema.ICreateEmployeeSchema, res, next) => {
+    try{
+      const existingEmployee = await Employee.findOne({ netID: req.body.netID });
+      if(!existingEmployee){
+        return next({
+          message: "Employee does not exist",
+          status: status.BAD_REQUEST
+        });
+      }
+      await Employee.findOneAndUpdate({
+        netID: req.body.netID
+      },
+      {
+        netID: req.body.netID,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        password: req.body.password
+      },
+      {
+        new: true
+      } 
+    );
+    res.send({ message: "Information Updated"});
+    }catch(e){
+      next(e);
+    }
+  });
 
     //get one account//
     //!!! This route currently does not work, to fix later (does not return any data, though it doesn't break)//
     router.get("/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, res, next) => {
-      
       try {
-          
-          const employeeInformation = await Employee.aggregate([
-            {
-              '$match': {
-                '_id': req.params.id,
-              }
-              
-            }])
-            console.log(employeeInformation);
-            console.log(req.params.id);
-            /*
-           {
-              '$lookup': {
-                'from': 'workerlogs', 
-                'localField': '_id', 
-                'foreignField': 'employeeID', 
-                'as': 'employeeData'
-              }
-            }])
-           
-            /*  {
-              '$project': {
-                'netID': '$netID', 
-                'totalHours': {
-                  '$sum': '$employeeData.timeWorked'
-                }
-              }
+        if(!req.params.id){
+          return next({ message: "netID is required", status: status.BAD_REQUEST});
+        }
+          const employee = await Employee.findOne({_id: req.params.id});
+          if(!employee){
+            return next({
+              message: "Account not found",
+              status: status.BAD_REQUEST
+            });
+          }
+          const logs = await WorkerLogs.find({ _id: req.params.id});
+          let sum = 0;
+          for(var i = 0; i < logs.length; i++){
+            let log = logs.at(i);
+            if(log?.timeWorked){
+              sum += log.timeWorked;
             }
-          ])
-*/
-          res.send({ employeeData: employeeInformation });
+          }
+          employee.timeWorked = sum;
+          res.send({ employee: employee});
       } catch (e) {
         next(e);
       }
@@ -118,4 +114,5 @@ router.post("/", validateSchema(schema.CreateEmployeeSchema), async (req: schema
       next(e);
     }
   });
+
 

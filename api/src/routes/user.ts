@@ -128,6 +128,24 @@ router.delete("/:id", validateSchema(MongoIdSchema), async (req, res, next) => {
   }
 });
 
+router.delete("/demographics/:id", validateSchema(MongoIdSchema), async( req: IMongoIdSchema, res, next) => {
+  try{
+    if(!req.params.id){
+      return next({
+        message: "Need param id",
+        status: status.BAD_REQUEST
+      });
+    }
+    await Demographics.deleteOne({
+      _id: req.params.id
+    });
+    res.send({
+      message: "Success"
+    });
+  } catch(e){
+    next(e);
+  }
+})
 
 // update exisiting form
 router.put("/demographics", validateSchema(demographicsSchema.CreateDemographicsSchema), async (req: demographicsSchema.ICreateDemographicsSchema, res, next) => {
@@ -154,6 +172,24 @@ router.put("/demographics", validateSchema(demographicsSchema.CreateDemographics
       });
     res.send({ message: "Successfully updated form!" });
   } catch(e) {
+    next(e);
+  }
+});
+
+router.put("/", validateSchema(schema.CreateUserSchema), async (req: schema.ICreateUserSchema, res, next) =>{
+  try{
+    await User.findOneAndUpdate({
+      netID: req.body.netID
+    },
+    {
+    },
+    {
+      new: true
+    });
+    res.send({
+      message: "Success"
+    });
+  } catch(e){
     next(e);
   }
 });

@@ -21,6 +21,7 @@ export function validate(schema: Joi.ObjectSchema) {
 
 export interface IMongoIdSchema extends express.Request {
   params: {
+    netID: any;
     id: string;
   };
 }

@@ -4,6 +4,8 @@ import { router as userRoute } from "./user";
 import { router as itemRoute } from "./items";
 import { router as EmployeeRoute } from "./employee";
 import { router as workerLogRoute } from "./workerLogs";
+import { router as donorRoute } from "./donor";
+import { router as checkoutLogRoute } from "./checkoutLog";
 
 export const router = express.Router();
 
@@ -32,6 +34,10 @@ router.use("/item", itemRoute);
 router.use("/employee", EmployeeRoute);
 
 router.use("/workerLogs", workerLogRoute);
+
+router.use("/donor", donorRoute);
+
+router.use("/checkoutLog", checkoutLogRoute);
 
 router.use((req: express.Request, res: express.Response) => {
   res.status(404).send({ message: "Endpoint not found" });

@@ -5,21 +5,19 @@ import {  MONGO_ID_REGEX } from ".";
 
 
 export interface ICreateWorkerLogSchema extends express.Request {
-
   body: {
-    
-   timeWorked: number;
+   timeWorked: number,
+   employeeID: String,
   };
   params: {
     id: string;
   };
   
-  
 }
 export const CreateWorkerLogSchema = Joi.object({
   body: Joi.object({
-   
     timeWorked:Joi.number(),
+    employeeID: Joi.string().required()
   }),
 
   params: Joi.object({ 
