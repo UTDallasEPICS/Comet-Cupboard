@@ -13,13 +13,13 @@
 
   let deleted = false ;
 // passed as a prop from Cart
-export let item;  // item inside the cart
+export let item;  
 
   let itemName = item.name;
 
-  let hasDeal;        // does the item have a deal
-  let itemDeal = "";  // deal for item text
-  if (item.deal != "")  // if item has a deal label
+  let hasDeal;        
+  let itemDeal = "";  
+  if (item.deal != "")  
   {
     hasDeal = true;
     itemDeal = item.deal;
@@ -30,9 +30,9 @@ export let item;  // item inside the cart
   }
 
   /* checks if item has an image */
-  let hasImage = false; // does item have an image
-  let image_url = "";   // image url
-  if (item.image_src != "") // if item has an image url
+  let hasImage = false; 
+  let image_url = "";   
+  if (item.image_src != "") 
   {
     hasImage = true;
     image_url = item.image_src;

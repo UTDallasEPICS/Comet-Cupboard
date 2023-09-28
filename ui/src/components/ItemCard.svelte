@@ -1,11 +1,11 @@
 <!-- item card displayed in checkout history and category section -->
 <script>
   // receives this as a prop from CheckoutHistory
-  export let item;  // item the user clicked on
+  export let item;  
   let itemName = item.name;
-  let hasDeal;        // does the item have a deal
-  let itemDeal = "";  // deal for item text
-  if (item.deal != "")  // if item has a deal label
+  let hasDeal;        
+  let itemDeal = "";  
+  if (item.deal != "")  
   {
     hasDeal = true;
     itemDeal = item.deal;
@@ -15,8 +15,8 @@
     hasDeal = false;
   }
 
-  let hasImage = false; // does item have an image
-  let image_url = "";   // image url
+  let hasImage = false; 
+  let image_url = "";   
   if (item.image_src != "") // if item has an image url
   {
     hasImage = true;
@@ -39,9 +39,9 @@
         </div>
       {/if}
     </div>
-  {:else if hasImage == false} <!-- if item does not have an image, then display placeholder text -->
+  {:else if hasImage == false} 
     <div class="white-box">
-      {#if hasDeal} <!-- if item has a deal, then show its deal label -->
+      {#if hasDeal} 
         <div class="deal-label">
           <p>{itemDeal}</p>
         </div>
