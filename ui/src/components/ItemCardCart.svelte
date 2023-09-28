@@ -29,6 +29,7 @@ export let item;  // item inside the cart
     hasDeal = false;
   }
 
+  /* checks if item has an image */
   let hasImage = false; // does item have an image
   let image_url = "";   // image url
   if (item.image_src != "") // if item has an image url

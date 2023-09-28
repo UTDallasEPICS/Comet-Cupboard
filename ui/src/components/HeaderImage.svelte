@@ -1,7 +1,8 @@
 <!-- component for Shop For Items image header -->
 
 <script>
-    //import HeaderImage from "../../src/images/header-image.jpg"
+  /* implement images later */
+    import HeaderImage from "../../src/images/header-image.jpg"
     import SearchIcon from "../../src/images/magnify-icon.png"
     import ScanIcon from "../../src/images/scan-icon.png"
 </script>
@@ -18,7 +19,7 @@
     width: 100%;
     height: 263px;
 
-    background-image: url("../../src/images/header-image.jpg");
+    background-image: url("../../src/images/header-image.jpg"); 
     background-repeat: no-repeat;
     background-size: cover;
   }

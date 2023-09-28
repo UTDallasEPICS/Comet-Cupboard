@@ -2,6 +2,7 @@
     import CometCupboardLogo from '../../src/images/CometCupboard_transparent.png';
 </script>
 
+<!-- Content in Footer includes contact info and mission statement-->
 <footer>
   <div>
       <img src={CometCupboardLogo} alt="Comet Cupboard logo." />

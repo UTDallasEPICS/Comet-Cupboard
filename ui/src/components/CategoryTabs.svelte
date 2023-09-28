@@ -56,7 +56,10 @@
   ];
   function handleCategoryClick(category) {
     $catClicked = category.name;
+    // Change the current page's URL to the target URL associated with the clicked category
     window.location.href = category.target;
+    // Change the text color of the category text to the color associated with the clicked category
+    document.getElementById("category-text").style.color = category.color;
   }
 </script>
 
@@ -84,6 +87,7 @@
       {:else if category.name === "Fruits"}
         <div class="fruit"></div>
       {/if}
+    <!-- When a category is clicked, it triggers the handleCategoryClick function -->
   {/each}
 </div>
  

@@ -1,3 +1,5 @@
+
+<!-- Description: This component is the top bar of the website. It contains the Comet Cupboard logo, a cart icon, and an account icon. -->
 <script>
     import CometCupboardLogo from '../../src/images/CometCupboard_transparent_orange.png';
     import InventoryIcon from '../../src/images/WarehouseInventory.png'
@@ -6,10 +8,11 @@
     import { itemsInCart } from '../stores.js';
 </script>
 
+<!--  Comet Cupboard Logo  -->
 <header class="flex-container">
   <div class="header-left">
     <a href="#/"> <!-- takes user to Shop for Items page (home page) -->
-      <img src={CometCupboardLogo} class="logo" alt="Comet Cupboard logo." />
+      <img src={CometCupboardLogo}  class="logo" alt="Comet Cupboard logo." />
     </a>
   </div>
 
@@ -49,8 +52,8 @@
     width: 160px;
     padding: 15px;
     padding-top: 20px;
-
     align-self: flex-start;
+    
   }
 
   .inventory{
