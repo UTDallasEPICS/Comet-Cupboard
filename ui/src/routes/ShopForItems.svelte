@@ -89,30 +89,26 @@
     text-align: center;
 
     /* positions category tab and checkout history side-by-side */
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    /* flex: 1; */
+    display: grid;
+    grid-template-columns: 2fr 10fr;
 
-    /* flex: 1 1 auto; */
     height:100%;
+    width:100%;
   }
 
   /*Invisible flex box under category tab */
   #category-tab {
-    width: 250px;    /* this is needed in order to get flex-grow to work */
-    top: 0;
-    align-self: flex-start;
+    position: sticky;
+    top:150px;
+    right: 0;
+
     background: #154734;
 
-    /*display: flex;*/
-    flex-direction: column;
-    flex-grow: 1000;
-    /* flex: 1 1 auto; */
     height: 100%;
+    width: 100%;
   }
 
   .display-section {
-    flex-grow: 100;   /* expands the width of checkout history to fill the remaining width  */
+
   }
   </style>
