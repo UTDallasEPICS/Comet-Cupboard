@@ -55,60 +55,44 @@
 
 <style>
 
-  .flex-wrapper {
-    /* min-height: 100%;
-    position: relative;
-    height: 100%; */
-
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-    
-    /*this doesn't work*/
-    /* justify-content: flex-start; */ 
-    /* box-sizing: border-box; */
-  }
-
   .header {
-    /* make header stay on top of page at all times */
     position: sticky;
-    top: 0;
-
-    /* make header stay in front of all items */
+    top:0;
     z-index: 2;
+    width:100vw;
   }
 
   .content {
-    z-index: 0;  /* make header stay in front of all items */
+    z-index: 0;  
   }
 
   .footer {
-    margin-top: auto; /* push footer to the bottom when content overflows the page and when content is short */  }
+    margin-top: auto; /* push footer to the bottom when content overflows the page and when content is short */  
+}
 
-  .container { /* contains category tab and checkout history */
+  .container {
     text-align: center;
 
-    /* positions category tab and checkout history side-by-side */
     display: grid;
-    grid-template-columns: 2fr 10fr;
+    grid-template-columns: 3fr 9fr;
 
     height:100%;
     width:100%;
   }
 
-  /*Invisible flex box under category tab */
   #category-tab {
     position: sticky;
-    top:150px;
+    top:101.85px;
     right: 0;
 
     background: #154734;
 
-    height: 100%;
-    width: 100%;
+    height: 90vh;
   }
 
   .display-section {
-
+    overflow-y: scroll;
+    width:100%;
+    height:100%;
   }
   </style>
