@@ -6,32 +6,14 @@
   import Footer from '../components/Footer.svelte';
   import CheckoutHistory from '../components/CheckoutHistory.svelte';
   import CategoryTabs from '../components/CategoryTabs.svelte';
+
+    $: categoryItemClicked = {};
+    const handleCategoryClick = (e) => {
+      console.log(e.detail);
+      categoryItemClicked = e.detail;
+    }
+
 </script>
-
-<!-- sample code from Svelte to get started
-  <main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank"> 
-      <img src="/vite.svg" class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank"> 
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Comet Cupboard</h1>
-
-  <div class="card">
-    <Counter />
-  </div>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
-</main> -->
 
 <div class="flex-wrapper">
   <div class="header">
@@ -41,10 +23,10 @@
     <HeaderImage />
     <div class="container">
       <div id="category-tab">
-        <CategoryTabs />
+        <CategoryTabs on:category-clicked(handleCategoryClick)/>
       </div>
       <div class="display-section">
-        <CheckoutHistory />
+        <CheckoutHistory category={categoryItemClicked} />
       </div>
     </div>
   </div>
@@ -70,6 +52,7 @@
     margin-top: auto; /* push footer to the bottom when content overflows the page and when content is short */  
 }
 
+/* contains category tab and checkout history */
   .container {
     text-align: center;
 
@@ -80,7 +63,8 @@
     width:100%;
   }
 
-  #category-tab {
+  
+  #category-tab { 
     position: sticky;
     top:101.85px;
     right: 0;

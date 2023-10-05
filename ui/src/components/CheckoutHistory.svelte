@@ -51,9 +51,17 @@
 
 		open = true; // sets open to true to open the pop up once it knows which item to open
   }
+
+  export let category; // category of items to display to user
+
 </script>
 
 <div>
+    {#if category === null}
+        <h1> All Items</h1>
+    {:else}
+        <h1> {category.name} </h1>
+    {/if}
   <h1>Checkout History</h1>
   <div>
     <Select

@@ -1,8 +1,15 @@
 <!--The different category tabs that will be on the left side of the screen-->
 <script>
+    import { createEventDispatcher } from 'svelte';
+    const dispatch = createEventDispatcher();
   import {catClicked} from '../stores.js';
 
   let categories = [
+    {
+        "name": "All",
+        "color": "#000",
+        "target": "#/all"
+    },
     {
       "name": "Pantry Staples",
       "color": "#38B6FF",
@@ -54,94 +61,42 @@
       "target": "#/categories",
     }
   ];
-  function handleCategoryClick(category) {
+  const handleCategoryClick = (category) => {
     $catClicked = category.name;
     window.location.href = category.target;
-
     // Change the text color of the category text 
     document.getElementById("category-text").style.color = category.color;
+    dispatch('category-clicked', category);
   }
 </script>
 
 <div>
-  {#each categories as category, index}
-    <!-- svelte-ignore a11y-click-events-have-key-events - next semester -->
-      <p id="category-text" on:click={() => handleCategoryClick(categories[index])}>{category.name}</p>
-    <!-- color coding list for colored rectangles under category text -->
-      <hr style="border-color:{category.color}">
-    
-  {/each}
+    {#each categories as category, index}
+        <!-- on:keypress is redundant and used to get rid of warning -->
+        <div class="category-box" style="border-bottom:3px solid {category.color}"
+            on:click={() => handleCategoryClick(catClicked[index])}  on:keypress={() => category}> 
+              <p id="category-text">{category.name}</p>
+        </div>
+        
+    {/each}
 </div>
  
 <style>
-  p {
-      text-align: center;
-      color: white;
-      cursor: pointer;
+    p {
+        text-align: center;
+        color: white;
+        padding: 32px;
+        padding-bottom: 0;
+        margin: 0px;
+    }
 
-      padding: 5px;
-  }
-
-  /* .pantry {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #38B6FF;
-  }
-
-  .snacks {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #9EDBFF;
-  }
-
-  .grains {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #FED111;
-  }
-
-  .breakfast {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #FFEB95;
-  }
-
-  .soup {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #E57528;
-  }
-
-  .protein {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #DC4631;
-  }
-
-  .house {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #F6F6ED;
-  }
-
-  .care {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #929292;
-  }
-
-  .fruit {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #DA6F61;
-  } */
+    .category-box {
+        cursor: pointer;
+    }
+    .category-box:hover {
+        background-color: #255744;
+    }
+    .category-box:active {
+        background-color: #053724;
+    }
 </style>
