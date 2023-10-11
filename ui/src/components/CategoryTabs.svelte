@@ -1,8 +1,7 @@
 <!--The different category tabs that will be on the left side of the screen-->
 <script>
     import { createEventDispatcher } from 'svelte';
-    const dispatch = createEventDispatcher();
-  import {catClicked} from '../stores.js';
+    import {categoryClicked} from '../stores.js';
 
   let categories = [
     {
@@ -62,11 +61,7 @@
     }
   ];
   const handleCategoryClick = (category) => {
-    $catClicked = category.name;
-    window.location.href = category.target;
-    // Change the text color of the category text 
-    document.getElementById("category-text").style.color = category.color;
-    dispatch('category-clicked', category);
+    categoryClicked.set(category);
   }
 </script>
 
@@ -74,8 +69,8 @@
     {#each categories as category, index}
         <!-- on:keypress is redundant and used to get rid of warning -->
         <div class="category-box" style="border-bottom:3px solid {category.color}"
-            on:click={() => handleCategoryClick(catClicked[index])}  on:keypress={() => category}> 
-              <p id="category-text">{category.name}</p>
+            on:click={() => handleCategoryClick(category)}  on:keypress={() => category}> 
+              <p id={category.name}>{category.name}</p>
         </div>
         
     {/each}
