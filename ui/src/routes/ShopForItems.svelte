@@ -7,12 +7,6 @@
   import CheckoutHistory from '../components/CheckoutHistory.svelte';
   import CategoryTabs from '../components/CategoryTabs.svelte';
 
-    $: categoryItemClicked = {};
-    const handleCategoryClick = (e) => {
-      console.log(e.detail);
-      categoryItemClicked = e.detail;
-    }
-
 </script>
 
 <div class="flex-wrapper">
@@ -23,10 +17,10 @@
     <HeaderImage />
     <div class="container">
       <div id="category-tab">
-        <CategoryTabs on:category-clicked(handleCategoryClick)/>
+        <CategoryTabs/>
       </div>
       <div class="display-section">
-        <CheckoutHistory category={categoryItemClicked} />
+        <CheckoutHistory/>
       </div>
     </div>
   </div>
