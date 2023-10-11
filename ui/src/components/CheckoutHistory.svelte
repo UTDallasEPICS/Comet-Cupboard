@@ -44,13 +44,13 @@
 		// let str = JSON.stringify(obj, null, 4); // outputs object into a formatted string for debugging
 		// console.log(str); // Logs output to dev tools console.
 		// console.log(obj.image_src);
-		itemClickedName.set(obj.name);
-		itemClickedImageSrc.set(obj.image_src);
-		itemClickedDeal.set(obj.deal);
-		itemClickedSizes.update(sizes => sizes = obj.sizes.slice(0));
-		itemClickedExpDates.update(expDates => expDates = obj.expiration_dates.slice(0));
-		itemClickedCat.set(obj.category);
-    itemClickedId.set(obj.id);
+        itemClickedName.set(obj.name);
+        itemClickedImageSrc.set(obj.image_src);
+        itemClickedDeal.set(obj.deal);
+        itemClickedSizes.update(sizes => sizes = obj.sizes.slice(0));
+        itemClickedExpDates.update(expDates => expDates = obj.expiration_dates.slice(0));
+        itemClickedCat.set(obj.category);
+        itemClickedId.set(obj.id);
 
 		open = true; // sets open to true to open the pop up once it knows which item to open
   }

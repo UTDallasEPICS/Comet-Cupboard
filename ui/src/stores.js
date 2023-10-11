@@ -175,7 +175,7 @@ export const itemClickedExpDates = writable(["n/a"]);
 export const itemClickedCat = writable("");
 export const itemClickedId = writable("-1");
 
-// Used to 
+// Used to to keep track of the category to display
 export const categoryClicked = writable({
     name:"All",
     color:"#000",
