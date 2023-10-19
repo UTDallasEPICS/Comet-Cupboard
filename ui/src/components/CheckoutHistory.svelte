@@ -57,11 +57,7 @@
 </script>
 
 <div>
-    {#if $categoryClicked.name === ""}
-        <h1> All Items</h1>
-    {:else}
-        <h1> {$categoryClicked.name} </h1>
-    {/if}
+    <h1>Checkout History</h1>
   <div>
     <Select
       class="shaped-outlined"
