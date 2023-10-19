@@ -6,6 +6,7 @@
   import Footer from '../components/Footer.svelte';
   import CheckoutHistory from '../components/CheckoutHistory.svelte';
   import CategoryTabs from '../components/CategoryTabs.svelte';
+    import CategorySection from '../components/CategorySection.svelte';
 
 </script>
 
@@ -20,7 +21,8 @@
         <CategoryTabs/>
       </div>
       <div class="display-section">
-        <CheckoutHistory/>
+        <CategorySection />
+        <!-- <CheckoutHistory/> -->
       </div>
     </div>
   </div>
@@ -62,6 +64,8 @@
     position: sticky;
     top:101.85px;
     right: 0;
+
+    max-width: 250px;
 
     background: #154734;
 
