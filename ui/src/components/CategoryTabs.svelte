@@ -1,8 +1,14 @@
 <!--The different category tabs that will be on the left side of the screen-->
 <script>
-  import {catClicked} from '../stores.js';
+    import { createEventDispatcher } from 'svelte';
+    import {categoryClicked} from '../stores.js';
 
   let categories = [
+    {
+        "name": "All",
+        "color": "#000",
+        "target": "#/all"
+    },
     {
       "name": "Pantry Staples",
       "color": "#38B6FF",
@@ -54,112 +60,38 @@
       "target": "#/categories",
     }
   ];
-  function handleCategoryClick(category) {
-    $catClicked = category.name;
-    window.location.href = category.target;
-
-    // Change the text color of the category text 
-    document.getElementById("category-text").style.color = category.color;
+  const handleCategoryClick = (category) => {
+    categoryClicked.set(category);
   }
 </script>
 
 <div>
-  {#each categories as category, index}
-    <!-- svelte-ignore a11y-click-events-have-key-events - next semester -->
-      <p id="category-text" on:click={() => handleCategoryClick(categories[index])}>{category.name}</p>
-    <!-- color coding list for colored rectangles under category text -->
-      {#if category.name === "Pantry Staples"}
-        <div class="pantry"></div>
-      {:else if category.name === "Snacks"}
-        <div class="snacks"></div>
-      {:else if category.name === "Grains"}
-        <div class="grains"></div>
-      {:else if category.name === "Breakfast Grains"}
-        <div class="breakfast"></div>
-      {:else if category.name === "Soup"}
-        <div class="soup"></div>
-      {:else if category.name === "Protein"}
-        <div class="protein"></div>
-      {:else if category.name === "Household Items"}
-        <div class="house"></div>
-      {:else if category.name === "Personal Care"}
-        <div class="care"></div>
-      {:else if category.name === "Fruits"}
-        <div class="fruit"></div>
-      {/if}
-    
-  {/each}
+    {#each categories as category, index}
+        <!-- on:keypress is redundant and used to get rid of warning -->
+        <div class="category-box" style="border-bottom:3px solid {category.color}"
+            on:click={() => handleCategoryClick(category)}  on:keypress={() => category}> 
+              <p id={category.name}>{category.name}</p>
+        </div>
+        
+    {/each}
 </div>
  
 <style>
-  p {
-      text-align: center;
-      color: white;
-      cursor: pointer;
+    p {
+        text-align: center;
+        color: white;
+        padding: 32px;
+        padding-bottom: 0;
+        margin: 0px;
+    }
 
-      padding: 5px;
-  }
-
-  .pantry {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #38B6FF;
-  }
-
-  .snacks {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #9EDBFF;
-  }
-
-  .grains {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #FED111;
-  }
-
-  .breakfast {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #FFEB95;
-  }
-
-  .soup {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #E57528;
-  }
-
-  .protein {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #DC4631;
-  }
-
-  .house {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #F6F6ED;
-  }
-
-  .care {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #929292;
-  }
-
-  .fruit {
-      margin: auto;
-      height: 5px;
-      width: 65%;
-      background-color: #DA6F61;
-  }
+    .category-box {
+        cursor: pointer;
+    }
+    .category-box:hover {
+        background-color: #255744;
+    }
+    .category-box:active {
+        background-color: #053724;
+    }
 </style>
