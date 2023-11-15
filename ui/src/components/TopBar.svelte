@@ -32,6 +32,10 @@
       <a href="#/inventory">
       <img src={InventoryIcon} class="inventory" alt="Inventory icon" />
     </a>
+    <!-- </div> -->
+    <a href="#/NTFBForm">
+      <img src={InventoryIcon} class="inventory" alt="Inventory icon" />
+    </a>
     <!-- <p>NetID</p> -->
   </div>
   <!-- <div class="header-right">
