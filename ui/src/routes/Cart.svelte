@@ -1,4 +1,6 @@
-<!-- This file is for building the Cart Page -->
+<!-- This file is for building the Cart Page 
+      Use flex-column for item cards
+-->
 
 <script lang="ts">
   //importing components
@@ -21,8 +23,9 @@
   //importing sample data
   import { cartContents, itemsInCart, pantryInCart, snacksInCart, grainsInCart,
            breakInCart, soupInCart, proteinInCart, houseInCart, personalInCart, fruitsInCart,
-           vegInCart } from '../stores.js';
+           vegInCart } from '../stores.js'; 
 
+    
     // resets cart for demo
     function confirmation() {
     if (confirm("You're checked out!"))
@@ -43,7 +46,7 @@
       return true;
     }
   }
-
+  // use for quanity button in cart
   function dropDown()
   {
     if (dropDownOpen == false)
@@ -58,6 +61,20 @@
     }
   }
 
+  function removeAllItems() {
+    $cartContents = []; // Set the cart contents to an empty array to remove all items
+    $itemsInCart = 0;
+    $pantryInCart = 0;
+    $snacksInCart = 0;
+    $grainsInCart = 0;
+    $breakInCart = 0;
+    $soupInCart = 0;
+    $vegInCart = 0;
+    $personalInCart = 0;
+    $houseInCart = 0;
+    $proteinInCart = 0;
+    $fruitsInCart = 0;
+  }
   /*function checkoutPop()
   {
     if (checkOutOpen == false)
@@ -95,7 +112,19 @@
           </a>
         </Wrapper>
       </div>
+      <div class="remove-all-button" style="display:flex; flex-wrap:wrap; align-items:center;"> <!-- Select All Button -->
+        <Wrapper>
+          {#if $cartContents.length > 0}
+            <Button on:click={removeAllItems} variant="raised" touch> <!-- Add functionality later-->
+              <Label>Remove All</Label>
+            </Button>
+          {/if}
+        </Wrapper>
+      </div>
+      
+     
       <h1>Cart</h1> <!-- title of page-->
+      <!-- remove if block and instead implement the container on right side which adds categories-->
       {#if $cartContents.length != 0}
       <div class="item-dropdown">
         <button on:click={() => dropDown()} class ="item-button">Item Totals</button>
@@ -111,6 +140,14 @@
           Personal Care: {$personalInCart} <br>
           Fruits: {$fruitsInCart} <br>
           Vegetables: {$vegInCart}
+        </div>
+        <!-- Add the categories based on if their in the cart, have the total too-->
+        <div class = "category-container">
+          <div class="scrollable-area">
+      
+          </div>
+          <div class="white-line"></div>
+          <p id="total-text">Total: {$itemsInCart} Items</p> 
         </div>
       </div>
       {/if}
@@ -139,7 +176,7 @@
           let:confirm="{confirmThis}"
 >  
           <div class="checkoutbutton"> <!--checkout button-->
-            <button on:click={() => confirmThis(confirmation)}>Checkout</button>
+            <button on:click={() => confirmThis(confirmation)}>Verify Checkout</button>
           </div>
           
           <span slot="title">
@@ -156,6 +193,7 @@
     <Footer />
   </div>
 </div>
+
 
 
   <style>
@@ -190,6 +228,53 @@
       position: absolute;
       left: 0;
     }
+    .remove-all-button{
+      margin: 20px 15px;
+      margin-left: 190px;
+      position: absolute;
+      
+    }
+    .category-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 20vw;
+      height: 25vw;
+      top: 40%;
+      right: 450px;
+      position: absolute;
+      border-radius: 10px; /* Provides curved edges */
+      background-color: #154734; /* Background color for the box */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+        
+
+    }
+    .scrollable-area {
+      height: 50%; /* Height of the scrollable area (adjust as needed) */
+      overflow-y: auto; /* Enable vertical scrollbar */
+    }
+
+    .white-line {
+      width: 100%; /* Spans the entire width of the green box */
+      height: 1px; /* Adjust the height of the line */
+      background-color: white; /* Sets the color of the line */
+      position: absolute;
+      top: 82%; /* Adjusts the position vertically */
+      transform: translateY(-50%); /* Centers the line */
+    }
+
+    #total-text { /*<p id="item-detail-title"> */
+      font-size: 45px; /* Set the desired font size */
+      text-align: center; /* Aligns text in the center */
+      position: absolute;
+      font-weight: bold; /* Adds bold to the text */
+      bottom: 0%; /* Positions the text in the middle */
+      transform: translateY(50%);
+      width: 100%; /* Spans the entire width */
+      color: white
+    }
+    
+   
     * :global(.mdc-button--raised:not(:disabled)) {
         background-color: #D9D9D9 !important;
         color: #154734 !important;
@@ -202,6 +287,12 @@
         line-height: 45px !important;
         border-radius: 35px;
     }
+    * :global(.remove-all-button .mdc-button--raised) {
+        background-color: red !important;
+        color: #D9D9D9 !important;
+    }
+    
+
    /*styles Cart title*/
    h1 {
       text-align: center;
@@ -221,8 +312,8 @@
   button {
     display: inline-block;
     text-align: center;
-    background-color: #D9D9D9;
-    color: #154734;
+    background-color: #154734;
+    color: #D9D9D9;
     font-weight: bold;
     font-family: Inter, sans-serif;
     letter-spacing: normal;
@@ -233,9 +324,12 @@
   }
     /*styles checkout button*/
   .checkoutbutton {
-    display: hidden;
-    padding: 15px;
-    padding-left: 35px;
+    position: absolute;
+    padding: 25px;
+    font-size: 30px;
+    top: 65%;
+    right: 460px;
+    
   }
 
   .item-dropdown {
@@ -261,7 +355,7 @@
   }
 
   .item-button {
-    display: inline-block;
+    display: none;
     text-align: center;
     position: absolute;
     right: 81vw;

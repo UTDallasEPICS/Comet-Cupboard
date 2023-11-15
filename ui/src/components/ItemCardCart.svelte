@@ -1,5 +1,6 @@
 <!--item cards for each item on the Cart page-->
-
+<!--<i class="fa-solid fa-chevron-down"></i> chevron for dropdown and create remove button-->
+<!-- create the quantity button in div class= right-->
 <script>
 // @ts-nocheck
 
@@ -127,7 +128,7 @@ export let item;
       <div class="right"> <!--text + icons on item card-->
         <div class="side-by-side">
           <div class="item-text">
-            <p id="item-detail-title"><strong>Item Name: </strong><br>Size: <br>Expiration Date: <br>Amount: </p>
+            <p id="item-detail-title"><strong>Item Name: </strong><br>Size: <br>Expiration Date: <br>Quantity: </p>
             <p id="item-details"><strong>{itemName}</strong><br>{item.sizes}<br>{item.expiration_dates[0]}<br>{item.amount}</p>
           </div>
         </div>
@@ -139,7 +140,9 @@ export let item;
           let:confirm="{confirmThis}"
 >  
           <div class="remove-button" style="display: flex; align-items: center;"> <!--remove button-->
-            <IconButton class="material-icons" on:click={() =>  confirmThis(handleDelete, item)} ripple={false}>close</IconButton>
+            <IconButton class="material-icons" on:click={() =>  confirmThis(handleDelete, item)} ripple={false}>
+              <i class="fa fa-trash" aria-hidden="true"></i> <!--trash icon-->
+            </IconButton>
           </div>
           
           <span slot="title">
@@ -156,21 +159,21 @@ export let item;
 <style>
   /*styles item card background*/
   .item-card-container {
-      background-color: #F5F4F4;
+      background-color: #EEEEEE;
       border-radius: 10px;
-      border-color: #A9A8A8;
-      border-width: 1px;
-      border-style: solid;
-      box-shadow: 2px 3px 5px 2px rgb(0 0 0 / 0.2);
+      border-color: #ffffff;
+      border-width: 0px;
+      border-style: none;
+      box-shadow: 2px 3px 5px 2px rgb(0 0 0 / 0.2); 
       display: flex;
       flex-direction: column;
       /* align-items: center; centers item cards inside */
       place-items: stretch stretch; /*combines align-items and justify-items*/
-      width: 90vw;
+      width: 45vw;
       height: 15vh;
       margin-block-end: 25px;
-      margin-top: 20px;
-      margin-left: auto;
+      margin-top: 30px;
+      margin-left: 40px;
       margin-bottom: auto;
       margin-right: auto;
   }
@@ -276,11 +279,11 @@ export let item;
   /*styles the text on the item card*/
   .item-text {
     position: relative;
-    top: 15px;
+    top: 1px;
     white-space: normal;
   }
   #item-detail-title {
-    text-align: right;
+    text-align: left;
     right: 0px;
   }
   #item-details {
@@ -295,8 +298,8 @@ export let item;
   /*styles remove button*/
   .remove-button {
     position: relative;
-    left: 290px;
-    bottom: 100px;
+    left: 100px;
+    bottom: 10px;
   }
   :global(.mdc-icon-button) {
     font-size: 36px !important;
