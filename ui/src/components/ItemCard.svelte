@@ -19,6 +19,12 @@
   let image_url = item.image_src;
 </script>
 
+<!-- These are experimental components
+     they are still not complete and need to figure out
+     what is the best way to design and implement them
+     for it to work well in phones, tablets, and desktop/laptop
+ -->
+
 <!-- svelte-ignore a11y-click-events-have-key-events (to-do for next semester) -->
 <div style="height:100%">
     <Card class="card">
