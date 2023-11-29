@@ -1,14 +1,7 @@
 <script>
     // importing components
-    import TopBar from '../components/TopBar.svelte';
-   
-    import Footer from '../components/Footer.svelte';
 </script>
 <div class="flex-wrapper">
-    <div class="header">
-      <TopBar />
-    </div>
-    
       </div>
       <div class="ntfbform">
       <div class="center">
@@ -67,9 +60,7 @@
 </div>
 
 
-<div class="footer">
-    <Footer />
-</div>
+
 </div>
 <style>
 
