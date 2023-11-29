@@ -1,6 +1,6 @@
 <!-- This file is for building the Inventory Page -->
 
-<script>
+<script lang='ts'>
 // @ts-nocheck
 
   //importing components
@@ -8,14 +8,25 @@
     import Footer from '../components/Footer.svelte'
     import Table from '../components/InventoryTable.svelte'
     import { inventory } from '../stores.js'
+    import ItemDetails from '../components/ItemDetails.svelte';
+    import AddItemDialog from '../components/AddItemDialog.svelte';
+    import EditItemDialog from '../components/EditItemDialog.svelte';
+    import RemoveItemDialog from '../components/RemoveItemDialog.svelte';
     
-    let cometStyle = "cometTable";
-
     //importing from SMUI 
-    import Wrapper from '@smui/touch-target';
     import Button, { Label, Icon } from '@smui/button';
-    let clicked = 0;
+    import DataTable,{Body,Cell,Head,Row} from "@smui/data-table/";
+    import Checkbox from '@smui/checkbox';
+    import Dialog, { Actions, Content, Title } from "@smui/dialog";
 
+    // modal listeners
+    let detailOpen = false;
+    let addOpen = false;
+    let removeOpen = false;
+    let editOpen = false;
+
+    let cometStyle = "cometTable";
+    let selected:item[];
 </script>
 
 <div class="flex-wrapper">
@@ -25,24 +36,54 @@
   <div class="container">
     <div class="side-by-side">
       <div class="shop-for-items-button" style="display:flex; flex-wrap:wrap; align-items:center;"> <!-- Shop for Items back button -->
-        <Wrapper>
-          <a href="#/">
-            <Button on:click={() => clicked++} variant="raised" touch>
-              <Icon class="material-icons">arrow_back_ios</Icon>
-              <Label>Shop for Items</Label>
-            </Button>
-          </a>
-        </Wrapper>
+        <!-- <Button on:click={() => clicked++} variant="raised" touch>
+            <Icon class="material-icons">arrow_back_ios</Icon>
+            <Label>Shop for Items</Label>
+        </Button> -->
       </div>
       <h1>Inventory</h1> <!-- title of page-->
     </div> 
 </div>
 
-<Table tableData={$inventory} style={cometStyle}/>
+
+<div class="buttonRow">
+    <!-- display each row button and write a function for each button -->
+    <Button on:click={() => (addOpen = true)} ><Label>Add Item</Label></Button>
+    {#if selected && selected.length==1}
+        <Button on:click={() => (detailOpen = true)} ><Label>Details</Label>    </Button>
+        <Button on:click={() => (removeOpen = true)}><Label>Remove Item</Label></Button>
+        <Button on:click={() => (editOpen = true)}><Label>Edit Item</Label></Button>
+    {:else}
+        <Button disabled ><Label>Details</Label></Button>
+        <Button disabled><Label>Remove Item</Label></Button>
+        <Button disabled><Label>Edit Item</Label></Button>
+    {/if}
+</div>
+
+<Table bind:selected tableData={$inventory} style={cometStyle}/>
+<div>
+    <Dialog
+        bind:open={addOpen}
+        class = "addDialog"
+        surface$style="width: 80%; max-width: calc(100vw - 2rem);"
+    >
+        <AddItemDialog />
+    </Dialog>
+    <Dialog bind:open={detailOpen}>
+        <ItemDetails bind:selected={selected} />
+    </Dialog>
+    <Dialog bind:open={removeOpen}>
+        <RemoveItemDialog />
+    </Dialog>
+    <Dialog bind:open={editOpen}>
+        <EditItemDialog />
+    </Dialog>
+</div>
   
-  <div class="footer"> <!-- footer -->
+<div class="footer"> <!-- footer -->
     <Footer />
-  </div>
+</div>
+
 </div>
 
 <style>
@@ -51,25 +92,25 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-  }
+}
 
   /*styles header*/
   .header {
-    position: sticky; /* make header stay on top of page at all times */
-    top: 0;
-    z-index: 2;       /* make header stay in front of all items */
-  }
+      position: sticky; /* make header stay on top of page at all times */
+      top: 0;
+      z-index: 2;       /* make header stay in front of all items */
+    }
+    
+    /*holds all of the content on page*/
+    .container {
+        z-index: 0;             /* make header stay in front of all items */
+        display: flex;          /* using flex box to align items to center */
+        flex-direction: column;
+        align-items: center;
+    }
 
-  /*holds all of the content on page*/
-  .container {
-    z-index: 0;             /* make header stay in front of all items */
-    display: flex;          /* using flex box to align items to center */
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /*makes everything within it lay side-by-side w/o interference w/ each other*/
-  .side-by-side {
+    /*makes everything within it lay side-by-side w/o interference w/ each other*/
+    .side-by-side {
     text-align: center;
     display: flex;                  /* positions both elements side-by-side */
     justify-content: space-between;
@@ -94,16 +135,20 @@
       text-transform: none !important;
       line-height: 45px !important;
       border-radius: 35px;
-  }
-  
- /*styles Cart title*/
- h1 {
-    text-align: center;
-    margin-top: 25px;
-  }
+    }
 
+    * :global(.addDialog) {
+        width:80%;
+    }
+    
+    /*styles Cart title*/
+    h1 {
+        text-align: center;
+        margin-top: 25px;
+    }
+    
  /*styles footer*/
  .footer {
-    margin-top: auto; 
-  }
+     margin-top: auto; 
+    }
 </style>
