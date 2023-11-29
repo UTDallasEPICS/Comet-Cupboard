@@ -1,6 +1,12 @@
 <!-- This file is for building the Cart Page 
       Use flex-column for item cards
--->
+      make sure that everything is grid aligned and not fixed so the right containter doesnt move 
+      add select all and remove button when clicking an item card it should highlight to orange outline
+      have a boolean value for isSelected, if true than apply the orange style to the itemcard
+      when remove is clicked all the highlighted cards will disappear, updating item count in array and categories
+      in the itemcarcard, add the quaitity button file at the top and it should appear in the card
+      the quantity should reflect in all the arrays
+    -->
 
 <script lang="ts">
   //importing components
@@ -17,8 +23,9 @@
     import Wrapper from '@smui/touch-target';
     import Button, { Label, Icon } from '@smui/button';
     let clicked = 0;
+    let dropDownOpen = false;
 
-  let dropDownOpen = false;
+  
 
   //importing sample data
   import { cartContents, itemsInCart, pantryInCart, snacksInCart, grainsInCart,
@@ -61,20 +68,6 @@
     }
   }
 
-  function removeAllItems() {
-    $cartContents = []; // Set the cart contents to an empty array to remove all items
-    $itemsInCart = 0;
-    $pantryInCart = 0;
-    $snacksInCart = 0;
-    $grainsInCart = 0;
-    $breakInCart = 0;
-    $soupInCart = 0;
-    $vegInCart = 0;
-    $personalInCart = 0;
-    $houseInCart = 0;
-    $proteinInCart = 0;
-    $fruitsInCart = 0;
-  }
   /*function checkoutPop()
   {
     if (checkOutOpen == false)
@@ -91,6 +84,44 @@
     }
   }*/
 
+  
+  let isSelectMode = false; // when in select mode, this will be set to true
+  function toggleSelectMode() {
+      isSelectMode = !isSelectMode;
+  }
+  let selectedItems: boolean[] = []; // stores the selected items
+
+  function toggleItemSelected(index) { // toggles the selected item
+    if(isSelectMode) {
+      selectedItems[index] = !selectedItems[index];
+      // Force Svelte to recognize the change in the array
+      selectedItems = [...selectedItems];
+    }
+
+  }
+  let isSelectAllActive = false;
+  function toggleSelectAll() {
+    isSelectAllActive = !isSelectAllActive;
+    selectAllItems();
+  }
+
+  function selectAllItems() { // selects all items
+    selectedItems = $cartContents.map(() => isSelectAllActive);
+  }
+
+  function removeSelectedItems() {
+    if (isSelectMode || isSelectAllActive) {
+      $cartContents = $cartContents.filter((_, index) => !selectedItems[index]);
+      selectedItems = $cartContents.map(() => false); // Reset the selection
+      isSelectMode = false; // Optionally reset the select mode
+      isSelectAllActive = false; // Optionally reset the select all mode
+      $itemsInCart = 0;
+    }
+  }
+
+  
+
+
 </script>
 
 <div id="op" class="opacity">
@@ -99,94 +130,97 @@
       <TopBar />
     </div>
   <div class="container">
-   
   </div>
+  
     <div class="side-by-side">
-      <div class="shop-for-items-button" style="display:flex; flex-wrap:wrap; align-items:center;"> <!-- Shop for Items back button -->
-        <Wrapper>
-          <a href="#/">
-            <Button on:click={() => clicked++} variant="raised" touch>
-              <Icon class="material-icons">arrow_back_ios</Icon>
-              <Label>Shop for Items</Label>
-            </Button>
-          </a>
-        </Wrapper>
-      </div>
-      <div class="remove-all-button" style="display:flex; flex-wrap:wrap; align-items:center;"> <!-- Select All Button -->
-        <Wrapper>
-          {#if $cartContents.length > 0}
-            <Button on:click={removeAllItems} variant="raised" touch> <!-- Add functionality later-->
-              <Label>Remove All</Label>
-            </Button>
-          {/if}
-        </Wrapper>
-      </div>
-      
-     
       <h1>Cart</h1> <!-- title of page-->
-      <!-- remove if block and instead implement the container on right side which adds categories-->
-      {#if $cartContents.length != 0}
-      <div class="item-dropdown">
-        <button on:click={() => dropDown()} class ="item-button">Item Totals</button>
-        <div id="dropdown-list" class="item-dropdown-cat">
-          Total: {$itemsInCart} <br>
-          Pantry Staples: {$pantryInCart} <br>
-          Snacks: {$snacksInCart} <br>
-          Grains: {$grainsInCart} <br>
-          Breakfast Grains: {$breakInCart} <br>
-          Soup: {$soupInCart} <br>
-          Protein: {$proteinInCart} <br>
-          Household Items: {$houseInCart} <br>
-          Personal Care: {$personalInCart} <br>
-          Fruits: {$fruitsInCart} <br>
-          Vegetables: {$vegInCart}
+      <div class="buttons-container"> <!-- flexbox for buttons on top -->
+        <div class="shop-for-items-button" style="display:flex; flex-wrap:wrap; align-items:center;"> <!-- Shop for Items back button -->
+          <Wrapper>
+            <a href="#/">
+              <Button on:click={() => clicked++} variant="raised" touch>
+                <Icon class="material-icons">arrow_back_ios</Icon>
+                <Label>Shop for Items</Label>
+              </Button>
+            </a>
+          </Wrapper>
         </div>
-        <!-- Add the categories based on if their in the cart, have the total too-->
-        <div class = "category-container">
-          <div class="scrollable-area">
-      
-          </div>
-          <div class="white-line"></div>
-          <p id="total-text">Total: {$itemsInCart} Items</p> 
+        <div class="select-button {isSelectMode ? 'selected' : ''}" style="display:flex; flex-wrap:wrap; align-items:center;"> <!-- Select All Button -->
+          <Wrapper>
+            {#if $cartContents.length > 0}
+              <Button on:click={toggleSelectMode} variant="raised" touch> <!-- Add functionality later-->
+                <Label>Select</Label>
+              </Button>
+            {/if}
+          </Wrapper>
+        </div>
+        <div class="select-all-button {isSelectAllActive ? 'selected' : ''}" style="display:flex; flex-wrap:wrap; align-items:center;"> <!-- Select All Button -->
+          <Wrapper>
+            {#if $cartContents.length > 0}
+            <Button on:click={toggleSelectAll} variant="raised" touch> <!-- Add functionality later-->
+                <Label>Select All</Label>
+              </Button>
+            {/if}
+          </Wrapper>
+        </div>
+        <div class="remove-button" style="display:flex; flex-wrap:wrap; align-items:center;"> <!-- Select All Button -->
+          <Wrapper>
+            {#if $cartContents.length > 0}
+              <Button class = "remove-button" on:click={removeSelectedItems} variant="raised" touch> <!-- Add functionality later-->
+                <Label>Remove</Label>
+              </Button>
+            {/if}
+          </Wrapper>
         </div>
       </div>
-      {/if}
-    </div> 
-    {#if $cartContents.length==0}
-    <h3><b> PLEASE ADD ITEMS TO YOUR CART</b></h3> 
-    
-    {/if}
- 
-      {#each $cartContents as cartItem, index (cartItem.id)} <!--adds sample data  from stores.js-->
-        <!--<ItemCardCart bind:item={$cartContents[index]}/>-->
-        
-        <ItemCardCart bind:item={$cartContents[index]}></ItemCardCart>
-        <p hidden>{$cartContents = $cartContents}</p> <!--updates cartContents array-->
-      {/each}
+      
+      
+      {#if $cartContents.length > 0}
+          <div class="checkout-area"> 
+            <div class="category-container">
+              <div class="scrollable-area">
+                <!-- Content of scrollable area -->
+              </div>
+              <hr> 
+              <div class="white-line"></div>
+              <p id="total-text">Total: {$itemsInCart} Items</p> 
+            </div>
+            <Confirm
+              confirmTitle="Checkout"
+              cancelTitle="Cancel"
+              themeColor="140" 
+              let:confirm="{confirmThis}"
+            >  
+              <div class="checkoutbutton">
+                <button on:click={() => confirmThis(confirmation)}>Verify Checkout</button>
+              </div>
+              <span slot="title">
+                Checkout
+              </span>
+              <span slot="description">
+                Are you ready to checkout?
+              </span>
+            </Confirm>
+          </div>
+        {/if}
+
+        {#if $cartContents.length == 0}
+          <h2><b> PLEASE ADD ITEMS TO YOUR CART</b></h2>
+        {/if}
+
+        {#each $cartContents as cartItem, index (cartItem.id)}
+          <ItemCardCart
+            bind:item={$cartContents[index]}
+            isSelected={selectedItems[index]}
+            isSelectMode={isSelectMode}
+            on:click={() => toggleItemSelected(index)}>
+          </ItemCardCart>
+          <p hidden>{$cartContents = $cartContents}</p> <!--updates cartContents array-->
+        {/each}
+    </div>
 </div>
 
-{#if $cartContents.length!=0}
 
-<!-- ignore error squiggles on themeColor, it is working-->
-<Confirm
-          confirmTitle="Checkout"
-          cancelTitle="Cancel"
-          themeColor="140"
-
-          let:confirm="{confirmThis}"
->  
-          <div class="checkoutbutton"> <!--checkout button-->
-            <button on:click={() => confirmThis(confirmation)}>Verify Checkout</button>
-          </div>
-          
-          <span slot="title">
-            Checkout
-          </span>
-          <span slot="description">
-            Are you ready to checkout?
-          </span>
-        </Confirm>
-{/if}
  
   
   <div class="footer"> <!-- footer -->
@@ -222,27 +256,53 @@
       /*display: flex;                  /* positions both elements side-by-side */
       justify-content: space-between;
     }
+    
     /*styles Shop for Items button*/
     .shop-for-items-button {
       margin: 20px 15px;
-      position: absolute;
+      margin-top: 2em;
+      position: relative;
       left: 0;
     }
-    .remove-all-button{
-      margin: 20px 15px;
-      margin-left: 190px;
+    .buttons-container {
+      display: flex;
+      align-items: center; /* Aligns items vertically in the center */
+      /* Additional styling as needed */
+    }
+
+    .select-button {
+      margin-left: 0px; /* Adjust this value to set the horizontal distance */
+      margin-top: 1em;
+      /* Additional styling for the button */
+    }
+
+    .select-all-button {
+      margin-left: 10px; /* Adjust this value to set the horizontal distance */
+      margin-top: 1em;
+      /* Additional styling for the button */
+    }
+    .remove-button {
+      margin-left: 10px;   
+      margin-top: 1em;
+    }
+    .checkout-area {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end; /* Align children to the right */
       position: absolute;
-      
+      top: 20%; /* Adjust as needed */
+      right: 5%; /* Use percentage for responsiveness */
+      width: 20vw; /* Adjust width as needed */
     }
     .category-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 20vw;
-      height: 25vw;
+      height: 23vw;
       top: 40%;
-      right: 450px;
-      position: absolute;
+      right: 65%;
+      position: relative;
       border-radius: 10px; /* Provides curved edges */
       background-color: #154734; /* Background color for the box */
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
@@ -263,8 +323,19 @@
       transform: translateY(-50%); /* Centers the line */
     }
 
+    .checkoutbutton {
+    position: relative;
+    padding: 25px;
+    font-size: 1.5vw;
+    top: 65%;
+    right: 78%;
+    color: white;
+    font-weight: bold;
+    
+   }
+
     #total-text { /*<p id="item-detail-title"> */
-      font-size: 45px; /* Set the desired font size */
+      font-size: 2.5em; /* Set the desired font size */
       text-align: center; /* Aligns text in the center */
       position: absolute;
       font-weight: bold; /* Adds bold to the text */
@@ -287,21 +358,35 @@
         line-height: 45px !important;
         border-radius: 35px;
     }
-    * :global(.remove-all-button .mdc-button--raised) {
+    * :global(.remove-button .mdc-button--raised) {
         background-color: red !important;
         color: #D9D9D9 !important;
     }
     
+    * :global(.select-button.selected .mdc-button--raised) {
+      background-color: #154734 !important; /* New background color when selected */
+      color: #D9D9D9 !important; /* New text color when selected */
+    }
 
+    * :global(.select-all-button.selected .mdc-button--raised) {
+      background-color: #154734 !important; /* New background color when selected */
+      color: #D9D9D9 !important; /* New text color when selected */
+    }
+
+    
    /*styles Cart title*/
    h1 {
       text-align: center;
-      margin-top: 25px;
+      margin-top: 10px;
+      position: fixed;
+      left: 50%; /* Position 50% from the left side of the viewport */
+      transform: translateX(-50%); /* Shift it back 50% of its own width */
+      width: 100%; /* Optional: Set a specific width if needed */
     }
-   h3{
+   h2{
     text-align: center;
-     padding-top: 150px;
-     color: gray;
+     padding-top: 350px;
+     color: #D9D9D9;
    }
    /*styles footer*/
    .footer {
@@ -322,45 +407,9 @@
     border-radius: 35px;
     box-shadow: 0px 2px 4px 0px rgb(169, 169, 169);
   }
-    /*styles checkout button*/
-  .checkoutbutton {
-    position: absolute;
-    padding: 25px;
-    font-size: 30px;
-    top: 65%;
-    right: 460px;
     
-  }
-
-  .item-dropdown {
-    display: block;
-    position: relative;
-    line-height: 45px;
-    border-radius: 35px;
-  }
-
-  .item-dropdown-cat {
-    display: none;
-    font-weight: bold;
-    margin: auto;
-    position: absolute;
-    width: 175px;
-    text-align: left;
-    z-index: 2;
-    overflow: auto;
-    background-color:#fff;
-    border-radius: 25px;
-    box-shadow: 0px 10px 10px 0px rgba(0,0,0,0.4);
-    padding: 10px;
-  }
-
-  .item-button {
-    display: none;
-    text-align: center;
-    position: absolute;
-    right: 81vw;
-    bottom: .5vw;
-  }   
+  
+ 
   
   /*
   If making a custom checkout button format, here is a white box that pops up on top of the cart page

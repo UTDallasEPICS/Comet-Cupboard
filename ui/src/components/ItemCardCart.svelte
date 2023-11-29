@@ -1,6 +1,6 @@
 <!--item cards for each item on the Cart page-->
 <!--<i class="fa-solid fa-chevron-down"></i> chevron for dropdown and create remove button-->
-<!-- create the quantity button in div class= right-->
+<!-- import quanitityButton.svelte add to div class= right-->
 <script>
 // @ts-nocheck
 
@@ -10,6 +10,7 @@
    //import from SMUI
    import IconButton from '@smui/icon-button'
    // @ts-ignore
+   import QuantityButton from './QuantityButton.svelte';
    
 
   let deleted = false ;
@@ -42,6 +43,21 @@ export let item;
   {
     hasImage = false;
   }
+
+  export let isSelected = false;
+  export let isSelectMode = false;
+
+  function toggleSelected() {
+    if(isSelectMode) {
+      isSelected = !isSelected;
+    }
+    // You can also emit an event if you need to notify the parent component
+  }
+
+
+
+  
+  
   const handleDelete = () =>{
     deleted = true;
     if (deleted == true)
@@ -101,7 +117,8 @@ export let item;
 </script>
 
 <div> <!--item card-->
-  <div class="item-card-container"> <!--item card background-->
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <div class="item-card-container {isSelected ? 'selected' : ''}" on:click={toggleSelected}> <!--item card background-->
     <div class="side-by-side">
       <div class="left"> <!--item photo on cards-->
         {#if hasImage == true}<!-- if item does have an image, then apply class 'item-image' to show it -->
@@ -128,9 +145,17 @@ export let item;
       <div class="right"> <!--text + icons on item card-->
         <div class="side-by-side">
           <div class="item-text">
-            <p id="item-detail-title"><strong>Item Name: </strong><br>Size: <br>Expiration Date: <br>Quantity: </p>
-            <p id="item-details"><strong>{itemName}</strong><br>{item.sizes}<br>{item.expiration_dates[0]}<br>{item.amount}</p>
-          </div>
+            <p id="item-detail-title">
+              <strong>Item Name: </strong><br>
+              Size: <br>
+              Expiration Date: <br>
+            </p>
+            <p id="item-details">
+              <strong>{itemName}</strong><br>
+              {item.sizes}<br>
+              {item.expiration_dates[0]}
+            </p>
+          </div>          
         </div>
         <Confirm
           confirmTitle="Delete"
@@ -177,6 +202,9 @@ export let item;
       margin-bottom: auto;
       margin-right: auto;
   }
+  .item-card-container.selected {
+    border: 5px solid orange;
+  }
   /*makes everything within it lay side-by-side w/o interference w/ each other*/
   .side-by-side {
       text-align: center;
@@ -191,7 +219,7 @@ export let item;
     flex-shrink: 2;
     width: 100%;
     position: relative;
-    top: 10px;
+    top: 12%;
     left: 10px;
     justify-content: center;
   }
@@ -279,7 +307,7 @@ export let item;
   /*styles the text on the item card*/
   .item-text {
     position: relative;
-    top: 1px;
+    top: 1em;
     white-space: normal;
   }
   #item-detail-title {
@@ -293,13 +321,13 @@ export let item;
     text-align: left;
     position: inherit;
     left: 170px;
-    bottom: 116px;
+    bottom: 45%;
   }
   /*styles remove button*/
   .remove-button {
     position: relative;
-    left: 100px;
-    bottom: 10px;
+    left: 6em;
+    top: 2em;
   }
   :global(.mdc-icon-button) {
     font-size: 36px !important;
