@@ -6,7 +6,7 @@ import { router as EmployeeRoute } from "./employee";
 import { router as workerLogRoute } from "./workerLogs";
 import { router as donorRoute } from "./donor";
 import { router as checkoutLogRoute } from "./checkoutLog";
-
+import { router as cartRoute } from "./cart";
 export const router = express.Router();
 
 declare module "express-session" {
@@ -38,6 +38,8 @@ router.use("/workerLogs", workerLogRoute);
 router.use("/donor", donorRoute);
 
 router.use("/checkoutLog", checkoutLogRoute);
+
+router.use("/cart", cartRoute);
 
 router.use((req: express.Request, res: express.Response) => {
   res.status(404).send({ message: "Endpoint not found" });
