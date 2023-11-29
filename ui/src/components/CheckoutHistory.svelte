@@ -11,7 +11,10 @@
            itemClickedSizes, 
            itemClickedExpDates, 
            itemClickedCat, 
-           itemClickedId} from '../stores.js';
+           itemClickedId,
+           categoryClicked
+        
+        } from '../stores.js';
 
   // imports from SMUI
   import Select, { Option } from '@smui/select';
@@ -41,20 +44,20 @@
 		// let str = JSON.stringify(obj, null, 4); // outputs object into a formatted string for debugging
 		// console.log(str); // Logs output to dev tools console.
 		// console.log(obj.image_src);
-		itemClickedName.set(obj.name);
-		itemClickedImageSrc.set(obj.image_src);
-		itemClickedDeal.set(obj.deal);
-		itemClickedSizes.update(sizes => sizes = obj.sizes.slice(0));
-		itemClickedExpDates.update(expDates => expDates = obj.expiration_dates.slice(0));
-		itemClickedCat.set(obj.category);
-    itemClickedId.set(obj.id);
+        itemClickedName.set(obj.name);
+        itemClickedImageSrc.set(obj.image_src);
+        itemClickedDeal.set(obj.deal);
+        itemClickedSizes.update(sizes => sizes = obj.sizes.slice(0));
+        itemClickedExpDates.update(expDates => expDates = obj.expiration_dates.slice(0));
+        itemClickedCat.set(obj.category);
+        itemClickedId.set(obj.id);
 
 		open = true; // sets open to true to open the pop up once it knows which item to open
   }
 </script>
 
 <div>
-  <h1>Checkout History</h1>
+    <h1>Checkout History</h1>
   <div>
     <Select
       class="shaped-outlined"
@@ -72,11 +75,13 @@
     <!-- <pre class="status">Selected: {valueLeadingIcon}</pre> -->
   </div>
   <div class="item-grid">
-    {#each $inventory as _, index}
-      <Wrapper>
-        <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
-        <ItemCard on:click={() => (handleItemCardClick($inventory[index]))} bind:item={$inventory[index]} />
-      </Wrapper>
+    {#each $inventory as item, index}
+        {#if $categoryClicked.name == "All" || item.category == $categoryClicked.name}
+            <Wrapper>
+                <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
+                <ItemCard on:click={() => (handleItemCardClick(item))} bind:item={item} />
+            </Wrapper>
+        {/if}
     {/each}
   </div>
 </div>

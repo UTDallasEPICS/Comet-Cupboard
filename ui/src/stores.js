@@ -19,7 +19,7 @@ export const cartContents = writable([]);   // items in the cart
 export const inventory = writable([         // items in demo inventory
   {
       "name": "Canned Tuna",
-      "image_src": './demo_item_images/canned-tuna.svg',
+      "image_src": './demo_item_images/canned_tuna.png',
       "deal": "Deal: 2 for 1",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
@@ -28,7 +28,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
       "name": "Mac n Cheese",
-      "image_src": "./demo_item_images/mac-n-cheese.svg",
+      "image_src": "./demo_item_images/mac-n-cheese.png",
       "deal": "",
       "sizes": ["S", "M"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
@@ -37,7 +37,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
       "name": "Mayonnaise",
-      "image_src": "./demo_item_images/mayonnaise.svg",
+      "image_src": "./demo_item_images/mayonnaise.png",
       "deal": "",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2023", "02/02/2023", "03/03/2023"],
@@ -46,7 +46,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
       "name": "Oatmeal",
-      "image_src": "./demo_item_images/oatmeal.svg",
+      "image_src": "./demo_item_images/oatmeal.png",
       "deal": "",
       "sizes": ["S", "M", "L"],
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
@@ -55,7 +55,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
       "name": "Ramen Pack",
-      "image_src": "./demo_item_images/ramen-pack.svg",
+      "image_src": "./demo_item_images/ramen.png",
       "deal": "Deal: 2 for 1",
       "sizes": ["One Size"],
       "expiration_dates": ["01/01/2024"],
@@ -64,7 +64,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
       "name": "Razor",
-      "image_src": "./demo_item_images/razor.svg",
+      "image_src": "./demo_item_images/razor-2.png",
       "deal": "",
       "sizes": ["One Size"],
       "expiration_dates": ["N/A"],
@@ -73,7 +73,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
       "name": "Toilet Paper",
-      "image_src": "./demo_item_images/toilet-paper.svg",
+      "image_src": "./demo_item_images/toilet_paper.png",
       "deal": "",
       "sizes": ["One Size"],
       "expiration_dates": ["N/A"],
@@ -82,7 +82,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
     "name": "Ground Beef",
-    "image_src": "",
+    "image_src": "./demo_item_images/ground_beef.png",
     "deal": "",
     "sizes": ["S", "M", "L"],
     "expiration_dates": ["01/01/2099"],
@@ -91,7 +91,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
     "name": "Potato Chips",
-    "image_src": "",
+    "image_src": "./demo_item_images/potato_chips.png",
     "deal": "",
     "sizes": ["One Size"],
     "expiration_dates": ["01/01/2099"],
@@ -100,7 +100,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
     "name": "White Bread",
-    "image_src": "",
+    "image_src": "./demo_item_images/white_bread.png",
     "deal": "",
     "sizes": ["One Size"],
     "expiration_dates": ["01/01/2099"],
@@ -109,7 +109,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
     "name": "Chicken Noodle",
-    "image_src": "",
+    "image_src": "./demo_item_images/chicken_noodle.png",
     "deal": "",
     "sizes": ["One Size"],
     "expiration_dates": ["01/01/2099"],
@@ -118,7 +118,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
     "name": "Apple",
-    "image_src": "",
+    "image_src": "./demo_item_images/apple.png",
     "deal": "",
     "sizes": ["One Size"],
     "expiration_dates": ["01/01/2099"],
@@ -127,7 +127,7 @@ export const inventory = writable([         // items in demo inventory
   },
   {
     "name": "Green Beans",
-    "image_src": "",
+    "image_src": "./demo_item_images/green_beans.png",
     "deal": "Deal: 3 for 1",
     "sizes": ["One Size"],
     "expiration_dates": ["01/01/2099"],
@@ -174,4 +174,10 @@ export const itemClickedSizes = writable([]);
 export const itemClickedExpDates = writable(["n/a"]);
 export const itemClickedCat = writable("");
 export const itemClickedId = writable("-1");
-export const catClicked = writable("");
+
+// Used to to keep track of the category to display
+export const categoryClicked = writable({
+    name:"All",
+    color:"#000",
+    target:"#/all",
+});

@@ -13,6 +13,9 @@
 	<!-- SMUI -->
 	<link rel="stylesheet" href="https://unpkg.com/svelte-material-ui/bare.css" />
 	<!-- <link rel="stylesheet" href="node_modules/svelte-material-ui/bare.css" /> -->
+
+    <!-- import font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </svelte:head>
 
 <script>

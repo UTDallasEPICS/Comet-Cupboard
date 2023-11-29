@@ -6,6 +6,7 @@
     import CartIcon from "../../src/images/cart-icon.png"
     import AccountIcon from "../../src/images/account-circle-icon.png"
     import { itemsInCart } from '../stores.js';
+    import NTFBIcon from "../../src/images/NTFBform.png"
 </script>
 
 <!--  Comet Cupboard Logo  -->
@@ -17,6 +18,9 @@
   </div>
 
   <div class="header-right">
+    <a href="#/NTFBForm">
+      <img src={NTFBIcon} class="ntfb" alt="NTFB icon" />
+    </a>
 
     <a href="#/cart"> <!-- takes user to cart page -->
       {#if $itemsInCart !== 0}
@@ -32,6 +36,7 @@
       <a href="#/inventory">
       <img src={InventoryIcon} class="inventory" alt="Inventory icon" />
     </a>
+    <!-- </div> -->
     <!-- <p>NetID</p> -->
   </div>
   <!-- <div class="header-right">
@@ -64,11 +69,19 @@
     align-self: flex-start;
   }
 
+  .ntfb {
+    width: 48px;
+    padding-right: 15px;
+    padding-bottom: 20px;
+
+  }
+
   .cart {
     width: 48px;
     padding-right: 15px;
     padding-bottom: 20px;
   }
+
 
   .account {
     width: 48px;
@@ -118,4 +131,8 @@
     font-size: 0.8em;
     color: white;
   }
+
+  
+
+
   </style>
