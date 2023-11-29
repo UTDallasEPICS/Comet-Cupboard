@@ -20,7 +20,7 @@ router.post("/", validateSchema(schema.CreateUserSchema), async (req: schema.ICr
       });
     }
     const user = new User({
-      netID: req.body.netID
+      netID: req.body.netID,
     });
     await user.save();
     // remember to send a response back to whoever is requesting or else it will infinitely wait
@@ -42,9 +42,9 @@ router.post("/demographics", validateSchema(demographicsSchema.CreateDemographic
     }
     const demographics = new Demographics({
       userID: req.body.userID,
-      numChild: req.body.numChild,
-      numParents: req.body.numParents,
-      numOld: req.body.numOld,
+      countChild: req.body.countChild,
+      countParents: req.body.countParents,
+      countSeniors: req.body.countSeniors,
       income: req.body.income
     });
     await demographics.save();
@@ -162,9 +162,10 @@ router.put("/demographics", validateSchema(demographicsSchema.CreateDemographics
         userID: req.body.userID
       },
        {
-        numChild: req.body.numChild,
-        numParents: req.body.numParents,
-        numOld: req.body.numOld,
+        countChild: req.body.countChild,
+        countParents: req.body.countParents,
+        countSeniors: req.body.countSeniors,
+        
         income: req.body.income
        },
        {

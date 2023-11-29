@@ -8,6 +8,6 @@ export { default as ItemLog, IItemLog, IItemLogDocument } from "./items/ItemLog"
 export { default as WorkerLogs, IWorkerLogsDocument} from "./forms/WorkerLogs";
 export { default as CheckoutLog, ICheckoutLog, ICheckoutLogDocument } from "./forms/CheckoutLog";
 
-
+export { default as Cart, ICartItem, ICartDocument } from "./cart/Cart";
 
 
