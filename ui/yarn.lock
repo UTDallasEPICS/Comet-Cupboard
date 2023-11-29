@@ -282,6 +282,20 @@
     "@material/theme" "^14.0.0"
     tslib "^2.1.0"
 
+"@material/segmented-button@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.npmjs.org/@material/segmented-button/-/segmented-button-14.0.0.tgz"
+  integrity sha512-6es7PPNX3T3h7bOLyb8L38hMoTXqBs5XX8XCKycKZG2Dm4stac/yYMKKO/q3MOn36t37s+JAVTjyRB8HnJu5Gg==
+  dependencies:
+    "@material/base" "^14.0.0"
+    "@material/elevation" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/ripple" "^14.0.0"
+    "@material/theme" "^14.0.0"
+    "@material/touch-target" "^14.0.0"
+    "@material/typography" "^14.0.0"
+    tslib "^2.1.0"
+
 "@material/select@^14.0.0":
   version "14.0.0"
   resolved "https://registry.npmjs.org/@material/select/-/select-14.0.0.tgz"
@@ -377,6 +391,18 @@
   resolved "https://registry.npmjs.org/@polka/url/-/url-0.5.0.tgz"
   integrity sha512-oZLYFEAzUKyi3SKnXvj32ZCEGH6RDnao7COuCVhDydMS9NrCSVXhM79VaKyP5+Zc33m0QXEd2DN3UkU7OsHcfw==
 
+"@smui-extra/autocomplete@^7.0.0-beta.15":
+  version "7.0.0-beta.15"
+  resolved "https://registry.npmjs.org/@smui-extra/autocomplete/-/autocomplete-7.0.0-beta.15.tgz"
+  integrity sha512-Nfbi4fOzIZDoF2HVTPeK1APRCx+sLR8hj53SyiYKJZn5V2/rraLpmoOKgfqkB1A4F/E4IGl4OHQPBNk2n0NwHw==
+  dependencies:
+    "@smui/common" "^7.0.0-beta.15"
+    "@smui/list" "^7.0.0-beta.15"
+    "@smui/menu" "^7.0.0-beta.15"
+    "@smui/menu-surface" "^7.0.0-beta.15"
+    "@smui/textfield" "^7.0.0-beta.15"
+    svelte2tsx "^0.6.21"
+
 "@smui-extra/badge@^7.0.0-beta.0":
   version "7.0.0-beta.0"
   resolved "https://registry.npmjs.org/@smui-extra/badge/-/badge-7.0.0-beta.0.tgz"
@@ -447,7 +473,7 @@
     "@smui/common" "^7.0.0-beta.0"
     svelte2tsx "^0.5.12"
 
-"@smui/floating-label@^7.0.0-beta.0", "@smui/floating-label@^7.0.0-beta.15":
+"@smui/floating-label@^7.0.0-beta.15":
   version "7.0.0-beta.15"
   resolved "https://registry.npmjs.org/@smui/floating-label/-/floating-label-7.0.0-beta.15.tgz"
   integrity sha512-KRjZjO8AGE5uKHewmn05vyAxIi6XOGo8a4jn8b0+dIJcYxaPpmtacH4PeQHw4vOR88cX/0DqqxSz6+Fkrt+SIA==
@@ -467,7 +493,7 @@
     "@smui/ripple" "^7.0.0-beta.15"
     svelte2tsx "^0.6.21"
 
-"@smui/line-ripple@^7.0.0-beta.0", "@smui/line-ripple@^7.0.0-beta.15":
+"@smui/line-ripple@^7.0.0-beta.15":
   version "7.0.0-beta.15"
   resolved "https://registry.npmjs.org/@smui/line-ripple/-/line-ripple-7.0.0-beta.15.tgz"
   integrity sha512-tfdEybgQlLiotELlWknLzb5l6pT47uGfMGYzLs5AVf74CU/zAhp8NiicHUUmI95qY5P2z2xHYYpdLTs1wZ5c9A==
@@ -510,7 +536,7 @@
     "@smui/menu-surface" "^7.0.0-beta.15"
     svelte2tsx "^0.6.21"
 
-"@smui/notched-outline@^7.0.0-beta.0", "@smui/notched-outline@^7.0.0-beta.15":
+"@smui/notched-outline@^7.0.0-beta.15":
   version "7.0.0-beta.15"
   resolved "https://registry.npmjs.org/@smui/notched-outline/-/notched-outline-7.0.0-beta.15.tgz"
   integrity sha512-9oVSIYmb1/GcCFYm1M0xVy4J5/A2Ysa4H6gm3RIL9/ke3F9EmmALmCs1lmtGu4Vwyo0ES5KroW2Tly2SzMfB2g==
@@ -543,6 +569,18 @@
     "@smui/common" "^7.0.0-beta.15"
     svelte2tsx "^0.6.21"
 
+"@smui/segmented-button@^7.0.0-beta.15":
+  version "7.0.0-beta.15"
+  resolved "https://registry.npmjs.org/@smui/segmented-button/-/segmented-button-7.0.0-beta.15.tgz"
+  integrity sha512-Kottq8SC86LV7a3uIUpCvZKJbcvUGMoANVr1ioKl+73Mg0YEPBNzbjP5gFlfWQKn36OeNNnFXgwxNutLD5oXwA==
+  dependencies:
+    "@material/base" "^14.0.0"
+    "@material/ripple" "^14.0.0"
+    "@material/segmented-button" "^14.0.0"
+    "@smui/common" "^7.0.0-beta.15"
+    "@smui/ripple" "^7.0.0-beta.15"
+    svelte2tsx "^0.6.21"
+
 "@smui/select@^7.0.0-beta.0", "@smui/select@^7.0.0-beta.15":
   version "7.0.0-beta.15"
   resolved "https://registry.npmjs.org/@smui/select/-/select-7.0.0-beta.15.tgz"
@@ -563,22 +601,22 @@
     "@smui/ripple" "^7.0.0-beta.15"
     svelte2tsx "^0.6.21"
 
-"@smui/textfield@^7.0.0-beta.0":
-  version "7.0.0-beta.0"
-  resolved "https://registry.npmjs.org/@smui/textfield/-/textfield-7.0.0-beta.0.tgz"
-  integrity sha512-4GPtEuwUq+i2Nbslea04PxwHKBs6r6q/w/5wI6SsL2SRQoyNWS6mWi5Pt8keGguqeEVj21Yci5wTbQj/cyazgQ==
+"@smui/textfield@^7.0.0-beta.0", "@smui/textfield@^7.0.0-beta.15":
+  version "7.0.0-beta.15"
+  resolved "https://registry.npmjs.org/@smui/textfield/-/textfield-7.0.0-beta.15.tgz"
+  integrity sha512-98lGaVJRH3K5aXVUAa8o/8rHRQ/Vwu9q6phupSrPW4BEmEEEezb/fzKExTOgm0c241dy4nDRLkdH9IdtObTA8w==
   dependencies:
     "@material/dom" "^14.0.0"
     "@material/feature-targeting" "^14.0.0"
     "@material/ripple" "^14.0.0"
     "@material/rtl" "^14.0.0"
     "@material/textfield" "^14.0.0"
-    "@smui/common" "^7.0.0-beta.0"
-    "@smui/floating-label" "^7.0.0-beta.0"
-    "@smui/line-ripple" "^7.0.0-beta.0"
-    "@smui/notched-outline" "^7.0.0-beta.0"
-    "@smui/ripple" "^7.0.0-beta.0"
-    svelte2tsx "^0.5.12"
+    "@smui/common" "^7.0.0-beta.15"
+    "@smui/floating-label" "^7.0.0-beta.15"
+    "@smui/line-ripple" "^7.0.0-beta.15"
+    "@smui/notched-outline" "^7.0.0-beta.15"
+    "@smui/ripple" "^7.0.0-beta.15"
+    svelte2tsx "^0.6.21"
 
 "@smui/touch-target@^7.0.0-beta.0":
   version "7.0.0-beta.0"
@@ -1035,9 +1073,9 @@ svelte2tsx@^0.5.12:
     pascal-case "^3.1.1"
 
 svelte2tsx@^0.6.21:
-  version "0.6.26"
-  resolved "https://registry.npmjs.org/svelte2tsx/-/svelte2tsx-0.6.26.tgz"
-  integrity sha512-6EWEZmfdAggtGJ9YwjZkX06mqZvMdmm5XWq1UEAoznC67mDE6wPUJnyX1erpTWU00X/N1T6qsYPAZOUWJs9IaA==
+  version "0.6.27"
+  resolved "https://registry.npmjs.org/svelte2tsx/-/svelte2tsx-0.6.27.tgz"
+  integrity sha512-E1uPW1o6VsbRz+nUk3fznZ2lSmCITAJoNu8AYefWSvIwE2pSB01i5sId4RMbWNzfcwCQl1DcgGShCPcldl4rvg==
   dependencies:
     dedent-js "^1.0.1"
     pascal-case "^3.1.1"
