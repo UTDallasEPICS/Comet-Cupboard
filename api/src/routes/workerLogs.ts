@@ -11,7 +11,7 @@ router.post("/", validateSchema(schema.CreateWorkerLogSchema), async (req: schem
    {
     const workerLogs = new WorkerLogs({
       timeWorked: req.body.timeWorked,
-     
+      employeeID: req.body.employeeID,
     });
     await workerLogs.save();
     res.send({message: "Successfully created worker log"});
