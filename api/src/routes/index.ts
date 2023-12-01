@@ -8,7 +8,7 @@ import { router as donorRoute } from "./donor";
 import { router as checkoutLogRoute } from "./checkoutLog";
 
 // import { router as demoRoute } from "./demo";
-
+import { router as cartRoute } from "./cart";
 export const router = express.Router();
 
 declare module "express-session" {
@@ -41,8 +41,7 @@ router.use("/donor", donorRoute);
 
 router.use("/checkoutLog", checkoutLogRoute);
 
-// router.use("/demo", demoRoute);
-
+router.use("/cart", cartRoute);
 
 router.use((req: express.Request, res: express.Response) => {
   res.status(404).send({ message: "Endpoint not found" });
