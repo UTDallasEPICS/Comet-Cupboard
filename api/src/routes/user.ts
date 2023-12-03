@@ -42,10 +42,16 @@ router.post("/demographics", validateSchema(demographicsSchema.CreateDemographic
     }
     const demographics = new Demographics({
       userID: req.body.userID,
+
       countChild: req.body.countChild,
       countParents: req.body.countParents,
       countSeniors: req.body.countSeniors,
-      income: req.body.income
+      income: req.body.income,
+
+      snapInterest: req.body.snapInterest,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName
+
     });
     await demographics.save();
     res.send({ message: "Successfully created new demographics form! "});
@@ -165,8 +171,12 @@ router.put("/demographics", validateSchema(demographicsSchema.CreateDemographics
         countChild: req.body.countChild,
         countParents: req.body.countParents,
         countSeniors: req.body.countSeniors,
+        income: req.body.income,
         
-        income: req.body.income
+        snapInterest: req.body.snapInterest,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
+
        },
        {
         new: true

@@ -11,6 +11,7 @@ export interface ICreateDemographicsSchema extends express.Request {
       countSeniors: number;
 
       snapInterest: boolean;
+      // Boolean value for whether or not the user is interested in SNAP benefits
       firstName: string;
       lastName: string;
 
