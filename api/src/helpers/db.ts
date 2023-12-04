@@ -7,7 +7,6 @@ import mongoose from "mongoose";
 //   : `mongodb://localhost:27017/${DATABASE_NAME}`;
 
 //link to the cloud database
-const DATABASE_URL = 'mongodb+srv://cometcupboardepics:IHateMongoDB@cluster0.nvtxzww.mongodb.net/?retryWrites=true&w=majority';
 
 // connect to mongoose
 export const db = mongoose.connection;
