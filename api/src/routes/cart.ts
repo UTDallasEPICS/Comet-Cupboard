@@ -72,6 +72,71 @@ router.get("/:customerId", async (req, res, next) => {
 });
 
 
+//increment quantity
+router.put("/:customerId/incrementQuantity/:itemId", async (req, res, next) => {
+  try {
+    const { customerId, itemId } = req.params;
+
+    //Find the cart based on the customer's ID
+    const cart = await Cart.findOne({ customerId });
+
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+
+    //Find the item in the cart based on the itemId
+    const item = cart.cartItems.find((item) => item.itemId.toString() === itemId);
+
+    if (!item) {
+      return res.status(404).json({ error: "Item not found in the cart" });
+    }
+
+    //Increment the quantity of the item
+    item.quantity++;
+
+    // Save the updated cart
+    await cart.save();
+
+    return res.status(200).json(cart);
+  } catch (error) {
+    console.error("Error:", error);
+    next(error);
+    return res.status(500).json({ error: "Failed to increment item quantity." });
+  }
+});
+
+//decrement quantity
+router.put("/:customerId/decrementQuantity/:itemId", async (req, res, next) => {
+  try {
+    const { customerId, itemId } = req.params;
+
+    //Find the cart based on the customer's ID
+    const cart = await Cart.findOne({ customerId });
+
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+
+    //Find the item in the cart based on the itemId
+    const item = cart.cartItems.find((item) => item.itemId.toString() === itemId);
+
+    if (!item) {
+      return res.status(404).json({ error: "Item not found in the cart" });
+    }
+
+    //Decrement the quantity of the item
+    item.quantity--;
+
+    //Save the updated cart
+    await cart.save();
+
+    return res.status(200).json(cart);
+  } catch (error) {
+    console.error("Error:", error);
+    next(error);
+    return res.status(500).json({ error: "Failed to decrement item quantity." });
+  }
+});
 
 // Remove 1 item from the cart
 router.delete("/:itemId", async (req, res, next) => {
@@ -142,71 +207,6 @@ router.delete("/", async (req, res, next) => {
   } catch (error) {
     next(error);
     return res.status(500).json({ error: "Failed to clear the cart." });
-  }
-});
-
-router.put("/:customerId/incrementQuantity/:itemId", async (req, res, next) => {
-  try {
-    const { customerId, itemId } = req.params;
-
-    //Find the cart based on the customer's ID
-    const cart = await Cart.findOne({ customerId });
-
-    if (!cart) {
-      return res.status(404).json({ error: "Cart not found" });
-    }
-
-    //Find the item in the cart based on the itemId
-    const item = cart.cartItems.find((item) => item.itemId.toString() === itemId);
-
-    if (!item) {
-      return res.status(404).json({ error: "Item not found in the cart" });
-    }
-
-    //Increment the quantity of the item
-    item.quantity++;
-
-    // Save the updated cart
-    await cart.save();
-
-    return res.status(200).json(cart);
-  } catch (error) {
-    console.error("Error:", error);
-    next(error);
-    return res.status(500).json({ error: "Failed to increment item quantity." });
-  }
-});
-
-
-router.put("/:customerId/decrementQuantity/:itemId", async (req, res, next) => {
-  try {
-    const { customerId, itemId } = req.params;
-
-    //Find the cart based on the customer's ID
-    const cart = await Cart.findOne({ customerId });
-
-    if (!cart) {
-      return res.status(404).json({ error: "Cart not found" });
-    }
-
-    //Find the item in the cart based on the itemId
-    const item = cart.cartItems.find((item) => item.itemId.toString() === itemId);
-
-    if (!item) {
-      return res.status(404).json({ error: "Item not found in the cart" });
-    }
-
-    //Decrement the quantity of the item
-    item.quantity--;
-
-    //Save the updated cart
-    await cart.save();
-
-    return res.status(200).json(cart);
-  } catch (error) {
-    console.error("Error:", error);
-    next(error);
-    return res.status(500).json({ error: "Failed to decrement item quantity." });
   }
 });
 

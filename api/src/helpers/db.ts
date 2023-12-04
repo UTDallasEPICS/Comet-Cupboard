@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 
-// setup database
-const DATABASE_NAME = process.env.DATABASE_NAME || "db";
-const DATABASE_URL = process.env.MONGODB_ORIGIN
-  ? `${process.env.MONGODB_ORIGIN}/${DATABASE_NAME}?retryWrites=true&w=majority`
-  : `mongodb://localhost:27017/${DATABASE_NAME}`;
+// setup database - local
+//const DATABASE_NAME = process.env.DATABASE_NAME || "db";
+// const DATABASE_URL = process.env.MONGODB_ORIGIN
+//   ? `${process.env.MONGODB_ORIGIN}/${DATABASE_NAME}?retryWrites=true&w=majority`
+//   : `mongodb://localhost:27017/${DATABASE_NAME}`;
+
+//link to the cloud database
+const DATABASE_URL = 'mongodb+srv://cometcupboardepics:IHateMongoDB@cluster0.nvtxzww.mongodb.net/?retryWrites=true&w=majority';
 
 // connect to mongoose
 export const db = mongoose.connection;
