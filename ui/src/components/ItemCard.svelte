@@ -25,8 +25,7 @@
      for it to work well in phones, tablets, and desktop/laptop
  -->
 
-<!-- svelte-ignore a11y-click-events-have-key-events (to-do for next semester) -->
-<div style="height:100%">
+<div style="width:100%">
     <Card class="card">
         {#if itemDeal !== ""}
         <div class:dealLabel={itemDeal!==""}>
@@ -34,20 +33,22 @@
         </div>
         {/if}
         <PrimaryAction on:click>
-            <Media class="itemImage" aspectRatio="16x9" style="
-                background-image: url({image_url});
-                object-fit: fit;
-            "/>
-                <!-- <MediaContent>
-                    {#if image_url !== ""}
-                    <img class="itemImage" src={image_url} alt={itemName}>
-                    {:else}
-                    <div class="whiteBox">Image Coming Soon</div>
-                    {/if}
-                </MediaContent> -->
-            <Content>
-                <p class="item-name"><b>{itemName}</b></p>
-            </Content>
+            <!-- figure out how to put image when non available -->
+            <Media class="itemImage {image_url==""?"whiteBox":""}" aspectRatio="16x9" style="
+                background-image: url({image_url == '' ? 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg' : image_url});
+                background-repeat: no-repeat;"
+            />
+            <div>
+                <Content class="cardBody">
+                    <h3 class="itemName"><b>{itemName}</b></h3>
+                    <!-- random number for amount -->
+                    <p>
+                        Amount: {Math.floor(Math.random()*50)}<br>
+                        Expiration Date: {item.expiration_dates[0]}<br>
+                        Size Available: {item.sizes}
+                    </p>
+                </Content>
+            </div>
         </PrimaryAction>
     </Card>
 </div>
@@ -78,18 +79,10 @@
         box-sizing: border-box;
         border-radius: 20px;
         background: rgba(238, 238, 238, 0.93);
+        width: 100%;
     }   
 
     * :global(.itemCard) {
-        background-color: blueviolet;
-        /* display: grid; */
-        /* grid-template-columns: 2fr 1fr; */
-
-        /* display: flex; */
-
-        /* justify-content: center; */
-        /* align-items: center; */
-        /* gap: 1.5rem;  */
         
         box-sizing: border-box;
         border-radius: 20px;
@@ -97,13 +90,25 @@
         background: rgba(238, 238, 238, 0.93);
   }     
 
-    *:global(.itemImage) {
+    * :global(.itemImage) {
         background-repeat: repeat;
-        background-size:fit;
-        aspect-ratio: 16/9;
-        
+        background-size:40%;
+        background-position: 0;
         
     }
+
+    * :global(.cardBody) {
+        box-sizing: border-box;
+        position:absolute;
+        right:0;
+        top:0;
+        height: 100%;
+        width: 60%;
+        background-color: rgb(201, 201, 201);
+        z-index: -1;
+        border-top-right-radius: 20px;
+    }
+
   .whiteBox {
       max-width: 130px;
       max-height: 130px;
@@ -143,13 +148,11 @@
     justify-content: center;
     align-items: center;
 
-    /* makes deal label in front of white box */
     position: relative;
     z-index: 0;
   }
 
-  .itemImage p {
-    /* centers deal label text horizontally */
+  /* .itemImage p {
     display: inline-block;
     vertical-align: middle;
   }
@@ -158,7 +161,7 @@
     font-size: 20px;
     word-wrap: break-word;
     width: 130px;
-  }
+  } */
 
   .dealLabel {
     background-color: #E87500;
@@ -185,9 +188,19 @@
     font-size: 15px;
     margin: 0;
   }
-
-  @media screen and (min-width:600px) {
-
-  }
   
+    @media screen and (max-width: 430px) {
+        * :global(.cardBody) {
+            width: 100%;
+            position: static;
+            top:auto;
+            right:auto;
+            z-index: 1;
+        }
+
+        * :global(.itemImage) {
+            background-position:center;
+            background-size: 70%;
+        }
+  }
 </style>
