@@ -19,10 +19,11 @@
   let image_url = item.image_src;
 </script>
 
-<!-- These are experimental components
-     they are still not complete and need to figure out
-     what is the best way to design and implement them
-     for it to work well in phones, tablets, and desktop/laptop
+<!-- 
+    These are experimental components
+    they are still not complete and need to figure out
+    what is the best way to design and implement them
+    for it to work well in phones, tablets, and desktop/laptop
  -->
 
 <div style="width:100%">
@@ -52,26 +53,6 @@
         </PrimaryAction>
     </Card>
 </div>
-
-<!-- </Card>
-<div on:click class="item-card">
-    <div class:whiteBox={image_url==""} class="imageWrapper">
-        {#if itemDeal !== ""}
-            <div class:dealLabel={itemDeal!==""}>
-                <p>{itemDeal}</p>
-            </div>
-        {/if}
-        {#if image_url !== "" }
-            <img src={image_url} alt={item.name} class="itemImage">
-        {:else}
-            <div class="whiteBox">Image Coming Soon</div>
-        {/if}
-    </div>
-
-    <div class="info">
-        <p class="item-name"><b>{itemName}</b></p>
-    </div>
-</div> -->
 
 <style>
     * :global(.card) {
@@ -108,7 +89,23 @@
         z-index: -1;
         border-top-right-radius: 20px;
     }
+    
+    /* media quires to make styles more reactive */
+      @media screen and (max-width: 430px) {
+          * :global(.cardBody) {
+              width: 100%;
+              position: static;
+              top:auto;
+              right:auto;
+              z-index: 1;
+          }
+  
+          * :global(.itemImage) {
+              background-position:center;
+              background-size: 70%;
+          }
 
+    /* all styles below are old styles, but they may be useful for later */
   .whiteBox {
       max-width: 130px;
       max-height: 130px;
@@ -153,8 +150,8 @@
   }
 
   /* .itemImage p {
-    display: inline-block;
-    vertical-align: middle;
+      display: inline-block;
+      vertical-align: middle;
   }
 
   .item-name {
@@ -189,18 +186,5 @@
     margin: 0;
   }
   
-    @media screen and (max-width: 430px) {
-        * :global(.cardBody) {
-            width: 100%;
-            position: static;
-            top:auto;
-            right:auto;
-            z-index: 1;
-        }
-
-        * :global(.itemImage) {
-            background-position:center;
-            background-size: 70%;
-        }
   }
 </style>
