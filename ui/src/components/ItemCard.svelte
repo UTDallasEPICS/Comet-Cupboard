@@ -29,7 +29,7 @@
 <div style="width:100%">
     <Card class="card">
         {#if itemDeal !== ""}
-        <div class:dealLabel={itemDeal!==""}>
+        <div class:dealLabel={itemDeal!=""}>
             <p>{itemDeal}</p>
         </div>
         {/if}
@@ -90,6 +90,32 @@
         border-top-right-radius: 20px;
     }
     
+    .dealLabel {
+      background-color: #E87500;
+      border-radius: 35px;
+      box-shadow: 0 3px 4px rgb(0 0 0 / 0.2);
+  
+      line-height: 1.7;  /* centers line height for text */
+      height: 30px;
+      width: 125px;
+      top: 0;
+  
+      /* makes deal label in front of white box */
+      position: absolute;
+      z-index: 1;
+  
+      /* positions deal label around halfway above white box */
+      transform: translateY(-60%);
+    }
+  
+    .dealLabel p {
+      position: relative;
+      font-weight: bold;
+      color: white;
+      font-size: 15px;
+      margin: 0;
+    }
+    
     /* media quires to make styles more reactive */
       @media screen and (max-width: 430px) {
           * :global(.cardBody) {
@@ -104,7 +130,7 @@
               background-position:center;
               background-size: 70%;
           }
-
+        }
     /* all styles below are old styles, but they may be useful for later */
   .whiteBox {
       max-width: 130px;
@@ -160,31 +186,4 @@
     width: 130px;
   } */
 
-  .dealLabel {
-    background-color: #E87500;
-    border-radius: 35px;
-    box-shadow: 0 3px 4px rgb(0 0 0 / 0.2);
-
-    line-height: 1.7;  /* centers line height for text */
-    height: 30px;
-    width: 125px;
-    top: 0;
-
-    /* makes deal label in front of white box */
-    position: absolute;
-    z-index: 1;
-
-    /* positions deal label around halfway above white box */
-    transform: translateY(-60%);
-  }
-
-  .dealLabel p {
-    position: relative;
-    font-weight: bold;
-    color: white;
-    font-size: 15px;
-    margin: 0;
-  }
-  
-  }
 </style>
