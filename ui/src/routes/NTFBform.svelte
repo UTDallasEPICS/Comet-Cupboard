@@ -7,8 +7,7 @@
     import CheckoutHistory from '../components/CheckoutHistory.svelte';
     import CategoryTabs from '../components/CategoryTabs.svelte';
     import CategorySection from '../components/CategorySection.svelte';
-    import NorthTexasFoodBankForm from 'src/components/NorthTexasFoodBankForm.svelte';
-  
+    import NorthTexasFoodBankForm from '../components/NorthTexasFoodBankForm.svelte';
   </script>
 
 <div class="flex-wrapper">
