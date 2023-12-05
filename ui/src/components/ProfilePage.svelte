@@ -12,7 +12,7 @@
       </div>
       <div class="profilepage">
 <h1>Your Profile Page</h1>
-<p>Name: Unkown Unknown</p>
+<p>Name: Unknown Unknown</p>
 <p>Netid: UUU12345</p>
 <p>Email: unkown@utdallas.edu</p>
 <div class="footer">

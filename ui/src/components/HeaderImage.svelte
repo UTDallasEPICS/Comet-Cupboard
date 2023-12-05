@@ -5,13 +5,14 @@
     import HeaderImage from "../../src/images/header-image.jpg"
     import SearchIcon from "../../src/images/magnify-icon.png"
     import ScanIcon from "../../src/images/scan-icon.png"
+    import SearchBar from "./SearchBar.svelte";
 </script>
 
     <!-- <img src={HeaderImage} class="header-image" alt="Mac and cheese header." /> -->
 
 <div class="image-container">
     <h1>Shop for Items</h1>
-    
+    <SearchBar />
 </div>
 
 <style>
@@ -22,10 +23,15 @@
     background-image: url("../../src/images/header-image.jpg"); 
     background-repeat: no-repeat;
     background-size: cover;
+
+    display: flex;
+    flex-direction: column;
+    justify-content:space-evenly;
+    align-items: center;
   }
 
   .image-container h1 {
-    padding-top: 90px;
+    /* padding-top: 90px; */
     margin: 0;
 
     color: white;
