@@ -20,6 +20,7 @@
 
   // imports from SMUI
   import Select, { Option } from '@smui/select';
+  // @ts-ignore
   import Icon from '@smui/select/icon';
   import Wrapper from '@smui/touch-target';
   import Button, { Label, Icon as ButtonIcon } from '@smui/button';
@@ -42,37 +43,20 @@
 
   }
  
-  
   // @param:
   //	  obj - item to display to user in pop up
-  function handleItemCardClick(obj) { /* sets and updates the item clicked's attributes to store into store.js */
-    // item_clicked = obj.name;
-    let str = JSON.stringify(obj, null, 4); // outputs object into a formatted string for debugging
-    console.log(str); // Logs output to dev tools console.
-    console.log(obj.image_src);
-    itemClickedName.set(obj.name);
-    itemClickedImageSrc.set(obj.image_src);
-    itemClickedDeal.set(obj.deal);
-    itemClickedSizes.update(sizes => sizes = obj.sizes.slice(0));
-    itemClickedExpDates.update(expDates => expDates = obj.expiration_dates.slice(0));
-    itemClickedCat.set(obj.category);
-    itemClickedId.set(obj.id);
-
-    open = true; // sets open to true to open the pop up once it knows which item to open
-  }
-
   const handleCardClick = (e) => {
-    let str = JSON.stringify(e, null, 4); // outputs object into a formatted string for debugging
-    console.log(str); // Logs output to dev tools console.
-    console.log(e.image_src);
-    itemClickedName.set(e.name);
-    itemClickedImageSrc.set(e.image_src);
-    itemClickedDeal.set(e.deal);
-    itemClickedSizes.update(sizes => sizes = e.sizes.slice(0));
-    itemClickedExpDates.update(expDates => expDates = e.expiration_dates.slice(0));
-    itemClickedCat.set(e.category);
-    itemClickedId.set(e.id);
-
+    let item = e.detail;
+    console.log("handleCardClick");
+    console.log(item);
+    itemClickedName.set(item.name);
+    itemClickedImageSrc.set(item.image_src);
+    itemClickedDeal.set(item.deal);
+    itemClickedSizes.update(sizes => sizes = item.sizes.slice(0));
+    itemClickedExpDates.update(expDates => expDates = item.expiration_dates.slice(0));
+    itemClickedCat.set(item.category);
+    itemClickedId.set(item.id);
+    
     open = true; // sets open to true to open the pop up once it knows which item to open
   }
 
@@ -182,6 +166,7 @@
     display: flex;
     flex-direction: column;
     align-items: center; /* centers item cards inside */
+    justify-content: center;
 
     width: 95%;
   }
