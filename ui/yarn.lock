@@ -35,7 +35,58 @@
     "@material/typography" "^14.0.0"
     tslib "^2.1.0"
 
+"@material/card@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.npmjs.org/@material/card/-/card-14.0.0.tgz"
+  integrity sha512-SnpYWUrCb92meGYLXV7qa/k40gnHR6rPki6A1wz0OAyG2twY48f0HLscAqxBLvbbm1LuRaqjz0RLKGH3VzxZHw==
+  dependencies:
+    "@material/dom" "^14.0.0"
+    "@material/elevation" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/ripple" "^14.0.0"
+    "@material/rtl" "^14.0.0"
+    "@material/shape" "^14.0.0"
+    "@material/theme" "^14.0.0"
+    tslib "^2.1.0"
 
+"@material/checkbox@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.npmjs.org/@material/checkbox/-/checkbox-14.0.0.tgz"
+  integrity sha512-OoqwysCqvj1d0cRmEwVWPvg5OqYAiCFpE6Wng6me/Cahfe4xgRxSPa37WWqsClw20W7PG/5RrYRCBtc6bUUUZA==
+  dependencies:
+    "@material/animation" "^14.0.0"
+    "@material/base" "^14.0.0"
+    "@material/density" "^14.0.0"
+    "@material/dom" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/focus-ring" "^14.0.0"
+    "@material/ripple" "^14.0.0"
+    "@material/theme" "^14.0.0"
+    "@material/touch-target" "^14.0.0"
+    tslib "^2.1.0"
+
+"@material/data-table@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.npmjs.org/@material/data-table/-/data-table-14.0.0.tgz"
+  integrity sha512-tnmLawGaMtnp29KH8pX99bqeKmFODE+MtRUTt6TauupkEfQE/wd0Um4JQDFiI0kCch7uF3r/NmQKyKuan10hXw==
+  dependencies:
+    "@material/animation" "^14.0.0"
+    "@material/base" "^14.0.0"
+    "@material/checkbox" "^14.0.0"
+    "@material/density" "^14.0.0"
+    "@material/dom" "^14.0.0"
+    "@material/elevation" "^14.0.0"
+    "@material/feature-targeting" "^14.0.0"
+    "@material/icon-button" "^14.0.0"
+    "@material/linear-progress" "^14.0.0"
+    "@material/list" "^14.0.0"
+    "@material/menu" "^14.0.0"
+    "@material/rtl" "^14.0.0"
+    "@material/select" "^14.0.0"
+    "@material/shape" "^14.0.0"
+    "@material/theme" "^14.0.0"
+    "@material/touch-target" "^14.0.0"
+    "@material/typography" "^14.0.0"
     tslib "^2.1.0"
 
 "@material/density@^14.0.0":
@@ -337,6 +388,21 @@
   dependencies:
     "@material/elevation" "^14.0.0"
 
+"@material/top-app-bar@^14.0.0":
+  version "14.0.0"
+  resolved "https://registry.npmjs.org/@material/top-app-bar/-/top-app-bar-14.0.0.tgz"
+  integrity sha512-uPej5vHgZnlSB1+koiA9FnabXrHh3O/Npl2ifpUgDVwHDSOxKvLp2LNjyCO71co1QLNnNHIU0xXv3B97Gb0rpA==
+  dependencies:
+    "@material/animation" "^14.0.0"
+    "@material/base" "^14.0.0"
+    "@material/elevation" "^14.0.0"
+    "@material/ripple" "^14.0.0"
+    "@material/rtl" "^14.0.0"
+    "@material/shape" "^14.0.0"
+    "@material/theme" "^14.0.0"
+    "@material/typography" "^14.0.0"
+    tslib "^2.1.0"
+
 "@material/touch-target@^14.0.0":
   version "14.0.0"
   resolved "https://registry.npmjs.org/@material/touch-target/-/touch-target-14.0.0.tgz"
@@ -374,18 +440,19 @@
     svelte2tsx "^0.6.21"
 
 "@smui-extra/badge@^7.0.0-beta.0":
-  version "7.0.0-beta.0"
-  resolved "https://registry.npmjs.org/@smui-extra/badge/-/badge-7.0.0-beta.0.tgz"
-  integrity sha512-OflX8Ef/jAmliChFeJ8kfDecUC3xP1KWCanjX3K0jr/TY5R/onKaAIU/TbFiveB9ySqaaRH1BuvsiPLfZ5feHA==
+  version "7.0.0-beta.15"
+  resolved "https://registry.npmjs.org/@smui-extra/badge/-/badge-7.0.0-beta.15.tgz"
+  integrity sha512-gv6Wq6JojuDkEtY7t9V+HGIyFVhDZXlyCAAssBCQFiTXGwVDu+RtOVUmXj5ODyA5QmFdL3JKH/P080D284wBug==
   dependencies:
     "@material/feature-targeting" "^14.0.0"
     "@material/rtl" "^14.0.0"
     "@material/shape" "^14.0.0"
     "@material/theme" "^14.0.0"
     "@material/typography" "^14.0.0"
-    "@smui/common" "^7.0.0-beta.0"
-    svelte2tsx "^0.5.12"
+    "@smui/common" "^7.0.0-beta.15"
+    svelte2tsx "^0.6.21"
 
+"@smui/button@^7.0.0-beta.0", "@smui/button@^7.0.0-beta.15":
   version "7.0.0-beta.15"
   resolved "https://registry.npmjs.org/@smui/button/-/button-7.0.0-beta.15.tgz"
   integrity sha512-yfs/HkIjLDJROzUw+lvK26AV3S/XtAGkuRXEPUQuIzlfv8LAp9kIv2S3EPpxPj9xXAS/kiKu8HnFsyknl02dSw==
@@ -414,15 +481,15 @@
 
 
 "@smui/dialog@^7.0.0-beta.0":
-  version "7.0.0-beta.0"
-  resolved "https://registry.npmjs.org/@smui/dialog/-/dialog-7.0.0-beta.0.tgz"
-  integrity sha512-kLufkVO7WRKI+l9jAFY4+7i/vdOlAhQ9r6V6438ssZ08J9uf/TMz0AIYJV2qDBV/LiXmrdVrp+aa3ihAv9MaTA==
+  version "7.0.0-beta.15"
+  resolved "https://registry.npmjs.org/@smui/dialog/-/dialog-7.0.0-beta.15.tgz"
+  integrity sha512-5N2/cf+2ObVYXb9rzLJQ2juykNgB/T0je4f12zWQt/PYc8ZhLcZ4+eCz7pUSj02dDXo5pRmBXAkPeYmy26iPXQ==
   dependencies:
     "@material/button" "^14.0.0"
     "@material/dialog" "^14.0.0"
     "@material/dom" "^14.0.0"
-    "@smui/common" "^7.0.0-beta.0"
-    svelte2tsx "^0.5.12"
+    "@smui/common" "^7.0.0-beta.15"
+    svelte2tsx "^0.6.21"
 
 "@smui/floating-label@^7.0.0-beta.15":
   version "7.0.0-beta.15"
@@ -568,6 +635,16 @@
     "@smui/line-ripple" "^7.0.0-beta.15"
     "@smui/notched-outline" "^7.0.0-beta.15"
     "@smui/ripple" "^7.0.0-beta.15"
+    svelte2tsx "^0.6.21"
+
+"@smui/top-app-bar@^7.0.0-beta.15":
+  version "7.0.0-beta.15"
+  resolved "https://registry.npmjs.org/@smui/top-app-bar/-/top-app-bar-7.0.0-beta.15.tgz"
+  integrity sha512-9b5DL+VExBIyTTnO2RUokHzn2Dp00GJ2dnI9j/OR7Ha44ry8Yd89ozjJdYcuR+JxPi10N3iILFtwuSZxMS1y+w==
+  dependencies:
+    "@material/feature-targeting" "^14.0.0"
+    "@material/top-app-bar" "^14.0.0"
+    "@smui/common" "^7.0.0-beta.15"
     svelte2tsx "^0.6.21"
 
 "@smui/touch-target@^7.0.0-beta.0":
