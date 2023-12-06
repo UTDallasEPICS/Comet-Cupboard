@@ -53,7 +53,7 @@
     text-align: center;
 
     display: grid;
-    grid-template-columns: 3fr 9fr;
+    grid-template-columns: fit-content(250px) 9fr;
 
     height:100%;
     width:100%;

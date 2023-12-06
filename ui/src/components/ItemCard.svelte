@@ -1,84 +1,149 @@
 <!-- item card displayed in checkout history and category section -->
 <script>
+    import Card, {
+    Content,
+    PrimaryAction,
+    Media,
+    MediaContent,
+    Actions,
+    ActionButtons,
+    ActionIcons,
+  } from '../../node_modules/@smui/card';
+  import Button, { Label } from '@smui/button';
+  import IconButton, { Icon } from '@smui/icon-button';
+
   // receives this as a prop from CheckoutHistory
   export let item;  
   let itemName = item.name;
-  let hasDeal;        
-  let itemDeal = "";  
-  if (item.deal != "")  
-  {
-    hasDeal = true;
-    itemDeal = item.deal;
-  }
-  else
-  {
-    hasDeal = false;
-  }
-
-  let hasImage = false; 
-  let image_url = "";   
-  if (item.image_src != "") // if item has an image url
-  {
-    hasImage = true;
-    image_url = item.image_src;
-  }
-  else
-  {
-    hasImage = false;
-  }
+  let itemDeal = item.deal;
+  let image_url = item.image_src;
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events (to-do for next semester) -->
-<div on:click class="item-card"> <!-- forwards the onClick event to CheckoutHistory.svelte -->
-  {#if hasImage == true} <!-- if item does have an image, then apply class 'item-image' to show it -->
-    <!-- <div class="white-box" class:item-image={hasImage}> -->
-    <div class="item-image" style="--image: url({image_url});"> <!-- passes image_url as a variable -->
-      {#if hasDeal} <!-- if item has a deal, then show its deal label -->
-        <div class="deal-label">
-          <p>{itemDeal}</p>
+<!-- 
+    These are experimental components
+    they are still not complete and need to figure out
+    what is the best way to design and implement them
+    for it to work well in phones, tablets, and desktop/laptop
+ -->
+
+<div style="width:100%">
+    <Card class="card">
+        {#if itemDeal !== ""}
+        <div class:dealLabel={itemDeal!=""}>
+            <p>{itemDeal}</p>
         </div>
-      {/if}
-    </div>
-  {:else if hasImage == false} 
-    <div class="white-box">
-      {#if hasDeal} 
-        <div class="deal-label">
-          <p>{itemDeal}</p>
-        </div>
-      {/if}
-      <p>Image Coming Soon</p>
-    </div>
-  {/if}
-  <p class="item-name"><b>{itemName}</b></p>
+        {/if}
+        <PrimaryAction on:click>
+            <!-- figure out how to put image when non available -->
+            <Media class="itemImage {image_url==""?"whiteBox":""}" aspectRatio="16x9" style="
+                background-image: url({image_url == '' ? 'https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg' : image_url});
+                background-repeat: no-repeat;"
+            />
+            <div>
+                <Content class="cardBody">
+                    <h3 class="itemName"><b>{itemName}</b></h3>
+                    <!-- random number for amount -->
+                    <p>
+                        Amount: {Math.floor(Math.random()*50)}<br>
+                        Expiration Date: {item.expiration_dates[0]}<br>
+                        Size Available: {item.sizes}
+                    </p>
+                </Content>
+            </div>
+        </PrimaryAction>
+    </Card>
 </div>
 
 <style>
-  .item-card {
-    cursor: pointer;
-  }
+    * :global(.card) {
+        padding: 0;
+        box-sizing: border-box;
+        border-radius: 20px;
+        background: rgba(238, 238, 238, 0.93);
+        width: 100%;
+    }   
 
-  .white-box {
-    width: 130px;
-    height: 130px;
+    * :global(.itemCard) {
+        
+        box-sizing: border-box;
+        border-radius: 20px;
+        border: 1px solid #E9E9E9;
+        background: rgba(238, 238, 238, 0.93);
+  }     
 
-    line-height: 130px; /* centers text horizontally */
+    * :global(.itemImage) {
+        background-repeat: repeat;
+        background-size:40%;
+        background-position: 0;
+        
+    }
 
-    background-color: white;
-    background-repeat: no-repeat;
-    background-size: cover;
+    * :global(.cardBody) {
+        box-sizing: border-box;
+        position:absolute;
+        right:0;
+        top:0;
+        height: 100%;
+        width: 60%;
+        background-color: rgb(201, 201, 201);
+        z-index: -1;
+        border-top-right-radius: 20px;
+    }
+    
+    .dealLabel {
+      background-color: #E87500;
+      border-radius: 35px;
+      box-shadow: 0 3px 4px rgb(0 0 0 / 0.2);
+  
+      line-height: 1.7;  /* centers line height for text */
+      height: 30px;
+      width: 125px;
+      top: 0;
+  
+      /* makes deal label in front of white box */
+      position: absolute;
+      z-index: 1;
+  
+      /* positions deal label around halfway above white box */
+      transform: translateY(-60%);
+    }
+  
+    .dealLabel p {
+      position: relative;
+      font-weight: bold;
+      color: white;
+      font-size: 15px;
+      margin: 0;
+    }
+    
+    /* media quires to make styles more reactive */
+      @media screen and (max-width: 430px) {
+          * :global(.cardBody) {
+              width: 100%;
+              position: static;
+              top:auto;
+              right:auto;
+              z-index: 1;
+          }
+  
+          * :global(.itemImage) {
+              background-position:center;
+              background-size: 70%;
+          }
+        }
+    /* all styles below are old styles, but they may be useful for later */
+  .whiteBox {
+      max-width: 130px;
+      max-height: 130px;
 
     box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
 
     /* makes deal label in front of white box */
     position: relative;
     z-index: 0;
   }
 
-  .white-box p { /* Image Coming Soon text */
+  .whiteBox p { /* Image Coming Soon text */
     /* centers text vertically */
     display: inline-block;
     vertical-align: middle;
@@ -93,60 +158,32 @@
     font-size: 20px;
   }
 
-  .item-image {
-    width: 130px;
-    height: 130px;
+  .itemImage {
 
+    background-image: url({image_url});
     background-repeat: no-repeat;
-    background-size: cover;
-    background-image: var(--image); /* displays background image from url stored in 'image' */
-
+    background-size: fit;
+    
+    
     box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
-
-    display: flex;
+    
+    flex: 1 0 0;
     justify-content: center;
     align-items: center;
 
-    /* makes deal label in front of white box */
     position: relative;
     z-index: 0;
   }
 
-  .item-image p {
-    /* centers deal label text horizontally */
-    display: inline-block;
-    vertical-align: middle;
+  /* .itemImage p {
+      display: inline-block;
+      vertical-align: middle;
   }
 
   .item-name {
     font-size: 20px;
     word-wrap: break-word;
     width: 130px;
-  }
+  } */
 
-  .deal-label {
-    background-color: #E87500;
-    border-radius: 35px;
-    box-shadow: 0 3px 4px rgb(0 0 0 / 0.2);
-
-    line-height: 1.7;  /* centers line height for text */
-    height: 30px;
-    width: 125px;
-    top: 0;
-
-    /* makes deal label in front of white box */
-    position: absolute;
-    z-index: 1;
-
-    /* positions deal label around halfway above white box */
-    transform: translateY(-60%);
-  }
-
-  .deal-label p {
-    position: relative;
-    font-weight: bold;
-    color: white;
-    font-size: 15px;
-    margin: 0;
-  }
 </style>

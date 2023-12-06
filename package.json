@@ -1,29 +1,4 @@
 {
   "dependencies": {
-    "express": "^4.18.2",
-    "http-status": "^1.7.3",
-    "joi": "^17.11.0",
-    "mongodb": "^6.3.0",
-    "compression": "^1.7.4",
-    "connect-mongo": "^5.0.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "express-session": "^1.17.3",
-    "http": "^0.0.1-security",
-    "http-status": "^1.7.0",
-    "joi": "^17.11.0",
-    "mongoose": "^7.6.2",
-    "morgan": "^1.10.0",
-    "svelte-confirm": "^0.0.0",
-    "ts-node": "^10.9.1"
-  },
-  "devDependencies": {
-    "@types/compression": "^1.7.3",
-    "@types/cors": "^2.8.14",
-    "@types/express": "^4.17.19",
-    "@types/express-session": "^1.17.8",
-    "@types/mongoose": "^5.11.97",
-    "@types/morgan": "^1.9.6"
   }
 }
