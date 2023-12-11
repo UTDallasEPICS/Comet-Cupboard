@@ -11,6 +11,9 @@
    import IconButton from '@smui/icon-button'
    // @ts-ignore
    import QuantityButton from './QuantityButton.svelte';
+   import { createEventDispatcher } from 'svelte';
+  
+const dispatch = createEventDispatcher();
    
 
   let deleted = false ;
@@ -48,16 +51,15 @@ export let item;
   export let isSelectMode = false;
 
   function toggleSelected() {
+    console.log("toggleSelected",isSelectMode);
     if(isSelectMode) {
       isSelected = !isSelected;
     }
     // You can also emit an event if you need to notify the parent component
+    dispatch('itemSelected');
   }
 
 
-
-  
-  
   const handleDelete = () =>{
     deleted = true;
     if (deleted == true)
@@ -155,9 +157,13 @@ export let item;
               {item.sizes}<br>
               {item.expiration_dates[0]}
             </p>
-          </div>          
+          </div>  
+          <div class="quantity-button"> <!--quantity button-->
+            <QuantityButton quantity={item.amount} itemId={item.id} category={item.category} /> <!--add quantity button below the text -->
+          </div>
         </div>
         <Confirm
+          class="centered-confirm-dialog"
           confirmTitle="Delete"
           cancelTitle="Cancel"
           themeColor="140"
@@ -184,27 +190,28 @@ export let item;
 <style>
   /*styles item card background*/
   .item-card-container {
-      background-color: #EEEEEE;
-      border-radius: 10px;
-      border-color: #ffffff;
-      border-width: 0px;
-      border-style: none;
-      box-shadow: 2px 3px 5px 2px rgb(0 0 0 / 0.2); 
-      display: flex;
-      flex-direction: column;
-      /* align-items: center; centers item cards inside */
-      place-items: stretch stretch; /*combines align-items and justify-items*/
-      width: 45vw;
-      height: 15vh;
-      margin-block-end: 25px;
-      margin-top: 30px;
-      margin-left: 40px;
-      margin-bottom: auto;
-      margin-right: auto;
-  }
-  .item-card-container.selected {
-    border: 5px solid orange;
-  }
+    background-color: #EEEEEE;
+    border-radius: 10px;
+    box-shadow: 2px 3px 5px 2px rgb(0 0 0 / 0.2); 
+    display: flex;
+    flex-direction: column;
+    place-items: stretch stretch;
+    width: 45%;  /* Width relative to the parent container */
+    max-width: 45vw; /* Maximum width relative to the viewport width */
+    height: 15%; /* Height adjusts to content */
+    margin-block-end: 45px;
+    margin-top: 30px;
+    margin-left: 40px;
+    margin-bottom: auto;
+    margin-right: auto;
+    transition: box-shadow 0.2s ease; /* Smooth transition for shadow */
+}
+
+.item-card-container.selected {
+    
+    box-shadow: 0 0 0 5px orange, 2px 3px 5px 2px rgb(0 0 0 / 0.2); /* Mimic outline with shadow */
+}
+
   /*makes everything within it lay side-by-side w/o interference w/ each other*/
   .side-by-side {
       text-align: center;
@@ -216,12 +223,13 @@ export let item;
   /*styles item photo*/
   .left {
     display: flex;
-    flex-shrink: 2;
+    flex-shrink: 3;
     width: 100%;
     position: relative;
-    top: 12%;
+    top: 20%;
     left: 10px;
     justify-content: center;
+    padding-top: 2%;
   }
   .white-box {
       width: 130px;
@@ -307,7 +315,6 @@ export let item;
   /*styles the text on the item card*/
   .item-text {
     position: relative;
-    top: 1em;
     white-space: normal;
   }
   #item-detail-title {
@@ -326,9 +333,19 @@ export let item;
   /*styles remove button*/
   .remove-button {
     position: relative;
-    left: 6em;
-    top: 2em;
+    right: 6em;
+    top: 1em;
   }
+
+  .quantity-button {
+    position: relative;
+    right: 6em;
+    top: 5em;
+    font-size: 1em;
+  }
+
+  
+
   :global(.mdc-icon-button) {
     font-size: 36px !important;
   }

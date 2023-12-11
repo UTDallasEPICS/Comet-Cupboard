@@ -97,7 +97,7 @@ let reduce=1;
       $cartContents = [...$cartContents, 
                   {name: nameOfItem, amount: totalNumOfitems, sizes: itemSize, deal: itemDeal, 
                   expiration_dates: expDate, category: itemCategory, 
-                  image_src: itemImage, id: itemId}];
+                  image_src: itemImage, id: itemId, isSelected: false}];
       categoryAddition(itemCategory, totalNumOfitems);
       itemsInCart.update(n => n + totalNumOfitems); // adds items (based on number of one item chosen (ie: chose 2 of an item, adds 2))
     }

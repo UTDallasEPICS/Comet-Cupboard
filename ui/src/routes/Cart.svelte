@@ -6,6 +6,8 @@
       when remove is clicked all the highlighted cards will disappear, updating item count in array and categories
       in the itemcarcard, add the quaitity button file at the top and it should appear in the card
       the quantity should reflect in all the arrays
+      have states of selecte or not in the itemcard object itself
+      // bugs in documentation, the select button, and the quantity button not updating the items in cart
     -->
 
 <script lang="ts">
@@ -24,13 +26,14 @@
     import Button, { Label, Icon } from '@smui/button';
     let clicked = 0;
     let dropDownOpen = false;
+    let deleted = false ;
 
   
 
   //importing sample data
   import { cartContents, itemsInCart, pantryInCart, snacksInCart, grainsInCart,
            breakInCart, soupInCart, proteinInCart, houseInCart, personalInCart, fruitsInCart,
-           vegInCart } from '../stores.js'; 
+           vegInCart} from '../stores.js'; 
 
     
     // resets cart for demo
@@ -85,42 +88,150 @@
   }*/
 
   
-  let isSelectMode = false; // when in select mode, this will be set to true
-  function toggleSelectMode() {
-      isSelectMode = !isSelectMode;
-  }
-  let selectedItems: boolean[] = []; // stores the selected items
+let isSelectMode = false;
+let isSelectAllActive = false;
 
-  function toggleItemSelected(index) { // toggles the selected item
-    if(isSelectMode) {
-      selectedItems[index] = !selectedItems[index];
-      // Force Svelte to recognize the change in the array
-      selectedItems = [...selectedItems];
+
+// Update selectedItems based on $cartContents
+$: selectedItems = $cartContents.map(() => false);
+
+function toggleSelectMode() {
+    isSelectMode = !isSelectMode;
+    console.log(selectedItems);
+    if (isSelectMode) {
+        isSelectAllActive = false; 
     }
+    else{
+      selectedItems.fill(false);
+    }
+    selectedItems = [...selectedItems]; 
+    
+}
 
-  }
-  let isSelectAllActive = false;
-  function toggleSelectAll() {
+function toggleSelectAll() {
     isSelectAllActive = !isSelectAllActive;
-    selectAllItems();
-  }
-
-  function selectAllItems() { // selects all items
-    selectedItems = $cartContents.map(() => isSelectAllActive);
-  }
-
-  function removeSelectedItems() {
-    if (isSelectMode || isSelectAllActive) {
-      $cartContents = $cartContents.filter((_, index) => !selectedItems[index]);
-      selectedItems = $cartContents.map(() => false); // Reset the selection
-      isSelectMode = false; // Optionally reset the select mode
-      isSelectAllActive = false; // Optionally reset the select all mode
-      $itemsInCart = 0;
+    console.log($cartContents);
+    if (isSelectAllActive) {
+        // Activate 'Select All'
+        isSelectMode = false; // Deactivate 'Select Mode'
+        selectedItems.fill(true); // Set all items as selected
+    } else {
+        
+        selectedItems.fill(false); 
     }
+
+    
+    selectedItems = [...selectedItems];
+
+    console.log(selectedItems); // Debugging: Check the state of selectedItems
+    console.log($cartContents);
+}
+
+
+function toggleItemSelected(index) { 
+  console.log(index,"Test");
+    if (isSelectMode) {
+        selectedItems[index] = !selectedItems[index];
+        selectedItems = [...selectedItems];
+    }
+    console.log(selectedItems)
+}
+
+function removeSelectedItems() { 
+  console.log(isSelectAllActive, isSelectMode, selectedItems);
+    if (isSelectAllActive) {
+        $cartContents = [];
+        $itemsInCart = 0;
+    } else if (isSelectMode) {
+        // let removedItemCount = 0;
+      
+        $cartContents.forEach((item, index) => {
+            if (selectedItems[index]) {
+               console.log(item,"Nava test 1");
+               handleDelete(item,index);
+            } 
+        });
+        
+    }
+    console.log("After removal:", $cartContents, $itemsInCart, selectedItems);
+    resetSelection();
+}
+// when clicked, the array for selectedItems doesnt update to true
+
+const handleDelete = (item,index=-1) =>{ // removes item from cart
+    // deleted = true;
+    // if (deleted == true)
+    // {
+      console.log(index,"Nava");
+      if(index==-1)
+      {
+        index = $cartContents.indexOf(item, 0);
+      }
+      if(index!=-1)
+      {
+        $cartContents.splice(index, 1);
+        categorySubtraction(item.category, item.amount);
+        itemsInCart.update(n => n - item.amount);
+      }
+    // }    
   }
 
-  
+  // subtracts from category count
+  function categorySubtraction(cat, N)
+  {
+    if (cat === "Pantry Staples")
+    {
+      $pantryInCart -= N;
+    }
+    else if (cat === "Snacks")
+    {
+      $snacksInCart -= N;
+    }
+    else if (cat === "Grains")
+    {
+      $grainsInCart -= N;
+    }
+    else if (cat === "Breakfast Grains")
+    {
+      $breakInCart -= N;
+    }
+    else if (cat === "Soup")
+    {
+      $soupInCart -= N;
+    }
+    else if (cat === "Protein")
+    {
+      $proteinInCart -= N;
+    }
+    else if (cat === "Household Items")
+    {
+      $houseInCart -= N;
+    }
+    else if (cat === "Personal Care")
+    {
+      $personalInCart -= N;
+    }
+    else if (cat === "Fruits")
+    {
+      $fruitsInCart -= N;
+    }
+    else if (cat === "Vegetables")
+    {
+      $vegInCart -= N;
+    }   
+  }
 
+
+function resetSelection() { 
+    selectedItems.fill(false);
+    isSelectMode = false;
+    isSelectAllActive = false;
+    selectedItems = [...selectedItems]; 
+}
+
+
+  // function that when select button is clicked and then remove button is clicked, it removes the item from the cart
+  // function removeItem()
 
 </script>
 
@@ -145,7 +256,7 @@
             </a>
           </Wrapper>
         </div>
-        <div class="select-button {isSelectMode ? 'selected' : ''}" style="display:flex; flex-wrap:wrap; align-items:center;"> <!-- Select All Button -->
+        <div class="select-button {isSelectMode ? 'selected' : ''}" style="display:flex; flex-wrap:wrap; align-items:center;"> <!-- Select Button -->
           <Wrapper>
             {#if $cartContents.length > 0}
               <Button on:click={toggleSelectMode} variant="raised" touch> <!-- Add functionality later-->
@@ -178,12 +289,26 @@
       {#if $cartContents.length > 0}
           <div class="checkout-area"> 
             <div class="category-container">
+              <p class="fixed-category-title">Categories</p>
               <div class="scrollable-area">
                 <!-- Content of scrollable area -->
+                
+                <p class="item-style">Pantry Staples: {$pantryInCart}</p>
+                <p class="item-style">Snacks: {$snacksInCart}</p>
+                <p class="item-style">Grains: {$grainsInCart}</p>
+                <p class="item-style">Breakfast Grains: {$breakInCart}</p>
+                <p class="item-style">Soup: {$soupInCart}</p>
+                <p class="item-style">Protein: {$proteinInCart}</p>
+                <p class="item-style">Household Items: {$houseInCart}</p>
+                <p class="item-style">Personal Care: {$personalInCart}</p>
+                <p class="item-style">Fruits: {$fruitsInCart}</p>
+                <p class="item-style">Vegetables: {$vegInCart}</p>
               </div>
               <hr> 
               <div class="white-line"></div>
-              <p id="total-text">Total: {$itemsInCart} Items</p> 
+              
+              <p id="total-text">Total: <span id="item-count">{$itemsInCart}</span> <span id="item-text">Item<span id="plural-s">s</span></span></p>
+
             </div>
             <Confirm
               confirmTitle="Checkout"
@@ -213,7 +338,8 @@
             bind:item={$cartContents[index]}
             isSelected={selectedItems[index]}
             isSelectMode={isSelectMode}
-            on:click={() => toggleItemSelected(index)}>
+            on:itemSelected={() => {toggleItemSelected(index); console.log("Test");}}>
+            
           </ItemCardCart>
           <p hidden>{$cartContents = $cartContents}</p> <!--updates cartContents array-->
         {/each}
@@ -299,24 +425,58 @@
       flex-direction: column;
       align-items: center;
       width: 20vw;
-      height: 23vw;
-      top: 40%;
+      height: 50vh;
+      top: 60%;
       right: 65%;
       position: relative;
       border-radius: 10px; /* Provides curved edges */
       background-color: #154734; /* Background color for the box */
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
-        
 
+      min-width: 200px; /* Minimum width */
+      max-width: 400px; /* Maximum width */
+      min-height: 250px; /* Minimum height */
+      max-height: 500px; /* Maximum height */
+        
     }
     .scrollable-area {
-      height: 50%; /* Height of the scrollable area (adjust as needed) */
-      overflow-y: auto; /* Enable vertical scrollbar */
+    height: 55%; /* Adjust to the appropriate height for your layout */
+    overflow-y: auto; /* Enable vertical scrolling */
+    scrollbar-width: auto; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: auto; /* Hide scrollbar for Internet Explorer and Edge */
+    color: white; /* Text color */
+    font-weight: bold; /* Bold text */
     }
+    .scrollable-area::-webkit-scrollbar {
+        display: none; /* Hide scrollbar for Webkit browsers */
+    
+    }
+    
+    .scrollable-area .item-style {
+    color: white;
+    font-size: 1.5em;
+    text-align: left;
+    margin-right: 100px;
+    padding: 4px;
+}
+
+.fixed-category-title {
+    position: sticky;
+    
+    color: white;
+      font-weight: bold;
+      font-size: 3em;
+      text-align: center;
+      margin: 5 px;
+      padding: 0;
+      position: relative;
+}
+
+    
 
     .white-line {
       width: 100%; /* Spans the entire width of the green box */
-      height: 1px; /* Adjust the height of the line */
+      height: 3px; /* Adjust the height of the line */
       background-color: white; /* Sets the color of the line */
       position: absolute;
       top: 82%; /* Adjusts the position vertically */
@@ -326,9 +486,8 @@
     .checkoutbutton {
     position: relative;
     padding: 25px;
-    font-size: 1.5vw;
-    top: 65%;
-    right: 78%;
+    font-size: 2.0vw;
+    right: 70%;
     color: white;
     font-weight: bold;
     
