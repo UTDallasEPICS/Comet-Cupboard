@@ -4,11 +4,7 @@
    
     import Footer from '../components/Footer.svelte';
 </script>
-<div class="flex-wrapper">
-    <div class="header">
-      <TopBar />
-    </div>
-    
+<div class="flex-wrapper"> 
       </div>
       <div class="ntfbform">
       <div class="center">
@@ -66,10 +62,6 @@
 <input type="submit" value="Submit">
 </div>
 
-
-<div class="footer">
-    <Footer />
-</div>
 </div>
 <style>
 
