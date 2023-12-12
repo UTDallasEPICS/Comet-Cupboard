@@ -20,6 +20,7 @@
 
   // imports from SMUI
   import Select, { Option } from '@smui/select';
+  // @ts-ignore
   import Icon from '@smui/select/icon';
   import Wrapper from '@smui/touch-target';
   import Button, { Label, Icon as ButtonIcon } from '@smui/button';
@@ -27,6 +28,8 @@
   // importing components
   import ItemCard from './ItemCard.svelte';
   import ItemPopUp from './ItemPopUp.svelte';
+  import ShopForItems from '../routes/ShopForItems.svelte';
+    import ShopItemGrid from './ShopItemGrid.svelte';
 
   let sorts = ['Alphabetical','Frequent'];  /* different sorts displayed in Sort button */
 
@@ -40,44 +43,40 @@
 
   }
  
-  
   // @param:
   //	  obj - item to display to user in pop up
-  function handleItemCardClick(obj) { /* sets and updates the item clicked's attributes to store into store.js */
-    // item_clicked = obj.name;
-    let str = JSON.stringify(obj, null, 4); // outputs object into a formatted string for debugging
-    console.log(str); // Logs output to dev tools console.
-    console.log(obj.image_src);
-    itemClickedName.set(obj.name);
-    itemClickedImageSrc.set(obj.image_src);
-    itemClickedDeal.set(obj.deal);
-    itemClickedSizes.update(sizes => sizes = obj.sizes.slice(0));
-    itemClickedExpDates.update(expDates => expDates = obj.expiration_dates.slice(0));
-    itemClickedCat.set(obj.category);
-    itemClickedId.set(obj.id);
-
+  const handleCardClick = (e) => {
+    let item = e.detail;
+    console.log("handleCardClick");
+    console.log(item);
+    itemClickedName.set(item.name);
+    itemClickedImageSrc.set(item.image_src);
+    itemClickedDeal.set(item.deal);
+    itemClickedSizes.update(sizes => sizes = item.sizes.slice(0));
+    itemClickedExpDates.update(expDates => expDates = item.expiration_dates.slice(0));
+    itemClickedCat.set(item.category);
+    itemClickedId.set(item.id);
+    
     open = true; // sets open to true to open the pop up once it knows which item to open
   }
+
 </script>
 
 <div class="container">
     <h1>{$categoryClicked.name}</h1>
+
+    <!-- TODO: make popular items a component  -->
   <div class="popular-items-container">
     <h2>Popular Items</h2>
     <div class="item-grid"> <!-- displays current popular items in category -->
-      <Wrapper>
+        <ShopItemGrid inv={[$inventory[0],$inventory[1],$inventory[2]]} on:itemCardClicked={(e) => handleCardClick(e)} />
         <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
-        <ItemCard on:click={() => (handleItemCardClick($inventory[0]))} bind:item={$inventory[0]} />
-      </Wrapper>
-      <Wrapper>
+        <!-- <ItemCard on:click={() => (handleItemCardClick($inventory[0]))} bind:item={$inventory[0]} /> -->
         <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
-        <ItemCard on:click={() => (handleItemCardClick($inventory[1]))} bind:item={$inventory[1]} />
-      </Wrapper>
-      <Wrapper>
+        <!-- <ItemCard on:click={() => (handleItemCardClick($inventory[1]))} bind:item={$inventory[1]} /> -->
         <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
-        <ItemCard on:click={() => (handleItemCardClick($inventory[2]))} bind:item={$inventory[2]} />
-      </Wrapper>
-    </div>
+        <!-- <ItemCard on:click={() => (handleItemCardClick($inventory[2]))} bind:item={$inventory[2]} /> -->
+    </div> 
   </div>
   <div class="organization-bar">
 
@@ -104,123 +103,9 @@
           {/each}
         </Select>
   </div>
-    <!-- debugging -->
-    <!-- <pre class="status">Selected: {valueLeadingIcon}</pre> -->
   </div>
-  {#each $inventory as item, index}
-        {#if $categoryClicked.name == "All" || item.category == $categoryClicked.name}
-            <Wrapper>
-                <!-- binds the correct item to display to each ItemCard component and sends it into function to handle click -->
-                <ItemCard on:click={() => (handleItemCardClick(item))} bind:item={item} />
-            </Wrapper>
-        {/if}
-    {/each}
-  <!-- {#if category == "Pantry Staples"}
-  <div class="item-grid">  displays all items in category 
-    {#each $inventory as _, index}
-      {#if $inventory[index].category == "Pantry Staples"}
-        <Wrapper>
-           binds the correct item to display to each ItemCard component and sends it into function to handle click 
-          <ItemCard on:click={() => (handleItemCardClick($inventory[index]))} bind:item={$inventory[index]} />
-        </Wrapper>
-      {/if}
-    {/each}
-  </div>
-  {:else if category == "Snacks"}
-  <div class="item-grid">
-    {#each $inventory as _, index}
-      {#if $inventory[index].category == "Snacks"}
-        <Wrapper>
- binds the correct item to display to each ItemCard component and sends it into function to handle click 
-          <ItemCard on:click={() => (handleItemCardClick($inventory[index]))} bind:item={$inventory[index]} />
-        </Wrapper>
-      {/if}
-    {/each}
-  </div>
-  {:else if category == "Grains"}
-  <div class="item-grid">
-    {#each $inventory as _, index}
-      {#if $inventory[index].category == "Grains"}
-        <Wrapper>
- binds the correct item to display to each ItemCard component and sends it into function to handle click 
-          <ItemCard on:click={() => (handleItemCardClick($inventory[index]))} bind:item={$inventory[index]} />
-        </Wrapper>
-      {/if}
-    {/each}
-  </div>
-  {:else if category == "Breakfast Grains"}
-  <div class="item-grid">
-    {#each $inventory as _, index}
-      {#if $inventory[index].category == "Breakfast Grains"}
-        <Wrapper>
- binds the correct item to display to each ItemCard component and sends it into function to handle click 
-          <ItemCard on:click={() => (handleItemCardClick($inventory[index]))} bind:item={$inventory[index]} />
-        </Wrapper>
-      {/if}
-    {/each}
-  </div>
-  {:else if category == "Soup"}
-  <div class="item-grid">
-    {#each $inventory as _, index}
-      {#if $inventory[index].category == "Soup"}
-        <Wrapper>
- binds the correct item to display to each ItemCard component and sends it into function to handle click 
-          <ItemCard on:click={() => (handleItemCardClick($inventory[index]))} bind:item={$inventory[index]} />
-        </Wrapper>
-      {/if}
-    {/each}
-  </div>
-  {:else if category == "Protein"}
-  <div class="item-grid">
-    {#each $inventory as _, index}
-      {#if $inventory[index].category == "Protein"}
-        <Wrapper> binds the correct item to display to each ItemCard component and sends it into function to handle click 
-          <ItemCard on:click={() => (handleItemCardClick($inventory[index]))} bind:item={$inventory[index]} />
-        </Wrapper>
-      {/if}
-    {/each}
-  </div>
-  {:else if category == "Household Items"}
-  <div class="item-grid">
-    {#each $inventory as _, index}
-      {#if $inventory[index].category == "Household Items"}
-        <Wrapper> binds the correct item to display to each ItemCard component and sends it into function to handle click 
-          <ItemCard on:click={() => (handleItemCardClick($inventory[index]))} bind:item={$inventory[index]} />
-        </Wrapper>
-      {/if}
-    {/each}
-  </div>
-  {:else if category == "Personal Care"}
-  <div class="item-grid">
-    {#each $inventory as _, index}
-      {#if $inventory[index].category == "Personal Care"}
-        <Wrapper> binds the correct item to display to each ItemCard component and sends it into function to handle click 
-          <ItemCard on:click={() => (handleItemCardClick($inventory[index]))} bind:item={$inventory[index]} />
-        </Wrapper>
-      {/if}
-    {/each}
-  </div>
-  {:else if category == "Fruits"}
-  <div class="item-grid">
-    {#each $inventory as _, index}
-      {#if $inventory[index].category == "Fruits"}
-        <Wrapper> binds the correct item to display to each ItemCard component and sends it into function to handle click 
-          <ItemCard on:click={() => (handleItemCardClick($inventory[index]))} bind:item={$inventory[index]} />
-        </Wrapper>
-      {/if}
-    {/each}
-    </div>
-  {:else if category == "Vegetables"}
-  <div class="item-grid">
-    {#each $inventory as _, index}
-      {#if $inventory[index].category == "Vegetables"}
-        <Wrapper> binds the correct item to display to each ItemCard component and sends it into function to handle click 
-          <ItemCard on:click={() => (handleItemCardClick($inventory[index]))} bind:item={$inventory[index]} />
-        </Wrapper>
-      {/if}
-    {/each}
-  </div>
-  {/if} -->
+  <ShopItemGrid on:itemCardClicked={(e) => handleCardClick(e)} />
+
 </div>
 
 <!-- binds open value to ItemPopUp component so that parent component's open is updated when child component updates open -->
@@ -273,23 +158,6 @@
       border-radius: 10px;
   }
 
-  .item-grid {
-    /* grid styles */
-    display: grid;
-    column-gap: 1rem;
-    row-gap: 2rem;
-    grid-template-columns: repeat(3, minmax(150px, 1fr));
-    /* grid-template-rows: repeat(4, 1fr); */
-    grid-auto-flow: dense;
-    /* grid-gap: 2rem; */
-    width: 90%;
-    /* place-items: baseline normal; */
-    align-items: start;
-    justify-items: center;
-    /* justify-content: space-between; */
-    margin: 40px;
-  }
-
   .popular-items-container {
     background-color: #F5F4F4;
     border-radius: 25px;
@@ -298,6 +166,7 @@
     display: flex;
     flex-direction: column;
     align-items: center; /* centers item cards inside */
+    justify-content: center;
 
     width: 95%;
   }

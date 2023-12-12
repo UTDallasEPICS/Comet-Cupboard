@@ -33,86 +33,86 @@ router.post("/", validateSchema(schema.CreateEmployeeSchema), async (req: schema
     }
   });
     
-    // get all accounts
-    router.get("/", async (req, res, next) => {
-      try{
-        const employees = await Employee.find();
-        res.send({ accounts: employees});
-      } catch(e){
-        next(e);
-      }
-    });
+// get all accounts
+router.get("/", async (req, res, next) => {
+  try{
+    const employees = await Employee.find();
+    res.send({ accounts: employees});
+  } catch(e){
+    next(e);
+  }
+});
 
-  //update route
-  router.put("/", validateSchema(schema.CreateEmployeeSchema), async ( req: schema.ICreateEmployeeSchema, res, next) => {
-    try{
-      const existingEmployee = await Employee.findOne({ netID: req.body.netID });
-      if(!existingEmployee){
+//update route
+router.put("/", validateSchema(schema.CreateEmployeeSchema), async ( req: schema.ICreateEmployeeSchema, res, next) => {
+  try{
+    const existingEmployee = await Employee.findOne({ netID: req.body.netID });
+    if(!existingEmployee){
+      return next({
+        message: "Employee does not exist",
+        status: status.BAD_REQUEST
+      });
+    }
+    await Employee.findOneAndUpdate({
+      netID: req.body.netID
+    },
+    {
+      netID: req.body.netID,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      password: req.body.password
+    },
+    {
+      new: true
+    } 
+  );
+  res.send({ message: "Information Updated"});
+  }catch(e){
+    next(e);
+  }
+});
+
+//get one account//
+//!!! This route currently does not work, to fix later (does not return any data, though it doesn't break)//
+router.get("/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, res, next) => {
+  try {
+    if(!req.params.id){
+      return next({ message: "netID is required", status: status.BAD_REQUEST});
+    }
+      const employee = await Employee.findOne({_id: req.params.id});
+      if(!employee){
         return next({
-          message: "Employee does not exist",
+          message: "Account not found",
           status: status.BAD_REQUEST
         });
       }
-      await Employee.findOneAndUpdate({
-        netID: req.body.netID
-      },
-      {
-        netID: req.body.netID,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        password: req.body.password
-      },
-      {
-        new: true
-      } 
-    );
-    res.send({ message: "Information Updated"});
-    }catch(e){
-      next(e);
-    }
-  });
-
-    //get one account//
-    //!!! This route currently does not work, to fix later (does not return any data, though it doesn't break)//
-    router.get("/:id", validateSchema(MongoIdSchema), async (req: IMongoIdSchema, res, next) => {
-      try {
-        if(!req.params.id){
-          return next({ message: "netID is required", status: status.BAD_REQUEST});
+      const logs = await WorkerLogs.find({ _id: req.params.id});
+      let sum = 0;
+      for(var i = 0; i < logs.length; i++){
+        let log = logs.at(i);
+        if(log?.timeWorked){
+          sum += log.timeWorked;
         }
-          const employee = await Employee.findOne({_id: req.params.id});
-          if(!employee){
-            return next({
-              message: "Account not found",
-              status: status.BAD_REQUEST
-            });
-          }
-          const logs = await WorkerLogs.find({ _id: req.params.id});
-          let sum = 0;
-          for(var i = 0; i < logs.length; i++){
-            let log = logs.at(i);
-            if(log?.timeWorked){
-              sum += log.timeWorked;
-            }
-          }
-          employee.timeWorked = sum;
-          res.send({ employee: employee});
-      } catch (e) {
-        next(e);
       }
-    });
+      employee.timeWorked = sum;
+      res.send({ employee: employee});
+  } catch (e) {
+    next(e);
+  }
+});
 
-    // delete new account
-    router.delete("/:id", validateSchema(MongoIdSchema), async (req, res, next) => {
-      try {
-      if (!req.params.id) {
-        return next({ message: "Id is required", status: status.BAD_REQUEST });
-      }
-      await Employee.deleteOne({ _id: req.params.id });
-  
-      res.send({ message: "Successfully deleted account" });
-    } catch (e) {
-      next(e);
+// delete new account
+router.delete("/:id", validateSchema(MongoIdSchema), async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      return next({ message: "Id is required", status: status.BAD_REQUEST });
     }
-  });
+    await Employee.deleteOne({ _id: req.params.id });
+
+    res.send({ message: "Successfully deleted account" });
+  } catch (e) {
+    next(e);
+  }
+});
 
 

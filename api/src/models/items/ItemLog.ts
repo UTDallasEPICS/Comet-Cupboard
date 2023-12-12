@@ -6,7 +6,10 @@ export interface IItemLog {
    item: Schema.Types.ObjectId, //objectid
    quantity: number,
    donor: Schema.Types.ObjectId, //donors
-   actionType: string //Tracking the changes
+   actionType: string, //Tracking the changes
+   hasExpired : boolean, // Marks if the item has been expired previously
+   workerID: Schema.Types.ObjectId,
+   newDate: string
   }
   export interface IItemLogDocument extends IItemLog, Document {
     createdAt: Date;
@@ -14,12 +17,15 @@ export interface IItemLog {
   
   const schema = new Schema(
     {
-      checkoutID: { type: Schema.Types.ObjectId, ref: "CheckoutLog", required: true },
-      expDate: { type: String, required: true },
+      checkoutID: { type: Schema.Types.ObjectId, ref: "CheckoutLog", required: false },
+      workerID: { type: Schema.Types.ObjectId, required: false },
+      expDate: { type: String, required: false },
       item: {type: Schema.Types.ObjectId, ref: "Items", required: true},
       quantity:{type: Number, required: true},
       donor:{type: Schema.Types.ObjectId, ref: "Donor", required: true},
-      actionType:{type: String, required: true}
+      actionType:{type: String, required: true},
+      hasExpired: {type: Boolean, required : false, default: false},
+      newDate :{type: String, required: false}
     },
     
     { timestamps: { createdAt: true } }

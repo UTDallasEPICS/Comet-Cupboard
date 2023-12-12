@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
+require("dotenv").config();
+console.log(process.env);
+// setup database - local
+//const DATABASE_NAME = process.env.DATABASE_NAME || "db";
+// const DATABASE_URL = process.env.MONGODB_ORIGIN
+//   ? `${process.env.MONGODB_ORIGIN}/${DATABASE_NAME}?retryWrites=true&w=majority`
+//   : `mongodb://localhost:27017/${DATABASE_NAME}`;
 
-// setup database
-const DATABASE_NAME = process.env.DATABASE_NAME || "db";
-const DATABASE_URL = process.env.MONGODB_ORIGIN
-  ? `${process.env.MONGODB_ORIGIN}/${DATABASE_NAME}?retryWrites=true&w=majority`
-  : `mongodb://localhost:27017/${DATABASE_NAME}`;
+//link to the cloud database
+const DATABASE_URL = process.env.apiKey;
 
 // connect to mongoose
 export const db = mongoose.connection;

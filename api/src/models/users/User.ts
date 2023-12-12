@@ -2,7 +2,7 @@ import { Schema, Document, model } from "mongoose"; //Where objects are defined
 
 export interface IUser {
   netID: string;
-  
+
   
 }
 export interface IUserDocument extends IUser, Document {
