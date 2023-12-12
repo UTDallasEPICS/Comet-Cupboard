@@ -2,10 +2,8 @@
 import { Schema, Document, model } from "mongoose";
 
 export interface ICartItem {
-  itemId: Schema.Types.ObjectId;
+  itemId: String;
   quantity: number;
-  //size: string;
-  categoryId: Schema.Types.ObjectId;
 }
 
 export interface ICartDocument extends Document {
@@ -25,9 +23,11 @@ const cartSchema = new Schema(
     customerId: { type: String, required: true },
     cartItems: [cartItemSchema],
   },
+  { timestamps: { createdAt: true }, optimisticConcurrency: true},
 );
 
 //const Cart = mongoose.model('Cart', cartSchema);
 //module.exports = Cart;
 
 export default model<ICartDocument>("Cart", cartSchema);
+export const cartItem =  model<ICartItem>("CartItem", cartItemSchema);
