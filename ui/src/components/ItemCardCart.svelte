@@ -1,5 +1,6 @@
 <!--item cards for each item on the Cart page-->
-
+<!--<i class="fa-solid fa-chevron-down"></i> chevron for dropdown and create remove button-->
+<!-- import quanitityButton.svelte add to div class= right-->
 <script>
 // @ts-nocheck
 
@@ -9,6 +10,10 @@
    //import from SMUI
    import IconButton from '@smui/icon-button'
    // @ts-ignore
+   import QuantityButton from './QuantityButton.svelte';
+   import { createEventDispatcher } from 'svelte';
+  
+const dispatch = createEventDispatcher();
    
 
   let deleted = false ;
@@ -41,6 +46,20 @@ export let item;
   {
     hasImage = false;
   }
+
+  export let isSelected = false;
+  export let isSelectMode = false;
+
+  function toggleSelected() {
+    console.log("toggleSelected",isSelectMode);
+    if(isSelectMode) {
+      isSelected = !isSelected;
+    }
+    // You can also emit an event if you need to notify the parent component
+    dispatch('itemSelected');
+  }
+
+
   const handleDelete = () =>{
     deleted = true;
     if (deleted == true)
@@ -100,7 +119,8 @@ export let item;
 </script>
 
 <div> <!--item card-->
-  <div class="item-card-container"> <!--item card background-->
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <div class="item-card-container {isSelected ? 'selected' : ''}" on:click={toggleSelected}> <!--item card background-->
     <div class="side-by-side">
       <div class="left"> <!--item photo on cards-->
         {#if hasImage == true}<!-- if item does have an image, then apply class 'item-image' to show it -->
@@ -127,11 +147,23 @@ export let item;
       <div class="right"> <!--text + icons on item card-->
         <div class="side-by-side">
           <div class="item-text">
-            <p id="item-detail-title"><strong>Item Name: </strong><br>Size: <br>Expiration Date: <br>Amount: </p>
-            <p id="item-details"><strong>{itemName}</strong><br>{item.sizes}<br>{item.expiration_dates[0]}<br>{item.amount}</p>
+            <p id="item-detail-title">
+              <strong>Item Name: </strong><br>
+              Size: <br>
+              Expiration Date: <br>
+            </p>
+            <p id="item-details">
+              <strong>{itemName}</strong><br>
+              {item.sizes}<br>
+              {item.expiration_dates[0]}
+            </p>
+          </div>  
+          <div class="quantity-button"> <!--quantity button-->
+            <QuantityButton quantity={item.amount} itemId={item.id} category={item.category} /> <!--add quantity button below the text -->
           </div>
         </div>
         <Confirm
+          class="centered-confirm-dialog"
           confirmTitle="Delete"
           cancelTitle="Cancel"
           themeColor="140"
@@ -139,7 +171,9 @@ export let item;
           let:confirm="{confirmThis}"
 >  
           <div class="remove-button" style="display: flex; align-items: center;"> <!--remove button-->
-            <IconButton class="material-icons" on:click={() =>  confirmThis(handleDelete, item)} ripple={false}>close</IconButton>
+            <IconButton class="material-icons" on:click={() =>  confirmThis(handleDelete, item)} ripple={false}>
+              <i class="fa fa-trash" aria-hidden="true"></i> <!--trash icon-->
+            </IconButton>
           </div>
           
           <span slot="title">
@@ -156,24 +190,28 @@ export let item;
 <style>
   /*styles item card background*/
   .item-card-container {
-      background-color: #F5F4F4;
-      border-radius: 10px;
-      border-color: #A9A8A8;
-      border-width: 1px;
-      border-style: solid;
-      box-shadow: 2px 3px 5px 2px rgb(0 0 0 / 0.2);
-      display: flex;
-      flex-direction: column;
-      /* align-items: center; centers item cards inside */
-      place-items: stretch stretch; /*combines align-items and justify-items*/
-      width: 90vw;
-      height: 15vh;
-      margin-block-end: 25px;
-      margin-top: 20px;
-      margin-left: auto;
-      margin-bottom: auto;
-      margin-right: auto;
-  }
+    background-color: #EEEEEE;
+    border-radius: 10px;
+    box-shadow: 2px 3px 5px 2px rgb(0 0 0 / 0.2); 
+    display: flex;
+    flex-direction: column;
+    place-items: stretch stretch;
+    width: 45%;  /* Width relative to the parent container */
+    max-width: 45vw; /* Maximum width relative to the viewport width */
+    height: 15%; /* Height adjusts to content */
+    margin-block-end: 45px;
+    margin-top: 30px;
+    margin-left: 40px;
+    margin-bottom: auto;
+    margin-right: auto;
+    transition: box-shadow 0.2s ease; /* Smooth transition for shadow */
+}
+
+.item-card-container.selected {
+    
+    box-shadow: 0 0 0 5px orange, 2px 3px 5px 2px rgb(0 0 0 / 0.2); /* Mimic outline with shadow */
+}
+
   /*makes everything within it lay side-by-side w/o interference w/ each other*/
   .side-by-side {
       text-align: center;
@@ -185,12 +223,13 @@ export let item;
   /*styles item photo*/
   .left {
     display: flex;
-    flex-shrink: 2;
+    flex-shrink: 3;
     width: 100%;
     position: relative;
-    top: 10px;
+    top: 20%;
     left: 10px;
     justify-content: center;
+    padding-top: 2%;
   }
   .white-box {
       width: 130px;
@@ -276,11 +315,10 @@ export let item;
   /*styles the text on the item card*/
   .item-text {
     position: relative;
-    top: 15px;
     white-space: normal;
   }
   #item-detail-title {
-    text-align: right;
+    text-align: left;
     right: 0px;
   }
   #item-details {
@@ -290,14 +328,24 @@ export let item;
     text-align: left;
     position: inherit;
     left: 170px;
-    bottom: 116px;
+    bottom: 45%;
   }
   /*styles remove button*/
   .remove-button {
     position: relative;
-    left: 290px;
-    bottom: 100px;
+    right: 6em;
+    top: 1em;
   }
+
+  .quantity-button {
+    position: relative;
+    right: 6em;
+    top: 5em;
+    font-size: 1em;
+  }
+
+  
+
   :global(.mdc-icon-button) {
     font-size: 36px !important;
   }

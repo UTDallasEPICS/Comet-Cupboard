@@ -15,7 +15,7 @@ export const personalInCart = writable(0);
 export const fruitsInCart = writable(0);
 export const vegInCart = writable(0);       // end of num of items in cart per category
 export const check = writable(false);       
-export const cartContents = writable([]);   // items in the cart
+export const cartContents = writable([]);   // items in the cart     // remaining items in the cart
 export const inventory = writable([         // items in demo inventory
   {
       "name": "Canned Tuna",
@@ -25,6 +25,7 @@ export const inventory = writable([         // items in demo inventory
       "expiration_dates": ["01/01/2024", "02/02/2024", "03/03/2024"],
       "category": "Protein",
       "id": "1"
+      
   },
   {
       "name": "Mac n Cheese",
@@ -174,6 +175,7 @@ export const itemClickedSizes = writable([]);
 export const itemClickedExpDates = writable(["n/a"]);
 export const itemClickedCat = writable("");
 export const itemClickedId = writable("-1");
+
 
 // Used to to keep track of the category to display
 export const categoryClicked = writable({
