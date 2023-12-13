@@ -12,8 +12,9 @@ export interface ICreateDemographicsSchema extends express.Request {
 
       snapInterest: boolean;
       // Boolean value for whether or not the user is interested in SNAP benefits
-      firstName: string;
-      lastName: string;
+
+      // firstName: string;
+      // lastName: string;
 
       income: number;
     };
@@ -33,8 +34,8 @@ export interface ICreateDemographicsSchema extends express.Request {
       countSeniors: Joi.number().required(),
 
       snapInterest: Joi.boolean(),
-      firstName: Joi.string().required(),
-      lastName: Joi.string().required(),
+      // firstName: Joi.string().required(),
+      // lastName: Joi.string().required(),
       
       income: Joi.number().required()
     })
