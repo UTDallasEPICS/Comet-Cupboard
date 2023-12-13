@@ -1,6 +1,9 @@
 # TODO
 Add setup instruction
 
+# Project
+Developing an inventory system for the Comet Cupboard to receive donations and keep track of items within the cupboard in an efficient manner.
+
 # Technologies Used
 Node JS, Express JS, Typescript, Docker, Svelte
 
