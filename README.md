@@ -24,4 +24,5 @@ docker compose up
 
 # Setup Videos
 [Setting Up Frontend](https://www.youtube.com/watch?v=A4s-K06qc6k)
+
 [Setting Up Backend](https://www.youtube.com/watch?v=dbjJGCbxj7M)
