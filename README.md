@@ -1,6 +1,11 @@
 # TODO
 Add setup instruction
 
+# Technologies Used
+Node JS, Express JS, Typescript, Docker, Svelte
+
+# Database
+MONGODB
 
 # First Time
 Required: Docker, NodeJS 18
