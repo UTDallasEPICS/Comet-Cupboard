@@ -21,3 +21,7 @@ docker run --rm --mount type=bind,source=$PWD/api,target=/app node:18 yarn --cwd
 ```
 docker compose up
 ```
+
+# Setup Videos
+[Setting Up Frontend](https://www.youtube.com/watch?v=A4s-K06qc6k)
+[Setting Up Backend](https://www.youtube.com/watch?v=dbjJGCbxj7M)
