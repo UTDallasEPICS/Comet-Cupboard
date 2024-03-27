@@ -1,4 +1,11 @@
 {
   "dependencies": {
+    "mui": "^0.0.1",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.73",
+    "file-loader": "^6.2.0",
+    "url-loader": "^4.1.1"
   }
 }
