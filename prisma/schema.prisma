@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model carts {
+  customerID String?   @db.VarChar(9)
+  createdAt  DateTime? @db.Timestamp(0)
+  updatedAt  DateTime? @db.Timestamp(0)
+  isFinal    Boolean?
+  cartID     Int       @id
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model categories {
+  classification String? @db.VarChar(20)
+
+  @@ignore
+}
+
+model checkoutlogs {
+  logID        Int       @id
+  workerID     String?   @db.VarChar(9)
+  customerID   String?   @db.VarChar(9)
+  checkoutDate DateTime? @db.Timestamp(0)
+  createdAt    DateTime? @db.Timestamp(0)
+  updatedAt    DateTime? @db.Timestamp(0)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model donors {
+  ID            Int?
+  affiliation   String?   @db.VarChar(20)
+  donationCount Int?
+  lastDonation  DateTime? @db.Timestamp(0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model employee {
+  ID          Int?
+  hoursWorked Int?
+  isPaid      Boolean?
+  salary      Decimal? @db.Decimal(10, 0)
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model item {
+  value          Int?
+  classification String? @db.VarChar(20)
+  imgURL         String? @db.VarChar(200)
+  quantity       Int?
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model student {
+  ID        String?  @db.VarChar(9)
+  fname     String?  @db.VarChar(20)
+  surname   String?  @db.VarChar(20)
+  grade     String?  @db.VarChar(20)
+  numVisits Int?
+  status    Boolean?
+  major     String?  @db.VarChar(50)
+  gender    String?  @db.VarChar(1)
+  user      user?    @relation(fields: [ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "student_ibfk_1")
+
+  @@index([ID], map: "ID")
+  @@ignore
+}
+
+model user {
+  ID        String    @id @db.VarChar(9)
+  gender    String?   @db.VarChar(1)
+  fname     String?   @db.VarChar(20)
+  surname   String?   @db.VarChar(20)
+  grade     String?   @db.VarChar(8)
+  major     String?   @db.VarChar(50)
+  lastLogin DateTime? @db.Timestamp(0)
+  role      String?   @db.VarChar(50)
+  active    Boolean?
+  student   student[] @ignore
+}
