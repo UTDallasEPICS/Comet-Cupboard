@@ -1,7 +1,9 @@
 {
   "dependencies": {
+    "@mui/material": "^5.15.14",
     "mui": "^0.0.1",
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "styled-components": "^6.1.8"
   },
   "devDependencies": {
     "@types/react": "^18.2.73",
