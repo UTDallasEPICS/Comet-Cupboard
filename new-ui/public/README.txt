@@ -1,0 +1,1 @@
+All public folder assets were copied from the old UI.
