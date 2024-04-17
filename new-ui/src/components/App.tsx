@@ -3,13 +3,15 @@ import reactLogo from '../assets/react.svg'
 import viteLogo from '../assets/vite.svg'
 import '../styles/App.css'
 import ProductBox from './Product'
-
+import BottomBar from './BottomBar'
+import cometimage from '../images/CometCupboard_transparent.png'
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
       <div>
+      <BottomBar image={cometimage}/>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>

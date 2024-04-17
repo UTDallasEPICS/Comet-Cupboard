@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from "styled-components"
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 interface ProductProps{
     name: string;
     image: string;
@@ -32,9 +34,7 @@ const Image = styled.img`
 export default function Product({ image, name }: ProductProps){
     return(
         <Container>
-            <Box height={75} width={75} display="flex" p={1} sx={{border: '2px solid #CCCCCC'}}> 
-                <Image src={image} alt={name} />
-            </Box>
+            <Card variant="outlined"><Image src={image} alt={name} /></Card>
             <StyledText>{name}</StyledText>
         </Container>
     );
