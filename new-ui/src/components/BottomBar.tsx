@@ -4,6 +4,7 @@ interface BottomBarProps{
 }
 
 const BottomStyle = styled.div`
+    margin-top: 1rem;
     width: 100%;
     position: fixed;
     left: 0;
