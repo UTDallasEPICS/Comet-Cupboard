@@ -10,7 +10,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <Box
       sx={{
-        backgroundColor: "#10141F",
+        backgroundColor: "#154734",
         display: "flex",
         flexDirection: {
           xs: "column",
