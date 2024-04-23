@@ -3,89 +3,98 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model carts {
-  customerID String?   @db.VarChar(9)
-  createdAt  DateTime? @db.Timestamp(0)
-  updatedAt  DateTime? @db.Timestamp(0)
-  isFinal    Boolean?
-  cartID     Int       @id
+model cartItems {
+  cartID   Int
+  itemID   Int
+  quantity Int?
+  value    Int?
+  student  student @relation(fields: [cartID], references: [cartID], onDelete: NoAction, onUpdate: NoAction)
+  item     item    @relation(fields: [itemID], references: [itemID], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([cartID, itemID])
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model categories {
-  classification String? @db.VarChar(20)
-
-  @@ignore
+  classification String @id @db.VarChar(20)
+  items          Int?
+  item           item[]
 }
 
-model checkoutlogs {
-  logID        Int       @id
-  workerID     String?   @db.VarChar(9)
-  customerID   String?   @db.VarChar(9)
-  checkoutDate DateTime? @db.Timestamp(0)
-  createdAt    DateTime? @db.Timestamp(0)
-  updatedAt    DateTime? @db.Timestamp(0)
+model checkout {
+  transactionID Int             @id
+  workerID      Int?
+  customerID    String?         @db.VarChar(9)
+  checkoutDate  DateTime?       @db.Timestamp(6)
+  student       student?        @relation(fields: [customerID], references: [ID], onDelete: NoAction, onUpdate: NoAction)
+  employee      employee?       @relation(fields: [workerID], references: [ID], onDelete: NoAction, onUpdate: NoAction)
+  checkoutItems checkoutItems[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model checkoutItems {
+  transactionID Int
+  itemID        Int
+  quantity      Int?
+  value         Int?
+  item          item     @relation(fields: [itemID], references: [itemID], onDelete: NoAction, onUpdate: NoAction)
+  checkout      checkout @relation(fields: [transactionID], references: [transactionID], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([transactionID, itemID])
+}
+
 model donors {
-  ID            Int?
-  affiliation   String?   @db.VarChar(20)
-  donationCount Int?
-  lastDonation  DateTime? @db.Timestamp(0)
-
-  @@ignore
+  ID               Int       @id
+  affiliation      String?   @db.VarChar(100)
+  donationCount    Int?
+  lastDonation     DateTime? @db.Timestamp(6)
+  donationDescript String?   @db.VarChar(200)
+  estDonValue      Decimal?  @db.Decimal
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model employee {
-  ID          Int?
+  ID          Int        @id
+  studentID   String?    @db.VarChar(9)
   hoursWorked Int?
   isPaid      Boolean?
-  salary      Decimal? @db.Decimal(10, 0)
-
-  @@ignore
+  salary      Decimal?   @db.Decimal
+  checkout    checkout[]
+  student     student?   @relation(fields: [studentID], references: [ID], onDelete: NoAction, onUpdate: NoAction)
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model item {
+  itemID         Int             @id
+  name           String?         @db.VarChar(20)
   value          Int?
-  classification String? @db.VarChar(20)
-  imgURL         String? @db.VarChar(200)
-  quantity       Int?
-
-  @@ignore
+  classification String?         @db.VarChar(20)
+  imgURL         String?         @db.VarChar(200)
+  stock          Int?
+  expirationDate DateTime?       @db.Date
+  cartItems      cartItems[]
+  checkoutItems  checkoutItems[]
+  categories     categories?     @relation(fields: [classification], references: [classification], onDelete: NoAction, onUpdate: NoAction)
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model student {
-  ID        String?  @db.VarChar(9)
-  fname     String?  @db.VarChar(20)
-  surname   String?  @db.VarChar(20)
-  grade     String?  @db.VarChar(20)
-  numVisits Int?
-  status    Boolean?
-  major     String?  @db.VarChar(50)
-  gender    String?  @db.VarChar(1)
-  user      user?    @relation(fields: [ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "student_ibfk_1")
-
-  @@index([ID], map: "ID")
-  @@ignore
+  ID             String      @id @db.VarChar(9)
+  fname          String?     @db.VarChar(20)
+  surname        String?     @db.VarChar(20)
+  grade          String?     @db.VarChar(9)
+  numVisits      Int?
+  current_status status?
+  major          String?     @db.VarChar(50)
+  gender         String?     @db.VarChar(1)
+  lastLogin      DateTime?   @db.Timestamp(6)
+  cartID         Int?        @unique @default(0)
+  totalValue     Int?
+  cartItems      cartItems[]
+  checkout       checkout[]
+  employee       employee[]
 }
 
-model user {
-  ID        String    @id @db.VarChar(9)
-  gender    String?   @db.VarChar(1)
-  fname     String?   @db.VarChar(20)
-  surname   String?   @db.VarChar(20)
-  grade     String?   @db.VarChar(8)
-  major     String?   @db.VarChar(50)
-  lastLogin DateTime? @db.Timestamp(0)
-  role      String?   @db.VarChar(50)
-  active    Boolean?
-  student   student[] @ignore
+enum status {
+  Active
+  Inactive
 }
