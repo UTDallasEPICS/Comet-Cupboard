@@ -10,9 +10,6 @@ const prisma = new PrismaClient()
 const port: number = 8000;
 const app: Express = express();
 
-
-
-
 async function main() {
   // const students = await prisma.student.findMany();
   // console.log(students) //Prints all the students in student table
@@ -33,5 +30,5 @@ main()
   })
 
   app.listen(port, () => { 
-    console.log("Server started and listening on port ${port}")
+    console.log(`Server started and listening on port ${port}`)
   });
