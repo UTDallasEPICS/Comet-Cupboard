@@ -11,8 +11,8 @@ const prisma = new PrismaClient()
 
 
 async function main() {
-  const students = await prisma.student.findMany();
-  console.log(students) //Prints all the students in student table
+  // const students = await prisma.student.findMany();
+  // console.log(students) //Prints all the students in student table
   // ... you will write your Prisma Client queries here
   //npx ts-node src/server.ts unless in this directory
 }
