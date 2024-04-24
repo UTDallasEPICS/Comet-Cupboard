@@ -4,31 +4,16 @@
 import { PrismaClient } from '@prisma/client'
 import express, {Express, Request, Response} from "express"
 import {status} from '@prisma/client'
+import router from './router' // implementing this
 
 
-const prisma = new PrismaClient()
 const port: number = 8000;
 const app: Express = express();
 
-async function main() {
-  // const students = await prisma.student.findMany();
-  // console.log(students) //Prints all the students in student table
-  // ... you will write your Prisma Client queries here
-  //npx ts-node src/server.ts unless in this directory
-}
+app.use("/", router());
 
-main()
-  .then(async () => {
-
-    await prisma.$disconnect()
-  })
-
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
-
-  app.listen(port, () => { 
+app.listen(port, () => { 
     console.log(`Server started and listening on port ${port}`)
-  });
+});
+
+ 
