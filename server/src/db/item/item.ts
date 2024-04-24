@@ -3,9 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const getItems = async () => { //Returns a list of all items
-    // console.log("Hi");
     const items = await prisma.item.findMany();
-    // console.log(items);
     return items;
 };
 
