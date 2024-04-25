@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import styled from "styled-components"
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -24,18 +24,78 @@ const StyledText = styled.p`
 `;
 
 const Image = styled.img`
-    height: 75px;
-    width: 75px;
-    object-fit: contain; /* Maintain aspect ratio while fitting within container */
+    height: 100%;
+    width: 100%;
     margin: auto;
 `;
 
+const PopupOverlay = styled.div`
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 999; /* Ensure the overlay is above other content */
+`;
+
+const Popup = styled.div`
+    position: fixed;
+    top: 40%;
+    left: 10%;
+    width: 1500px;
+    height: 170px;
+    background-color: grey;
+    gap: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid black;
+    z-index: 999;
+`
+
+const Close = styled.button`
+    margin: 0 auto;
+    color: red;
+    font-weight: bold
+`
+
+
+const Imageinbox = styled.img`
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+    
+`
+
+
 
 export default function Product({ image, name }: ProductProps){
+    const [makePopup, setPopup] = React.useState(false);
+    function handleOpen(){
+        setPopup(true);
+    }
+    function handleClose(){
+        setPopup(false);
+    }
     return(
+
         <Container>
-            <Card variant="outlined"><Image src={image} alt={name} /></Card>
+            <Card onClick={handleOpen} variant="outlined" sx={{width: "170px", height: "170px"}}><Image src={image} alt={name} /></Card>
             <StyledText>{name}</StyledText>
+            {makePopup &&(
+                <div>
+                <PopupOverlay />
+                <Popup>
+                    <div>
+                    <p>{name}</p>
+                    <Imageinbox src={image} alt={name} />
+                    </div>
+                    <Close>Add to cart</Close>
+                    <Close onClick={handleClose}>CLOSE</Close>
+                </Popup>
+                </div>
+            )}
         </Container>
     );
 }
