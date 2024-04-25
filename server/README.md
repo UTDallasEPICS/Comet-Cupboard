@@ -22,8 +22,14 @@ API Calls:
 
 
 # New to development?
-* dist folder: houses the JavaScript equivilant of server.ts
+* dist folder: houses the JavaScript equivilant of the src folder. Does not exist when you pull, but is created thanks to a script when you "npm run build." It is ignored in the global .gitignore. 
 * helpers: supplementary files with functions and constants (empty)
-* prisma: contains the schema of the PostgreSQL database
+* prisma: contains the schema of the PostgreSQL database. Is the ORM you used to interact with the db.
+* router: express router that routes calls to certain services. The router itself lives in index.ts of the router folder.
+* * all substantial files are routes that will take the router in as an argument, until the request finds a match
+* db: contains all the methods that use prisma to operate on each table in the database. Each file contains the table's CRUD. Exported and used in services
+* services: uses the methods in db but also does a lot of the extra computing with Request and Response on each table
+* the topmost level "server.ts" is the actual express server. 
+
 
 
