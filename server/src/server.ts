@@ -3,7 +3,6 @@
 //Later, it will also be used to handle cookies and authentication
 import { PrismaClient } from '@prisma/client'
 import express, {Express, Request, Response} from "express"
-import {status} from '@prisma/client'
 import router from './router' // implementing this
 
 

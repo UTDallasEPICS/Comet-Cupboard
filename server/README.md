@@ -5,11 +5,21 @@ This is the backend, and uses an Express server and Prisma ORM to interact with 
 Credentials for the Neon database are in the Final Report of Spring 2024 (MUST READ).
 
 # Getting started
-npm install
-npm run build
-npm run start - to launch express
-npm run dev - nodemon watchmode
+* cd server
+* npm install (via package.json)
+* npx prisma run (1st time)
+* npx prisma generate (1st time)
+* npm run build (script)
+* npm run start - to launch express (script)
+* * npm run dev - nodemon watchmode
 ****Full script in package.json
+
+API Calls:
+* install postmann
+* You can find the api calls (Post method) in the router folder here
+* Fire POST requests in Postman to localhost:{port}{route}
+* * Ex: POST: localhost:8000/item/get
+
 
 # New to development?
 * dist folder: houses the JavaScript equivilant of server.ts
