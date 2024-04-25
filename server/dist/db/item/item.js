@@ -13,9 +13,7 @@ exports.updateItem = exports.deleteItem = exports.addNewItem = exports.getItemsB
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const getItems = () => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log("Hi");
     const items = yield prisma.item.findMany();
-    // console.log(items);
     return items;
 });
 exports.getItems = getItems;

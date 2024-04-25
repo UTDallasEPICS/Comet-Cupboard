@@ -17,7 +17,8 @@ const getAllItems = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.getAllItems = getAllItems;
 const getOnlyCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const details = yield item_1.getItemsByCategory;
+    const category = req.body;
+    const details = yield (0, item_1.getItemsByCategory)(category);
     return res.status(200).json(details).end();
 });
 exports.getOnlyCategory = getOnlyCategory;
