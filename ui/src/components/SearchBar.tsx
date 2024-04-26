@@ -1,6 +1,6 @@
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
+import {AppBar} from "@mui/material";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -53,11 +53,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchAppBar() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar
-        position="sticky"
-        style={{ backgroundColor: "#154734", width: "100%" }}
-      >
+<Box sx={{flexgrow: 1}}>
+    <AppBar position="sticky" sx={{background: "#154734", width: "100vw", top: "10vh", left: "0px"}}>
         <Toolbar>
           <IconButton
             size="large"
@@ -88,6 +85,6 @@ export default function SearchAppBar() {
           </Search>
         </Toolbar>
       </AppBar>
-    </Box>
+      </Box>
   );
 }

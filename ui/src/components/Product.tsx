@@ -78,6 +78,7 @@ export default function Product({ image, name }: ProductProps){
     function handleClose(){
         setPopup(false);
     }
+    
     return(
 
         <Container>

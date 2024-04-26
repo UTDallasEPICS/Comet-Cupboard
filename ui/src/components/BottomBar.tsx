@@ -10,7 +10,7 @@ const BottomStyle = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    height: 100px;
+    height: auto;
     background-color: grey;
 `
 const StyledText = styled.p`
@@ -51,7 +51,6 @@ export default function BottomBar({ image }: BottomBarProps){
                     Location: MC 1.604
                 </StyledInfo>
             </StyledWrapper>
-            <StyledText>The Comet Cupboard is a UT Dallas food pantry initiative dedicated to helping students in need. Its primary mission is to provide necessary food and personal care items to members of the UT Dallas community.</StyledText>
         </BottomStyle>
     );
 }
