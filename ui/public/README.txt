@@ -1,1 +1,0 @@
-Public assets are copied from old team's ui.
