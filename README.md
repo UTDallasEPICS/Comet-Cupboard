@@ -17,6 +17,8 @@ Student: Sees Catlogue Page, North Bank Form Page, and Cart Page
 Backend: Express Server, Prisma ORM, PostgreSQL (on Neon db)
 Credentials and database url for the Neon database are in the Final Report of Spring 2024 (MUST READ).
 
+FrontEnd: React TypeScript, Mui
+
 # Getting started
 
 Backend
