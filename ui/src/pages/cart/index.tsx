@@ -19,14 +19,14 @@ export const Cart = () => {
         { id: 4, name: 'Carrot', quantity: 1, price: 3.45, imageName: 'carrot.png' }
     ];
 
-    // Calculate total and taxes
+    
     const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
     const taxRate = 0.08;  // Example tax rate of 8%
     const taxes = subtotal * taxRate;
     const total = subtotal + taxes;
 
     const handleNavigateBack = () => {
-        navigate(-1); // Navigates back to the previous page
+        navigate(-1); 
     };
 
     return (
