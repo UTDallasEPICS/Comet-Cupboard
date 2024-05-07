@@ -31,11 +31,27 @@ Backend
 * * npm run dev - nodemon watchmode
 ****Full script in package.json
 
+Frontend:
+
+* cd ui
+* npm install (via package.json)
+* npm install @mui/material @emotion/react @emotion/styled
+  npm install @mui/icons-material
+
+
+
+
+
 API Calls:
 * install postmann
 * You can find the api calls (Post method) in the router folder here
 * Fire POST requests in Postman to localhost:{port}{route}
 * * Ex: POST: localhost:8000/item/get
+
+
+
+
+                
 
 
 
