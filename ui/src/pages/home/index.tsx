@@ -6,12 +6,13 @@ import Product from "../../components/product/Product";
 import { SideBarNav } from "../../components/sidebar-nav/SideBarNav";
 import Layout from "../../layout";
 import ItemCard from "../../components/item-card";
+import BottomBar from "../../components/bottombar/BottomBar";
 // import BottomBar from "../../components/BottomBar";
 
-const Wrapper = styled.div`
-  display: flex;
-  //
-`;
+// const Wrapper = styled.div`
+//   display: flex;
+//   //
+// `;
 // const ProductWrapper = styled.div`
 //   margin-left: 5rem;
 //   margin-top: 3rem;
@@ -69,11 +70,12 @@ const Home = () => {
     // // <Wrapper>
 
     /////////////// CALEB TEST ///////////////////
+
     <>
-      <Navbar />
       <Layout>
         <Product image={"/images/tomato.png"} name={"tomato"} />
       </Layout>
+      <BottomBar image={"src/assets/CometCupboard_transparent_orange.png"} />
     </>
   );
 };
