@@ -8,13 +8,14 @@ Credentials for the Neon database are in the Final Report of Spring 2024 (MUST R
 * cd server
 * npm install (via package.json)
 * npx prisma run (1st time)
-* npx prisma generate (1st time)
-* npm run build (script)
-* npm run start - to launch express (script)
+* npx prisma generate (1st time and when prisma changes)
+* npm run build (script - always)
+* npm run start - to launch express (script -always)
 * * npm run dev - nodemon watchmode
 ****Full script in package.json
 
 API Calls:
+* before you make any API calls, you should probably make the .env file and put the database url in there provided by the Final Report 
 * install postmann
 * You can find the api calls (Post method) in the router folder here
 * Fire POST requests in Postman to localhost:{port}{route}
