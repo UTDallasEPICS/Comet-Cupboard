@@ -1,18 +1,11 @@
-import { Box, Grid } from "@mui/material";
+import { Box } from "@mui/material";
 import { ReactNode } from "react";
 import Sidebar from "../components/sidebar";
 import { Navbar } from "../components/navbar/Navbar";
-import styled from "styled-components";
-import { SideBarNav } from "../components/sidebar-nav/SideBarNav";
 
 interface LayoutProps {
   children: ReactNode;
 }
-
-const Wrapper = styled.div`
-  display: flex;
-  //
-`;
 
 // const Layout = ({ children }: LayoutProps) => {
 //   return (

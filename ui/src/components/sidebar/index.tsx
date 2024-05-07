@@ -1,7 +1,6 @@
-import React from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import { useLocation, Link } from "react-router-dom";
-import { Box, Hidden, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 // navLinks for sideBar
 const navLinks = [
@@ -72,17 +71,14 @@ const Sidebar = () => {
             lg: "column",
           },
           gap: 5,
-          alignItems: {
-            xs: "center",
-            lg: "start",
-          },
+          alignItems: "center",
           width: "100%",
         }}
       >
         <Box
           sx={{
             py: {
-              xs: "0px",
+              md: "0px",
               lg: "16px",
             },
             display: "flex",
@@ -91,6 +87,7 @@ const Sidebar = () => {
               lg: "column",
             },
             gap: 4,
+            alignItems: "center",
           }}
         >
           {navLinks.map((item) => (
@@ -108,9 +105,7 @@ const Sidebar = () => {
                   textDecoration: "none",
                 }}
               >
-                <Hidden mdDown>
-                  <Typography align="center">{item.name}</Typography>
-                </Hidden>
+                <Typography align="center">{item.name}</Typography>
               </Box>
             </Link>
           ))}
