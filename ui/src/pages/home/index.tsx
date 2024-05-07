@@ -4,10 +4,11 @@ import Searchbar from "../../components/SearchBar"
 import { Box, Grid } from "@mui/material";
 import Product from "../../components/Product";
 import { SideBarNav } from "../../components/SideBarNav";
-// import BottomBar from "../../components/BottomBar";
+import BottomBar from "../../components/BottomBar";
 
 const Wrapper = styled.div`
-  display: flex;
+  display: block;
+  width: 100%;
 // `
 // const ProductWrapper = styled.div`
 //   margin-left: 5rem;
@@ -19,7 +20,7 @@ const Home = () => {
     <Wrapper>
       <Navbar/>
       {/* <Searchbar/> */}
-      <Box display="flex" sx={{marginTop: "10vh"}}>
+      <Box display="block" sx={{marginTop: "10vh"}}>
         {/* <SideBarNav/> */}
         <Grid container spacing={1}>
           {/**This is for testing purposes. Do not actually do this.*/}
@@ -54,8 +55,9 @@ const Home = () => {
             <Product image={"/images/tomato.png"} name={"tomato"}/>
           </Grid>
         </Grid>
-        {/* <BottomBar/> */}
       </Box>
+      <BottomBar image={"../src/assets/CometCupboard_transparent.png"}/>
+        
     </Wrapper>
 
     //Header [Searchbar]
