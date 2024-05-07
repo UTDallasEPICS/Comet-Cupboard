@@ -1,72 +1,132 @@
-import styled from "styled-components"
-import {Navbar} from "../../components/Navbar";
-import Searchbar from "../../components/SearchBar"
-import { Box, Grid } from "@mui/material";
-import Product from "../../components/Product";
-import { SideBarNav } from "../../components/SideBarNav";
-import BottomBar from "../../components/BottomBar";
+import { Box, Grid, Typography } from "@mui/material";
+import Product from "../../components/product/Product";
+import Layout from "../../layout";
+import BottomBar from "../../components/bottombar/BottomBar";
+import MultipleSelect from "../../components/multiple-select";
 
-const Wrapper = styled.div`
-  display: block;
-  width: 100%;
-// `
-// const ProductWrapper = styled.div`
-//   margin-left: 5rem;
-//   margin-top: 3rem;
-//   display: flex;
-// `
 const Home = () => {
   return (
-    <Wrapper>
-      <Navbar/>
-      {/* <Searchbar/> */}
-      <Box display="block" sx={{marginTop: "10vh"}}>
-        {/* <SideBarNav/> */}
-        <Grid container spacing={1}>
-          {/**This is for testing purposes. Do not actually do this.*/}
-          <Grid item xs={12} sm={6} md={2}>
-            <Product image={"/images/apple.png"} name={"apple"}/>
+    /////////////// CALEB TEST ///////////////////
+
+    <Layout>
+      <Box
+        sx={{
+          padding: 5,
+          backgroundColor: "#F5F4F4",
+          borderRadius: 2,
+          boxShadow: 1,
+          border: 2,
+          m: 1,
+          ml: 2,
+        }}
+      >
+        <Grid container rowSpacing={3} columnSpacing={0}>
+          <Grid item xs={12} container justifyContent="center">
+            <Typography variant="h4">Available Items</Typography>
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <Product image={"/images/banana.png"} name={"banana"}/>
+          <Grid item xs={12} container justifyContent="center">
+            <MultipleSelect />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <Product image={"/images/beef.png"} name={"beef"}/>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/tomato.png"} name={"Tomato"} />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <Product image={"/images/bread.png"} name={"bread"}/>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/banana.png"} name={"Banana"} />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <Product image={"/images/carrot.png"} name={"carrot"}/>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/beef.png"} name={"Beef"} />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <Product image={"/images/cheese.png"} name={"cheese"}/>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/carrot.png"} name={"Carrot"} />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <Product image={"/images/chicken.png"} name={"chicken"}/>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/cheese.png"} name={"Cheese"} />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <Product image={"/images/cookie.png"} name={"cookie"}/>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/chicken.png"} name={"Chicken"} />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
-            <Product image={"/images/milk.png"} name={"milk"}/>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/cookie.png"} name={"Cookie"} />
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>        
-            <Product image={"/images/tomato.png"} name={"tomato"}/>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/milk.png"} name={"milk"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/tomato.png"} name={"Tomato"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/banana.png"} name={"Banana"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/beef.png"} name={"Beef"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/carrot.png"} name={"Carrot"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/cheese.png"} name={"Cheese"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/chicken.png"} name={"Chicken"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/cookie.png"} name={"Cookie"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/milk.png"} name={"milk"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/tomato.png"} name={"Tomato"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/banana.png"} name={"Banana"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/beef.png"} name={"Beef"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/carrot.png"} name={"Carrot"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/cheese.png"} name={"Cheese"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/chicken.png"} name={"Chicken"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/cookie.png"} name={"Cookie"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/milk.png"} name={"milk"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/tomato.png"} name={"Tomato"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/banana.png"} name={"Banana"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/beef.png"} name={"Beef"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/carrot.png"} name={"Carrot"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/cheese.png"} name={"Cheese"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/chicken.png"} name={"Chicken"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/cookie.png"} name={"Cookie"} />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Product image={"/images/milk.png"} name={"milk"} />
           </Grid>
         </Grid>
       </Box>
-      <BottomBar image={"../src/assets/CometCupboard_transparent.png"}/>
-        
-    </Wrapper>
-
-    //Header [Searchbar]
-    //Drawer [For Categories]
-    //Grid [Item Cards]
-    //Footer 
-    
-  // <Wrapper>
-    
+      <BottomBar image={"src/assets/CometCupboard_transparent.png"} />
+    </Layout>
   );
 };
 

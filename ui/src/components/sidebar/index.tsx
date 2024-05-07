@@ -1,13 +1,12 @@
-import React from "react";
 import HomeIcon from "@mui/icons-material/Home";
-import { useLocation } from "react-router-dom";
-import { Box } from "@mui/material";
+import { useLocation, Link } from "react-router-dom";
+import { Box, Typography } from "@mui/material";
 
 // navLinks for sideBar
 const navLinks = [
   {
     name: "Home",
-    icon: HomeIcon, // commet cupboard icon
+    icon: HomeIcon,
     link: "/",
   },
   {
@@ -41,41 +40,6 @@ const navLinks = [
     icon: HomeIcon,
     link: "/protien",
   },
-  {
-    name: "Household Items",
-    icon: HomeIcon,
-    link: "/household-items",
-  },
-  {
-    name: "Personal Care",
-    icon: HomeIcon,
-    link: "/personal-care",
-  },
-  {
-    name: "Fruits",
-    icon: HomeIcon,
-    link: "/fruits",
-  },
-  {
-    name: "Vegetables",
-    icon: HomeIcon,
-    link: "/vegetables",
-  },
-  {
-    name: "Refrigerated Items",
-    icon: HomeIcon,
-    link: "/refrigerated-items",
-  },
-  {
-    name: "Frozen Items",
-    icon: HomeIcon,
-    link: "/frozen-items",
-  },
-  {
-    name: "Miscellaneous",
-    icon: HomeIcon,
-    link: "/miscellaneous",
-  },
 ];
 
 const Sidebar = () => {
@@ -85,7 +49,7 @@ const Sidebar = () => {
       sx={{
         backgroundColor: "#154734",
         padding: 2,
-        borderRadius: 2,
+        borderRadius: 0,
         display: "flex",
         flexDirection: {
           xs: "row",
@@ -98,7 +62,56 @@ const Sidebar = () => {
           lg: 200,
         },
       }}
-    ></Box>
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: {
+            xs: "row",
+            lg: "column",
+          },
+          gap: 5,
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <Box
+          sx={{
+            py: {
+              md: "0px",
+              lg: "16px",
+            },
+            display: "flex",
+            flexDirection: {
+              xs: "row",
+              lg: "column",
+            },
+            gap: 4,
+            alignItems: "center",
+          }}
+        >
+          {navLinks.map((item) => (
+            <Link
+              key={item.name}
+              to={item.link}
+              style={{ textAlign: "center", textDecoration: "none" }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  color: "white",
+                  textDecoration: "none",
+                }}
+              >
+                <Typography align="center">{item.name}</Typography>
+              </Box>
+            </Link>
+          ))}
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
