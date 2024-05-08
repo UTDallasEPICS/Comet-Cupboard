@@ -5,6 +5,9 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
+import { useNavigate } from 'react-router-dom';
+
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -49,6 +52,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 }));
 
 export const Navbar = () => {
+  const navigate = useNavigate();
   return (
     <AppBar
       position="fixed"
@@ -72,7 +76,7 @@ export const Navbar = () => {
             }}
           ></img>
         </div>
-        <Button sx={{ marginLeft: "auto", color: "white", marginTop: 2 }}>
+        <Button sx={{ marginLeft: "auto", color: "white", marginTop: 2 }} onClick={() => navigate('/cart')}>
           <ShoppingCartIcon sx={{ fontSize: "5vh" }} />
         </Button>
         <Button sx={{ color: "white", marginTop: 2 }}>

@@ -2,7 +2,7 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Grid, Box, Paper, Card, CardContent, CardMedia } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useNavigate } from 'react-router-dom';
-import BottomBar from '../../components/BottomBar';
+import BottomBar from "../../components/bottombar/BottomBar";
 
 interface CartItem {
     id: number;
@@ -30,7 +30,23 @@ export const Cart = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <AppBar position="fixed" sx={{ background: "#154734", blockSize: '10vh', width: "100%" }}>
                 <Toolbar>
-                    <img src="/src/images/CometCupboard_transparent_orange.png" alt="Comet Cupboard Logo" style={{ marginRight: '1vw', height: '5vh', width: '10vw' }} />
+                    <div
+                    style={{
+                        width: "10vw",
+                        height: "5vh",
+                        overflow: "hidden",
+                        marginTop: 15,
+                    }}
+                    >
+                    <img
+                        src="src/assets/CometCupboard_transparent_orange.png"
+                        style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        }}
+                    ></img>
+                    </div>
                     <Typography variant="h6" sx={{ flexGrow: 1, textAlign: 'center' }}>
                         Shopping Cart
                     </Typography>

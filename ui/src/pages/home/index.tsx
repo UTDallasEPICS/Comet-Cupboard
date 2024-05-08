@@ -22,7 +22,7 @@ const Home = () => {
       >
         <Grid container rowSpacing={3} columnSpacing={0}>
           <Grid item xs={12} container justifyContent="center">
-            <Typography variant="h4">Available Items</Typography>
+            <Typography variant="h4" color='#000000'>Available Items</Typography>
           </Grid>
           <Grid item xs={12} container justifyContent="center">
             <MultipleSelect />
