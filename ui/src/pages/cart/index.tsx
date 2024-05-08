@@ -8,23 +8,18 @@ interface CartItem {
     id: number;
     name: string;
     quantity: number;
-    price: number;
     imageName: string;
 }
 
 export const Cart = () => {
     const navigate = useNavigate();
     const cartItems: CartItem[] = [
-        { id: 1, name: 'Tomato', quantity: 2, price: 9.99, imageName: 'tomato.png' },
-        { id: 2, name: 'Banana', quantity: 1, price: 19.99, imageName: 'banana.png' },
-        { id: 3, name: 'Beef', quantity: 3, price: 5.99, imageName: 'beef.png' },
-        { id: 4, name: 'Carrot', quantity: 1, price: 3.45, imageName: 'carrot.png' }
+        { id: 1, name: 'Tomato', quantity: 2, imageName: 'tomato.png' },
+        { id: 2, name: 'Banana', quantity: 1, imageName: 'banana.png' },
+        { id: 3, name: 'Beef', quantity: 3, imageName: 'beef.png' },
+        { id: 4, name: 'Carrot', quantity: 1, imageName: 'carrot.png' }
     ];
 
-    const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-    const taxRate = 0.08; // Example tax rate of 8%
-    const taxes = subtotal * taxRate;
-    const total = subtotal + taxes;
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -67,9 +62,7 @@ export const Cart = () => {
                             />
                             <CardContent sx={{ flexGrow: 1 }}>
                                 <Typography variant="h5">{item.name}</Typography>
-                                <Typography variant="body2">Price: ${item.price}</Typography>
                                 <Typography variant="body2">Quantity: {item.quantity}</Typography>
-                                <Typography variant="body2">Subtotal: ${item.price * item.quantity}</Typography>
                             </CardContent>
                         </Card>
                     ))}
@@ -77,9 +70,7 @@ export const Cart = () => {
                 <Grid item xs={12} md={4}>
                     <Paper elevation={3} sx={{ padding: 2 }}>
                         <Typography variant="h6" sx={{ marginBottom: 2 }}>Order Summary</Typography>
-                        <Typography>Subtotal: ${subtotal.toFixed(2)}</Typography>
-                        <Typography>Tax: ${taxes.toFixed(2)}</Typography>
-                        <Typography>Total: ${total.toFixed(2)}</Typography>
+                        <Typography>Quantity: 5</Typography>
                         <Button variant="contained" color="primary" startIcon={<ShoppingCartIcon />} sx={{ marginTop: 2, backgroundColor: '#004d40' }} onClick={() => alert('Proceed to Checkout')}>
                             Checkout
                         </Button>

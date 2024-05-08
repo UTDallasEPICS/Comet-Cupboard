@@ -48,7 +48,7 @@ const Layout = ({ children }: LayoutProps) => {
         //color: "white",
         overflowY: "hidden",
         height: "100vh",
-        marginTop: 13.3,
+        marginTop: '10vh',
       }}
     >
       <Navbar />
