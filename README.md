@@ -59,7 +59,7 @@ Fullscreen view of the current cart, which is queried from the carts db for a ca
 
 ## Tech Stack
 
-- React
+- React + Vite
 - TypeScript
 - Material UI
 - Express.js
