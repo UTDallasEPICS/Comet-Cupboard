@@ -3,98 +3,93 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = env("PRISMA_DB_URL")
 }
 
-model cartItems {
+model CartItems {
   cartID   Int
   itemID   Int
   quantity Int?
   value    Int?
-  student  student @relation(fields: [cartID], references: [cartID], onDelete: NoAction, onUpdate: NoAction)
-  item     item    @relation(fields: [itemID], references: [itemID], onDelete: NoAction, onUpdate: NoAction)
+  student  Student @relation(fields: [cartID], references: [cartID], onDelete: NoAction, onUpdate: NoAction)
+  item     Item    @relation(fields: [itemID], references: [itemID], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([cartID, itemID])
 }
 
-model categories {
-  classification String @id @db.VarChar(20)
+model Categories {
+  classification String @id
   items          Int?
-  item           item[]
+  item           Item[]
 }
 
-model checkout {
+model Checkout {
   transactionID Int             @id
   workerID      Int?
-  customerID    String?         @db.VarChar(9)
-  checkoutDate  DateTime?       @db.Timestamp(6)
-  student       student?        @relation(fields: [customerID], references: [ID], onDelete: NoAction, onUpdate: NoAction)
-  employee      employee?       @relation(fields: [workerID], references: [ID], onDelete: NoAction, onUpdate: NoAction)
-  checkoutItems checkoutItems[]
+  customerID    String?
+  checkoutDate  DateTime?
+  student       Student?        @relation(fields: [customerID], references: [ID], onDelete: NoAction, onUpdate: NoAction)
+  employee      Employee?       @relation(fields: [workerID], references: [ID], onDelete: NoAction, onUpdate: NoAction)
+  checkoutItems CheckoutItems[]
 }
 
-model checkoutItems {
+model CheckoutItems {
   transactionID Int
   itemID        Int
   quantity      Int?
   value         Int?
-  item          item     @relation(fields: [itemID], references: [itemID], onDelete: NoAction, onUpdate: NoAction)
-  checkout      checkout @relation(fields: [transactionID], references: [transactionID], onDelete: NoAction, onUpdate: NoAction)
+  item          Item     @relation(fields: [itemID], references: [itemID], onDelete: NoAction, onUpdate: NoAction)
+  checkout      Checkout @relation(fields: [transactionID], references: [transactionID], onDelete: NoAction, onUpdate: NoAction)
 
   @@id([transactionID, itemID])
 }
 
-model donors {
+model Donors {
   ID               Int       @id
-  affiliation      String?   @db.VarChar(100)
+  affiliation      String?
   donationCount    Int?
-  lastDonation     DateTime? @db.Timestamp(6)
-  donationDescript String?   @db.VarChar(200)
-  estDonValue      Decimal?  @db.Decimal
+  lastDonation     DateTime?
+  donationDescript String?
+  estDonValue      Decimal?
 }
 
-model employee {
+model Employee {
   ID          Int        @id
-  studentID   String?    @db.VarChar(9)
+  studentID   String?
   hoursWorked Int?
   isPaid      Boolean?
-  salary      Decimal?   @db.Decimal
-  checkout    checkout[]
-  student     student?   @relation(fields: [studentID], references: [ID], onDelete: NoAction, onUpdate: NoAction)
+  salary      Decimal?
+  checkout    Checkout[]
+  student     Student?   @relation(fields: [studentID], references: [ID], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model item {
+model Item {
   itemID         Int             @id
-  name           String?         @db.VarChar(20)
+  name           String?
   value          Int?
-  classification String?         @db.VarChar(20)
-  imgURL         String?         @db.VarChar(200)
+  classification String?
+  imgURL         String?
   stock          Int?
-  expirationDate DateTime?       @db.Date
-  cartItems      cartItems[]
-  checkoutItems  checkoutItems[]
-  categories     categories?     @relation(fields: [classification], references: [classification], onDelete: NoAction, onUpdate: NoAction)
+  expirationDate DateTime?
+  cartItems      CartItems[]
+  checkoutItems  CheckoutItems[]
+  categories     Categories?     @relation(fields: [classification], references: [classification], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model student {
-  ID             String      @id @db.VarChar(9)
-  fname          String?     @db.VarChar(20)
-  surname        String?     @db.VarChar(20)
-  grade          String?     @db.VarChar(9)
+model Student {
+  ID             String      @id
+  fname          String?
+  surname        String?
+  grade          String?
   numVisits      Int?
-  current_status status?
-  major          String?     @db.VarChar(50)
-  gender         String?     @db.VarChar(1)
-  lastLogin      DateTime?   @db.Timestamp(6)
+  current_status Boolean?
+  major          String?
+  gender         String?
+  lastLogin      DateTime?
   cartID         Int?        @unique @default(0)
   totalValue     Int?
-  cartItems      cartItems[]
-  checkout       checkout[]
-  employee       employee[]
-}
-
-enum status {
-  Active
-  Inactive
+  cartItems      CartItems[]
+  checkout       Checkout[]
+  employee       Employee[]
 }

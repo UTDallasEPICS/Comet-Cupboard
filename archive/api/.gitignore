@@ -1,9 +1,0 @@
-node_modules
-db.ts
-dist
-yarn.lock
-package-lock.json
-*.log
-*.local
-*.lock
-.env

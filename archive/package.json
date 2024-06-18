@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "@prisma/client": "^5.12.1",
-    "@types/express": "^4.17.21",
-    "@types/node": "^20.12.7",
-    "express": "^4.19.2",
-    "typescript": "^5.4.5"
-  }
-}

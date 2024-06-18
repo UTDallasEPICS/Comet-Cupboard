@@ -1,5 +1,0 @@
-{
-    "filepath": "src/**/*.ts",
-    "printWidth": 140,
-    "trailingComma": "none"
-  }

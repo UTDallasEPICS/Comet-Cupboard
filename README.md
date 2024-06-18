@@ -31,9 +31,13 @@ The purpose of the Comet Cupboard Inventory is to
   - Item statistics (popularity, amount/wk, expired on shelve if any)
 
 Three views: Faculty, Staff, Student
+
 Pages: Checkout Page (Cashier), Inventory Page, Catologue Page, and Cart Page.
+
 Faculty: Sees Inventory Page, Checkout Page, Catologue Page, Donors Page, North Bank Form Page, and Student Information Page
+
 Staff: Sees Inventory Page, Checkout Page, Catologue Page, Cart Page, and North Bank Form Page
+
 Student: Sees Catlogue Page, North Bank Form Page, and Cart Page
 
 ### Users/Roles

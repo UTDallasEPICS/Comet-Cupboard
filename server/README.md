@@ -1,4 +1,4 @@
-# To-Do
+
 
 # Technologies
 This is the backend, and uses an Express server and Prisma ORM to interact with a PostgreSQL server hosted on Neon.
