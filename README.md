@@ -25,10 +25,6 @@
   - [Migration Scripts](#migration-scripts)
   - [Setting Up Development Environment](#setting-up-development-environment)
     - [Install the repo](#install-the-repo)
-    - [Set up Dependencies](#set-up-dependencies)
-    - [Running Express Server](#running-express-server)
-    - [Previewing Frontend Only](#previewing-frontend-only)
-    - [Testing API Calls with Postman](#testing-api-calls-with-postman)
 
 </details>
 
@@ -129,12 +125,7 @@ SSO? idk
 
 ## Tech Stack
 
-- React + Vite
-- TypeScript
-- Material UI
-- Node.js and Express.js
-- Prisma ORM and SQLite
-- Postman
+To be done
 
 ## Deployment Notes
 
@@ -157,42 +148,4 @@ git clone https://github.com/UTDallasEPICS/Comet-Cupboard.git
 cd Comet-Cupboard
 ```
 
-### Set up Dependencies
-
-Setting Up Frontend Environment
-
-```bash
-# Assume current directory is /Comet-Cupboard
-cd ui
-npm install
-```
-
-Setting Up Backend Environment
-
-```bash
-# Assume current directory is /Comet-Cupboard
-cd server
-npm install
-npx prisma generate
-```
-
-### Running Express Server
-
-```bash
-# Assume current directory is /Comet-Cupboard/server
-npm run build
-npm run start # use this to start running
-npm run dev - nodemon watchmode # use this to dynamically update changed backend files while running
-```
-
-### Previewing Frontend Only
-
-```bash
-# Assume current directory is /Comet-Cupboard/ui
-npm run dev
-```
-
-### Testing API Calls with Postman
-
-Download Postman. There is a VSCode extension. :)
-Tutorial? maybe later
+To be done
