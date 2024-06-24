@@ -1,6 +1,3 @@
-<template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+<template lang="pug">
+NuxtWelcome
 </template>
