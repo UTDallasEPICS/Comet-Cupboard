@@ -2,7 +2,7 @@
 Menu
     div.relative.text-left.text-white.text-4xl
         MenuButton
-            img(style="height: 60px" src="/Hamburger.png")
+            Bars3Icon.w-16.h-16.stroke-white
         MenuItems
             div.absolute.left-0.flex.flex-col.w-64.divide-y(style="background-color: #8A7A67")
                 MenuItem
@@ -25,4 +25,5 @@ Menu
 
 <script lang="ts" setup>
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue"
+import { Bars3Icon } from "@heroicons/vue/24/solid"
 </script>
