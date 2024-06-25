@@ -3,8 +3,7 @@ div.bg-gray-600(style="background-color: #626262")
     div.p-5.max-w-fit.text-white(style="margin-left: auto; margin-right: auto")
         .grid.grid-cols-2.gap-5 
             img(style="margin-left: auto" src="/TemporaryCometCupboardTransparent.png")
-            p(style="margin-right: auto")
-                Office Telephone: 972-883-6613
+            p(style="margin-right: auto") Office Telephone: 972-883-6613
                 br 
                 | Email: cupboard@utdallas.edu 
                 br 
