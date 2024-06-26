@@ -1,6 +1,10 @@
 <template lang="pug">
-div.flex.flex-row.items-center.justify-center
-    p catalog
+div.flex.flex-row
+    CategorySidebar
+    div.w-screen
+        SearchBanner
+        p.text-right Sort Items
+        ItemsGrid.border-black.border-8
 </template>
 
 <script lang="ts" setup>

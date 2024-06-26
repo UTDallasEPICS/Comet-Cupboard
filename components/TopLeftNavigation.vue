@@ -1,6 +1,6 @@
 <template lang="pug">
 Menu
-    div.relative.text-left.text-white.text-4xl
+    div.relative.text-center.text-white.text-4xl
         MenuButton
             Bars3Icon.w-16.h-16.stroke-white
         MenuItems
@@ -20,7 +20,6 @@ Menu
                 MenuItem
                     NuxtLink(to="/data-analytics") 
                         p Data Analytics
-
 </template>
 
 <script lang="ts" setup>
