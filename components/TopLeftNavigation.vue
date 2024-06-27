@@ -1,28 +1,23 @@
 <template lang="pug">
 Menu
-    div.relative.text-center.text-white.text-4xl
+    div.relative
         MenuButton
             Bars3Icon.w-16.h-16.stroke-white
         MenuItems
-            div.absolute.left-0.flex.flex-col.w-64.divide-y(style="background-color: #8A7A67")
-                MenuItem
-                    NuxtLink(to="/catalog") 
-                        p Catalog
-                MenuItem
-                    NuxtLink(to="/donation") 
-                        p See Donations
-                MenuItem
-                    NuxtLink(to="/inventory") 
-                        p Inventory
-                MenuItem
-                    NuxtLink(to="/verify-cart") 
-                        p Verify Carts
-                MenuItem
-                    NuxtLink(to="/data-analytics") 
-                        p Data Analytics
+            div.absolute.left-0.flex.flex-col.items-center.pb-4.gap-4.w-72.text-center.text-white.text-3xl.whitespace-nowrap(style="background-color: #8A7A67")
+                MenuItem.min-w-full
+                    NuxtLink(to="/catalog") Catalog
+                MenuItem.min-w-full
+                    NuxtLink(to="/donation") See Donations
+                MenuItem.min-w-full
+                    NuxtLink(to="/inventory/inventory") Inventory
+                MenuItem.min-w-full
+                    NuxtLink(to="/verify-cart") Verify Carts
+                MenuItem.min-w-full
+                    NuxtLink(to="/data-analytics") Data Analytics
 </template>
 
 <script lang="ts" setup>
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue"
-import { Bars3Icon } from "@heroicons/vue/24/solid"
+import { Bars3Icon } from "@heroicons/vue/24/outline"
 </script>

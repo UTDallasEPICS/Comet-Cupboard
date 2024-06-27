@@ -3,8 +3,9 @@ div.flex.flex-row
     CategorySidebar
     div.w-screen
         SearchBanner
-        p.text-right Sort Items
-        ItemsGrid.border-black.border-8
+        div.flex.flex-row.justify-end 
+            SortingOptions
+        ItemsGrid
 </template>
 
 <script lang="ts" setup></script>
