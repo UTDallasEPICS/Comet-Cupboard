@@ -1,4 +1,4 @@
 <template lang="pug">
 div.flex.flex-row.items-center.justify-center
-    NuxtLink(to="/catalog") login
+    p delete item confirmation
 </template>

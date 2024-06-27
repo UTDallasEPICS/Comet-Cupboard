@@ -7,5 +7,4 @@ div.flex.flex-row
         ItemsGrid.border-black.border-8
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
