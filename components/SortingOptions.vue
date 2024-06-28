@@ -10,7 +10,7 @@ Listbox(v-model="selectedSort")
 </template>
 
 <script lang="ts" setup>
-import { Listbox, ListboxLabel, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue'
+import { Listbox, ListboxLabel, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue"
 
 const sortingOptions = ["Sort (none)", "Sort (alphabetical)", "Sort (popularity)"]
 const selectedSort = ref(sortingOptions[0])
