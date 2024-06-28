@@ -1,10 +1,10 @@
 <template lang="pug">
 div.bg-gray-500.text-white.text-center.text-6xl
     p Shop for Items
-    Combobox(v-model="selectedPerson")
-        ComboboxInput.text-black(@change="query = $event.target.value")
-        ComboboxOptions.text-black
-            ComboboxOption(v-for="person in filteredPeople" :key="person" :value="person") {{ person }}
+    //- Combobox(v-model="selectedPerson")
+    //-     ComboboxInput.text-black(@change="query = $event.target.value")
+    //-     ComboboxOptions.text-black
+    //-         ComboboxOption(v-for="person in filteredPeople" :key="person" :value="person") {{ person }}
 </template>
 
 <script lang="ts" setup>

@@ -1,8 +1,8 @@
 <template lang="pug">
 Listbox(v-model="selectedSort")
-    div.relative.w-72.text-right.text-white.text-3xl.whitespace-nowrap
-        ListboxButton 
-            div.bg-neutral-500
+    div.relative.text-right.text-white.text-3xl.whitespace-nowrap
+        ListboxButton
+            div.w-72.bg-neutral-500
                 p {{ selectedSort }}
         ListboxOptions
             div.absolute.right-0.flex.flex-col.items-center.pb-4.gap-4(style="background-color: #8A7A67")
