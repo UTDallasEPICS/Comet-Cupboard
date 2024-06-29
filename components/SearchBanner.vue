@@ -1,6 +1,9 @@
 <template lang="pug">
-div.bg-gray-500.text-white.text-center.text-6xl
-    p Shop for Items
+div.bg-gray-700.py-4
+    p.pb-4.text-white.text-center(class="text-5xl sm:text-6xl") Shop for Items
+    // TODO: need to replace with combobox
+    div.px-4
+        input.text-black.text-4xl.w-full(type="text" placeholder="Search for items...")
     //- Combobox(v-model="selectedPerson")
     //-     ComboboxInput.text-black(@change="query = $event.target.value")
     //-     ComboboxOptions.text-black

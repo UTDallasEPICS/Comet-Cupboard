@@ -5,7 +5,7 @@ Listbox(v-model="selectedSort")
             div.w-72.bg-neutral-500
                 p {{ selectedSort }}
         ListboxOptions
-            div.absolute.right-0.flex.flex-col.items-center.pb-4.gap-4(style="background-color: #8A7A67")
+            div.absolute.right-0.flex.flex-col.items-center.w-72.pb-4.gap-4(style="background-color: #8A7A67")
                 ListboxOption(v-for="option in sortingOptions" :key="option" :value="option") {{ option }}
 </template>
 

@@ -4,7 +4,7 @@ Menu
         MenuButton
             Bars3Icon.w-16.h-16.stroke-white
         MenuItems
-            div.absolute.left-0.flex.flex-col.items-center.pb-4.gap-4.text-center.text-white.text-3xl.whitespace-nowrap(class="w-screen md:w-64" style="background-color: #8A7A67")
+            div.absolute.left-0.z-50.flex.flex-col.items-center.pb-4.gap-4.text-center.text-white.text-3xl.whitespace-nowrap(class="w-screen md:w-72" style="background-color: #8A7A67")
                 MenuItem.min-w-full
                     NuxtLink(to="/catalog") Catalog
                 MenuItem.min-w-full
