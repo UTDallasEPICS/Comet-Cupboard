@@ -10,21 +10,27 @@
 		"postinstall": "nuxt prepare",
 		"format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json|vue)\""
 	},
+	"prisma": {
+		"seed": "tsx prisma/seed.ts"
+	},
 	"dependencies": {
 		"@headlessui/vue": "^1.7.22",
 		"@heroicons/vue": "^2.1.4",
 		"@nuxt/eslint": "^0.3.13",
 		"@nuxtjs/tailwindcss": "^6.12.0",
+		"@prisma/client": "^5.15.1",
+		"nanoid": "^5.0.7",
 		"nuxt": "^3.12.2",
 		"pug": "^3.0.3",
 		"vue": "^3.4.29",
 		"vue-router": "^4.3.3"
 	},
 	"devDependencies": {
-		"@types/node": "^20.14.8",
+		"@types/node": "^20.14.9",
 		"prettier": "^3.3.2",
 		"prisma": "^5.15.1",
 		"ts-node": "^10.9.2",
+		"tsx": "^4.16.0",
 		"typescript": "^5.5.2"
 	}
 }

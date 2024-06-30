@@ -9,3 +9,15 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Item {
+  itemID   String    @id @map("item_id")
+  name     String
+  // category     Category   @relation(fields: [categoryName], references: [name])
+  // categoryName String
+  quantity Int    @default(0)
+  imgURL   String // might want a default
+
+  // cartItems    CartItem[]
+  // deals        Deal[]
+}

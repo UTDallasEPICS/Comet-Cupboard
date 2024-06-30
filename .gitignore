@@ -22,3 +22,11 @@ logs
 .env
 .env.*
 !.env.example
+
+# Database
+*.db
+
+# Test images for database seeding
+*/test-images/*.png
+*/test-images/*.jpg
+*/test-images/*.jpeg
