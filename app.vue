@@ -1,6 +1,6 @@
 <template lang="pug">
-.flex.flex-col
+.flex.flex-col.min-h-screen
     CometHeader
-    NuxtPage.min-h-screen
+    NuxtPage.grow
     CometFooter
 </template>

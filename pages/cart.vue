@@ -1,10 +1,13 @@
 <template lang="pug">
-ActionButton.w-36.whitespace-nowrap
-    p Back to Items
-p.text-6xl.text-center(style="margin-left: auto; margin-right: auto;") My Cart
-div.relative(class="sm:w-1/2" style="margin-left: auto; margin-right: auto;")
-    CartItemsGrid.grid-cols-2
-    div.w-72.aspect-square.bg-black.absolute.-right-0.-top-0
-ActionButton.w-72(style="margin-left: auto; margin-right: auto;")
-    p Submit Cart
+div(class="sm:flex sm:flex-row sm:flex-nowrap")
+    ActionButton.w-36.h-min.whitespace-nowrap(class="sm:flex-grow-0")
+        p Back to Items
+    div(class="sm:flex-grow")
+        p.text-6xl.text-center My Cart
+        div.relative(style="margin-left: auto; margin-right: auto;")
+            CartItemsGrid(class="grid-cols-1 lg:grid-cols-2")
+    div.w-72
+        p put info here idk
+        ActionButton.block.w-72.h-min(class="sm:flex-grow-0" style="margin-left: auto; margin-right: auto;")
+            p Continue
 </template>
