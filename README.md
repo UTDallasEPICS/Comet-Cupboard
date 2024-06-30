@@ -149,3 +149,14 @@ cd Comet-Cupboard
 ```
 
 To be done
+
+```bash
+commands I've been using
+npx prisma migrate dev
+npx prisma migrate reset
+npx prisma studio
+npx nuxt dev -o
+npm run format
+npm install
+cp .\.env.example .env
+```

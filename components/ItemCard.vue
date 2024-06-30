@@ -8,13 +8,13 @@ div.border-black.border-8
 
 <script lang="ts" setup>
 const props = defineProps({
-    name: {
-        type: String,
-        required: true
-    },
-    imgURL: {
-        type: String,
-        required: true
-    }
+	name: {
+		type: String,
+		required: true,
+	},
+	imgURL: {
+		type: String,
+		required: true,
+	},
 })
 </script>
