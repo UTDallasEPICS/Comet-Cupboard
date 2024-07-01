@@ -1,5 +1,3 @@
-import { prisma } from "../db"
-
 export default defineEventHandler(async (event) => {
-	return await prisma.item.findMany()
+	return await event.context.prisma.item.findMany()
 })

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,14 +7,96 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Item {
-  itemID   String    @id @map("item_id")
-  name     String
-  // category     Category   @relation(fields: [categoryName], references: [name])
-  // categoryName String
-  quantity Int    @default(0)
-  imgURL   String // might want a default
+model User {
+  netID     String     @id @map("net_id")
+  // firstName     String
+  // lastName      String
+  // year          Int
+  // major         String
+  // birthDate     DateTime
+  // currentStatus Boolean
+  Volunteer Volunteer?
+  Admin     Admin?
+  Carts     Cart[]
 
-  // cartItems    CartItem[]
-  // deals        Deal[]
+  @@map("user")
+}
+
+model Volunteer {
+  User            User             @relation(fields: [netID], references: [netID])
+  netID           String           @id @map("net_id")
+  VolunteerShifts VolunteerShift[]
+
+  @@map("volunteer")
+}
+
+model VolunteerShift {
+  Volunteer Volunteer @relation(fields: [netID], references: [netID])
+  netID     String    @map("net_id")
+  startTime DateTime  @map("start_time")
+  endTime   DateTime  @map("end_time")
+
+  @@id([netID, startTime])
+  @@map("volunteer_shift")
+}
+
+model Admin {
+  User  User   @relation(fields: [netID], references: [netID])
+  netID String @id @map("net_id")
+
+  @@map("admin")
+}
+
+model Category {
+  name  String @id @map("name")
+  Items Item[]
+
+  @@map("category")
+}
+
+model Item {
+  itemID       String     @id @map("item_id")
+  name         String     @map("name")
+  Category     Category   @relation(fields: [categoryName], references: [name])
+  categoryName String     @map("category_name")
+  quantity     Int        @default(0) @map("quantity")
+  imgURL       String     @map("img_url")
+  CartItems    CartItem[]
+  Deals        Deal[]
+
+  @@map("item")
+}
+
+model Cart {
+  cartID        Int        @id @map("cart_id")
+  date          DateTime   @map("date")
+  User          User       @relation(fields: [netID], references: [netID])
+  netID         String     @map("net_id")
+  CartItems     CartItem[]
+  cartCompleted Boolean    @map("cart_completed")
+
+  @@map("cart")
+}
+
+model CartItem {
+  Item   Item   @relation(fields: [itemID], references: [itemID])
+  itemID String @map("item_id")
+  Cart   Cart   @relation(fields: [cartID], references: [cartID])
+  cartID Int    @map("cart_id")
+  count  Int    @map("count")
+
+  @@id([itemID, cartID])
+  @@map("cart_item")
+}
+
+model Deal {
+  dealID        Int      @id @map("deal_id")
+  Item          Item     @relation(fields: [itemID], references: [itemID])
+  itemID        String   @map("item_id")
+  actualCount   Int      @map("actual_count")
+  adjustedCount Int      @map("adjusted_count")
+  startDate     DateTime @map("start_date")
+  endDate       DateTime @map("end_date")
+
+  @@map("deal")
 }

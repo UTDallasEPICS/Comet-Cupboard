@@ -25,6 +25,7 @@ logs
 
 # Database
 *.db
+*.db-journal
 
 # Test images for database seeding
 */test-images/*.png

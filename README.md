@@ -152,7 +152,7 @@ To be done
 
 ```bash
 commands I've been using
-npx prisma migrate dev
+npx prisma migrate dev --name init
 npx prisma migrate reset
 npx prisma studio
 npx nuxt dev -o
