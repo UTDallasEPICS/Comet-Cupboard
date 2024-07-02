@@ -1,5 +1,5 @@
 <template lang="pug">
-div.border-black.border-8
+div.border-black.border-4
     img.w-full.aspect-square(:src="imgURL" :alt="name")
     ActionButton.rounded-none.w-full
         p Add to Cart

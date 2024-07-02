@@ -6,17 +6,17 @@ div.flex.flex-col.gap-4.min-w-72.w-72.text-center.text-white.text-3xl.whitespace
 <script lang="ts" setup>
 const categories = ref<Array<string>>([
 	"All",
-	"Pantry Staples",
-	"Snacks",
-	"Grains",
-	"Breakfast Grains",
-	"Soup",
-	"Protein",
 	"Household Items",
 	"Personal Care",
-	"Fruits",
-	"Vegetables",
 	"Refrigerated Items",
-	"Frozen",
+	"Frozen Items",
+	"Pantry Staples",
+	"Grains",
+	"Breakfast Grains",
+	"Protein",
+	"Soups",
+	"Snacks",
+	"Fruits",
+	"Vegetables"
 ])
 </script>

@@ -1,5 +1,5 @@
 <template lang="pug">
-div.border-black.border-8.flex.flex-row.flex-nowrap
+div.border-black.border-4.flex.flex-row.flex-nowrap
     img.aspect-square(class="w-16 lg:w-20" src="/TemporaryCometCupboardTransparent.png" alt="Food")
     div.w-full
         p.text-base.break-all.line-clamp-2(style="height: 3rem") Watermeloodqwpoqwkpn Watermelon Watermelon Watermelon
