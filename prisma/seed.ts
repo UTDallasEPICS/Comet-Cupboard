@@ -7,9 +7,17 @@ const prisma: PrismaClient = new PrismaClient()
 
 const testImages: Array<string> = fs.readdirSync("./public/test-images")
 
+if (
+	!testImages.find((file) => {
+		return file.split(".")[1] == "png" || file.split(".")[1] == "jpg" || file.split(".")[1] == "jpeg"
+	})
+) {
+	throw new Error("public/test-images has no images. Needs at least one test image for seeding")
+}
+
 const categories = Array.from(["Food"]).map((category) => {
 	return {
-		name: category
+		name: category,
 	}
 })
 
@@ -23,16 +31,16 @@ const items = Array.from({ length: 20 }).map(() => {
 		name: testImages[index].split(".")[0],
 		quantity: Math.floor(Math.random() * 100),
 		imgURL: "test-images/" + testImages[index],
-		categoryName: "Food"
+		categoryName: "Food",
 	}
 })
 
 const main = async () => {
 	await prisma.category.createMany({
-		data: categories
+		data: categories,
 	})
 	await prisma.item.createMany({
-		data: items
+		data: items,
 	})
 	console.log(`Database has been seeded. 🌱`)
 }
