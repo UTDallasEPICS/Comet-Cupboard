@@ -17,6 +17,6 @@ const categories = ref<Array<string>>([
 	"Soups",
 	"Snacks",
 	"Fruits",
-	"Vegetables"
+	"Vegetables",
 ])
 </script>

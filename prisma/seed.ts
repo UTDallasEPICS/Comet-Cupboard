@@ -42,6 +42,11 @@ const main = async () => {
 	await prisma.item.createMany({
 		data: items,
 	})
+	await prisma.user.createMany({
+		data: [{ netID: "stu000000" }, { netID: "vol000000" }, { netID: "adm000000" }],
+	})
+	await prisma.volunteer.create({ data: { netID: "vol000000" } })
+	await prisma.admin.create({ data: { netID: "adm000000" } })
 	console.log(`Database has been seeded. 🌱`)
 }
 
