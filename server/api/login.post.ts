@@ -1,4 +1,3 @@
-import { navigateTo } from "nuxt/app"
 import { z } from "zod"
 
 const schema = z.object({

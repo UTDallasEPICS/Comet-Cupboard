@@ -22,6 +22,10 @@ pageAccessMap.set("/catalog", AccessLevel.STUDENT)
 pageAccessMap.set("/cart", AccessLevel.STUDENT)
 pageAccessMap.set("/questionaire", AccessLevel.STUDENT)
 apiAccessMap.get("GET")?.set("/api/items", AccessLevel.STUDENT)
+apiAccessMap.get("GET")?.set("/api/cart/cart", AccessLevel.STUDENT)
+apiAccessMap.get("POST")?.set("/api/cart/cart", AccessLevel.STUDENT)
+apiAccessMap.get("DELETE")?.set("/api/cart/cartItem", AccessLevel.STUDENT)
+apiAccessMap.get("POST")?.set("/api/cart/cartItem", AccessLevel.STUDENT)
 
 // VOLUNTEER PAGES AND APIS
 pageAccessMap.set("/inventory/add-item", AccessLevel.VOLUNTEER)
@@ -44,7 +48,7 @@ const canAccess = (event, accessLevel: AccessLevel): boolean => {
 		case AccessLevel.PUBLIC:
 			return true
 		case AccessLevel.STUDENT:
-			return event.context.netID != undefined
+			return event.context.user.netID != undefined
 		case AccessLevel.VOLUNTEER:
 			return event.context.volunteerLevel != undefined
 		case AccessLevel.ADMIN:

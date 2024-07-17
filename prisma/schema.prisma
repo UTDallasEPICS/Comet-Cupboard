@@ -17,7 +17,7 @@ model User {
   // currentStatus Boolean
   Volunteer Volunteer?
   Admin     Admin?
-  Carts     Cart[]
+  Cart      Cart?
 
   @@map("user")
 }
@@ -36,7 +36,7 @@ model VolunteerShift {
   startTime DateTime  @map("start_time")
   endTime   DateTime  @map("end_time")
 
-  @@id([netID, startTime])
+  @@id(name: "volunteerShiftID", [netID, startTime])
   @@map("volunteer_shift")
 }
 
@@ -68,12 +68,10 @@ model Item {
 }
 
 model Cart {
-  cartID        Int        @id @map("cart_id")
-  date          DateTime   @map("date")
-  User          User       @relation(fields: [netID], references: [netID])
-  netID         String     @map("net_id")
-  CartItems     CartItem[]
-  cartCompleted Boolean    @map("cart_completed")
+  User      User       @relation(fields: [cartID], references: [netID])
+  cartID    String     @id @map("cart_id")
+  date      DateTime   @map("date")
+  CartItems CartItem[]
 
   @@map("cart")
 }
@@ -82,10 +80,10 @@ model CartItem {
   Item   Item   @relation(fields: [itemID], references: [itemID])
   itemID String @map("item_id")
   Cart   Cart   @relation(fields: [cartID], references: [cartID])
-  cartID Int    @map("cart_id")
+  cartID String @map("cart_id")
   count  Int    @map("count")
 
-  @@id([itemID, cartID])
+  @@id(name: "cartItemID", [itemID, cartID])
   @@map("cart_item")
 }
 

@@ -11,10 +11,10 @@ export default defineEventHandler(async (event) => {
 			where: {
 				netID: netID,
 			},
-			include: { Volunteer: true, Admin: true },
+			include: { Volunteer: true, Admin: true, Cart: {include: {CartItems: true}} },
 		})
 		if (user) {
-			event.context.netID = netID
+			event.context.user = user
 			if (user.Volunteer) {
 				event.context.volunteerLevel = true
 			}
