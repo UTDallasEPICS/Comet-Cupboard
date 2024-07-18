@@ -13,26 +13,42 @@ export default defineEventHandler(async (event) => {
 	}
 	const { itemID } = result.data
 	if (event.context.user.Cart) {
-		const cartItem = await event.context.prisma.cartItem.update({
-			where: {
-				cartItemID: {
-					cartID: event.context.user.Cart.cartID,
+		event.context.prisma.$transaction(async (tx) => {
+			if (!event.context.user.Cart.CartItems.find((cartItem) => cartItem.itemID == itemID)) {
+				throw new Error(`Item not in cart`)
+			}
+
+			await tx.item.update({
+				where: {
 					itemID: itemID,
 				},
-			},
-			data: {
-				count: { decrement: 1 },
-			},
-		})
-		if (cartItem.count == 0) {
-			await event.context.prisma.cartItem.delete({
+				data: {
+					quantity: { increment: 1 },
+				},
+			})
+
+			const cartItem = await tx.cartItem.update({
 				where: {
 					cartItemID: {
 						cartID: event.context.user.Cart.cartID,
 						itemID: itemID,
 					},
 				},
+				data: {
+					count: { decrement: 1 },
+				},
 			})
-		}
+
+			if (cartItem.count == 0) {
+				await tx.cartItem.delete({
+					where: {
+						cartItemID: {
+							cartID: event.context.user.Cart.cartID,
+							itemID: itemID,
+						},
+					},
+				})
+			}
+		})
 	}
 })

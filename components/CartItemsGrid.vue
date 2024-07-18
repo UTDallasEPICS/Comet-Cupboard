@@ -4,5 +4,5 @@ div.grid.gap-4.p-4
 </template>
 
 <script lang="ts" setup>
-const { data: items } = await useFetch("/api/items")
+const { data: items } = await useFetch("/api/inventory/items")
 </script>
