@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 	const { itemID } = result.data
 	await event.context.prisma.item.delete({
 		where: {
-			itemID: itemID
+			itemID: itemID,
 		},
 	})
 })

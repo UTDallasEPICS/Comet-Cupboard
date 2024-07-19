@@ -3,8 +3,8 @@ import { z } from "zod"
 
 const schema = z.object({
 	name: z.string(),
-    categoryName: z.string(),
-    imgURL: z.string()
+	categoryName: z.string(),
+	imgURL: z.string(),
 })
 
 const validateSchema = schema.strict().required()
@@ -15,20 +15,20 @@ export default defineEventHandler(async (event) => {
 		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
 	}
 	const { name, categoryName, imgURL } = result.data
-    const category = await event.context.prisma.category.findUnique({
-        where: {
-            name: categoryName
-        }
-    })
-    if(!category) {
+	const category = await event.context.prisma.category.findUnique({
+		where: {
+			name: categoryName,
+		},
+	})
+	if (!category) {
 		throw createError({ statusCode: 400, statusMessage: "No category" })
-    }
-    await event.context.prisma.item.create({
-        data: {
-            itemID: nanoid(),
-            name: name,
-            imgURL: imgURL,
-            categoryName: categoryName,
-        }
-    })
+	}
+	await event.context.prisma.item.create({
+		data: {
+			itemID: nanoid(),
+			name: name,
+			imgURL: imgURL,
+			categoryName: categoryName,
+		},
+	})
 })

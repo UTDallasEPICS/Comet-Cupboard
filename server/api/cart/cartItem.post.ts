@@ -14,18 +14,18 @@ export default defineEventHandler(async (event) => {
 	const { itemID } = result.data
 	if (event.context.user.Cart) {
 		event.context.prisma.$transaction(async (tx) => {
-            const item = await tx.item.findUnique({
-                where: {
-                    itemID: itemID
-                }
-            })
+			const item = await tx.item.findUnique({
+				where: {
+					itemID: itemID,
+				},
+			})
 
-            if(!item) {
-                throw new Error(`Not a valid itemID`)
-            }
-            if(item.quantity <= 0) {
-                throw new Error(`Item out of stock`)
-            }
+			if (!item) {
+				throw new Error(`Not a valid itemID`)
+			}
+			if (item.quantity <= 0) {
+				throw new Error(`Item out of stock`)
+			}
 
 			await tx.item.update({
 				where: {
@@ -36,22 +36,22 @@ export default defineEventHandler(async (event) => {
 				},
 			})
 
-            await tx.cartItem.upsert({
-                where: {
-                    cartItemID: {
-                        cartID: event.context.user.Cart.cartID,
-                        itemID: itemID,
-                    },
-                },
-                update: {
-                    count: { increment: 1 },
-                },
-                create: {
-                    cartID: event.context.user.Cart.cartID,
-                    itemID: itemID,
-                    count: 1,
-                },
-            })
+			await tx.cartItem.upsert({
+				where: {
+					cartItemID: {
+						cartID: event.context.user.Cart.cartID,
+						itemID: itemID,
+					},
+				},
+				update: {
+					count: { increment: 1 },
+				},
+				create: {
+					cartID: event.context.user.Cart.cartID,
+					itemID: itemID,
+					count: 1,
+				},
+			})
 		})
 	}
 })

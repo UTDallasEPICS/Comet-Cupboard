@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 			where: {
 				netID: netID,
 			},
-			include: { Volunteer: true, Admin: true, Cart: {include: {CartItems: true}} },
+			include: { Volunteer: true, Admin: true, Cart: { include: { CartItems: true } } },
 		})
 		if (user) {
 			event.context.user = user
