@@ -37,7 +37,7 @@ pageAccessMap.set("/verify-cart", AccessLevel.VOLUNTEER)
 apiAccessMap.get("DELETE")?.set("/api/inventory/item", AccessLevel.VOLUNTEER)
 apiAccessMap.get("POST")?.set("/api/inventory/item", AccessLevel.VOLUNTEER)
 apiAccessMap.get("PUT")?.set("/api/inventory/item", AccessLevel.VOLUNTEER)
-apiAccessMap.get("GET")?.set("/api/inventory/item", AccessLevel.VOLUNTEER)
+apiAccessMap.get("GET")?.set("/api/inventory/[itemID]", AccessLevel.VOLUNTEER)
 
 // ADMIN PAGES AND APIS
 pageAccessMap.set("/data-analytics", AccessLevel.ADMIN)

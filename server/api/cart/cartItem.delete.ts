@@ -4,7 +4,7 @@ const schema = z.object({
 	itemID: z.string(),
 })
 
-const validateSchema = schema.required()
+const validateSchema = schema.strict().required()
 
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
