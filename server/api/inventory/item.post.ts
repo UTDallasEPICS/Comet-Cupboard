@@ -14,11 +14,11 @@ const validateSchema = schema.strict().partial().required({
 
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
-	console.log(result.error)
 	if (!result.success) {
 		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
 	}
 	const { itemID, name, categoryName, imgURL, quantity } = result.data
+	// check if category exists if need to change category
 	if (categoryName) {
 		const category = await event.context.prisma.category.findUnique({
 			where: {
@@ -26,14 +26,12 @@ export default defineEventHandler(async (event) => {
 			},
 		})
 		if (!category) {
-			throw createError({ statusCode: 400, statusMessage: "No category" })
+			throw createError({ statusCode: 400, statusMessage: "Category does not exist" })
 		}
 	}
-	console.log(`${itemID} ${name} ${categoryName} ${imgURL} ${quantity}`)
-
 	// if field is undefined, prisma will not update it
-	// this is similar to builder pattern
-	await event.context.prisma.item.update({
+	// almost like GraphQL
+	const item = await event.context.prisma.item.update({
 		where: {
 			itemID: itemID,
 		},
@@ -44,4 +42,8 @@ export default defineEventHandler(async (event) => {
 			quantity: quantity,
 		},
 	})
+	if(!item) {
+		throw createError({ statusCode: 500, statusMessage: "Failed to edit item" })
+	}
+	return "Successfully edited item"
 })

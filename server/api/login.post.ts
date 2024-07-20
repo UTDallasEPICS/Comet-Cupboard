@@ -9,17 +9,17 @@ const validateSchema = schema.required()
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid NetID" })
+		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
 	}
 	const { netID } = result.data
+	// find user with NetID
 	const user = await event.context.prisma.user.findUnique({
 		where: {
 			netID: netID,
 		},
 	})
 	if (!user) {
-		throw createError({ statusCode: 401, statusMessage: "NetID not found" })
+		throw createError({ statusCode: 500, statusMessage: "Failed to find user with netID" })
 	}
-	console.log("setting cooke" + netID)
 	setCookie(event, "netID", netID)
 })

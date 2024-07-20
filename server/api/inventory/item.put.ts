@@ -15,15 +15,16 @@ export default defineEventHandler(async (event) => {
 		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
 	}
 	const { name, categoryName, imgURL } = result.data
+	// check if category exists
 	const category = await event.context.prisma.category.findUnique({
 		where: {
 			name: categoryName,
 		},
 	})
 	if (!category) {
-		throw createError({ statusCode: 400, statusMessage: "No category" })
+		throw createError({ statusCode: 400, statusMessage: "Category does not exist" })
 	}
-	await event.context.prisma.item.create({
+	const item = await event.context.prisma.item.create({
 		data: {
 			itemID: nanoid(),
 			name: name,
@@ -31,4 +32,8 @@ export default defineEventHandler(async (event) => {
 			categoryName: categoryName,
 		},
 	})
+	if(!item) {
+		throw createError({ statusCode: 500, statusMessage: "Failed to create item" })
+	}
+	return "Successfully created item"
 })

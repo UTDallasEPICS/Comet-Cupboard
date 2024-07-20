@@ -12,9 +12,14 @@ export default defineEventHandler(async (event) => {
 		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
 	}
 	const { itemID } = result.data
-	await event.context.prisma.item.delete({
+	// delete item
+	const item = await event.context.prisma.item.delete({
 		where: {
 			itemID: itemID,
 		},
 	})
+	if(!item) {
+		throw createError({ statusCode: 500, statusMessage: "Failed to delete item" })
+	}
+	return "Successfully deleted item"
 })
