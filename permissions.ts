@@ -48,13 +48,11 @@ const apiAccessMap: { [route: string]: { [method: string]: AccessLevel } } = {
     },
     // // VOLUNTEER APIS
     "/api/inventory/item": {
+        "GET": AccessLevel.VOLUNTEER,
         "POST": AccessLevel.VOLUNTEER,
         "PUT": AccessLevel.VOLUNTEER,
         "DELETE": AccessLevel.VOLUNTEER
     },
-    "/api/inventory/[itemID]": {
-        "GET": AccessLevel.VOLUNTEER
-    }
     // ADMIN APIS
 }
 

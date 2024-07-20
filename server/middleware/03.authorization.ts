@@ -16,16 +16,17 @@ const canAccess = (event, accessLevel: AccessLevel): boolean => {
 }
 
 export default defineEventHandler((event) => {
-	if (pageAccessMap[event.path]) {
-		const requiredAccessLevel: AccessLevel = pageAccessMap[event.path]
+	const requestPath = getRequestURL(event).pathname
+	if (pageAccessMap[requestPath]) {
+		const requiredAccessLevel: AccessLevel = pageAccessMap[requestPath]
 		if (!canAccess(event, requiredAccessLevel)) {
 			throw createError({ statusCode: 403, statusMessage: "Unauthorized" })
 		}
-	} else if (apiAccessMap[event.path] && apiAccessMap[event.path][event.method]) {
-		const requiredAccessLevel: AccessLevel = apiAccessMap[event.path][event.method]
+	} else if (apiAccessMap[requestPath] && apiAccessMap[requestPath][event.method]) {
+		const requiredAccessLevel: AccessLevel = apiAccessMap[requestPath][event.method]
 		if (!canAccess(event, requiredAccessLevel)) {
 			throw createError({ statusCode: 403, statusMessage: "Unauthorized" })
 		}
 	}
-	console.log("AUTHORIZING" + ` ${event.method} ${event.path}`)
+	console.log("AUTHORIZING" + ` ${event.method} ${requestPath}`)
 })
