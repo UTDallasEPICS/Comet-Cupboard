@@ -78,11 +78,23 @@ const pages = getAllLeafFilePaths(pageFolder, []).map((route) => {
 	return route.substring(slashIndex, extensionIndex)
 })
 // at this point, it looks like 'server/api/cart/cart.get.ts', want /api/cart/cart as well as the HTTP method
+// actually, some will look like server/api/pendingCartsUpdate.ts, so account for GET server/api/pendingCartsUpdate 
 const apis = getAllLeafFilePaths(apiFolder, []).map((route) => {
 	const slashIndex = route.indexOf("/")
 	const extensionIndex = route.lastIndexOf(".")
 	const methodIndex = route.lastIndexOf(".", extensionIndex - 1)
-	return { route: route.substring(slashIndex, methodIndex), method: route.substring(methodIndex + 1, extensionIndex).toUpperCase() }
+    // looks like server/api/pendingCartsUpdate.ts
+    if(route.match(/\./g)?.length == 1) {
+        return { route: route.substring(slashIndex, extensionIndex), method: "GET" }
+    }
+    // looks like server/api/cart/cart.get.ts
+    else if(route.match(/\./g)?.length == 2) {
+	    return { route: route.substring(slashIndex, methodIndex), method: route.substring(methodIndex + 1, extensionIndex).toUpperCase() }
+    }
+    else {
+        console.log("go rename your api route before I 💪🥊💥")
+        return { route: "ERROR", method: "ERROR" }
+    }
 })
 
 // TODO: probably should check for index page and index api

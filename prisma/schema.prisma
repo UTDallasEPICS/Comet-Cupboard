@@ -72,6 +72,7 @@ model Cart {
   cartID    String     @id @map("cart_id")
   date      DateTime   @map("date")
   CartItems CartItem[]
+  pending   Boolean    @default(false) @map("pending")
 
   @@map("cart")
 }
