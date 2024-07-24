@@ -1,3 +1,5 @@
+import { broadcastToVolunteers } from "~/server/utils/cartVerificationUtil"
+
 export default defineEventHandler(async (event) => {
 	if (!event.context.user.Cart) {
 		throw createError({ statusCode: 404, statusMessage: "User has no active cart" })
@@ -17,5 +19,6 @@ export default defineEventHandler(async (event) => {
 	if (!cart) {
 		throw createError({ statusCode: 500, statusMessage: "Failed to request cart verification" })
 	}
+	await broadcastToVolunteers(`NEW CART ${JSON.stringify(cart)}`)
 	return "Successfully requested cart verification"
 })

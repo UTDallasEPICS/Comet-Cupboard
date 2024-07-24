@@ -82,7 +82,7 @@ model Cart {
 model CartItem {
   Item   Item   @relation(fields: [itemID], references: [itemID])
   itemID String @map("item_id")
-  Cart   Cart   @relation(fields: [cartID], references: [cartID])
+  Cart   Cart   @relation(fields: [cartID], references: [cartID], onDelete: Cascade)
   cartID String @map("cart_id")
   count  Int    @map("count")
 
@@ -91,11 +91,12 @@ model CartItem {
 }
 
 model Order {
-  orderID    String      @id @map("order_id")
-  User       User        @relation(fields: [netID], references: [netID])
-  netID      String      @map("net_id")
-  date       DateTime    @map("date")
-  OrderItems OrderItem[]
+  orderID      String      @id @map("order_id")
+  User         User        @relation(fields: [netID], references: [netID])
+  netID        String      @map("net_id")
+  date         DateTime    @map("date")
+  acceptReason String      @map("accept_reason")
+  OrderItems   OrderItem[]
 
   @@map("order")
 }
