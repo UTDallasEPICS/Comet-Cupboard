@@ -18,6 +18,7 @@ model User {
   Volunteer Volunteer?
   Admin     Admin?
   Cart      Cart?
+  Order     Order[]
 
   @@map("user")
 }
@@ -55,13 +56,14 @@ model Category {
 }
 
 model Item {
-  itemID       String     @id @map("item_id")
-  name         String     @map("name")
-  Category     Category   @relation(fields: [categoryName], references: [name])
-  categoryName String     @map("category_name")
-  quantity     Int        @default(0) @map("quantity")
-  imgURL       String     @map("img_url")
+  itemID       String      @id @map("item_id")
+  name         String      @map("name")
+  Category     Category    @relation(fields: [categoryName], references: [name])
+  categoryName String      @map("category_name")
+  quantity     Int         @default(0) @map("quantity")
+  imgURL       String      @map("img_url")
   CartItems    CartItem[]
+  OrderItem    OrderItem[]
   Deals        Deal[]
 
   @@map("item")
@@ -86,6 +88,27 @@ model CartItem {
 
   @@id(name: "cartItemID", [itemID, cartID])
   @@map("cart_item")
+}
+
+model Order {
+  orderID    String      @id @map("order_id")
+  User       User        @relation(fields: [netID], references: [netID])
+  netID      String      @map("net_id")
+  date       DateTime    @map("date")
+  OrderItems OrderItem[]
+
+  @@map("order")
+}
+
+model OrderItem {
+  Item    Item   @relation(fields: [itemID], references: [itemID])
+  itemID  String @map("item_id")
+  Order   Order  @relation(fields: [orderID], references: [orderID])
+  orderID String @map("order_id")
+  count   Int    @map("count")
+
+  @@id(name: "orderItemID", [itemID, orderID])
+  @@map("order_item")
 }
 
 model Deal {
