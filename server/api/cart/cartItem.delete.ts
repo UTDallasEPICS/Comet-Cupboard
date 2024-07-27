@@ -18,6 +18,8 @@ export default defineEventHandler(async (event) => {
 	if (!event.context.user.Cart.CartItems.find((cartItem) => cartItem.itemID == itemID)) {
 		throw createError({ statusCode: 404, statusMessage: "Item not in cart" })
 	}
+	const cartItem = event.context.user.Cart.CartItems.find((cartItem) => cartItem.itemID == itemID)
+	const cartItemCount: number = cartItem.count
 	const transactionResult = event.context.prisma.$transaction(async (tx) => {
 		// update item count
 		await tx.item.update({
@@ -25,37 +27,22 @@ export default defineEventHandler(async (event) => {
 				itemID: itemID,
 			},
 			data: {
-				quantity: { increment: 1 },
+				quantity: { increment: cartItemCount },
 			},
 		})
 
-		// update cart item count
-		const cartItem = await tx.cartItem.update({
+		// delete item from cart
+		await tx.cartItem.delete({
 			where: {
 				cartItemID: {
 					cartID: event.context.user.Cart.cartID,
 					itemID: itemID,
 				},
 			},
-			data: {
-				count: { decrement: 1 },
-			},
 		})
-
-		// delete item from cart if needed
-		if (cartItem.count == 0) {
-			await tx.cartItem.delete({
-				where: {
-					cartItemID: {
-						cartID: event.context.user.Cart.cartID,
-						itemID: itemID,
-					},
-				},
-			})
-		}
 	})
-	if(!transactionResult) {
-		throw createError({ statusCode: 500, statusMessage: "Failed to decrement item from cart" })
+	if (!transactionResult) {
+		throw createError({ statusCode: 500, statusMessage: "Failed to delete item from cart" })
 	}
-	return "Successfully decremented item from cart"
+	return "Successfully deleted item from cart"
 })

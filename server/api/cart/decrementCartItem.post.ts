@@ -15,17 +15,8 @@ export default defineEventHandler(async (event) => {
 	if (!event.context.user.Cart) {
 		throw createError({ statusCode: 404, statusMessage: "User has no active cart" })
 	}
-	// find item with corresponding itemID
-	const item = await event.context.prisma.item.findUnique({
-		where: {
-			itemID: itemID,
-		},
-	})
-	if (!item) {
-		throw createError({ statusCode: 404, statusMessage: "Item does not exist" })
-	}
-	if (item.quantity <= 0) {
-		throw createError({ statusCode: 404, statusMessage: "Item out of stock" })
+	if (!event.context.user.Cart.CartItems.find((cartItem) => cartItem.itemID == itemID)) {
+		throw createError({ statusCode: 404, statusMessage: "Item not in cart" })
 	}
 	const transactionResult = event.context.prisma.$transaction(async (tx) => {
 		// update item count
@@ -34,30 +25,37 @@ export default defineEventHandler(async (event) => {
 				itemID: itemID,
 			},
 			data: {
-				quantity: { decrement: 1 },
+				quantity: { increment: 1 },
 			},
 		})
 
-		// create item/add item in cart
-		await tx.cartItem.upsert({
+		// update cart item count
+		const cartItem = await tx.cartItem.update({
 			where: {
 				cartItemID: {
 					cartID: event.context.user.Cart.cartID,
 					itemID: itemID,
 				},
 			},
-			update: {
-				count: { increment: 1 },
-			},
-			create: {
-				cartID: event.context.user.Cart.cartID,
-				itemID: itemID,
-				count: 1,
+			data: {
+				count: { decrement: 1 },
 			},
 		})
+
+		// delete item from cart if needed
+		if (cartItem.count == 0) {
+			await tx.cartItem.delete({
+				where: {
+					cartItemID: {
+						cartID: event.context.user.Cart.cartID,
+						itemID: itemID,
+					},
+				},
+			})
+		}
 	})
 	if(!transactionResult) {
-		throw createError({ statusCode: 500, statusMessage: "Failed to add item to cart" })
+		throw createError({ statusCode: 500, statusMessage: "Failed to decrement item from cart" })
 	}
-	return "Successfully added item to cart"
+	return "Successfully decremented item from cart"
 })
