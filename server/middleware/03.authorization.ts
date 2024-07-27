@@ -5,7 +5,7 @@ const canAccess = (event, accessLevel: AccessLevel): boolean => {
 		case AccessLevel.PUBLIC:
 			return true
 		case AccessLevel.STUDENT:
-			return event.context.user.netID != undefined
+			return event.context.user != undefined
 		case AccessLevel.VOLUNTEER:
 			return event.context.volunteerLevel != undefined
 		case AccessLevel.ADMIN:
