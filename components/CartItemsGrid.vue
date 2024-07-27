@@ -1,7 +1,7 @@
 <template lang="pug">
 div.grid.gap-4.p-4
     CartItemCard(v-for="cartItem in cartItems" 
-        :name="cartItem.name" :imgURL="cartItem.imgURL" :itemID="cartItem.itemID" :count="cartItem.count"
+        :name="cartItem.name" :imgURL="cartItem.imgURL" :itemID="cartItem.itemID" :count="cartItem.count" :editMode="editMode"
         @update:cart="getCart")
 </template>
 
@@ -9,7 +9,7 @@ div.grid.gap-4.p-4
 const cartItems = ref()
 
 onMounted(async () => {
-    await getCart()
+	await getCart()
 })
 
 const getCart = async () => {
@@ -18,4 +18,11 @@ const getCart = async () => {
 		return { name: cartItem.Item.name, imgURL: cartItem.Item.imgURL, itemID: cartItem.itemID, count: cartItem.count }
 	})
 }
+
+const props = defineProps({
+	editMode: {
+		type: Boolean,
+		required: true,
+	},
+})
 </script>

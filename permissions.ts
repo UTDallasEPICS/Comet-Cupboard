@@ -13,6 +13,7 @@ const pageAccessMap: { [route: string]: AccessLevel } = {
     "/catalog": AccessLevel.STUDENT,
     "/cart": AccessLevel.STUDENT,
     "/questionaire": AccessLevel.STUDENT,
+    "/request-verify-cart": AccessLevel.STUDENT,
     // VOLUNTEER PAGES
     "/inventory/add-item": AccessLevel.VOLUNTEER,
     "/inventory/delete-item-confirmation": AccessLevel.VOLUNTEER,
@@ -37,8 +38,13 @@ const apiAccessMap: { [route: string]: { [method: string]: AccessLevel } } = {
         "POST": AccessLevel.STUDENT
     },
     "/api/cart/cartItem": {
-        "POST": AccessLevel.STUDENT,
         "DELETE": AccessLevel.STUDENT
+    },
+    "/api/cart/incrementCartItem": {
+        "POST": AccessLevel.STUDENT
+    },
+    "/api/cart/decrementCartItem": {
+        "POST": AccessLevel.STUDENT
     },
     // // VOLUNTEER APIS
     "/api/inventory/item": {
