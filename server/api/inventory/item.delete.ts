@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 			itemID: itemID,
 		},
 	})
-	if(!item) {
+	if (!item) {
 		throw createError({ statusCode: 500, statusMessage: "Failed to delete item" })
 	}
 	return "Successfully deleted item"

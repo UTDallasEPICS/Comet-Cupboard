@@ -8,6 +8,14 @@ div(class="sm:flex sm:flex-row sm:flex-nowrap")
             CartItemsGrid(class="grid-cols-1 lg:grid-cols-2" :editMode="false")
     div.w-72
         p put info here idk
-        ActionButton.block.w-72.h-min(class="sm:flex-grow-0" style="margin-left: auto; margin-right: auto;" @click="")
-            p Continue
+        ActionButton.block.w-72.h-min(class="sm:flex-grow-0" style="margin-left: auto; margin-right: auto;" @click="requestCartVerification")
+            p Request Cart Verification
 </template>
+
+<script lang="ts" setup>
+const requestCartVerification = async () => {
+	await $fetch("/api/verification/cartRequestVerification", {
+		method: "POST",
+	})
+}
+</script>

@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
 				where: {
 					cartID: cartID,
 				},
-				include: { CartItems: true }
+				include: { CartItems: true },
 			})
 			const orderItems = cart.CartItems.map((cartItem) => {
 				return { itemID: cartItem.itemID, count: cartItem.count }
@@ -57,8 +57,19 @@ export default defineEventHandler(async (event) => {
 		if (!transactionResult) {
 			throw createError({ statusCode: 500, statusMessage: "Failed to accept cart verification" })
 		}
-		await broadcastToVolunteers(`ACCEPTED ${JSON.stringify(pendingCart)}`)
-		await messageToUser(cartID, `Cart accepted with reason ${reason}`)
+		await broadcastToVolunteers(
+			JSON.stringify({
+				type: "ACCEPT CART",
+				payload: pendingCart,
+			})
+		)
+		await messageToUser(
+			cartID,
+			JSON.stringify({
+				type: "ACCEPT CART",
+				payload: reason,
+			})
+		)
 		return `Successfully accepted cart with reason ${reason}`
 	} else if (action == "REJECT") {
 		const cart = await event.context.prisma.cart.update({
@@ -72,8 +83,19 @@ export default defineEventHandler(async (event) => {
 		if (!cart) {
 			throw createError({ statusCode: 500, statusMessage: "Failed to reject cart verification" })
 		}
-		await broadcastToVolunteers(`REJECTED ${JSON.stringify(cart)}`)
-		await messageToUser(cartID, `Cart rejected with reason ${reason}`)
+		await broadcastToVolunteers(
+			JSON.stringify({
+				type: "REJECT CART",
+				payload: cart,
+			})
+		)
+		await messageToUser(
+			cartID,
+			JSON.stringify({
+				type: "REJECT CART",
+				payload: reason,
+			})
+		)
 		return `Successfully rejected cart with reason ${reason}`
 	}
 })

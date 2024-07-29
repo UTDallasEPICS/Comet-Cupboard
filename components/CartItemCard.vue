@@ -35,8 +35,8 @@ const props = defineProps({
 	},
 	editMode: {
 		type: Boolean,
-		required: true
-	}
+		required: true,
+	},
 })
 
 const incrementCartItem = async () => {
@@ -44,7 +44,7 @@ const incrementCartItem = async () => {
 		method: "POST",
 		body: { itemID: props.itemID },
 	})
-    emit("update:cart")
+	emit("update:cart")
 }
 
 const decrementCartItem = async () => {
@@ -52,7 +52,7 @@ const decrementCartItem = async () => {
 		method: "POST",
 		body: { itemID: props.itemID },
 	})
-    emit("update:cart")
+	emit("update:cart")
 }
 
 const removeCartItem = async () => {
@@ -60,6 +60,6 @@ const removeCartItem = async () => {
 		method: "DELETE",
 		body: { itemID: props.itemID },
 	})
-    emit("update:cart")
+	emit("update:cart")
 }
 </script>

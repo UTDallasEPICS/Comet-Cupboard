@@ -4,9 +4,9 @@ const userMap: { [netID: string]: EventStream } = {}
 const volunteerMap: { [netID: string]: EventStream } = {}
 
 const messageToUser = async (netID: string, message: string) => {
-    if(userMap[netID]) {
-        await userMap[netID].push(message)
-    }
+	if (userMap[netID]) {
+		await userMap[netID].push(message)
+	}
 }
 
 const broadcastToVolunteers = async (message: string) => {

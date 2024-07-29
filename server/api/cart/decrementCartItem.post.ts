@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
 			})
 		}
 	})
-	if(!transactionResult) {
+	if (!transactionResult) {
 		throw createError({ statusCode: 500, statusMessage: "Failed to decrement item from cart" })
 	}
 	return "Successfully decremented item from cart"

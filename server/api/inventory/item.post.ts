@@ -42,7 +42,7 @@ export default defineEventHandler(async (event) => {
 			quantity: quantity,
 		},
 	})
-	if(!item) {
+	if (!item) {
 		throw createError({ statusCode: 500, statusMessage: "Failed to edit item" })
 	}
 	return "Successfully edited item"

@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 		where: {
 			netID: netID,
 		},
-		include: { Volunteer: true, Admin: true }
+		include: { Volunteer: true, Admin: true },
 	})
 	if (!user) {
 		throw createError({ statusCode: 500, statusMessage: "Failed to find user with netID" })
@@ -26,13 +26,13 @@ export default defineEventHandler(async (event) => {
 	setCookie(event, "netID", netID)
 	// sets cookie for purpose of frontend route guards
 	setCookie(event, "accessLevel", AccessLevel.PUBLIC)
-	if(user) {
+	if (user) {
 		setCookie(event, "accessLevel", AccessLevel.STUDENT)
 	}
-	if(user.Volunteer) {
+	if (user.Volunteer) {
 		setCookie(event, "accessLevel", AccessLevel.VOLUNTEER)
 	}
-	if(user.Admin) {
+	if (user.Admin) {
 		setCookie(event, "accessLevel", AccessLevel.ADMIN)
 	}
 })

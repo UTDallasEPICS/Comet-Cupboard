@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 	if (event.context.user.Cart.pending) {
 		return "Cart is already pending verification"
 	}
-    // set cart status to pending
+	// set cart status to pending
 	const cart = await event.context.prisma.cart.update({
 		where: {
 			cartID: event.context.user.netID,
@@ -19,6 +19,11 @@ export default defineEventHandler(async (event) => {
 	if (!cart) {
 		throw createError({ statusCode: 500, statusMessage: "Failed to request cart verification" })
 	}
-	await broadcastToVolunteers(`NEW CART ${JSON.stringify(cart)}`)
+	await broadcastToVolunteers(
+		JSON.stringify({
+			type: "NEW CART",
+			payload: cart,
+		})
+	)
 	return "Successfully requested cart verification"
 })

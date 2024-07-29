@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
 			categoryName: categoryName,
 		},
 	})
-	if(!item) {
+	if (!item) {
 		throw createError({ statusCode: 500, statusMessage: "Failed to create item" })
 	}
 	return "Successfully created item"
