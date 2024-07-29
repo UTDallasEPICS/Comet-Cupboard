@@ -13,9 +13,28 @@ div(class="sm:flex sm:flex-row sm:flex-nowrap")
 </template>
 
 <script lang="ts" setup>
+const cartVerificationResponseUpdate = ref<EventSource>()
+
 const requestCartVerification = async () => {
 	await $fetch("/api/verification/cartRequestVerification", {
 		method: "POST",
 	})
+}
+
+if (import.meta.client) {
+	// change this to use env later
+	// also probably use zod to type check the message...
+	cartVerificationResponseUpdate.value = new EventSource("http://localhost:3000/api/verification/cartRequestVerificationResponseWaiting")
+	cartVerificationResponseUpdate.value.onmessage = (event) => {
+		const { type, payload } = JSON.parse(event.data)
+		if (type === "ACCEPT CART") {
+            // change this later LOL, need to disable button and add logic
+            alert(`Cart accepted with reason "${payload}"`)
+        }
+        else if(type === "REJECT CART") {
+            // change this later LOL, need to disable button and add logic
+            alert(`Cart rejected with reason "${payload}"`)
+        }
+	}
 }
 </script>

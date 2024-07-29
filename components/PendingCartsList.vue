@@ -7,7 +7,7 @@ div.border-black.border-4
 </template>
 
 <script lang="ts" setup>
-const pendingCartIDs = ref<Array<string>>()
+const pendingCartIDs = ref<Array<string>>([])
 const pendingCartUpdates = ref<EventSource>()
 
 onMounted(async () => {
@@ -27,9 +27,13 @@ if (import.meta.client) {
 	pendingCartUpdates.value = new EventSource("http://localhost:3000/api/verification/pendingCartsUpdate")
 	pendingCartUpdates.value.onmessage = (event) => {
 		const { type, payload } = JSON.parse(event.data)
-		if (type === "NEW CART" || type === "ACCEPT CART" || type === "REJECT CART") {
+		if (type === "NEW CART") {
+			const cartIDToAdd = payload.cartID
+			pendingCartIDs.value.push(cartIDToAdd)
+		}
+		else if (type === "ACCEPT CART" || type === "REJECT CART") {
 			const cartIDToRemove = payload.cartID
-			pendingCartIDs.value = pendingCartIDs.value?.filter((cartID) => {
+			pendingCartIDs.value = pendingCartIDs.value.filter((cartID) => {
 				return cartID != cartIDToRemove
 			})
 		}
