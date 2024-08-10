@@ -1,0 +1,33 @@
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Database
+*.db
+*.db-journal
+
+# Test images for database seeding
+*/test-images/*.png
+*/test-images/*.jpg
+*/test-images/*.jpeg
