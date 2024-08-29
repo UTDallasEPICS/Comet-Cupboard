@@ -121,11 +121,12 @@ data and graphs goes crazy here
 
 ## Third Party Integrations
 
-SSO? idk
+- UTD SSO
 
 ## Tech Stack
 
-To be done
+- Nuxt.js
+- SQLite and Prisma
 
 ## Deployment Notes
 
@@ -139,24 +140,58 @@ N/A
 
 Ensure Node.js, npm, Visual Studio Code, Git, WSL2 (windows only) are installed.
 
-Credentials and database URL for the Neon database are in the Final Report of Spring 2024 (MUST READ). (maybe lol)
-
 ### Install the repo
 
 ```bash
 git clone https://github.com/UTDallasEPICS/Comet-Cupboard.git
 cd Comet-Cupboard
+npm install
 ```
 
-To be done
+### Set up environment variables
 
 ```bash
-commands I've been using
-npx prisma migrate dev --name init
-npx prisma migrate reset
-npx prisma studio
-npx nuxt dev -o
-npm run format
-npm install
-cp .\.env.example .env
+# Fill out the environment variables accordingly
+cp .env.example .env
 ```
+
+### Database Setup
+
+Populate the ./public/test-images with some images. My favorite thing to do is use Minecraft food images (Daniel).
+
+```bash
+# Initialize the database and test data seeding
+npx prisma migrate dev --name init
+```
+
+### Running the Application
+
+```bash
+# Pick your favorite way to run (-o flag will automatically open a new tab)
+npx nuxt dev -o
+npm run dev
+npm run dev -- -o
+```
+
+### Useful Dev Tips
+
+#### Prettier Formatting
+
+```bash
+npm run format
+```
+
+#### Prisma
+
+```bash
+# Prisma GUI to view database
+npx prisma studio
+```
+
+#### Postman
+
+Use Postman to test HTTP, SSE, and WebSockets. Keep in mind that some features like SSE do not work on the Postman extension for VSCode, so have the Postman desktop app for full functionality.
+
+#### Documentation
+
+See ./notes, ./figma
