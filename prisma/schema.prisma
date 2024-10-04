@@ -9,40 +9,23 @@ datasource db {
 
 model User {
   netID     String     @id @map("net_id")
-  // firstName     String
-  // lastName      String
-  // year          Int
-  // major         String
-  // birthDate     DateTime
-  // currentStatus Boolean
   Volunteer Volunteer?
   Admin     Admin?
   Cart      Cart?
-  Order     Order[]
+  Orders    Order[]
 
   @@map("user")
 }
 
 model Volunteer {
-  User            User             @relation(fields: [netID], references: [netID])
-  netID           String           @id @map("net_id")
-  VolunteerShifts VolunteerShift[]
+  User  User   @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
+  netID String @id @map("net_id")
 
   @@map("volunteer")
 }
 
-model VolunteerShift {
-  Volunteer Volunteer @relation(fields: [netID], references: [netID])
-  netID     String    @map("net_id")
-  startTime DateTime  @map("start_time")
-  endTime   DateTime  @map("end_time")
-
-  @@id(name: "volunteerShiftID", [netID, startTime])
-  @@map("volunteer_shift")
-}
-
 model Admin {
-  User  User   @relation(fields: [netID], references: [netID])
+  User  User   @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
   netID String @id @map("net_id")
 
   @@map("admin")
@@ -56,21 +39,42 @@ model Category {
 }
 
 model Item {
-  itemID       String      @id @map("item_id")
-  name         String      @map("name")
-  Category     Category    @relation(fields: [categoryName], references: [name])
-  categoryName String      @map("category_name")
-  quantity     Int         @default(0) @map("quantity")
-  imgURL       String      @map("img_url")
-  CartItems    CartItem[]
-  OrderItem    OrderItem[]
-  Deals        Deal[]
+  itemID           String            @id @map("item_id")
+  name             String            @map("name")
+  Category         Category          @relation(fields: [categoryName], references: [name], onDelete: Restrict, onUpdate: Cascade)
+  categoryName     String            @map("category_name")
+  quantity         Int               @default(0) @map("quantity")
+  imgURL           String            @map("img_url")
+  archived         Boolean           @map("archived")
+  ItemCountChanges ItemCountChange[]
+  CartItems        CartItem[]
+  OrderItems       OrderItem[]
+  Deals            Deal[]
 
   @@map("item")
 }
 
+model ItemCountChange {
+  countChangeID String   @id @map("count_change_id")
+  date          DateTime @map("date")
+  amountChanged Int      @map("amount_changed")
+  Item          Item     @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+  itemID        String   @map("item_id")
+  Source        Source   @relation(fields: [sourceName], references: [name], onDelete: NoAction, onUpdate: Cascade)
+  sourceName    String   @map("source_name")
+
+  @@map("item_count_change")
+}
+
+model Source {
+  name             String            @id @map("name")
+  ItemCountChanges ItemCountChange[]
+
+  @@map("source")
+}
+
 model Cart {
-  User      User       @relation(fields: [cartID], references: [netID])
+  User      User       @relation(fields: [cartID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
   cartID    String     @id @map("cart_id")
   date      DateTime   @map("date")
   CartItems CartItem[]
@@ -80,9 +84,9 @@ model Cart {
 }
 
 model CartItem {
-  Item   Item   @relation(fields: [itemID], references: [itemID])
+  Item   Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
   itemID String @map("item_id")
-  Cart   Cart   @relation(fields: [cartID], references: [cartID], onDelete: Cascade)
+  Cart   Cart   @relation(fields: [cartID], references: [cartID], onDelete: Cascade, onUpdate: Cascade)
   cartID String @map("cart_id")
   count  Int    @map("count")
 
@@ -91,20 +95,19 @@ model CartItem {
 }
 
 model Order {
-  orderID      String      @id @map("order_id")
-  User         User        @relation(fields: [netID], references: [netID])
-  netID        String      @map("net_id")
-  date         DateTime    @map("date")
-  acceptReason String      @map("accept_reason")
-  OrderItems   OrderItem[]
+  orderID    String      @id @map("order_id")
+  User       User        @relation(fields: [netID], references: [netID], onDelete: NoAction, onUpdate: Cascade)
+  netID      String      @map("net_id")
+  date       DateTime    @map("date")
+  OrderItems OrderItem[]
 
   @@map("order")
 }
 
 model OrderItem {
-  Item    Item   @relation(fields: [itemID], references: [itemID])
+  Item    Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
   itemID  String @map("item_id")
-  Order   Order  @relation(fields: [orderID], references: [orderID])
+  Order   Order  @relation(fields: [orderID], references: [orderID], onDelete: Restrict, onUpdate: Cascade)
   orderID String @map("order_id")
   count   Int    @map("count")
 
@@ -114,7 +117,7 @@ model OrderItem {
 
 model Deal {
   dealID        Int      @id @map("deal_id")
-  Item          Item     @relation(fields: [itemID], references: [itemID])
+  Item          Item     @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
   itemID        String   @map("item_id")
   actualCount   Int      @map("actual_count")
   adjustedCount Int      @map("adjusted_count")
