@@ -15,7 +15,7 @@
 	},
 	"dependencies": {
 		"@headlessui/vue": "^1.7.22",
-		"@heroicons/vue": "^2.1.4",
+		"@heroicons/vue": "^2.1.5",
 		"@nuxt/eslint": "^0.3.13",
 		"@nuxtjs/tailwindcss": "^6.12.0",
 		"@prisma/client": "^5.16.2",
