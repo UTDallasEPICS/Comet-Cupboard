@@ -14,7 +14,8 @@ export default {
       colors: {
         'utd-green': '#154734',
         'utd-orange': '#E4701E', //slightly off from utd's orange, but matches comet cupboard colors
-        'footer': '#626262' //unknow if needed for reuse, only used in components/CometFooter.vue
+        'cupboard-dg': '#626262',
+        'cupboard-lg': '#B1B1B1',
       },
       fontFamily: {
         utd: ['FF Din Pro', 'Barlow',],

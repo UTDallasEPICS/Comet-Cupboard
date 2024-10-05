@@ -1,5 +1,5 @@
 <template lang="pug">
-div.bg-footer
+div.bg-cupboard-dg
     div.mx-7.my-5.flex.flex-col.sm_flex-row.place-content-evenly.max-sm_space-y-7.sm_space-x-7.text-white
         div
             img.h-14(src="/CometCupboardLogo2.png")
