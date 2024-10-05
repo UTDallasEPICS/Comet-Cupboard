@@ -47,7 +47,7 @@ div.bg-cupboard-dg
         div.space-y-1
             h2.text-2xl.font-bold
                 |Connect With Us
-            a(href="https://www.instagram.com/cometcupboard/")
+            NuxtLink(to="https://www.instagram.com/cometcupboard/")
                 img(src="/instagramIcon.svg").h-10
 </template>
 
