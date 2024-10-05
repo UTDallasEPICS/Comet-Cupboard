@@ -1,42 +1,44 @@
 <template lang="pug">
-div.border-black.border-4
-	div.border-black.border-b-4
-		p search
-	div.border-black
-		p.cursor-pointer(v-for="pendingCartID in pendingCartIDs" @click="$emit('update:select-cart', pendingCartID)") {{ pendingCartID }}
+div.flex.flex-col.gap-y-4.w-72
+	button.h-12.rounded-xl.drop-shadow.cursor-pointer(class="bg-gray-300 hover:bg-orange-400 hover:text-white" v-for="s in tempArr" @click="$emit('update:select-cart', pendingCartID)") 
+		div.flex.row.justify-between
+			span.px-4.text-xl.text-left {{s}}
+			span.px-4.text-xl.text-right QTY: 2
 </template>
 
 <script lang="ts" setup>
-const pendingCartIDs = ref<Array<string>>([])
-const pendingCartUpdates = ref<EventSource>()
+const tempArr = ref<Array<string>>(["abc123456", "def123456", "ghi123456", "jkl123456", "mno123456", "pqr123456", "stu123456", "vwx123456"])
 
-onMounted(async () => {
-	await getPendingCarts()
-})
+// const pendingCartIDs = ref<Array<string>>([])
+// const pendingCartUpdates = ref<EventSource>()
 
-const getPendingCarts = async () => {
-	const pendingCarts = await $fetch("/api/verification/pendingCarts", { method: "GET" })
-	pendingCartIDs.value = pendingCarts.map((pendingCart) => {
-		return pendingCart.cartID
-	})
-}
+// onMounted(async () => {
+// 	await getPendingCarts()
+// })
 
-if (import.meta.client) {
-	// change this to use env later
-	// also probably use zod to type check the message...
-	pendingCartUpdates.value = new EventSource("http://localhost:3000/api/verification/pendingCartsUpdate")
-	pendingCartUpdates.value.onmessage = (event) => {
-		const { type, payload } = JSON.parse(event.data)
-		if (type === "NEW CART") {
-			const cartIDToAdd = payload.cartID
-			pendingCartIDs.value.push(cartIDToAdd)
-		}
-		else if (type === "ACCEPT CART" || type === "REJECT CART") {
-			const cartIDToRemove = payload.cartID
-			pendingCartIDs.value = pendingCartIDs.value.filter((cartID) => {
-				return cartID != cartIDToRemove
-			})
-		}
-	}
-}
+// const getPendingCarts = async () => {
+// 	const pendingCarts = await $fetch("/api/verification/pendingCarts", { method: "GET" })
+// 	pendingCartIDs.value = pendingCarts.map((pendingCart) => {
+// 		return pendingCart.cartID
+// 	})
+// }
+
+// if (import.meta.client) {
+// 	// change this to use env later
+// 	// also probably use zod to type check the message...
+// 	pendingCartUpdates.value = new EventSource("http://localhost:3000/api/verification/pendingCartsUpdate")
+// 	pendingCartUpdates.value.onmessage = (event) => {
+// 		const { type, payload } = JSON.parse(event.data)
+// 		if (type === "NEW CART") {
+// 			const cartIDToAdd = payload.cartID
+// 			pendingCartIDs.value.push(cartIDToAdd)
+// 		}
+// 		else if (type === "ACCEPT CART" || type === "REJECT CART") {
+// 			const cartIDToRemove = payload.cartID
+// 			pendingCartIDs.value = pendingCartIDs.value.filter((cartID) => {
+// 				return cartID != cartIDToRemove
+// 			})
+// 		}
+// 	}
+// }
 </script>
