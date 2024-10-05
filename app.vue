@@ -1,6 +1,6 @@
 <template lang="pug">
 .flex.flex-col.min-h-screen.font-utd
     CometHeader.sticky.top-0
-    NuxtPage.grow.overflow-y-scroll
+    NuxtPage.grow
     CometFooter
 </template>
