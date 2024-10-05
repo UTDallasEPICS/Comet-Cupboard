@@ -45,7 +45,7 @@ model Item {
   categoryName     String            @map("category_name")
   quantity         Int               @default(0) @map("quantity")
   imgURL           String            @map("img_url")
-  archived         Boolean           @map("archived")
+  archived         Boolean           @default(false) @map("archived")
   ItemCountChanges ItemCountChange[]
   CartItems        CartItem[]
   OrderItems       OrderItem[]
