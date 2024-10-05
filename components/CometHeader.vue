@@ -18,8 +18,9 @@ div.min-h-20.bg-utd-green.content-center
                 div.inline-flex.max-sm_hidden
                     NuxtLink(to="/data").cursor-pointer.text-nowrap
                         | Data
-            ShoppingBagIcon.size-10.min-w-10.fill-white.cursor-pointer.justify-self-right
-            UserIcon.size-10.min-w-10.fill-white.cursor-pointer.justify-self-right
+            div.flex.flex-row.space-x-5 
+                ShoppingBagIcon.size-10.min-w-10.fill-white.cursor-pointer.justify-self-right
+                UserIcon.size-10.min-w-10.fill-white.cursor-pointer.justify-self-right
 </template>
 
 <script lang="ts" setup>
