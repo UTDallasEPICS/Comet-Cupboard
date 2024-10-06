@@ -34,10 +34,10 @@
         text-align: left;
         font-family: theme('fontFamily.utd');
         font-size: x-large;
-        font-weight: 500;eight: 50px;
+        font-weight: 400;eight: 50px;
         background-color: transparent;
         border-bottom-style: solid;
-        border-bottom-width: 2px;
+        border-bottom-width: 1px;
         border-bottom-color: black;
     }
 }
