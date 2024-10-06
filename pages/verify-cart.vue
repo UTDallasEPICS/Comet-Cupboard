@@ -1,9 +1,9 @@
 <template lang="pug">
-div.flex.flex-row(class="mx-8 my-8 lg:mx-48 ")
-    div
+div.flex.flex-row(class="mx-8 my-8 lg:mx-48")
+    div.mr-20
         p search
         PendingCartsList(@update:select-cart="setCartIDPreview")
-    //- CartVerificationPreview(:cartID="currentCartIDPreview" @update:verified-cart="resetCartIDPreview")
+    CartVerificationPreview(:cartID="currentCartIDPreview" @update:verified-cart="resetCartIDPreview")
 </template>
 
 <script lang="ts" setup>

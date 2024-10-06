@@ -1,7 +1,7 @@
 <template lang="pug">
 div.flex.flex-col.gap-y-4.w-72
 	button.h-12.rounded-xl.drop-shadow.cursor-pointer(:class="(s === selectedCart ? ('bg-orange-400 text-white') : 'bg-gray-300')" class="hover:bg-orange-400 hover:text-white" v-for="s in tempArr" @click="selectCart(s)") 
-		div.flex.row.justify-between
+		div.flex.flex-row.justify-between
 			span.px-4.text-xl.text-left {{s}}
 			span.px-4.text-xl.text-right QTY: 2
 </template>
@@ -11,7 +11,7 @@ const tempArr = ref<Array<string>>(["abc123456", "def123456", "ghi123456", "jkl1
 const emit = defineEmits(["update:select-cart"])
 
 const pendingCartIDs = ref<Array<string>>([])
-const selectedCart = ref<string>("jkl123456")
+const selectedCart = ref<string>("")
 const pendingCartUpdates = ref<EventSource>()
 
 onMounted(async () => {
