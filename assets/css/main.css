@@ -24,7 +24,7 @@
         font-weight: 700;
         border-radius: 15px;
         /* horizontal, vertical, blur, grow, color */
-        box-shadow: 0px 5px 13px 1px gray;
+        box-shadow: 0px 4px 5px 1px rgb(185,185,185);
     }
 
     /* text input styling */
@@ -36,8 +36,9 @@
         font-size: x-large;
         font-weight: 400;eight: 50px;
         background-color: transparent;
+        outline: none;
         border-bottom-style: solid;
         border-bottom-width: 1px;
-        border-bottom-color: black;
+        border-bottom-color: rgb(100,100,100);
     }
 }
