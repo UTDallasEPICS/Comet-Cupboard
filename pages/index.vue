@@ -14,7 +14,8 @@ const handleSubmit = async () => {
 			method: "POST",
 			body: { netID: netID.value },
 		})
-		await navigateTo("/catalog")
+        refreshCookie('accessLevel');
+		await navigateTo("/shopping")
 	} catch (e) {
 		/* lol */
 	}

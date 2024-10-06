@@ -8,21 +8,14 @@ enum AccessLevel {
 const pageAccessMap: { [route: string]: AccessLevel } = {
 	// PUBLIC PAGES
 	"/": AccessLevel.PUBLIC,
-	"/donation": AccessLevel.PUBLIC,
 	// STUDENT PAGES
-	"/catalog": AccessLevel.STUDENT,
-	"/cart": AccessLevel.STUDENT,
+	"/shopping": AccessLevel.STUDENT,
 	"/questionaire": AccessLevel.STUDENT,
-	"/request-verify-cart": AccessLevel.STUDENT,
 	// VOLUNTEER PAGES
-	"/inventory/add-item": AccessLevel.VOLUNTEER,
-	"/inventory/delete-item-confirmation": AccessLevel.VOLUNTEER,
-	"/inventory/edit-item-deal": AccessLevel.VOLUNTEER,
-	"/inventory/edit-item": AccessLevel.VOLUNTEER,
-	"/inventory/inventory": AccessLevel.VOLUNTEER,
+	"/inventory-management": AccessLevel.VOLUNTEER,
 	"/verify-cart": AccessLevel.VOLUNTEER,
 	// ADMIN PAGES
-	"/data-analytics": AccessLevel.ADMIN,
+	"/data": AccessLevel.ADMIN,
 }
 const apiAccessMap: { [route: string]: { [method: string]: AccessLevel } } = {
 	// PUBLIC APIS
