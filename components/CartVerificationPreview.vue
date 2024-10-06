@@ -1,29 +1,18 @@
 <template lang="pug">
-//- TODO: don't make this fixed height, make h-max the height of page - margins, then overflow will scroll content
-div.w-full.h-auto.flex.flex-col.gap-y-4
-	div.h-12.rounded-xl.drop-shadow.bg-gray-300.flex.flex-row.justify-between
+div.w-full.h-min.flex.flex-col.gap-y-4
+	div.h-12.rounded-xl.drop-shadow.flex.flex-row.justify-between.bg-cupboard-lg
 		span.px-4.text-xl.text-left.my-auto {{ cartID }}
 		span.px-4.text-xl.text-right.my-auto QTY: 2
 	div.border-black.border-2.h-full.rounded-xl.drop-shadow.p-4
-		div.grid.grid-flow-row.grid-cols-3.place-items-center
-			div.m-1.w-72.h-8.rounded.flex.flex-row(style="background-color: #FFAB00" v-for="warning in warnings")
+		div.grid.place-items-center.gap-4(style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))")
+			div.w-72.h-8.rounded.flex.flex-row(style="background-color: #FFAB00" v-for="warning in warnings")
 				ExclamationTriangleIcon.my-auto.ml-1.size-7
 				p.ml-1.my-auto {{ warning }}
-		div.grid.grid-flow-row.grid-cols-3.place-items-center
+		div.my-4.grid.place-items-center.gap-4(style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))")
 			CartVerifyCard(v-for="cartItem in cartItems" :name="cartItem.name" :imgURL="cartItem.imgURL" :itemID="cartItem.itemID" :totalQTY="cartItem.totalQTY" :dealsCount="cartItem.dealsCount" :expiredCount="cartItem.expiredCount" :adjustedQTY="cartItem.adjustedQTY")
-					
-//- div.border-black.border-4.flex.flex-col.flex-nowrap.h-fit
-//- 	div.border-black.border-b-4
-//- 		p {{ cartID }}
-//- 	div.border-black.border-b-4.grid.gap-4.p-4(class="grid-cols-1 lg:grid-cols-2")
-//- 		CartItemVerifyCard(v-for="cartItem in cartItems" 
-//-             :name="cartItem.name" :imgURL="cartItem.imgURL" :itemID="cartItem.itemID" :count="cartItem.count")
-//- 	div.flex.flex-row
-//- 		p reason
-//- 		ActionButton.block.w-72.h-min(class="sm:flex-grow-0" style="background-color: #FF0000" @click="rejectCart")
-//- 			p Reject
-//- 		ActionButton.block.w-72.h-min(class="sm:flex-grow-0" @click="acceptCart")
-//- 			p Accept
+		div.flex.flex-row.gap-x-4.justify-center.lg_justify-end
+			button.button.w-40.bg-red-negative.text-white(@click="rejectCart") Decline
+			button.button.w-40.bg-utd-green.text-white(@click="acceptCart") Accept
 </template>
 
 <script lang="ts" setup>
@@ -45,8 +34,8 @@ const cartItems = ref([
 	"imgURL": "test-images/Apple_JE3_BE3.png",
 	"itemID": "1",
 	"totalQTY": 1,
-	"dealsCount": 1,
-	"expiredCount": 1,
+	"dealsCount": 0,
+	"expiredCount": 0,
 	"adjustedQTY": 1
 },
 
@@ -55,8 +44,8 @@ const cartItems = ref([
 	"imgURL": "test-images/Baked_Potato_JE4_BE2.png",
 	"itemID": "1",
 	"totalQTY": 1,
-	"dealsCount": 1,
-	"expiredCount": 1,
+	"dealsCount": -1,
+	"expiredCount": -1,
 	"adjustedQTY": 1
 },
 
@@ -65,8 +54,8 @@ const cartItems = ref([
 	"imgURL": "test-images/Bread_JE3_BE3.png",
 	"itemID": "1",
 	"totalQTY": 1,
-	"dealsCount": 1,
-	"expiredCount": 1,
+	"dealsCount": -1,
+	"expiredCount": 0,
 	"adjustedQTY": 1
 },
 
@@ -75,8 +64,8 @@ const cartItems = ref([
 	"imgURL": "test-images/Cooked_Salmon_JE2_BE2.png",
 	"itemID": "1",
 	"totalQTY": 1,
-	"dealsCount": 1,
-	"expiredCount": 1,
+	"dealsCount": 0,
+	"expiredCount": -1,
 	"adjustedQTY": 1
 },
 
@@ -85,8 +74,8 @@ const cartItems = ref([
 	"imgURL": "test-images/Cookie_JE2_BE2.png",
 	"itemID": "1",
 	"totalQTY": 1,
-	"dealsCount": 1,
-	"expiredCount": 1,
+	"dealsCount": 0,
+	"expiredCount": 0,
 	"adjustedQTY": 1
 }
 
@@ -108,7 +97,7 @@ const warnings = ref<Array<string>>(["Cart exceeds 6 item limit", "Cart exceeds 
 const rejectCart = async () => {
 	await $fetch("/api/verification/cartVerificationAction", {
 		method: "POST",
-		body: { cartID: props.cartID, action: "REJECT", reason: "rejected for some reason" },
+		body: { cartID: props.cartID, action: "REJECT" },
 	})
 	emit("update:verified-cart")
 }
@@ -116,7 +105,7 @@ const rejectCart = async () => {
 const acceptCart = async () => {
 	await $fetch("/api/verification/cartVerificationAction", {
 		method: "POST",
-		body: { cartID: props.cartID, action: "ACCEPT", reason: "accepted for some reason" },
+		body: { cartID: props.cartID, action: "ACCEPT" },
 	})
 	emit("update:verified-cart")
 }

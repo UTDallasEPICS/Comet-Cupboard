@@ -16,6 +16,7 @@ export default {
         'utd-orange': '#E4701E', //slightly off from utd's orange, but matches comet cupboard colors
         'cupboard-dg': '#626262',
         'cupboard-lg': '#B1B1B1',
+        'red-negative': '#E22222'
       },
       fontFamily: {
         utd: ['FF Din Pro', 'Barlow',],

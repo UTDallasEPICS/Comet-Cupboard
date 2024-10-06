@@ -1,6 +1,7 @@
 <template lang="pug">
 div.flex.flex-col.gap-y-4.w-72
-	button.h-12.rounded-xl.drop-shadow.cursor-pointer(:class="(s === selectedCart ? ('bg-orange-400 text-white') : 'bg-gray-300')" class="hover:bg-orange-400 hover:text-white" v-for="s in tempArr" @click="selectCart(s)") 
+	button.h-12.rounded-xl.drop-shadow.cursor-pointer.hover_bg-utd-orange.hover_text-white(
+		:class="(s === selectedCart ? ('bg-utd-orange text-white') : 'bg-cupboard-lg')" v-for="s in tempArr" @click="selectCart(s)") 
 		div.flex.flex-row.justify-between
 			span.px-4.text-xl.text-left {{s}}
 			span.px-4.text-xl.text-right QTY: 2
