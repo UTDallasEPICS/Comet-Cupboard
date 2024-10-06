@@ -5,10 +5,13 @@ div.w-full.h-auto.flex.flex-col.gap-y-4
 		span.px-4.text-xl.text-left.my-auto {{ cartID }}
 		span.px-4.text-xl.text-right.my-auto QTY: 2
 	div.border-black.border-2.h-full.rounded-xl.drop-shadow.p-4
-		div.w-72.h-8.rounded(style="background-color: #FFAB00")
-			ExclamationTriangleIcon.size-8.inline
-			p.inline Cart has expired items
-		p a
+		div.grid.grid-flow-row.grid-cols-3.place-items-center
+			div.m-1.w-72.h-8.rounded.flex.flex-row(style="background-color: #FFAB00" v-for="warning in warnings")
+				ExclamationTriangleIcon.my-auto.ml-1.size-7
+				p.ml-1.my-auto {{ warning }}
+		div.grid.grid-flow-row.grid-cols-3.place-items-center
+			CartVerifyCard(v-for="cartItem in cartItems" :name="cartItem.name" :imgURL="cartItem.imgURL" :itemID="cartItem.itemID" :totalQTY="cartItem.totalQTY" :dealsCount="cartItem.dealsCount" :expiredCount="cartItem.expiredCount" :adjustedQTY="cartItem.adjustedQTY")
+					
 //- div.border-black.border-4.flex.flex-col.flex-nowrap.h-fit
 //- 	div.border-black.border-b-4
 //- 		p {{ cartID }}
@@ -35,7 +38,61 @@ const props = defineProps({
 	},
 })
 
-const cartItems = ref([])
+
+const cartItems = ref([
+{
+	"name": "apple",
+	"imgURL": "test-images/Apple_JE3_BE3.png",
+	"itemID": "1",
+	"totalQTY": 1,
+	"dealsCount": 1,
+	"expiredCount": 1,
+	"adjustedQTY": 1
+},
+
+{
+	"name": "baked potato",
+	"imgURL": "test-images/Baked_Potato_JE4_BE2.png",
+	"itemID": "1",
+	"totalQTY": 1,
+	"dealsCount": 1,
+	"expiredCount": 1,
+	"adjustedQTY": 1
+},
+
+{
+	"name": "bread",
+	"imgURL": "test-images/Bread_JE3_BE3.png",
+	"itemID": "1",
+	"totalQTY": 1,
+	"dealsCount": 1,
+	"expiredCount": 1,
+	"adjustedQTY": 1
+},
+
+{
+	"name": "cooked salmon",
+	"imgURL": "test-images/Cooked_Salmon_JE2_BE2.png",
+	"itemID": "1",
+	"totalQTY": 1,
+	"dealsCount": 1,
+	"expiredCount": 1,
+	"adjustedQTY": 1
+},
+
+{
+	"name": "cookie",
+	"imgURL": "test-images/Cookie_JE2_BE2.png",
+	"itemID": "1",
+	"totalQTY": 1,
+	"dealsCount": 1,
+	"expiredCount": 1,
+	"adjustedQTY": 1
+}
+
+
+])
+const warnings = ref<Array<string>>(["Cart exceeds 6 item limit", "Cart exceeds 1 items per category", "Cart has expired items"])
 
 // watch(props, async () => {
 // 	try {
