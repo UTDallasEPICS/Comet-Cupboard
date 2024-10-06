@@ -6,7 +6,7 @@ div.sticky.top-0.z-50.min-h-20.overscroll-none.bg-utd-green.content-center
         div.flex.flex-row.h-14.space-x-5.sm_space-x-14.items-center.w-full
             img.h-14(src="/CometCupboardLogo1.png")
             // desktop navigation links
-            div.flex-grow.flex-row.space-x-10.overflow-x-scroll.items-center.left-left.text-3xl.font-bold.text-white.text-nowrap
+            div.flex-grow.flex-row.space-x-10.overflow-x-scroll.no-scrollbar.items-center.left-left.text-3xl.font-bold.text-white.text-nowrap
                 div(v-if="accessCookie === 'STUDENT' || accessCookie === 'VOLUNTEER'").inline-flex.max-sm_hidden
                     NuxtLink(:to="shoppingPath").cursor-pointer.text-nowrap
                         | Shopping

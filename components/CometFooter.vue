@@ -7,7 +7,7 @@ div.bg-cupboard-dg
             h2.text-2xl.font-bold
                 |Contact
             div
-                button(@click="handleRoom").space-x-1.cursor-pointer
+                button(@click="handleRoom").space-x-1.cursor-pointer.text-left
                     p.font-bold.inline-flex
                         |Location: 
                     p.inline-flex
@@ -15,7 +15,7 @@ div.bg-cupboard-dg
                     div(v-show="roomCopied").inline-flex
                         ClipboardDocumentCheckIcon.w-4.size4.fill-white
             div
-                button(@click="handleEmail").space-x-1.cursor-pointer
+                button(@click="handleEmail").space-x-1.cursor-pointer.text-left
                     p.font-bold.inline-flex
                         |Email: 
                     p.inline-flex
@@ -23,7 +23,7 @@ div.bg-cupboard-dg
                     div(v-show="emailCopied").inline-flex
                         ClipboardDocumentCheckIcon.w-4.size4.fill-white
             div
-                button(@click="handlePhone").space-x-1.cursor-pointer
+                button(@click="handlePhone").space-x-1.cursor-pointer.text-left
                     p.font-bold.inline-flex
                         |Phone
                     p.inline-flex
@@ -60,6 +60,7 @@ const email = "cupboard@utdallas.edu"
 const phone = "972-883-6613"
 const instagram = "https://www.instagram.com/cometcupboard/"
 
+// contact info copy user-feedback
 let roomMessageTimeout;
 const roomCopied = ref(false);
 function handleRoom() {
@@ -91,10 +92,6 @@ function handlePhone() {
 }
 function phoneAlert() {
     phoneCopied.value = false;
-}
-
-function handleInstagram() {
-    window.open(instagram)
 }
 
 </script>
