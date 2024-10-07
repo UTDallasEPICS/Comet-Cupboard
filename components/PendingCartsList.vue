@@ -1,6 +1,6 @@
 <template lang="pug">
 div.flex.flex-col.gap-y-4.min-w-60
-	button.h-12.rounded-xl.drop-shadow.cursor-pointer.hover_bg-utd-orange.hover_text-white(
+	button.h-12.rounded-xl.drop-shadow-standard.cursor-pointer.hover_bg-utd-orange.hover_text-white(
 		:class="((s === selectedCart) ? ('bg-utd-orange text-white') : 'bg-cupboard-lg')" @click="emit('update:select-cart', s)" v-for="s in tempArr") 
 		div.flex.flex-row.justify-between
 			span.px-4.text-xl.text-left {{s}}

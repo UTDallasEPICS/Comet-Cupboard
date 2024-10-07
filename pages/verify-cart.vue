@@ -1,9 +1,9 @@
 <template lang="pug">
-div.flex.flex-row.my-8.flex-wrap.md_flex-nowrap.justify-center.md_justify-normal
+div.flex.flex-row.my-4.md_my-8.flex-wrap.md_flex-nowrap.justify-center.md_justify-normal
     div.md_mr-6.lg_mr-12(:class="((currentCartIDPreview === 'No cart chosen') ? 'visible' : 'invisible hidden') + ' md_visible md_block'")
         p search
         PendingCartsList(:selectedCart="currentCartIDPreview" @update:select-cart="setCartIDPreview")
-    XMarkIcon.ml-auto.size-10.stroke-black(:class="((currentCartIDPreview === 'No cart chosen') ? 'invisible hidden': 'visible') + ' md_invisible md_hidden'" @click="resetCartIDPreview")
+    XMarkIcon.ml-auto.mb-4.size-10.stroke-black(:class="((currentCartIDPreview === 'No cart chosen') ? 'invisible hidden': 'visible') + ' md_invisible md_hidden'" @click="resetCartIDPreview")
     CartVerificationPreview(:class="((currentCartIDPreview === 'No cart chosen') ? 'invisible hidden': 'visible') + ' md_visible md_flex'" 
         :cartID="currentCartIDPreview" @update:verified-cart="resetCartIDPreview")
 </template>
