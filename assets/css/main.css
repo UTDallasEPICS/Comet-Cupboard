@@ -30,7 +30,6 @@
     /* text input styling */
     .input {
         height: 50px;
-        text-indent: 7px;
         text-align: left;
         font-family: theme('fontFamily.utd');
         font-size: x-large;
