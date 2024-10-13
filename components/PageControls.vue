@@ -4,6 +4,7 @@
             div.flex
                 div.relative
                     Listbox( multiple )
+                        // TODO make this fix on small displays
                         ListboxButton.button.w-full.md_w-44.bg-utd-orange.text-white.px-4
                             | Filters
                         ListboxOptions( anchor.to="bottom" anchor.gap="5" ).absolute.bg-white.drop-shadow-standard.rounded-xl.w-full.space-y-3.pt-2.pb-3
@@ -13,16 +14,17 @@
                                 | Deals
                             ListboxOption( ).text-center.border-b.bg-utd-green.text-white.text-xl.font-bold
                                 | Categories 
-                            ListboxOption( v-for="filter in filters" @click="handleFilter(filter)" ).text-center.border-b.cursor-pointer
-                                | {{filter}}
+                            ListboxOption( v-for="filter in filters" @click="handleFilter(filter.name)" ).text-center.border-b.cursor-pointer
+                                | {{filter.name}}
             div( v-if="type === 'INVENTORY'" ).max-md_order-first.flex.flex-row.space-x-5.max-md_pb-3
                 div.relative
                     Listbox()
+                        // TODO make this fix on small displays
                         ListboxButton.button.w-full.md_w-44.bg-utd-orange.text-white.px-4
                             | Source
                         ListboxOptions( anchor.to="bottom" anchor.gap="5" ).absolute.bg-white.drop-shadow-standard.rounded-xl.w-full.space-y-3.pt-2.pb-3
-                            ListboxOption( v-for="source in sources" @click="handleSource(source)" ).text-center.border-b.cursor-pointer
-                                | {{source}}
+                            ListboxOption( v-for="source in sources" @click="handleSource(source.name)" ).text-center.border-b.cursor-pointer
+                                | {{source.name}}
                 button( @click="handleAdd" ).button.flex.w-40.md_w-12.bg-utd-green.text-white.place-content-center.place-items-center
                     PlusIcon.fill-white.stroke-white.h-7
         div.relative.flex.grow
@@ -51,7 +53,7 @@ const options = reactive({
     searchTerm: '',
 }); 
 
-const filters = [
+/* const filters = [
     "Snacks",
     "Grains",
     "Breakfast Grains",
@@ -63,8 +65,8 @@ const filters = [
     "Vegetables",
     "Refrigerated Items",
     "Frozeon Items",
-]; // hardcode for now, if nessesary pull db
-// filter array will be unordered currently
+]; */
+const { data: filters } = await useFetch("/api/page-controls/categories")
 function handleFilter( filterName ) {
     let pos = options.filters.indexOf(filterName);
     if (pos == -1) {
@@ -75,7 +77,8 @@ function handleFilter( filterName ) {
     }
 }
 
-const sources = ["NTFB", "Community Garden", "Raising Cans", "Individual Donation"];
+// const sources = ["NTFB", "Community Garden", "Raising Cans", "Individual Donation"];
+const { data: sources } = await useFetch("/api/page-controls/sources")
 function handleSource( sourceName ) {
     if ( options.source === sourceName ) {
         options.source = "";
