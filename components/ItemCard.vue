@@ -23,9 +23,9 @@ const props = defineProps({
 })
 
 const addToCart = async () => {
-	await $fetch("/api/cart/incrementCartItem", {
+	await $fetch("/api/cart/cartItem", {
 		method: "POST",
-		body: { itemID: props.itemID },
+		body: { itemID: props.itemID, incrementChange: 1 },
 	})
 }
 </script>

@@ -15,7 +15,7 @@ onMounted(async () => {
 const getCart = async () => {
 	const cart = await $fetch("/api/cart/cart", { method: "GET" })
 	cartItems.value = cart.CartItems.map((cartItem) => {
-		return { name: cartItem.Item.name, imgURL: cartItem.Item.imgURL, itemID: cartItem.itemID, count: cartItem.count }
+		return { name: cartItem.Item.name, imgURL: cartItem.Item.imgURL, itemID: cartItem.itemID, count: cartItem.count, expiredCount: cartItem.expiredCount }
 	})
 }
 
