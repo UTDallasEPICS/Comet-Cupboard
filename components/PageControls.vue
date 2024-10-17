@@ -1,29 +1,44 @@
 <template lang="pug">
     div.flex.flex-col.md_flex-row.pb-7.max-md_space-y-3.md_space-x-10.sm_text-nowrap
         div.flex.flex-col.md_flex-row.md_space-x-5( v-if="type === 'SHOPPING' | type === 'INVENTORY'" )
-            div.flex
-                div.relative
-                    Listbox( multiple )
-                        // TODO make this fix on small displays
-                        ListboxButton.button.w-full.md_w-44.bg-utd-orange.text-white.px-4
-                            | Filters
-                        ListboxOptions( anchor.to="bottom" anchor.gap="5" ).absolute.bg-white.drop-shadow-standard.rounded-xl.w-full.space-y-3.pt-2.pb-3
-                            ListboxOption( ).text-center.border-b.bg-utd-green.text-white.text-xl.font-bold
+            div.flex.relative
+                Listbox( multiple )
+                    ListboxButton.button.w-full.md_w-44.bg-utd-orange.text-white.px-4
+                        | Filters
+                    ListboxOptions( class="max-h-[600px] md_max-h-96" ).absolute.top-14.z-10.bg-white.drop-shadow-standard.rounded-xl.w-full.divide-y.divide-cupboard-lg.overflow-y-scroll.no-scrollbar
+                        ListboxOption.text-center.rounded-t-xl.bg-utd-green.text-white.text-2xl.font-bold.py-2
+                            | Deals
+                        ListboxOption( @click="handleFilter('Deals')" ).flex.flex-row.p-1.text-center.text-xl.cursor-pointer.hover_bg-cupboard-lg
+                            div.flex.px-2
+                                div.relative.w-6.h-6.place-self-center.rounded-md.bg-utd-green
+                                    CheckIcon( v-if="options.filters.indexOf('Deals') != -1" ).absolute.inset-0.pointer-events-none.fill-white.stroke-white.h-6
+                            div.grow
                                 | Deals
-                            ListboxOption( @click="handleFilter('Deals')" ).text-center.border-b.cursor-pointer
-                                | Deals
-                            ListboxOption( ).text-center.border-b.bg-utd-green.text-white.text-xl.font-bold
-                                | Categories 
-                            ListboxOption( v-for="filter in filters" @click="handleFilter(filter.name)" ).text-center.border-b.cursor-pointer
+                        ListboxOption.text-center.bg-utd-green.text-white.text-2xl.font-bold.py-2
+                            | Categories 
+                        // FIXME jumps to top of scroll sometimes (seems to occur every other click?)
+                        ListboxOption( v-for="filter in filters" @click="handleFilter(filter.name)" ).flex.flex-row.p-1.text-center.text-xl.cursor-pointer.text-wrap.hover_bg-cupboard-lg
+                            div.flex.px-2
+                                div.relative.w-6.h-6.place-self-center.rounded-md.bg-utd-green
+                                    CheckIcon( v-if="options.filters.indexOf(filter.name) != -1" ).absolute.inset-0.pointer-events-none.fill-white.stroke-white.h-6
+                            div.grow
                                 | {{filter.name}}
             div( v-if="type === 'INVENTORY'" ).max-md_order-first.flex.flex-row.space-x-5.max-md_pb-3
-                div.relative
+                div.flex.grow.relative
                     Listbox()
-                        // TODO make this fix on small displays
                         ListboxButton.button.w-full.md_w-44.bg-utd-orange.text-white.px-4
-                            | Source
-                        ListboxOptions( anchor.to="bottom" anchor.gap="5" ).absolute.bg-white.drop-shadow-standard.rounded-xl.w-full.space-y-3.pt-2.pb-3
-                            ListboxOption( v-for="source in sources" @click="handleSource(source.name)" ).text-center.border-b.cursor-pointer
+                            // default, shown when no source
+                            div( v-if="options.source === ''" )
+                                | Source
+                            // handle different sizes of source names being shown in the button
+                            div( v-else-if="options.source.length > 20" ).text-wrap.text-sm
+                                | {{options.source}}
+                            div( v-else-if="options.source.length > 10" ).text-wrap.text-base
+                                | {{options.source}}
+                            div( v-else )
+                                | {{options.source}}
+                        ListboxOptions( class="max-h-[600px] md_max-h-96" ).absolute.top-14.z-10.bg-white.drop-shadow-standard.rounded-xl.w-full.max-h-96.divide-y.divide-cupboard-lg.overflow-y-scroll.no-scrollbar
+                            ListboxOption( v-for="source in sources" @click="handleSource(source.name)" ).p-1.text-center.text-xl.cursor-pointer.text-wrap.hover_bg-cupboard-lg
                                 | {{source.name}}
                 button( @click="handleAdd" ).button.flex.w-40.md_w-12.bg-utd-green.text-white.place-content-center.place-items-center
                     PlusIcon.fill-white.stroke-white.h-7
@@ -34,7 +49,7 @@
 
 <script lang="ts" setup>
 
-import { PlusIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
+import { PlusIcon, MagnifyingGlassIcon, CheckIcon } from '@heroicons/vue/24/solid'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 
 const emit = defineEmits(["controlsChange","addItemClick"]);
