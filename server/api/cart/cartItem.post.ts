@@ -12,6 +12,16 @@ const validateSchema = schema.strict().partial().required({
 	incrementChange: true,
 })
 
+/*
+	Two ways to use POST cartItem: Incremental or Edit
+	For incremental:
+		Assign the amount you want to increment/decrement by in incrementChange field
+			ex. 1 or -1
+	For edit:
+		Assign incrementChange = 0
+		Assign values to count or expiredCount. Not assigning the field will not update the field. 
+*/
+
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
