@@ -11,4 +11,8 @@ div.flex.flex-row
         ItemsGrid(class="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5")
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+onMounted(async () => {
+	await $fetch("/api/cart/cart", { method: "POST" })
+})
+</script>

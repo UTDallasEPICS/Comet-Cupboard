@@ -84,11 +84,12 @@ model Cart {
 }
 
 model CartItem {
-  Item   Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-  itemID String @map("item_id")
-  Cart   Cart   @relation(fields: [cartID], references: [cartID], onDelete: Cascade, onUpdate: Cascade)
-  cartID String @map("cart_id")
-  count  Int    @map("count")
+  Item         Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+  itemID       String @map("item_id")
+  Cart         Cart   @relation(fields: [cartID], references: [cartID], onDelete: Cascade, onUpdate: Cascade)
+  cartID       String @map("cart_id")
+  count        Int    @map("count")
+  expiredCount Int    @map("expired_count")
 
   @@id(name: "cartItemID", [itemID, cartID])
   @@map("cart_item")

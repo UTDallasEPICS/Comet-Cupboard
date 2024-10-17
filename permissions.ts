@@ -11,6 +11,7 @@ const pageAccessMap: { [route: string]: AccessLevel } = {
 	// STUDENT PAGES
 	"/shopping": AccessLevel.STUDENT,
 	"/questionaire": AccessLevel.STUDENT,
+	"/cart": AccessLevel.STUDENT,
 	// VOLUNTEER PAGES
 	"/inventory-management": AccessLevel.VOLUNTEER,
 	"/verify-cart": AccessLevel.VOLUNTEER,
