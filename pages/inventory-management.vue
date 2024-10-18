@@ -1,7 +1,14 @@
 <template lang="pug">
 div
     div
-        PageControls( type="INVENTORY" @controlsChange="(options) => getControls(options)" @addItemClick="addItemsOpen = !addItemsOpen" )
+        // page control components
+        div.flex.flex-col.md_flex-row.pb-7.max-md_space-y-3.md_space-x-10.sm_text-nowrap
+            div.flex.flex-col.md_flex-row.md_space-x-5
+                ControlsFilter( @filterChange="(selectedFilters) => filters = selectedFilters" :categories="categories")
+                div.max-md_order-first.flex.flex-row.space-x-5.max-md_pb-3
+                    ControlsSourceAndAdd( @sourceChange="(selectedSource) => source = selectedSource" @addItemClick="addItemsOpen = !addItemsOpen" :sources="sources").max-md_order-first.max-md_pb-3
+            div.flex.grow
+                ControlsSearch( @searchTermChange="(newTerm) => searchTerm = newTerm" )
         div.flex.flex-row.space-x-20
             div
                 | filters = {{filters}}
@@ -16,15 +23,12 @@ div
 
 <script lang="ts" setup>
 
+const { data: categories } = await useFetch("/api/page-controls/categories")
+const { data: sources } = await useFetch("/api/page-controls/sources")
+
 const searchTerm = ref("");
 const filters = ref([]);
 const source = ref("");
-
-function getControls(options) {
-    searchTerm.value = options.searchTerm;
-    filters.value = options.filters; 
-    source.value = options.source;
-}
 
 const addItemsOpen = ref(false);
 
