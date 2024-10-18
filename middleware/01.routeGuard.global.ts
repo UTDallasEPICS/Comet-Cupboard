@@ -1,28 +1,21 @@
-import { AccessLevel, pageAccessMap } from "~/permissions"
-
-const canAccess = (routePermission: string, accessLevel: string): boolean => {
-	switch (routePermission) {
-		case AccessLevel.PUBLIC:
-			return true
-		case AccessLevel.STUDENT:
-			return accessLevel == AccessLevel.STUDENT || accessLevel == AccessLevel.VOLUNTEER || accessLevel == AccessLevel.ADMIN
-		case AccessLevel.VOLUNTEER:
-			return accessLevel == AccessLevel.VOLUNTEER || accessLevel == AccessLevel.ADMIN
-		case AccessLevel.ADMIN:
-			return accessLevel == AccessLevel.ADMIN
-		default:
-			return false
-	}
-}
+import { pageAccessMap } from "~/permissions"
 
 export default defineNuxtRouteMiddleware((to, from) => {
-	const accessCookie = useCookie("accessLevel")
+	const accessCookie = useCookie("AccessPermission")
+	const permissions = accessCookie.value
+
 	// TODO, handle when navigating back to index page while logged in
 	if (to.path == "/") {
 		return
 	}
+
+	// page does not exist in pageAccessMap
+	if (!pageAccessMap[to.path]) {
+		return navigateTo("/")
+	}
 	// do not have permission to access
-	if (!(pageAccessMap[to.path] && accessCookie.value && canAccess(pageAccessMap[to.path], accessCookie.value))) {
+	const requiredAccessPermission: string = pageAccessMap[to.path]
+	if (!(permissions && typeof(permissions) === 'object' && permissions[requiredAccessPermission])) {
 		return navigateTo("/")
 	}
 })

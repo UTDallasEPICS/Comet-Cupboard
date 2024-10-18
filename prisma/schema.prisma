@@ -9,12 +9,20 @@ datasource db {
 
 model User {
   netID     String     @id @map("net_id")
+  Student   Student?
   Volunteer Volunteer?
   Admin     Admin?
   Cart      Cart?
   Orders    Order[]
 
   @@map("user")
+}
+
+model Student {
+  User  User   @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
+  netID String @id @map("net_id")
+
+  @@map("student")
 }
 
 model Volunteer {
