@@ -19,7 +19,7 @@ const getAllLeafFilePaths = (folder: string, existingPaths: Array<string>) => {
 	return existingPaths
 }
 
-// at this point, it looks like 'pages/cart.vue', want /cart
+// at this point, it looks like 'pages/shopping.vue', want /shopping
 const pages = getAllLeafFilePaths(pageFolder, []).map((route) => {
 	const slashIndex = route.indexOf("/")
 	const extensionIndex = route.lastIndexOf(".")
