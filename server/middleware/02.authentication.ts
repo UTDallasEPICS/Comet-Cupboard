@@ -30,6 +30,7 @@ export default defineEventHandler(async (event) => {
 			}
 			if (user.Admin) {
 				event.context.permissions[AccessPermission.INVENTORY_MANAGEMENT] = true
+				event.context.permissions[AccessPermission.VERIFY_CART] = true
 				event.context.permissions[AccessPermission.DATA] = true
 			}
 		}

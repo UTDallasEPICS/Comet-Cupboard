@@ -11,11 +11,18 @@ const netID = ref("")
 const accessCookie = useCookie("netID")
 
 onMounted(async () => {
-	if(accessCookie.value) {
+	if (accessCookie.value) {
 		await $fetch("/api/updatePermissions", {
 			method: "GET",
 		})
-		await navigateTo("/shopping")
+		const accessCookiePermission = useCookie("AccessPermission")
+		const permissions = accessCookiePermission.value && typeof accessCookiePermission.value === "object" ? accessCookiePermission.value : {}
+		if (permissions["DATA"]) {
+			await navigateTo("/data")
+		}
+		else {
+			await navigateTo("/shopping")
+		}
 	}
 })
 
@@ -31,7 +38,6 @@ const handleSubmit = async () => {
 		refreshCookie("netID")
 		refreshCookie("AccessPermission")
 		reloadNuxtApp()
-		await navigateTo("/shopping")
 	} catch (e) {
 		/* lol */
 	}
