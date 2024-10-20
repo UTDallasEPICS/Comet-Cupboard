@@ -125,13 +125,11 @@ model OrderItem {
 }
 
 model Deal {
-  dealID        Int      @id @map("deal_id")
+  dealID        String      @id @map("deal_id")
   Item          Item     @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
   itemID        String   @map("item_id")
   actualCount   Int      @map("actual_count")
   adjustedCount Int      @map("adjusted_count")
-  startDate     DateTime @map("start_date")
-  endDate       DateTime @map("end_date")
 
   @@map("deal")
 }
