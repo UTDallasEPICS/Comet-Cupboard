@@ -1,7 +1,7 @@
 <template lang="pug">
 div.flex.flex-row.my-4.md_my-8.flex-wrap.md_flex-nowrap.justify-center.md_justify-normal
     div.md_mr-6.lg_mr-12(:class="((currentCartIDPreview === 'No cart chosen') ? 'visible' : 'invisible hidden') + ' md_visible md_block'")
-        p search
+        ControlsSearch( @searchTermChange="(newTerm) => searchTerm = newTerm" ).pb-7
         PendingCartsList(:selectedCart="currentCartIDPreview" @update:select-cart="setCartIDPreview")
     XMarkIcon.ml-auto.mb-4.size-10.stroke-black(:class="((currentCartIDPreview === 'No cart chosen') ? 'invisible hidden': 'visible') + ' md_invisible md_hidden'" @click="resetCartIDPreview")
     CartVerificationPreview(:class="((currentCartIDPreview === 'No cart chosen') ? 'invisible hidden': 'visible') + ' md_visible md_flex'" 
@@ -11,6 +11,8 @@ div.flex.flex-row.my-4.md_my-8.flex-wrap.md_flex-nowrap.justify-center.md_justif
 <script lang="ts" setup>
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 
+
+const searchTerm = ref("");
 const currentCartIDPreview = ref<string>("No cart chosen")
 
 const setCartIDPreview = (cartID: string) => {
