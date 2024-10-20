@@ -14,7 +14,7 @@
                         | Deals
                 ListboxOption.text-center.bg-utd-green.text-white.text-2xl.font-bold.py-2
                     | Categories 
-                ListboxOption( v-for="filter in props.categories" :key="filter.name" :value="filter.name" ).flex.flex-row.p-1.text-center.text-xl.cursor-pointer.text-wrap.hover_bg-cupboard-lg
+                ListboxOption( v-for="filter in categories" :key="filter.name" :value="filter.name" ).flex.flex-row.p-1.text-center.text-xl.cursor-pointer.text-wrap.hover_bg-cupboard-lg
                     div.flex.px-2
                         div.relative.w-6.h-6.place-self-center.rounded-md.bg-utd-green
                             CheckIcon( v-if="selectedFilters.indexOf(filter.name) != -1" ).absolute.inset-0.pointer-events-none.fill-white.stroke-white.h-6
@@ -29,12 +29,7 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headless
 
 const emit = defineEmits(["filterChange"]);
 
-const props = defineProps({
-    categories: {
-        type: Array,
-        required: true,
-    }
-});
+const { data: categories } = await useFetch("/api/page-controls/categories")
 
 const selectedFilters = ref([]);
 

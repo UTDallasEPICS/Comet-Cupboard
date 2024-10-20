@@ -4,7 +4,7 @@ div.flex.flex-row
     div.w-screen
         div.flex.flex-col.md_flex-row.pb-7.max-md_space-y-3.md_space-x-10.sm_text-nowrap
             div.flex.flex-col.md_flex-row.md_space-x-5
-                ControlsFilter( @filterChange="(selectedFilters) => filters = selectedFilters" :categories="categories")
+                ControlsFilter( @filterChange="(selectedFilters) => filters = selectedFilters" )
             div.flex.grow
                 ControlsSearch( @searchTermChange="(newTerm) => searchTerm = newTerm" )
         //- div.flex.flex-row(class="justify-center sm:justify-end sm:pr-4")
@@ -18,8 +18,6 @@ div.flex.flex-row
 </template>
 
 <script lang="ts" setup>
-
-const { data: categories } = await useFetch("/api/page-controls/categories")
 
 const searchTerm = ref("");
 const filters = ref([]);

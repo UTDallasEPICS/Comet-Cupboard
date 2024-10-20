@@ -13,25 +13,17 @@
                 div( v-else )
                     | {{selectedSource}}
             ListboxOptions( class="max-h-[600px] md_max-h-96" ).absolute.top-14.z-10.bg-white.drop-shadow-standard.rounded-xl.w-full.max-h-96.divide-y.divide-cupboard-lg.overflow-y-scroll.no-scrollbar
-                ListboxOption( v-for="source in props.sources" @click="handleSource(source.name)" ).p-1.text-center.text-xl.cursor-pointer.text-wrap.hover_bg-cupboard-lg
+                ListboxOption( v-for="source in sources" @click="handleSource(source.name)" ).p-1.text-center.text-xl.cursor-pointer.text-wrap.hover_bg-cupboard-lg
                     | {{source.name}}
-    button( @click="emit('addItemClick')" ).button.flex.w-24.md_w-12.bg-utd-green.text-white.place-content-center.place-items-center
-        PlusIcon.fill-white.stroke-white.h-7
 </template>
 
 <script lang="ts" setup>
 
-import { PlusIcon } from '@heroicons/vue/24/solid'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
 
-const emit = defineEmits(["sourceChange","addItemClick"]);
+const emit = defineEmits(["sourceChange"]);
 
-const props = defineProps({
-    sources: {
-        type: Array,
-        required: true,
-    }
-});
+const { data: sources } = await useFetch("/api/page-controls/sources")
 
 const selectedSource = ref("");
 
