@@ -10,7 +10,7 @@ div
                     button( @click="addItemsOpen = !addItemsOpen" ).button.flex.w-24.md_w-12.bg-utd-green.text-white.place-content-center.place-items-center
                         PlusIcon.fill-white.stroke-white.h-7
             div.flex.grow
-                ControlsSearch( @searchTermChange="(newTerm) => searchTerm = newTerm" )
+                ControlsSearch( @searchTermChange="(newTerm) => searchTerm = newTerm" resultType="ITEM" )
         div.flex.flex-row.space-x-20
             div
                 | filters = {{filters}}

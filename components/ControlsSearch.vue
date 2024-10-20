@@ -1,16 +1,49 @@
 <template lang="pug">
     div.relative.flex.grow
-        input( v-model="searchTerm" placeholder="Search" ).input.pl-10.w-full
-        MagnifyingGlassIcon.absolute.left-0.top-3.h-7.fill-black.pointer-events-none
+        Combobox( v-model="searchTerm" )
+            ComboboxInput( placeholder="Search" :displayValue="(result) => result.name" @change="query = $event.target.value" ).input.pl-10.w-full
+            ComboboxButton.absolute.left-0.top-3
+                MagnifyingGlassIcon.h-7.fill-black.pointer-events-none
+            ComboboxOptions.absolute.top-14.z-10.bg-white.drop-shadow-standard.rounded-xl.w-full.max-h-96.divide-y.divide-cupboard-lg.overflow-y-scroll.no-scrollbar
+                div( v-if="results.length === 0 || filteredResults.length ===0 && searchTerm != ''" ).p-1.text-center.text-xl.cursor-pointer.text-wrap.hover_bg-cupboard-lg
+                    | No Results
+                ComboboxOption( v-for="result in filteredResults" :key="result.name" :value="result.name" ).p-1.text-center.text-xl.cursor-pointer.text-wrap.hover_bg-cupboard-lg
+                    div( v-if="props.resultType === 'ITEM'" )
+                        | {{result.name}}
+                    div( v-if="props.resultType === 'CART'" )
+                        | {{result.cartID}}
 </template>
 
 <script lang="ts" setup>
-
+import { Combobox, ComboboxInput, ComboboxButton, ComboboxOptions, ComboboxOption } from '@headlessui/vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 
 const emit = defineEmits(["searchTermChange"]);
 
+const props = defineProps({
+    resultType: {
+        type: String,
+        required: true,
+    }
+});
+let results;
+if( props.resultType === 'ITEM' ) {
+    const { data } = await useFetch("/api/page-controls/item-names");
+    results = data;
+}
+if( props.resultType === 'CART' ) {
+    const { data } = await useFetch("/api/page-controls/carts");
+    results = data;
+}
+
 const searchTerm = ref("");
+const query = ref("");
+
+const filteredResults = computed(() =>
+  query.value === ''
+    ? results.value
+    : results.value
+);
 
 // emit searchTerm changes
 watch(searchTerm, () => {

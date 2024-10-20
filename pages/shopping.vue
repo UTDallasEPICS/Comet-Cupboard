@@ -6,7 +6,7 @@ div.flex.flex-row
             div.flex.flex-col.md_flex-row.md_space-x-5
                 ControlsFilter( @filterChange="(selectedFilters) => filters = selectedFilters" )
             div.flex.grow
-                ControlsSearch( @searchTermChange="(newTerm) => searchTerm = newTerm" )
+                ControlsSearch( @searchTermChange="(newTerm) => searchTerm = newTerm" resultType="ITEM" )
         //- div.flex.flex-row(class="justify-center sm:justify-end sm:pr-4")
         //-     CategoryOptions(class="flex visible lg:hidden lg:invisible")
         // ItemsGrid(class="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5")
