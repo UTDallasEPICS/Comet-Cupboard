@@ -22,4 +22,7 @@ div.flex.flex-row
 const searchTerm = ref("");
 const filters = ref([]);
 
+onMounted(async () => {
+	await $fetch("/api/cart/cart", { method: "POST" })
+})
 </script>

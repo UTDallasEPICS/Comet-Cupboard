@@ -1,52 +1,64 @@
-enum AccessLevel {
+enum AccessPermission {
 	PUBLIC = "PUBLIC",
-	STUDENT = "STUDENT",
-	VOLUNTEER = "VOLUNTEER",
-	ADMIN = "ADMIN",
+	SHOPPING = "SHOPPING",
+	SHOPPING_ACTION = "SHOPPING_ACTION",
+	INVENTORY_MANAGEMENT = "INVENTORY_MANAGEMENT",
+	VERIFY_CART = "VERIFY_CART",
+	DATA = "DATA"
 }
 
-const pageAccessMap: { [route: string]: AccessLevel } = {
-	// PUBLIC PAGES
-	"/": AccessLevel.PUBLIC,
-	// STUDENT PAGES
-	"/shopping": AccessLevel.STUDENT,
-	"/questionaire": AccessLevel.STUDENT,
-	// VOLUNTEER PAGES
-	"/inventory-management": AccessLevel.VOLUNTEER,
-	"/verify-cart": AccessLevel.VOLUNTEER,
-	// ADMIN PAGES
-	"/data": AccessLevel.ADMIN,
+const pageAccessMap: { [route: string]: AccessPermission } = {
+	"/": AccessPermission.PUBLIC,
+	"/index": AccessPermission.PUBLIC,
+	"/shopping": AccessPermission.SHOPPING,
+	"/questionaire": AccessPermission.SHOPPING,
+	"/inventory-management": AccessPermission.INVENTORY_MANAGEMENT,
+	"/verify-cart": AccessPermission.VERIFY_CART,
+	"/data": AccessPermission.DATA,
 }
-const apiAccessMap: { [route: string]: { [method: string]: AccessLevel } } = {
-	// PUBLIC APIS
+const apiAccessMap: { [route: string]: { [method: string]: AccessPermission } } = {
 	"/api/login": {
-		POST: AccessLevel.PUBLIC,
+		POST: AccessPermission.PUBLIC,
 	},
-	// // STUDENT APIS
-	"/api/inventory/items": {
-		GET: AccessLevel.STUDENT,
+	"/api/updatePermissions": {
+		GET: AccessPermission.PUBLIC,
 	},
 	"/api/cart/cart": {
-		GET: AccessLevel.STUDENT,
-		POST: AccessLevel.STUDENT,
+		GET: AccessPermission.SHOPPING_ACTION,
+		POST: AccessPermission.SHOPPING_ACTION,
 	},
 	"/api/cart/cartItem": {
-		DELETE: AccessLevel.STUDENT,
+		DELETE: AccessPermission.SHOPPING_ACTION,
+		POST: AccessPermission.SHOPPING_ACTION,
 	},
-	"/api/cart/incrementCartItem": {
-		POST: AccessLevel.STUDENT,
-	},
-	"/api/cart/decrementCartItem": {
-		POST: AccessLevel.STUDENT,
-	},
-	// // VOLUNTEER APIS
 	"/api/inventory/item": {
-		GET: AccessLevel.VOLUNTEER,
-		POST: AccessLevel.VOLUNTEER,
-		PUT: AccessLevel.VOLUNTEER,
-		DELETE: AccessLevel.VOLUNTEER,
+		GET: AccessPermission.SHOPPING,
+		POST: AccessPermission.INVENTORY_MANAGEMENT,
+		PUT: AccessPermission.INVENTORY_MANAGEMENT,
+		DELETE: AccessPermission.INVENTORY_MANAGEMENT,
 	},
-	// ADMIN APIS
+	"/api/inventory/items": {
+		GET: AccessPermission.SHOPPING,
+	},
+	"/api/verification/cartRequestVerification": {
+		POST: AccessPermission.SHOPPING_ACTION
+	},
+	"/api/verification/cartRequestVerificationResponseWaiting": {
+		GET: AccessPermission.SHOPPING_ACTION
+	},
+	"/api/verification/cartVerificationAction": {
+		POST: AccessPermission.VERIFY_CART
+	},
+	"/api/verification/pendingCart": {
+		GET: AccessPermission.VERIFY_CART
+	},
+	"/api/verification/pendingCarts": {
+		GET: AccessPermission.VERIFY_CART
+	},
+	"/api/verification/pendingCartsUpdate": {
+		GET: AccessPermission.VERIFY_CART
+	},
+	// DATA APIS
 }
 
-export { AccessLevel, pageAccessMap, apiAccessMap }
+export { AccessPermission, pageAccessMap, apiAccessMap }

@@ -11,8 +11,8 @@ div.flex.flex-row.my-4.md_my-8.flex-wrap.md_flex-nowrap.justify-center.md_justif
 <script lang="ts" setup>
 import { XMarkIcon } from '@heroicons/vue/24/solid'
 
-const searchTerm = ref("");
 
+const searchTerm = ref("");
 const currentCartIDPreview = ref<string>("No cart chosen")
 
 const setCartIDPreview = (cartID: string) => {

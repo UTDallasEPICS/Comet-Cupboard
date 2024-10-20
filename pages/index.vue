@@ -8,14 +8,36 @@ div.flex.flex-row.items-center.justify-center
 <script lang="ts" setup>
 const netID = ref("")
 
+const accessCookie = useCookie("netID")
+
+onMounted(async () => {
+	if (accessCookie.value) {
+		await $fetch("/api/updatePermissions", {
+			method: "GET",
+		})
+		const accessCookiePermission = useCookie("AccessPermission")
+		const permissions = accessCookiePermission.value && typeof accessCookiePermission.value === "object" ? accessCookiePermission.value : {}
+		if (permissions["DATA"]) {
+			await navigateTo("/data")
+		}
+		else {
+			await navigateTo("/shopping")
+		}
+	}
+})
+
 const handleSubmit = async () => {
 	try {
 		await $fetch("/api/login", {
 			method: "POST",
 			body: { netID: netID.value },
 		})
-        refreshCookie('accessLevel');
-		await navigateTo("/shopping")
+		await $fetch("/api/updatePermissions", {
+			method: "GET",
+		})
+		refreshCookie("netID")
+		refreshCookie("AccessPermission")
+		reloadNuxtApp()
 	} catch (e) {
 		/* lol */
 	}
