@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 			where: {
 				netID: netID,
 			},
-			include: { Student: true, Volunteer: true, Admin: true, Cart: { include: { CartItems: { include: { Item: true } } } } },
+			include: { Student: true, Volunteer: true, Admin: true, Cart: { include: { CartItems: { include: { Item: { include: { Deal: true } } } } } } },
 		})
 
 		if (user) {

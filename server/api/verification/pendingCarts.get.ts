@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
 		where: {
 			pending: true,
 		},
-		include: { CartItems: true },
+		include: { CartItems: { include: { Item: { include: { Deal: true } } } } },
 	})
 	return pendingCarts
 })

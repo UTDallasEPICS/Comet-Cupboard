@@ -31,6 +31,9 @@ export default defineEventHandler(async (event) => {
 	if (!event.context.user.Cart) {
 		throw createError({ statusCode: 404, statusMessage: "User has no active cart" })
 	}
+	if (event.context.user.Cart.pending) {
+		throw createError({ statusCode: 404, statusMessage: "User cart is pending" })
+	}
 	if (
 		(incrementChange < 0 || count != undefined || expiredCount != undefined) &&
 		!event.context.user.Cart.CartItems.find((cartItem) => cartItem.itemID == itemID)
@@ -70,7 +73,7 @@ export default defineEventHandler(async (event) => {
 						itemID: itemID,
 					},
 				},
-				update: {
+				data: {
 					count: count,
 					expiredCount: expiredCount,
 				},
@@ -96,7 +99,7 @@ export default defineEventHandler(async (event) => {
 						itemID: itemID,
 					},
 				},
-				update: {
+				data: {
 					expiredCount: cartItem.count,
 				},
 			})

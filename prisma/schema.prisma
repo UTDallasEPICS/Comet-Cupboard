@@ -52,12 +52,12 @@ model Item {
   Category         Category          @relation(fields: [categoryName], references: [name], onDelete: Restrict, onUpdate: Cascade)
   categoryName     String            @map("category_name")
   quantity         Int               @default(0) @map("quantity")
+  Deal             Deal?
   imgURL           String            @map("img_url")
   archived         Boolean           @default(false) @map("archived")
   ItemCountChanges ItemCountChange[]
   CartItems        CartItem[]
   OrderItems       OrderItem[]
-  Deals            Deal[]
 
   @@map("item")
 }
@@ -125,11 +125,10 @@ model OrderItem {
 }
 
 model Deal {
-  dealID        String      @id @map("deal_id")
-  Item          Item     @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-  itemID        String   @map("item_id")
-  actualCount   Int      @map("actual_count")
-  adjustedCount Int      @map("adjusted_count")
+  Item          Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+  itemID        String @id @map("item_id")
+  actualCount   Int    @map("actual_count")
+  adjustedCount Int    @map("adjusted_count")
 
   @@map("deal")
 }
