@@ -26,13 +26,17 @@ export const pendingCartWarnings = (cart) => {
 	if (cart.CartItems.filter((cartItem) => cartItem.expiredCount > 0).length > 0) {
 		warnings.push("Cart has expired items")
 	}
-	const categories: Array<string> = []
+	const categories: { [key: string]: number } = {}
 	for (let i = 0; i < cart.CartItems.length; i++) {
-		if (categories.find((category) => category == cart.CartItems[i].Item.categoryName)) {
+		if (!categories[cart.CartItems[i].categoryName]) {
+			categories[cart.CartItems[i].categoryName] = 0
+		}
+		categories[cart.CartItems[i].categoryName] += cartItemCountAdjustment(cart.CartItems[i]).count
+
+		if (categories[cart.CartItems[i].categoryName] > 1) {
 			warnings.push("Cart exceeds 1 item per category")
 			break
 		}
-		categories.push(cart.CartItems[i].Item.categoryName)
 	}
 	return warnings
 }
