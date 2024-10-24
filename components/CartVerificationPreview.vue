@@ -2,7 +2,7 @@
 div.w-full.h-min.flex.flex-col.gap-y-4
 	div.h-12.rounded-xl.drop-shadow-standard.flex.flex-row.justify-between.bg-cupboard-lg
 		span.px-4.text-xl.text-left.my-auto {{ cartID }}
-		span.px-4.text-xl.text-right.my-auto QTY: {{ cartAdjustedCount }}
+		span.px-4.text-xl.text-right.my-auto(v-if="cartID != 'No cart chosen'") QTY: {{ cartAdjustedCount }}
 	div.md_border-black.md_border-2.h-full.rounded-xl.drop-shadow-standard.p-4(v-if="cartID != 'No cart chosen'")
 		div.grid.place-items-center.gap-4(style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))")
 			div.w-72.h-8.rounded.flex.flex-row(style="background-color: #FFAB00" v-for="warning in warnings")

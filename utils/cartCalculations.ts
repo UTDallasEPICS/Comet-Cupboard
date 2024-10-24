@@ -28,12 +28,11 @@ export const pendingCartWarnings = (cart) => {
 	}
 	const categories: { [key: string]: number } = {}
 	for (let i = 0; i < cart.CartItems.length; i++) {
-		if (!categories[cart.CartItems[i].categoryName]) {
-			categories[cart.CartItems[i].categoryName] = 0
+		if (!categories[cart.CartItems[i].Item.categoryName]) {
+			categories[cart.CartItems[i].Item.categoryName] = 0
 		}
-		categories[cart.CartItems[i].categoryName] += cartItemCountAdjustment(cart.CartItems[i]).count
-
-		if (categories[cart.CartItems[i].categoryName] > 1) {
+		categories[cart.CartItems[i].Item.categoryName] += cartItemCountAdjustment(cart.CartItems[i]).count
+		if (categories[cart.CartItems[i].Item.categoryName] > 1) {
 			warnings.push("Cart exceeds 1 item per category")
 			break
 		}
