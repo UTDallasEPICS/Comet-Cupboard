@@ -1,8 +1,7 @@
 <template lang="pug">
   div.p-4.w-72
     div.relative
-      div.flex.justify-center
-        img.w-64.h-64.shadow-md.object-cover.rounded-md(:src="imgURL" :alt="name")
+      img.w-64.h-64.shadow-md.object-cover.rounded-md(:src="imgURL" :alt="name")
 
       div(v-if="typeOfCard === 'INVENTORY'")
         div.absolute.top-2.right-2.bg-gray-300.rounded-full.p-3.shadow-md.cursor-pointer.w-13.h-13(@click="toggleDropdown")
@@ -36,7 +35,7 @@
         span.text-xl.font-bold +
 
     div(v-if="typeOfCard === 'SHOPPING'").mt-4
-      button.bg-utd-green.text-white.py-1.rounded-full.w-full(@click="addToCart") Add to Cart
+      button.bg-utd-green.text-white.py-1.rounded-full.w-full.font-semibold(@click="addToCart") Add to Cart
 
     div.mt-3.text-center
       p.text-xl {{ name }}
