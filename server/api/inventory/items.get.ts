@@ -7,7 +7,7 @@ const schema = z.object({
 
 const validateSchema = schema.strict().partial()
 
-// event.context.permissions[AccessPermission.SHOPPING_ACTION]
+// Only people with AccessPermission.INVENTORY_MANAGEMENT are allowed to use getCounts query param to get item quantities
 
 export default defineEventHandler(async (event) => {
 	const queries = await getValidatedQuery(event, (query) => validateSchema.safeParse(query))
