@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
 		data: {
 			pending: true,
 		},
+		include: { CartItems: { include: { Item: { include: { Deal: true } } } } },
 	})
 	if (!cart) {
 		throw createError({ statusCode: 500, statusMessage: "Failed to request cart verification" })

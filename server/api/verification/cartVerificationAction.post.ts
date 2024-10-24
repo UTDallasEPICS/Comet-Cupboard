@@ -5,7 +5,6 @@ import { messageToUser, broadcastToVolunteers } from "~/server/utils/cartVerific
 const schema = z.object({
 	cartID: z.string(),
 	action: z.string(),
-	reason: z.string().default("No reason provided"),
 })
 
 const validateSchema = schema.strict().required()
@@ -15,7 +14,7 @@ export default defineEventHandler(async (event) => {
 	if (!result.success) {
 		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
 	}
-	const { cartID, action, reason } = result.data
+	const { cartID, action } = result.data
 	if (action != "ACCEPT" && action != "REJECT") {
 		throw createError({ statusCode: 400, statusMessage: "Invalid action" })
 	}
@@ -47,7 +46,6 @@ export default defineEventHandler(async (event) => {
 					orderID: nanoid(),
 					netID: cart.cartID,
 					date: new Date(),
-					acceptReason: reason,
 					OrderItems: {
 						create: orderItems,
 					},
@@ -67,10 +65,10 @@ export default defineEventHandler(async (event) => {
 			cartID,
 			JSON.stringify({
 				type: "ACCEPT CART",
-				payload: reason,
+				payload: "Accepted cart",
 			})
 		)
-		return `Successfully accepted cart with reason ${reason}`
+		return `Successfully accepted cart`
 	} else if (action == "REJECT") {
 		const cart = await event.context.prisma.cart.update({
 			where: {
@@ -93,9 +91,9 @@ export default defineEventHandler(async (event) => {
 			cartID,
 			JSON.stringify({
 				type: "REJECT CART",
-				payload: reason,
+				payload: "Rejected cart",
 			})
 		)
-		return `Successfully rejected cart with reason ${reason}`
+		return `Successfully rejected cart`
 	}
 })

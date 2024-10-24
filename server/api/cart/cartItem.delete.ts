@@ -15,6 +15,9 @@ export default defineEventHandler(async (event) => {
 	if (!event.context.user.Cart) {
 		throw createError({ statusCode: 404, statusMessage: "User has no active cart" })
 	}
+	if (event.context.user.Cart.pending) {
+		throw createError({ statusCode: 404, statusMessage: "User cart is pending" })
+	}
 	if (!event.context.user.Cart.CartItems.find((cartItem) => cartItem.itemID == itemID)) {
 		throw createError({ statusCode: 404, statusMessage: "Item not in cart" })
 	}
@@ -26,7 +29,7 @@ export default defineEventHandler(async (event) => {
 			},
 		},
 	})
-	if(!cartItem) {
+	if (!cartItem) {
 		throw createError({ statusCode: 500, statusMessage: "Failed to delete item from cart" })
 	}
 	return "Successfully deleted item from cart"

@@ -40,7 +40,6 @@ const main = async () => {
 	})
 	await prisma.deal.create({
 		data: {
-			dealID: nanoid(),
 			itemID: items[0].itemID,
 			actualCount: 3,
 			adjustedCount: 1,

@@ -9,7 +9,7 @@ div.text-xl
 				span.text-right {{ totalQTY }}
 			div.flex.flex-row.justify-between
 				span.text-left Deals
-				span.text-right.text-red-negative(v-if="dealsCount != 0") {{ dealsCount }}
+				span.text-right.text-red-negative(v-if="dealCount != 0") {{ dealCount }}
 			div.flex.flex-row.justify-between
 				span.text-left Expired
 				span.text-right.text-red-negative(v-if="expiredCount != 0") {{ expiredCount }}
@@ -37,7 +37,7 @@ const props = defineProps({
 		type: Number,
 		required: true,
 	},
-	dealsCount: {
+	dealCount: {
 		type: Number,
 		required: true,
 	},
