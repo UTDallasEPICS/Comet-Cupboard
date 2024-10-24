@@ -17,6 +17,9 @@ export default defineEventHandler(async (event) => {
 		where: {
 			itemID: itemID,
 		},
+		include: {
+			Deal: true,
+		},
 	})
 	if (!item) {
 		throw createError({ statusCode: 500, statusMessage: "Failed to find item" })

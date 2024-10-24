@@ -1,4 +1,3 @@
-import { AccessLevel } from "~/permissions"
 import { z } from "zod"
 
 const schema = z.object({
@@ -24,15 +23,4 @@ export default defineEventHandler(async (event) => {
 		throw createError({ statusCode: 500, statusMessage: "Failed to find user with netID" })
 	}
 	setCookie(event, "netID", netID)
-	// sets cookie for purpose of frontend route guards
-	setCookie(event, "accessLevel", AccessLevel.PUBLIC)
-	if (user) {
-		setCookie(event, "accessLevel", AccessLevel.STUDENT)
-	}
-	if (user.Volunteer) {
-		setCookie(event, "accessLevel", AccessLevel.VOLUNTEER)
-	}
-	if (user.Admin) {
-		setCookie(event, "accessLevel", AccessLevel.ADMIN)
-	}
 })

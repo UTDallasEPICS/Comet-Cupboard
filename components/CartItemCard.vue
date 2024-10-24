@@ -33,6 +33,10 @@ const props = defineProps({
 		type: Number,
 		required: true,
 	},
+	expiredCount: {
+		type: Number,
+		required: true,
+	},
 	editMode: {
 		type: Boolean,
 		required: true,
@@ -40,17 +44,17 @@ const props = defineProps({
 })
 
 const incrementCartItem = async () => {
-	await $fetch("/api/cart/incrementCartItem", {
+	await $fetch("/api/cart/cartItem", {
 		method: "POST",
-		body: { itemID: props.itemID },
+		body: { itemID: props.itemID, incrementChange: 1 },
 	})
 	emit("update:cart")
 }
 
 const decrementCartItem = async () => {
-	await $fetch("/api/cart/decrementCartItem", {
+	await $fetch("/api/cart/cartItem", {
 		method: "POST",
-		body: { itemID: props.itemID },
+		body: { itemID: props.itemID, incrementChange: -1 },
 	})
 	emit("update:cart")
 }
