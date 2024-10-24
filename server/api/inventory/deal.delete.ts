@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 	}
 	const { itemID } = result.data
 
-	const deal = await event.context.prisma.item.delete({
+	const deal = await event.context.prisma.deal.delete({
 		where: {
 			itemID: itemID,
 		},
