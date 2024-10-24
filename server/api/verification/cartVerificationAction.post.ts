@@ -41,6 +41,18 @@ export default defineEventHandler(async (event) => {
 			const orderItems = cart.CartItems.map((cartItem) => {
 				return { itemID: cartItem.itemID, count: cartItem.count }
 			})
+
+			orderItems.forEach(async (orderItem) => {
+				await tx.item.update({
+					where: {
+						itemID: orderItem.itemID,
+					},
+					data: {
+						quantity: { decrement: orderItem.count },
+					},
+				})
+			})
+
 			await tx.order.create({
 				data: {
 					orderID: nanoid(),

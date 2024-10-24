@@ -16,7 +16,7 @@ div.sticky.top-0.z-50.min-h-20.overscroll-none.bg-utd-green.content-center
                 div(v-if="permissions['INVENTORY_MANAGEMENT']").inline-flex.max-sm_hidden
                     NuxtLink(:to="inventoryPath").cursor-pointer.text-nowrap
                         | Inventory Management
-                div(v-if="permissions['DATA']").inline-flex.max-sm_hidden
+                div(v-if="permissions['ADMIN']").inline-flex.max-sm_hidden
                     NuxtLink(:to="dataPath").cursor-pointer.text-nowrap
                         | Data
             div.flex.flex-row.space-x-5 
@@ -44,13 +44,12 @@ div(v-show="mobileNav").sticky.top-20.z-40.flex-grow.h-screen.w-screen.bg-utd-gr
         div(v-if="permissions['INVENTORY_MANAGEMENT']").flex.justify-center.text-2xl.font-semibold
             NuxtLink(:to="inventoryPath", @click="mobileNav = false").cursor-pointer
                 | Inventory Management
-        div(v-if="permissions['DATA']").flex.justify-center.text-2xl.font-semibold
+        div(v-if="permissions['ADMIN']").flex.justify-center.text-2xl.font-semibold
             NuxtLink(:to="dataPath", @click="mobileNav = false").cursor-pointer
                 | Data
 </template>
 
 <script lang="ts" setup>
-import type { AccessPermission } from "~/permissions"
 import { Bars3Icon, ShoppingBagIcon, UserIcon, XMarkIcon } from "@heroicons/vue/24/solid"
 
 const accessCookie = useCookie("AccessPermission")

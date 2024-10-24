@@ -17,7 +17,7 @@ onMounted(async () => {
 		})
 		const accessCookiePermission = useCookie("AccessPermission")
 		const permissions = accessCookiePermission.value && typeof accessCookiePermission.value === "object" ? accessCookiePermission.value : {}
-		if (permissions["DATA"]) {
+		if (permissions["ADMIN"]) {
 			await navigateTo("/data")
 		}
 		else {
