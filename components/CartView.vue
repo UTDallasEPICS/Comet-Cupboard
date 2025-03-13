@@ -65,8 +65,11 @@ div.w-full.sm_w-80.drop-shadow-standard.bg-white.flex.flex-col.text-xl
 <script setup lang="ts">
 import { XMarkIcon, CheckIcon } from "@heroicons/vue/24/solid"
 import { useCartStore } from "~/stores/cart"
+import { storeToRefs } from "pinia"
 
-const { cartItems, cartTotalCount, cartAdjustedCount, pending, getCart } = useCartStore()
+const store = useCartStore()
+const { getCart } = store
+const { cartItems, cartTotalCount, cartAdjustedCount, pending } = storeToRefs(store)
 
 const markExpiredItems = ref(false)
 const currentModal = ref("")
