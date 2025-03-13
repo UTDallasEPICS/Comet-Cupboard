@@ -27,8 +27,8 @@ logs
 *.db
 *.db-journal
 
+# Migrations for now
+prisma/migrations
+
 # Test images for database seeding
-*/test-images/*.png
-*/test-images/*.jpg
-*/test-images/*.jpeg
 images
