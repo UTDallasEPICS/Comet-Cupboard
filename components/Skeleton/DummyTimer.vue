@@ -1,4 +1,6 @@
-<template lang="pug"></template>
+<template lang="pug">
+div
+</template>
 
 <script lang="ts" setup>
 const milliseconds: number = 300
