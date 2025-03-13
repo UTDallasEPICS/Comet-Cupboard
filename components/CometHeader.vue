@@ -91,7 +91,6 @@ const adminDashboardPath = "/admin-dashboard"
 
 // get the route to check if the user is on the shopping page
 watch(route, () => {
-	console.log("refreshed header route")
 	page.value = route.fullPath
 })
 

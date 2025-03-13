@@ -139,7 +139,6 @@ const updateItemChangeAmount = (itemID, amountChange) => {
 }
 
 const submitInventoryCountChanges = async () => {
-	console.log(source.value)
 	await $fetch("/api/inventory/itemCountChanges", {
 		method: "POST",
 		body: {

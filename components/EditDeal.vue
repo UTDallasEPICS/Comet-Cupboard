@@ -64,17 +64,14 @@ const checkInput = () => {
 
 	if (actualCount.value === "X" || actualCount.value === "") {
 		invalidActualCount.value = true
-		console.log("actualCount not defined")
 		alertText = "The actual count must be a number"
 	}
 	if (actualCount.value !== "" && !isNaN(actualCount.value) && actualCount.value < 1) {
 		invalidActualCount.value = true
-		console.log("actualCount value too low")
 		alertText = "The actual count must greater than zero"
 	}
 	if (adjustedCount.value === "Y" || adjustedCount.value === "") {
 		invalidAdjustedCount.value = true
-		console.log("adjustedCount not defined")
 		if (alertText === "") {
 			alertText += "The adjusted count must be a number"
 		} else {
@@ -83,7 +80,6 @@ const checkInput = () => {
 	}
 	if (!isNaN(adjustedCount.value) && adjustedCount.value < 0) {
 		invalidAdjustedCount.value = true
-		console.log("adjustedCount value too low")
 		if (alertText === "") {
 			alertText += "The adjusted count must be positive"
 		} else {
@@ -93,7 +89,6 @@ const checkInput = () => {
 	if (!isNaN(actualCount.value) && !isNaN(adjustedCount.value) && actualCount.value <= adjustedCount.value) {
 		invalidActualCount.value = true
 		invalidAdjustedCount.value = true
-		console.log("actualCount cannot be less than adjustedCount")
 		alertText = "The actual count must be greater than the adjusted count"
 	}
 	alertText += "."
