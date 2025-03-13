@@ -48,7 +48,7 @@ const emit = defineEmits(["submit"])
 
 const itemName = ref(props.item.name || null)
 const imageFile = ref<File | null>(null)
-const imageUrl = ref(props.item.imgName || null)
+const imageUrl = ref(`api/image/${props.item.imgName}`)
 const selectedCategory = ref(props.item.categoryName || null)
 
 const { data: categories } = await useFetch("/api/controls/categories")
@@ -57,7 +57,7 @@ watch(imageFile, (newFile) => {
 	if (newFile) {
 		imageUrl.value = URL.createObjectURL(newFile)
 	} else {
-		imageUrl.value = null
+		imageUrl.value = `api/image/${props.item.imgName}`
 	}
 })
 

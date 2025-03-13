@@ -24,10 +24,8 @@ div.sticky.top-0.z-50
 						NuxtLink(:to="adminDashboardPath").cursor-pointer.text-nowrap
 							| Admin Dashboard
 				div.flex.flex-row.space-x-1.tn_space-x-2.sm_space-x-4
-					button(v-if="page === shoppingPath" style="text-decoration-color: white" @click="cartView = !cartView").hover_underline
+					button(v-if="page === shoppingPath" style="text-decoration-color: white" @click="toggleCartView").hover_underline
 						ShoppingBagIcon.size-10.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
-					TransitionsSlideLeft
-						CartView(v-if="cartView" @closeCartView="cartView = false").fixed.z-50.right-0.top-20.bottom-0
 					// for now this is a link to the sign in page (test + nowhere else yet)
 					button(@click="logout").cursor-pointer
 						ArrowRightStartOnRectangleIcon.size-10.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
@@ -68,11 +66,12 @@ div.sticky.top-0.z-50
 
 <script lang="ts" setup>
 import { Bars3Icon, ShoppingBagIcon, ArrowRightStartOnRectangleIcon, XMarkIcon } from "@heroicons/vue/24/solid"
+import { useCartStore } from "~/stores/cart"
+
+const { toggleCartView } = useCartStore()
 
 const accessCookie = ref(useCookie("AccessPermission"))
 const permissions = ref(accessCookie.value && typeof accessCookie.value === "object" ? accessCookie.value : {})
-// flag for if the cart view is open
-const cartView = ref(false)
 // flag for if the mobile navigation menu is open
 const mobileNav = ref(false)
 const route = useRoute()

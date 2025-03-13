@@ -2,6 +2,16 @@ import { defineStore } from "pinia"
 
 export const useCartStore = defineStore("cart", () => {
 	const cart = ref({})
+	const cartView = ref(false)
+
+	const resetCartView = () => {
+		cartView.value = false
+	}
+
+	const toggleCartView = () => {
+		cartView.value = !cartView.value
+	}
+
 	const getCart = async () => {
 		try {
 			cart.value = await $fetch("/api/cart/cart")
@@ -38,5 +48,5 @@ export const useCartStore = defineStore("cart", () => {
 		return false
 	})
 
-	return { cart, cartItems, cartTotalCount, cartAdjustedCount, pending, getCart }
+	return { cart, cartView, cartItems, cartTotalCount, cartAdjustedCount, pending, getCart, toggleCartView, resetCartView }
 })
