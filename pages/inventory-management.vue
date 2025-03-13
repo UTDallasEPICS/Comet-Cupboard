@@ -10,20 +10,20 @@ div
 						div.flex.flex-col.md_flex-row.md_space-x-5
 							ControlsFilter(@filterChange="(selectedFilters) => (filters = selectedFilters)")
 							div.max-md_order-first.flex.flex-row.space-x-5.max-md_pb-3
-								button(@click="currentModal = Modal.ADD").button.flex.w-24.md_w-12.bg-utd-green.text-white.place-content-center.place-items-center
+								button(@click="currentModal = ModalType.ADD").button.flex.w-24.md_w-12.bg-utd-green.text-white.place-content-center.place-items-center
 									PlusIcon.fill-white.stroke-white.h-7
 						div.flex.grow
 							ControlsSearch(@searchTermChange="(newTerm) => searchTermChange(newTerm)")
 
-					Modal(v-if="currentModal == Modal.ADD" title="Add Item" @toggleModal="closeModal")
+					Modal(v-if="currentModal == ModalType.ADD" title="Add Item" @toggleModal="closeModal")
 						AddItem(@submit="closeModal")
-					Modal(v-if="currentModal == Modal.EDIT" title="Edit Item" @toggleModal="closeModal")
+					Modal(v-if="currentModal == ModalType.EDIT" title="Edit Item" @toggleModal="closeModal")
 						EditItem(@submit="closeModal" :item="editingItem")
-					Modal(v-if="currentModal == Modal.DELETE" title="Remove Item" @toggleModal="closeModal")
+					Modal(v-if="currentModal == ModalType.DELETE" title="Remove Item" @toggleModal="closeModal")
 						DeleteItem(@submit="closeModal" :item="deleteItem")
-					Modal(v-if="currentModal == Modal.DEAL" title="Item Deal" @toggleModal="closeModal")
+					Modal(v-if="currentModal == ModalType.DEAL" title="Item Deal" @toggleModal="closeModal")
 						EditDeal(@submit="closeModal" :item="dealItem")
-					Modal(v-if="currentModal == Modal.REVIEW" title="Review Changes" @toggleModal="closeModal")
+					Modal(v-if="currentModal == ModalType.REVIEW" title="Review Changes" @toggleModal="closeModal")
 						InventoryReviewChanges(@accept="submitInventoryCountChanges" @cancel="closeModal" :changes="inventoryCountChanges")
 
 					CategoryItemsGrid(v-for="category in Object.keys(filteredCategoryItems)" :headingName="category").my-4
@@ -43,11 +43,8 @@ div
 						)
 					// submit button
 					div.sticky.bottom-8.z-20.flex.justify-end.pointer-events-none
-						button(v-if="source === ''").button.bg-red-negative.text-white.w-full.sm_w-72.cursor-not-allowed.pointer-events-auto No Source Selected
-						button(
-							v-else-if="JSON.stringify(inventoryCountChanges) === '{}'"
-						).button.bg-red-negative.text-white.w-full.sm_w-72.cursor-not-allowed.pointer-events-auto No Changes
-						button(v-else @click="reviewChangesOpen = !reviewChangesOpen").button.bg-utd-green.text-white.w-full.sm_w-72.pointer-events-auto Review Changes
+						button(v-if="JSON.stringify(inventoryCountChanges) === '{}'").button.bg-red-negative.text-white.w-full.sm_w-72.cursor-not-allowed.pointer-events-auto No Changes
+						button(v-else @click="currentModal = ModalType.REVIEW").button.bg-utd-green.text-white.w-full.sm_w-72.pointer-events-auto Review Changes
 						button(class="w-[50px]" @click="scrollToTop").button.bg-utd-green.text-white.drop-shadow-standard.pointer-events-auto
 							ChevronUpIcon.m-auto.h-6.fill-white.stroke-white
 		//- Skeleton
@@ -86,14 +83,13 @@ import { PlusIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
 
 const searchTerm = ref("")
 const filters = ref([])
-const source = ref("")
 const inventoryCountChanges = ref({})
 const currentModal = ref("")
 const editingItem = ref(null)
 const deleteItem = ref(null)
 const dealItem = ref(null)
 
-const Modal = Object.freeze({
+const ModalType = Object.freeze({
 	ADD: "ADD",
 	EDIT: "EDIT",
 	DELETE: "DELETE",
@@ -141,11 +137,11 @@ const updateItemChangeAmount = (itemID, amountChange) => {
 	}
 }
 
-const submitInventoryCountChanges = async () => {
+const submitInventoryCountChanges = async (source) => {
 	await $fetch("/api/inventory/itemCountChanges", {
 		method: "POST",
 		body: {
-			source: source.value,
+			source: source,
 			inventoryCountChanges: Object.keys(inventoryCountChanges.value).map((itemKey) => {
 				return { itemID: itemKey, countChange: inventoryCountChanges.value[itemKey] }
 			}),
@@ -164,16 +160,16 @@ const closeModal = () => {
 
 const openEditForm = (item, category) => {
 	editingItem.value = { ...item, categoryName: category }
-	currentModal.value = Modal.EDIT
+	currentModal.value = ModalType.EDIT
 }
 
 const openDeleteForm = (item) => {
 	deleteItem.value = { ...item }
-	currentModal.value = Modal.DELETE
+	currentModal.value = ModalType.DELETE
 }
 
 const openDealForm = (item, category) => {
 	dealItem.value = { ...item, categoryName: category }
-	currentModal.value = Modal.DEAL
+	currentModal.value = ModalType.DEAL
 }
 </script>
