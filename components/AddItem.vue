@@ -1,7 +1,7 @@
 <template lang="pug">
 div.px-5.overflow-y-scroll.overscroll-contain
 	div.flex.flex-col.sm_flex-row.justify-center.items-center.sm_space-x-10.mt-7.mb-12
-		div.relative.z-10.flex.flex-col.max-w-52.max-h-52.min-w-52.min-h-52.bg-gray-300.items-center.justify-center.rounded.cursor-pointer
+		div.relative.z-10.flex.flex-col.max-w-52.max-h-52.min-w-52.min-h-52.bg-gray-300.items-center.justify-center.rounded
 			img(v-if="imageUrl" :src="imageUrl").absolute.inset-0.w-full.h-full.object-cover.rounded
 			label(
 				:class="{ 'bg-gray-500 bg-opacity-60': imageUrl }"

@@ -21,7 +21,7 @@ div
 								:name="item.name"
 							)
 				div.sticky.bottom-5.flex.justify-end
-					button(v-on:click="scrollToTop").button(class="w-[50px]").bg-utd-green.text-white.drop-shadow-standard.pointer-events-auto
+					button(class="w-[50px]" @click="scrollToTop").button.bg-utd-green.text-white.drop-shadow-standard.pointer-events-auto
 						ChevronUpIcon.m-auto.h-6.fill-white.stroke-white
 
 		//- Skeleton - change as needed when UI changes, hardcoded here to reduce maintaining skeleton components

@@ -8,23 +8,23 @@ div.sticky.top-0.z-50
 				img(src="/CometCupboardLogo1.png").h-14
 				// desktop navigation links
 				div.flex-grow.flex-row.space-x-10.overflow-x-scroll.no-scrollbar.items-center.left-left.text-3xl.font-bold.text-white.text-nowrap
-					div(v-if="permissions['SHOPPING']").inline-flex(style="text-decoration-color: white").max-sm_hidden.hover_underline
+					div(v-if="permissions['SHOPPING']" style="text-decoration-color: white").inline-flex.max-sm_hidden.hover_underline
 						NuxtLink(:to="shoppingPath").cursor-pointer.text-nowrap
 							| Shopping
-					div(v-if="permissions['VERIFY_CART']").inline-flex(style="text-decoration-color: white").max-sm_hidden.hover_underline
+					div(v-if="permissions['VERIFY_CART']" style="text-decoration-color: white").inline-flex.max-sm_hidden.hover_underline
 						NuxtLink(:to="verifyPath").cursor-pointer.text-nowrap
 							| Verify Carts
-					div(v-if="permissions['INVENTORY_MANAGEMENT']").inline-flex(style="text-decoration-color: white").max-sm_hidden.hover_underline
+					div(v-if="permissions['INVENTORY_MANAGEMENT']" style="text-decoration-color: white").inline-flex.max-sm_hidden.hover_underline
 						NuxtLink(:to="inventoryPath").cursor-pointer.text-nowrap
 							| Inventory Management
-					div(v-if="permissions['ADMIN']").inline-flex(style="text-decoration-color: white").max-sm_hidden.hover_underline
+					div(v-if="permissions['ADMIN']" style="text-decoration-color: white").inline-flex.max-sm_hidden.hover_underline
 						NuxtLink(:to="dataPath").cursor-pointer.text-nowrap
 							| Data
-					div(v-if="permissions['ADMIN']").inline-flex.max-sm_hidden.hover_underline
+					div(v-if="permissions['ADMIN']" style="text-decoration-color: white").inline-flex.max-sm_hidden.hover_underline
 						NuxtLink(:to="adminDashboardPath").cursor-pointer.text-nowrap
 							| Admin Dashboard
 				div.flex.flex-row.space-x-1.tn_space-x-2.sm_space-x-4
-					button(v-if="page === shoppingPath" @click="cartView = !cartView").hover_underline(style="text-decoration-color: white")
+					button(v-if="page === shoppingPath" style="text-decoration-color: white" @click="cartView = !cartView").hover_underline
 						ShoppingBagIcon.size-10.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
 					TransitionsSlideLeft
 						CartView(v-if="cartView" @closeCartView="cartView = false").fixed.z-50.right-0.top-20.bottom-0

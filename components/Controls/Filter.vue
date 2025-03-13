@@ -10,7 +10,7 @@ div.flex.relative
 			ListboxOptions(
 				class="max-h-[600px]"
 			).md_max-h-96.absolute.top-14.z-30.bg-white.drop-shadow-standard.rounded-xl.w-full.divide-y.divide-cupboard-lg.overflow-y-scroll.overflow-x-hidden.overscroll-contain
-				ListboxOption(disabled="true").text-center.rounded-t-xl.bg-utd-green.text-white.text-2xl.font-bold.py-2
+				ListboxOption(disabled).text-center.rounded-t-xl.bg-utd-green.text-white.text-2xl.font-bold.py-2
 					| Deals
 				ListboxOption(value="Deals").flex.flex-row.p-1.text-center.text-xl.cursor-pointer.hover_bg-cupboard-lg
 					div.flex.px-2
@@ -18,7 +18,7 @@ div.flex.relative
 							CheckIcon(v-show="selectedFilters.indexOf('Deals') != -1").absolute.inset-0.pointer-events-none.fill-white.stroke-white.h-6
 					div.grow
 						| Deals
-				ListboxOption(disabled="true").text-center.bg-utd-green.text-white.text-2xl.font-bold.py-2
+				ListboxOption(disabled).text-center.bg-utd-green.text-white.text-2xl.font-bold.py-2
 					| Categories
 				ListboxOption(
 					v-for="filter in categories"

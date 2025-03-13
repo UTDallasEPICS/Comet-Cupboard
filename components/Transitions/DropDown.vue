@@ -6,6 +6,7 @@ Transition(
 	leave-active-class="transition duration-75 ease-in pointer-events-none"
 	leave-from-class="transform translate-y-0 opacity-100"
 	leave-to-class="transform -translate-y-3 opacity-0"
+	appear
 )
 	slot
 </template>

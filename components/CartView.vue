@@ -30,49 +30,56 @@ div.w-full.sm_w-80.drop-shadow-standard.bg-white.flex.flex-col.text-xl
 			div(class="h-[1px]").bg-black
 
 			// Pending Review Pop-Up
-			Modal(title="Pending Review" @toggleModal="pendingModalOpen = false" :isOpen="pendingModalOpen")
+			Modal(v-if="currentModal == ModalType.PENDING" title="Pending Review" @toggleModal="closeModal")
 				div.flex.flex-col.p-5
 					div.text-xl.h-20
 						| Your cart has been submitted, please take it to a volunteer for review.
 					div.flex.flex-row.mt-auto
 						button(@click="retractCart").modal-button.bg-utd-orange.text-white.ml-auto.w-full.sm_w-32.mr-5
 							| Edit Cart
-						button(@click="pendingModalOpen = false").modal-button.bg-utd-green.text-white.w-full.sm_w-32
+						button(@click="closeModal").modal-button.bg-utd-green.text-white.w-full.sm_w-32
 							| Close
 
 			// Rejected Pop-Up
-			Modal(title="Cart Rejected" @toggleModal="rejectedModalOpen = false" :isOpen="rejectedModalOpen")
+			Modal(v-if="currentModal == ModalType.REJECTED" title="Cart Rejected" @toggleModal="closeModal")
 				div.flex.flex-col.p-5
 					div.text-xl.h-20
 						| Your cart has been rejected, possible reasons include:
 					div.flex.flex-row.mt-auto
-						button(@click="rejectedModalOpen = false").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
+						button(@click="closeModal").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
 							| Close
 
 			// Accepted Pop-Up
-			Modal(title="Cart Accepted" @toggleModal="acceptedModalOpen = false" :isOpen="acceptedModalOpen")
+			Modal(v-if="currentModal == ModalType.ACCEPTED" title="Cart Accepted" @toggleModal="closeModal")
 				div.flex.flex-col.p-5
 					div.text-xl.h-20
 						| Your cart has been approved!
 					div.flex.flex-row.mt-auto
-						button(@click="acceptedModalOpen = false").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
+						button(@click="closeModal").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
 							| Close
 
-			button(v-if="pending" @click="pendingModalOpen = true").bg-utd-green.text-white.w-full.button Pending Cart...
+			button(v-if="pending" @click="currentModal = ModalType.PENDING").bg-utd-green.text-white.w-full.button Pending Cart...
 			button(v-else @click="submitCart").button.bg-utd-green.text-white.w-full Submit Cart
 </template>
 
 <script setup lang="ts">
 import { XMarkIcon, CheckIcon } from "@heroicons/vue/24/solid"
 import { useCartStore } from "~/stores/cart"
+import { storeToRefs } from "pinia"
 
-const { cartItems, cartTotalCount, cartAdjustedCount, pending, getCart } = useCartStore()
+const store = useCartStore()
+const { getCart } = store
+const { cartItems, cartTotalCount, cartAdjustedCount, pending } = storeToRefs(store)
 
 const markExpiredItems = ref(false)
-const pendingModalOpen = ref(false)
-const acceptedModalOpen = ref(false)
-const rejectedModalOpen = ref(false)
+const currentModal = ref("")
 const verificationUpdate = ref<EventSource>()
+
+const ModalType = Object.freeze({
+	PENDING: "PENDING",
+	ACCEPTED: "ACCEPTED",
+	REJECTED: "REJECTED",
+})
 
 if (import.meta.client) {
 	// change this to use env later
@@ -82,14 +89,10 @@ if (import.meta.client) {
 		// put a better response as to accepted or declined cart later
 		const { type, payload } = JSON.parse(event.data)
 		if (type === "REJECT CART") {
-			pendingModalOpen.value = false
-			acceptedModalOpen.value = false
-			rejectedModalOpen.value = true
+			currentModal.value = ModalType.REJECTED
 		}
 		if (type === "ACCEPT CART") {
-			pendingModalOpen.value = false
-			acceptedModalOpen.value = true
-			rejectedModalOpen.value = false
+			currentModal.value = ModalType.ACCEPTED
 		}
 		await getCart()
 	}
@@ -109,12 +112,16 @@ const toggleMarkExpiredItems = async () => {
 const submitCart = async () => {
 	await $fetch("/api/verification/cartRequestVerification", { method: "POST" })
 	await getCart()
-	pendingModalOpen.value = true
+	currentModal.value = ModalType.PENDING
 }
 
 const retractCart = async () => {
-	pendingModalOpen.value = false
 	await $fetch("/api/verification/retractCart", { method: "PUT" })
+	closeModal()
+}
+
+const closeModal = () => {
+	currentModal.value = ""
 }
 
 onMounted(async () => {

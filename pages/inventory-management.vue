@@ -10,21 +10,21 @@ div
 						div.flex.flex-col.md_flex-row.md_space-x-5
 							ControlsFilter(@filterChange="(selectedFilters) => (filters = selectedFilters)")
 							div.max-md_order-first.flex.flex-row.space-x-5.max-md_pb-3
-								button(@click="addItemsOpen = !addItemsOpen").button.flex.w-24.md_w-12.bg-utd-green.text-white.place-content-center.place-items-center
+								button(@click="currentModal = ModalType.ADD").button.flex.w-24.md_w-12.bg-utd-green.text-white.place-content-center.place-items-center
 									PlusIcon.fill-white.stroke-white.h-7
 						div.flex.grow
 							ControlsSearch(@searchTermChange="(newTerm) => searchTermChange(newTerm)")
 
-					Modal(title="Add Item" @toggleModal="addItemsOpen = false" :isOpen="addItemsOpen")
-						AddItem(title="AddItem" @submit="submitAdd()")
-					Modal(title="Edit Item" @toggleModal="editItemsOpen = false" :isOpen="editItemsOpen")
-						EditItem(title="Edit Item" @submit="submitEdit()" :item="editingItem")
-					Modal(title="Remove Item" @toggleModal="deleteItemsOpen = false" :isOpen="deleteItemsOpen")
-						DeleteItem(title="Remove Item" @submit="submitDelete()" :item="deleteItem")
-					Modal(title="Item Deal" @toggleModal="dealItemsOpen = false" :isOpen="dealItemsOpen")
-						EditDeal(title="Item Deal" @submit="submitDeal()" :item="dealItem")
-					Modal(title="Review Changes" @toggleModal="reviewChangesOpen = false" :isOpen="reviewChangesOpen")
-						InventoryReviewChanges(@accept="submitInventoryCountChanges" @cancel="reviewChangesOpen = false" :changes="inventoryCountChanges")
+					Modal(v-if="currentModal == ModalType.ADD" title="Add Item" @toggleModal="closeModal")
+						AddItem(@submit="closeModal")
+					Modal(v-if="currentModal == ModalType.EDIT" title="Edit Item" @toggleModal="closeModal")
+						EditItem(@submit="closeModal" :item="editingItem")
+					Modal(v-if="currentModal == ModalType.DELETE" title="Remove Item" @toggleModal="closeModal")
+						DeleteItem(@submit="closeModal" :item="deleteItem")
+					Modal(v-if="currentModal == ModalType.DEAL" title="Item Deal" @toggleModal="closeModal")
+						EditDeal(@submit="closeModal" :item="dealItem")
+					Modal(v-if="currentModal == ModalType.REVIEW" title="Review Changes" @toggleModal="closeModal")
+						InventoryReviewChanges(@accept="submitInventoryCountChanges" @cancel="closeModal" :changes="inventoryCountChanges")
 
 					CategoryItemsGrid(v-for="category in Object.keys(filteredCategoryItems)" :headingName="category").my-4
 						ItemCard(
@@ -43,12 +43,9 @@ div
 						)
 					// submit button
 					div.sticky.bottom-8.z-20.flex.justify-end.pointer-events-none
-						button(v-if="source === ''").button.bg-red-negative.text-white.w-full.sm_w-72.cursor-not-allowed.pointer-events-auto No Source Selected
-						button(
-							v-else-if="JSON.stringify(inventoryCountChanges) === '{}'"
-						).button.bg-red-negative.text-white.w-full.sm_w-72.cursor-not-allowed.pointer-events-auto No Changes
-						button(v-else @click="reviewChangesOpen = !reviewChangesOpen").button.bg-utd-green.text-white.w-full.sm_w-72.pointer-events-auto Review Changes
-						button(v-on:click="scrollToTop").button(class="w-[50px]").bg-utd-green.text-white.drop-shadow-standard.pointer-events-auto
+						button(v-if="JSON.stringify(inventoryCountChanges) === '{}'").button.bg-red-negative.text-white.w-full.sm_w-72.cursor-not-allowed.pointer-events-auto No Changes
+						button(v-else @click="currentModal = ModalType.REVIEW").button.bg-utd-green.text-white.w-full.sm_w-72.pointer-events-auto Review Changes
+						button(class="w-[50px]" @click="scrollToTop").button.bg-utd-green.text-white.drop-shadow-standard.pointer-events-auto
 							ChevronUpIcon.m-auto.h-6.fill-white.stroke-white
 		//- Skeleton
 		template(#fallback)
@@ -86,25 +83,27 @@ import { PlusIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
 
 const searchTerm = ref("")
 const filters = ref([])
-const source = ref("")
 const inventoryCountChanges = ref({})
-const addItemsOpen = ref(false)
-
+const currentModal = ref("")
 const editingItem = ref(null)
-const editItemsOpen = ref(false)
-const reviewChangesOpen = ref(false)
 const deleteItem = ref(null)
-const deleteItemsOpen = ref(false)
 const dealItem = ref(null)
-const dealItemsOpen = ref(false)
 
-const scrollToTop = (): void => {
-	window.scrollTo({ top: 0, behavior: "smooth" })
-}
+const ModalType = Object.freeze({
+	ADD: "ADD",
+	EDIT: "EDIT",
+	DELETE: "DELETE",
+	DEAL: "DEAL",
+	REVIEW: "REVIEW",
+})
 
 const { data: items, refresh } = await useFetch("/api/inventory/items", {
 	query: { getCounts: true },
 })
+
+const scrollToTop = (): void => {
+	window.scrollTo({ top: 0, behavior: "smooth" })
+}
 
 const filteredCategoryItems = computed(() => {
 	const categoryFilters = filters.value.filter((filter) => filter !== "Deals")
@@ -138,55 +137,39 @@ const updateItemChangeAmount = (itemID, amountChange) => {
 	}
 }
 
-const submitInventoryCountChanges = async () => {
+const submitInventoryCountChanges = async (source) => {
 	await $fetch("/api/inventory/itemCountChanges", {
 		method: "POST",
 		body: {
-			source: source.value,
+			source: source,
 			inventoryCountChanges: Object.keys(inventoryCountChanges.value).map((itemKey) => {
 				return { itemID: itemKey, countChange: inventoryCountChanges.value[itemKey] }
 			}),
 		},
 	})
 	inventoryCountChanges.value = {}
-	reviewChangesOpen.value = false
+	currentModal.value = ""
 	refresh()
 }
 
 // modal controls
-
-const submitAdd = () => {
-	addItemsOpen.value = false
+const closeModal = () => {
+	currentModal.value = ""
 	refresh()
 }
 
 const openEditForm = (item, category) => {
 	editingItem.value = { ...item, categoryName: category }
-	editItemsOpen.value = true
-}
-
-const submitEdit = () => {
-	editItemsOpen.value = false
-	refresh()
+	currentModal.value = ModalType.EDIT
 }
 
 const openDeleteForm = (item) => {
 	deleteItem.value = { ...item }
-	deleteItemsOpen.value = true
-}
-
-const submitDelete = () => {
-	deleteItemsOpen.value = false
-	refresh()
+	currentModal.value = ModalType.DELETE
 }
 
 const openDealForm = (item, category) => {
 	dealItem.value = { ...item, categoryName: category }
-	dealItemsOpen.value = true
-}
-
-const submitDeal = () => {
-	dealItemsOpen.value = false
-	refresh()
+	currentModal.value = ModalType.DEAL
 }
 </script>
