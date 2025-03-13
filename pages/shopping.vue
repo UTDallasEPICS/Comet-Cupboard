@@ -23,6 +23,36 @@ div
 				div.sticky.bottom-5.flex.justify-end
 					button(class="w-[50px]" @click="scrollToTop").button.bg-utd-green.text-white.drop-shadow-standard.pointer-events-auto
 						ChevronUpIcon.m-auto.h-6.fill-white.stroke-white
+				TransitionsSlideLeft
+					CartView(v-if="cartView" @openPendingModal="currentModal = ModalType.PENDING").fixed.z-50.right-0.top-20.bottom-0
+				// Pending Review Pop-Up
+				Modal(v-if="currentModal == ModalType.PENDING" title="Pending Review" @toggleModal="closeModal")
+					div.flex.flex-col.p-5
+						div.text-xl.h-20
+							| Your cart has been submitted, please take it to a volunteer for review.
+						div.flex.flex-row.mt-auto
+							button(@click="retractCart").modal-button.bg-utd-orange.text-white.ml-auto.w-full.sm_w-32.mr-5
+								| Edit Cart
+							button(@click="closeModal").modal-button.bg-utd-green.text-white.w-full.sm_w-32
+								| Close
+
+				// Rejected Pop-Up
+				Modal(v-if="currentModal == ModalType.REJECTED" title="Cart Rejected" @toggleModal="closeModal")
+					div.flex.flex-col.p-5
+						div.text-xl.h-20
+							| Your cart has been rejected, possible reasons include:
+						div.flex.flex-row.mt-auto
+							button(@click="closeModal").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
+								| Close
+
+				// Accepted Pop-Up
+				Modal(v-if="currentModal == ModalType.ACCEPTED" title="Cart Accepted" @toggleModal="closeModal")
+					div.flex.flex-col.p-5
+						div.text-xl.h-20
+							| Your cart has been approved!
+						div.flex.flex-row.mt-auto
+							button(@click="closeModal").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
+								| Close
 
 		//- Skeleton - change as needed when UI changes, hardcoded here to reduce maintaining skeleton components
 		template(#fallback)
@@ -51,9 +81,40 @@ div
 
 <script lang="ts" setup>
 import { ChevronUpIcon } from "@heroicons/vue/24/solid"
+import { useCartStore } from "~/stores/cart"
+
+const store = useCartStore()
+const { resetCartView, getCart } = store
+const { cartView } = storeToRefs(store)
 
 const searchTerm = ref("")
 const filters = ref([])
+const currentModal = ref("")
+const verificationUpdate = ref<EventSource>()
+
+const ModalType = Object.freeze({
+	PENDING: "PENDING",
+	ACCEPTED: "ACCEPTED",
+	REJECTED: "REJECTED",
+})
+
+if (import.meta.client) {
+	// change this to use env later
+	// also probably use zod to type check the message...
+	verificationUpdate.value = new EventSource("http://localhost:3000/api/verification/cartRequestVerificationResponseWaiting")
+	verificationUpdate.value.onmessage = async (event) => {
+		// put a better response as to accepted or declined cart later
+		const { type, payload } = JSON.parse(event.data)
+		if (type === "REJECT CART") {
+			currentModal.value = ModalType.REJECTED
+		}
+		if (type === "ACCEPT CART") {
+			currentModal.value = ModalType.ACCEPTED
+		}
+		await getCart()
+		resetCartView()
+	}
+}
 
 const scrollToTop = (): void => {
 	window.scrollTo({ top: 0, behavior: "smooth" })
@@ -82,6 +143,15 @@ const filteredCategoryItems = computed(() => {
 		}
 	)
 })
+
+const closeModal = () => {
+	currentModal.value = ""
+}
+
+const retractCart = async () => {
+	await $fetch("/api/verification/retractCart", { method: "PUT" })
+	closeModal()
+}
 
 onMounted(async () => {
 	try {

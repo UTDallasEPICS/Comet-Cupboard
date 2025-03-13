@@ -21,5 +21,10 @@ const props = defineProps({
 	},
 })
 
-const show = ref<boolean>(true)
+// can't have transitions on initial render
+const show = ref<boolean>(false)
+
+onMounted(() => {
+	show.value = true
+})
 </script>

@@ -2,7 +2,7 @@
 div.w-full.sm_w-80.drop-shadow-standard.bg-white.flex.flex-col.text-xl
 	div.relative.h-12.w-full.bg-utd-orange.content-center
 		p.text-3xl.text-center.font-bold.text-white Cart View
-		button(@click="$emit('closeCartView')").absolute.inset-y-0.right-2
+		button(@click="resetCartView").absolute.inset-y-0.right-2
 			XMarkIcon.size-10.fill-white.stroke-white.hover_fill-black.hover_stroke-black
 	div.px-5.py-5.h-full.flex.flex-col.gap-y-4.overflow-y-scroll
 		CartItemCard(
@@ -29,36 +29,7 @@ div.w-full.sm_w-80.drop-shadow-standard.bg-white.flex.flex-col.text-xl
 				p.ml-2.text-nowrap.hover_underline Mark Expired Items
 			div(class="h-[1px]").bg-black
 
-			// Pending Review Pop-Up
-			Modal(v-if="currentModal == ModalType.PENDING" title="Pending Review" @toggleModal="closeModal")
-				div.flex.flex-col.p-5
-					div.text-xl.h-20
-						| Your cart has been submitted, please take it to a volunteer for review.
-					div.flex.flex-row.mt-auto
-						button(@click="retractCart").modal-button.bg-utd-orange.text-white.ml-auto.w-full.sm_w-32.mr-5
-							| Edit Cart
-						button(@click="closeModal").modal-button.bg-utd-green.text-white.w-full.sm_w-32
-							| Close
-
-			// Rejected Pop-Up
-			Modal(v-if="currentModal == ModalType.REJECTED" title="Cart Rejected" @toggleModal="closeModal")
-				div.flex.flex-col.p-5
-					div.text-xl.h-20
-						| Your cart has been rejected, possible reasons include:
-					div.flex.flex-row.mt-auto
-						button(@click="closeModal").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
-							| Close
-
-			// Accepted Pop-Up
-			Modal(v-if="currentModal == ModalType.ACCEPTED" title="Cart Accepted" @toggleModal="closeModal")
-				div.flex.flex-col.p-5
-					div.text-xl.h-20
-						| Your cart has been approved!
-					div.flex.flex-row.mt-auto
-						button(@click="closeModal").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
-							| Close
-
-			button(v-if="pending" @click="currentModal = ModalType.PENDING").bg-utd-green.text-white.w-full.button Pending Cart...
+			button(v-if="pending" @click="emit('openPendingModal')").bg-utd-green.text-white.w-full.button Pending Cart...
 			button(v-else @click="submitCart").button.bg-utd-green.text-white.w-full Submit Cart
 </template>
 
@@ -68,35 +39,12 @@ import { useCartStore } from "~/stores/cart"
 import { storeToRefs } from "pinia"
 
 const store = useCartStore()
-const { getCart } = store
+const { resetCartView, getCart } = store
 const { cartItems, cartTotalCount, cartAdjustedCount, pending } = storeToRefs(store)
 
+const emit = defineEmits(["openPendingModal"])
+
 const markExpiredItems = ref(false)
-const currentModal = ref("")
-const verificationUpdate = ref<EventSource>()
-
-const ModalType = Object.freeze({
-	PENDING: "PENDING",
-	ACCEPTED: "ACCEPTED",
-	REJECTED: "REJECTED",
-})
-
-if (import.meta.client) {
-	// change this to use env later
-	// also probably use zod to type check the message...
-	verificationUpdate.value = new EventSource("http://localhost:3000/api/verification/cartRequestVerificationResponseWaiting")
-	verificationUpdate.value.onmessage = async (event) => {
-		// put a better response as to accepted or declined cart later
-		const { type, payload } = JSON.parse(event.data)
-		if (type === "REJECT CART") {
-			currentModal.value = ModalType.REJECTED
-		}
-		if (type === "ACCEPT CART") {
-			currentModal.value = ModalType.ACCEPTED
-		}
-		await getCart()
-	}
-}
 
 const toggleMarkExpiredItems = async () => {
 	markExpiredItems.value = !markExpiredItems.value
@@ -112,16 +60,7 @@ const toggleMarkExpiredItems = async () => {
 const submitCart = async () => {
 	await $fetch("/api/verification/cartRequestVerification", { method: "POST" })
 	await getCart()
-	currentModal.value = ModalType.PENDING
-}
-
-const retractCart = async () => {
-	await $fetch("/api/verification/retractCart", { method: "PUT" })
-	closeModal()
-}
-
-const closeModal = () => {
-	currentModal.value = ""
+	emit("openPendingModal")
 }
 
 onMounted(async () => {
