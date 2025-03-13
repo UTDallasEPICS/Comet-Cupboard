@@ -20,15 +20,16 @@ const props = defineProps({
 
 const emit = defineEmits(["update:select-cart"])
 
-const pendingCartUpdates = ref<EventSource>()
-
 const { data: pendingCarts } = await useFetch("/api/verification/pendingCarts")
 
+const pendingCartUpdates = ref<EventSource>()
+const pendingCartsList = ref(pendingCarts)
+
 const pendingCartIDsAndAdjQTY = computed(() => {
-	if (!pendingCarts || !pendingCarts.value) {
+	if (!pendingCartsList.value) {
 		return []
 	}
-	return pendingCarts.value.map((pendingCart) => {
+	return pendingCartsList.value.map((pendingCart) => {
 		return { cartID: pendingCart.cartID, adjQTY: cartCountAdjustment(pendingCart) }
 	})
 })
@@ -40,13 +41,12 @@ if (import.meta.client) {
 	pendingCartUpdates.value.onmessage = (event) => {
 		const { type, payload } = JSON.parse(event.data)
 		if (type === "NEW CART") {
-			const cartIDToAdd = payload.cartID
-			const adjQTY = cartCountAdjustment(payload)
-			pendingCartIDsAndAdjQTY.value.push({ cartID: cartIDToAdd, adjQTY: adjQTY })
+			const newCart = payload
+			pendingCartsList.value.push(newCart)
 		} else if (type === "ACCEPT CART" || type === "REJECT CART" || type === "RETRACT CART") {
 			const cartIDToRemove = payload.cartID
-			pendingCartIDsAndAdjQTY.value = pendingCartIDsAndAdjQTY.value.filter((idsAndAdjQTY) => {
-				return idsAndAdjQTY.cartID != cartIDToRemove
+			pendingCartsList.value = pendingCartsList.value.filter((pendingCart) => {
+				return pendingCart.cartID != cartIDToRemove
 			})
 		}
 	}
