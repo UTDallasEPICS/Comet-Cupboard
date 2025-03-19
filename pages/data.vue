@@ -1,9 +1,9 @@
 <template lang="pug">
 div
 	ClientOnly
-		DataProcessedChart(title="Number of Items Out" :data="data" timeLevel="Semester" viewLevel="category").h-screen
+		DataProcessedChart(timeLevel="Semester" title="Number of Items Out" viewLevel="category" :data="data").h-screen
 	ClientOnly
-		DataProcessedChart(title="Number of Items In" :data="data2" timeLevel="Semester" viewLevel="category").h-screen
+		DataProcessedChart(timeLevel="Semester" title="Number of Items In" viewLevel="category" :data="data2").h-screen
 </template>
 
 <script setup>
