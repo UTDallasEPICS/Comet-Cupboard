@@ -92,11 +92,11 @@ const filters = ref([])
 const currentModal = ref("")
 const verificationUpdate = ref<EventSource>()
 
-const ModalType = Object.freeze({
-	PENDING: "PENDING",
-	ACCEPTED: "ACCEPTED",
-	REJECTED: "REJECTED",
-})
+enum ModalType {
+	PENDING = "PENDING",
+	ACCEPTED = "ACCEPTED",
+	REJECTED = "REJECTED",
+}
 
 if (import.meta.client) {
 	// change this to use env later

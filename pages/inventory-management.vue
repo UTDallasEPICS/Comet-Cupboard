@@ -89,13 +89,13 @@ const editingItem = ref(null)
 const deleteItem = ref(null)
 const dealItem = ref(null)
 
-const ModalType = Object.freeze({
-	ADD: "ADD",
-	EDIT: "EDIT",
-	DELETE: "DELETE",
-	DEAL: "DEAL",
-	REVIEW: "REVIEW",
-})
+enum ModalType {
+	ADD = "ADD",
+	EDIT = "EDIT",
+	DELETE = "DELETE",
+	DEAL = "DEAL",
+	REVIEW = "REVIEW",
+}
 
 const { data: items, refresh } = await useFetch("/api/inventory/items", {
 	query: { getCounts: true },
