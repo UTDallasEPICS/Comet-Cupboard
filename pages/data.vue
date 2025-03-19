@@ -17,13 +17,15 @@ const uniqueUsersPerMonth = Object.keys(lol).map((year_month) => {
 	const uniqueUsers = new Set(lol[year_month].map((order) => order.netID))
 	return {
 		x: year_month,
-		y: uniqueUsers.size
+		y: uniqueUsers.size,
 	}
 })
 
-const aaaaaaa = [{
-	x: uniqueUsersPerMonth.map((x) => x.x),
-	y: uniqueUsersPerMonth.map((x) => x.y),
-	type: "linechart"
-}]
+const aaaaaaa = [
+	{
+		x: uniqueUsersPerMonth.map((x) => x.x),
+		y: uniqueUsersPerMonth.map((x) => x.y),
+		type: "linechart",
+	},
+]
 </script>
