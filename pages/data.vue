@@ -68,7 +68,7 @@ const processedData = computed(() => {
 				count: itemCountChange.amountChanged,
 				Item: itemCountChange.Item.name,
 				Category: itemCountChange.Item.categoryName,
-				Source: itemCountChange.source,
+				Source: itemCountChange.sourceName,
 			}
 		})
 	} else if (selectedQuery.value === "itemsOut") {
