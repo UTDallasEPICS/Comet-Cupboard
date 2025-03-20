@@ -36,4 +36,8 @@ const renderChart = () => {
 onMounted(() => {
 	renderChart()
 })
+
+onUpdated(() => {
+	renderChart()
+})
 </script>
