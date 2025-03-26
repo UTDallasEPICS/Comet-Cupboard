@@ -25,8 +25,8 @@ div.sticky.top-0.z-50
 							| Admin Dashboard
 				div.flex.flex-row.space-x-1.tn_space-x-2.sm_space-x-4
 					button(v-if="page === shoppingPath" style="text-decoration-color: white" @click="toggleCartView").relative
-						ShoppingCartIcon.size-11.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange 
-						span(v-if="cartAdjustedCount!= 0").px-2.text-xl.absolute.font-bold.-top-2.rounded-full.-right-2.text-xl.text-white.bg-utd-orange {{ cartAdjustedCount }}
+						ShoppingCartIcon.size-11.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
+						span(v-if="cartAdjustedCount != 0").px-2.text-xl.absolute.font-bold.-top-2.rounded-full.-right-2.text-xl.text-white.bg-utd-orange {{ cartAdjustedCount }}
 
 					// for now this is a link to the sign in page (test + nowhere else yet)
 					button(@click="logout").cursor-pointer
@@ -71,7 +71,6 @@ import { Bars3Icon, ShoppingCartIcon, ArrowRightStartOnRectangleIcon, XMarkIcon 
 import { useCartStore } from "~/stores/cart"
 import { storeToRefs } from "pinia"
 
-
 const { toggleCartView } = useCartStore()
 
 const accessCookie = ref(useCookie("AccessPermission"))
@@ -111,5 +110,4 @@ const logout = async () => {
 
 const store = useCartStore()
 const { cartAdjustedCount } = storeToRefs(store)
-
 </script>
