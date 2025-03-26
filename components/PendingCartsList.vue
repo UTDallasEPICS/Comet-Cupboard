@@ -1,6 +1,6 @@
 <template lang="pug">
 div.flex.flex-col.gap-y-4.min-w-60
-	div(v-if="pendingCartIDsAndAdjQTY.length === 0").text-xl
+	div(v-if="pendingCartIDsAndAdjQTY.length === 0").flex.flex-row.p-1.text-center.text-xl.text-gray-500.justify-center
 		p No Pending Carts
 	div(v-else)
 		button(
