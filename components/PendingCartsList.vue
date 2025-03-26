@@ -1,13 +1,16 @@
 <template lang="pug">
 div.flex.flex-col.gap-y-4.min-w-60
-	button(
-		v-for="pendingCart in pendingCartIDsAndAdjQTY"
-		:class="pendingCart.cartID === selectedCart ? 'bg-utd-orange text-white' : 'bg-cupboard-lg'"
-		@click="emit('update:select-cart', pendingCart.cartID)"
-	).h-12.rounded-xl.cursor-pointer.hover_bg-utd-orange.hover_text-white.hover_drop-shadow-standard
-		div.flex.flex-row.justify-between
-			span.px-4.text-xl.text-left {{ pendingCart.cartID }}
-			span.px-4.text-xl.text-right QTY: {{ pendingCart.adjQTY }}
+	div(v-if="pendingCartIDsAndAdjQTY.length === 0").text-xl
+		p No Pending Carts 
+	div(v-else)
+		button(
+			v-for="pendingCart in pendingCartIDsAndAdjQTY"
+			:class="pendingCart.cartID === selectedCart ? 'bg-utd-orange text-white' : 'bg-cupboard-lg'"
+			@click="emit('update:select-cart', pendingCart.cartID)"
+		).h-12.rounded-xl.cursor-pointer.hover_bg-utd-orange.hover_text-white.hover_drop-shadow-standard
+			div.flex.flex-row.justify-between
+				span.px-4.text-xl.text-left {{ pendingCart.cartID }}
+				span.px-4.text-xl.text-right QTY: {{ pendingCart.adjQTY }}
 </template>
 
 <script lang="ts" setup>
@@ -24,7 +27,7 @@ const { data: pendingCarts } = await useFetch("/api/verification/pendingCarts")
 
 const pendingCartUpdates = ref<EventSource>()
 const pendingCartsList = ref(pendingCarts)
-
+console.log(pendingCartsList.value.length)
 const pendingCartIDsAndAdjQTY = computed(() => {
 	if (!pendingCartsList.value) {
 		return []
@@ -33,6 +36,8 @@ const pendingCartIDsAndAdjQTY = computed(() => {
 		return { cartID: pendingCart.cartID, adjQTY: cartCountAdjustment(pendingCart) }
 	})
 })
+
+
 
 if (import.meta.client) {
 	// change this to use env later
