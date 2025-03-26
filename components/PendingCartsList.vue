@@ -1,7 +1,7 @@
 <template lang="pug">
 div.flex.flex-col.gap-y-4.min-w-60
 	div(v-if="pendingCartIDsAndAdjQTY.length === 0").text-xl
-		p No Pending Carts 
+		p No Pending Carts
 	div(v-else)
 		button(
 			v-for="pendingCart in pendingCartIDsAndAdjQTY"
@@ -27,7 +27,7 @@ const { data: pendingCarts } = await useFetch("/api/verification/pendingCarts")
 
 const pendingCartUpdates = ref<EventSource>()
 const pendingCartsList = ref(pendingCarts)
-console.log(pendingCartsList.value.length)
+
 const pendingCartIDsAndAdjQTY = computed(() => {
 	if (!pendingCartsList.value) {
 		return []
@@ -36,8 +36,6 @@ const pendingCartIDsAndAdjQTY = computed(() => {
 		return { cartID: pendingCart.cartID, adjQTY: cartCountAdjustment(pendingCart) }
 	})
 })
-
-
 
 if (import.meta.client) {
 	// change this to use env later
