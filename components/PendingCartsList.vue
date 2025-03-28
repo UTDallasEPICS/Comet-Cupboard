@@ -24,6 +24,8 @@ const { data: pendingCarts } = await useFetch("/api/verification/pendingCarts")
 
 const pendingCartUpdates = ref<EventSource>()
 const pendingCartsList = ref(pendingCarts)
+const runtimeConfig = useRuntimeConfig()
+
 
 const pendingCartIDsAndAdjQTY = computed(() => {
 	if (!pendingCartsList.value) {
@@ -37,7 +39,7 @@ const pendingCartIDsAndAdjQTY = computed(() => {
 if (import.meta.client) {
 	// change this to use env later
 	// also probably use zod to type check the message...
-	pendingCartUpdates.value = new EventSource("http://localhost:3000/api/verification/pendingCartsUpdate")
+	pendingCartUpdates.value = new EventSource(runtimeConfig.public.LOCAL_URL)
 	pendingCartUpdates.value.onmessage = (event) => {
 		const { type, payload } = JSON.parse(event.data)
 		if (type === "NEW CART") {

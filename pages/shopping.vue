@@ -98,10 +98,13 @@ const ModalType = Object.freeze({
 	REJECTED: "REJECTED",
 })
 
+const runtimeConfig = useRuntimeConfig()
+
+
 if (import.meta.client) {
 	// change this to use env later
 	// also probably use zod to type check the message...
-	verificationUpdate.value = new EventSource("http://localhost:3000/api/verification/cartRequestVerificationResponseWaiting")
+	verificationUpdate.value = new EventSource(runtimeConfig.public.LOCAL_URL)
 	verificationUpdate.value.onmessage = async (event) => {
 		// put a better response as to accepted or declined cart later
 		const { type, payload } = JSON.parse(event.data)
