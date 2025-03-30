@@ -34,7 +34,7 @@ div
 					| Toggle Aggregate by time ({{ aggregation }})
 
 		div
-			Combobox(v-model="selectedViewFilters" multiple)
+			Combobox(multiple v-model="selectedViewFilters")
 				ul(v-if="selectedViewFilters").flex.flex-row.gap-1.m-1
 					li(v-for="selectedViewFilter in selectedViewFilters" :key="selectedViewFilter" :value="selectedViewFilter")
 						div.bg-utd-orange.text-white.pl-2.pr-2.pt-1.pb-1.rounded-xl
@@ -43,7 +43,6 @@ div
 				ComboboxOptions.text-black.border
 					ComboboxOption(v-for="viewFilter in filteredViews" :key="viewFilter" :value="viewFilter").hover_bg-black.hover_text-white.p-1
 						| {{ viewFilter }}
-
 
 	ClientOnly
 		DataProcessedChart(
@@ -78,16 +77,11 @@ const viewFilters = ["Grain", "NTFB", "Protein", "Vegetable", "Fruit"]
 const selectedViewFilters = ref([viewFilters[0]])
 const aggregation = ref(false)
 
-const query = ref('')
+const query = ref("")
 const filteredViews = computed(() =>
-  query.value === ''
-    ? viewFilters
-    : viewFilters.filter((viewFilter) =>
-        viewFilter
-          .toLowerCase()
-          .replace(/\s+/g, '')
-          .includes(query.value.toLowerCase().replace(/\s+/g, ''))
-      )
+	query.value === ""
+		? viewFilters
+		: viewFilters.filter((viewFilter) => viewFilter.toLowerCase().replace(/\s+/g, "").includes(query.value.toLowerCase().replace(/\s+/g, "")))
 )
 
 const processedData = computed(() => {
