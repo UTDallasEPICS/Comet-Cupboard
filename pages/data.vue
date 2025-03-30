@@ -1,31 +1,49 @@
 <template lang="pug">
 div
-	VueDatePicker(v-model="startDate" :enable-time-picker="false")
-	VueDatePicker(v-model="endDate" :enable-time-picker="false")
+	div.overflow-visible.p-3
+		div.flex.gap-1.w-fit
+			VueDatePicker(v-model="startDate" :enable-time-picker="false")
+			VueDatePicker(v-model="endDate" :enable-time-picker="false")
 
-	Listbox(v-model="selectedQuery")
-		ListboxButton.border-2.border-black
-			| {{ selectedQuery }}
-		ListboxOptions
-			ListboxOption(v-for="query in queries" :key="query" :value="query").cursor-pointer
-				| {{ query }}
+		div.flex.flex-wrap.gap-1.mt-1
+			div.relative.z-10
+				Listbox(v-model="selectedQuery")
+					ListboxButton.button.bg-utd-orange.text-white.w-40
+						| {{ selectedQuery }}
+					ListboxOptions.text-center.border.rounded-xl.overflow-hidden.absolute.bg-white.w-full
+						ListboxOption(v-for="query in queries" :key="query" :value="query").cursor-pointer.border.p-1.hover_bg-black.hover_text-white
+							| {{ query }}
+			div.relative.z-10
+				Listbox(v-model="selectedTimeLevel")
+					ListboxButton.button.bg-utd-orange.text-white.w-40
+						| {{ selectedTimeLevel }}
+					ListboxOptions.text-center.border.rounded-xl.overflow-hidden.absolute.bg-white.w-full
+						ListboxOption(v-for="timeLevel in timeLevels" :key="timeLevel" :value="timeLevel").cursor-pointer.border.p-1.hover_bg-black.hover_text-white
+							| {{ timeLevel }}
 
-	Listbox(v-model="selectedTimeLevel")
-		ListboxButton.border-2.border-black
-			| {{ selectedTimeLevel }}
-		ListboxOptions
-			ListboxOption(v-for="timeLevel in timeLevels" :key="timeLevel" :value="timeLevel").cursor-pointer
-				| {{ timeLevel }}
+			div.relative.z-10
+				Listbox(v-model="selectedViewLevel")
+					ListboxButton.button.bg-utd-orange.text-white.w-40
+						| {{ selectedViewLevel }}
+					ListboxOptions.text-center.border.rounded-xl.overflow-hidden.absolute.bg-white.w-full
+						ListboxOption(v-for="viewLevel in viewLevels" :key="viewLevel" :value="viewLevel").cursor-pointer.border.p-1.hover_bg-black.hover_text-white
+							| {{ viewLevel }}
 
-	Listbox(v-model="selectedViewLevel")
-		ListboxButton.border-2.border-black
-			| {{ selectedViewLevel }}
-		ListboxOptions
-			ListboxOption(v-for="viewLevel in viewLevels" :key="viewLevel" :value="viewLevel").cursor-pointer
-				| {{ viewLevel }}
+			div.z-9
+				button(@click="aggregation = !aggregation").button.bg-utd-green.text-white.w-full.px-4
+					| Toggle Aggregate by time ({{ aggregation }})
 
-	button(@click="aggregation = !aggregation")
-		| Aggregate by time = {{ aggregation }}
+		div
+			Combobox(v-model="selectedViewFilters" multiple)
+				ul(v-if="selectedViewFilters").flex.flex-row.gap-1.m-1
+					li(v-for="selectedViewFilter in selectedViewFilters" :key="selectedViewFilter" :value="selectedViewFilter")
+						div.bg-utd-orange.text-white.pl-2.pr-2.pt-1.pb-1.rounded-xl
+							| {{ selectedViewFilter }}
+				ComboboxInput(@change="query = $event.target.value").text-black.border.w-full.p-1
+				ComboboxOptions.text-black.border
+					ComboboxOption(v-for="viewFilter in filteredViews" :key="viewFilter" :value="viewFilter").hover_bg-black.hover_text-white.p-1
+						| {{ viewFilter }}
+
 
 	ClientOnly
 		DataProcessedChart(
@@ -34,13 +52,12 @@ div
 			:timeFilter="{ start: startDate, end: endDate }"
 			:timeLevel="selectedTimeLevel"
 			:title="selectedQuery"
-			:viewFilter="viewFilters"
 			:viewLevel="selectedViewLevel"
-		).h-screen
+		).h-screen.w-full
 </template>
 
 <script lang="ts" setup>
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/vue"
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from "@headlessui/vue"
 import VueDatePicker from "@vuepic/vue-datepicker"
 import "@vuepic/vue-datepicker/dist/main.css"
 
@@ -57,8 +74,21 @@ const viewLevels = ["Item", "Category", "Source", "All"]
 const selectedViewLevel = ref(viewLevels[0])
 const startDate = ref(null)
 const endDate = ref(null)
-const viewFilters = ref({})
+const viewFilters = ["Grain", "NTFB", "Protein", "Vegetable", "Fruit"]
+const selectedViewFilters = ref([viewFilters[0]])
 const aggregation = ref(false)
+
+const query = ref('')
+const filteredViews = computed(() =>
+  query.value === ''
+    ? viewFilters
+    : viewFilters.filter((viewFilter) =>
+        viewFilter
+          .toLowerCase()
+          .replace(/\s+/g, '')
+          .includes(query.value.toLowerCase().replace(/\s+/g, ''))
+      )
+)
 
 const processedData = computed(() => {
 	if (selectedQuery.value === "itemsIn") {
