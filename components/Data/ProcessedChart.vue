@@ -1,7 +1,11 @@
 <template lang="pug">
 div
 	ClientOnly
-		DataPlotlyChart(:data="processedData" :layout="layout").h-screen
+		DataPlotlyChart(
+			:config="{ scrollZoom: true, responsive: true, displaylogo: false, modeBarButtonsToRemove: ['lasso2d', 'zoom2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d', 'pan2d', 'select2d'], displayModeBar: true }"
+			:data="processedData"
+			:layout="layout"
+		).h-screen
 </template>
 
 <script lang="ts" setup>
@@ -93,6 +97,18 @@ const layout = computed(() => {
 			text: title.value,
 		},
 		barmode: "stack",
+		dragmode: "pan",
+		xaxis: {
+			linecolor: "black",
+			linewidth: 2,
+			mirror: true,
+		},
+		yaxis: {
+			linecolor: "black",
+			linewidth: 2,
+			mirror: true,
+		},
+		plot_bgcolor: "#D9D9D9",
 	}
 })
 
