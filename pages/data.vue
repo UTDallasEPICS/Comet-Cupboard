@@ -4,69 +4,102 @@ div
 	p scroll on an axis or the graph to zoom in/out
 	p drag-click on an axis or the graph to move it
 	div(class="md_h-[calc(100vh-80px)]").flex.flex-col.md_flex-row.gap-4
-		div.min-w-72.border-2.border-black.flex.flex-col.overflow-y-hidden.overflow-y-scroll
-			p Query
-			div.relative
-				Listbox(v-model="selectedQuery")
-					ListboxButton.button.bg-utd-orange.text-white.w-40
-						| {{ selectedQuery }}
-					ListboxOptions.text-center.border.rounded-xl.overflow-hidden.absolute.bg-white.w-full.z-10
-						ListboxOption(v-for="query in queries" :key="query" :value="query").cursor-pointer.border.p-1.hover_bg-black.hover_text-white
-							| {{ query }}
-			p Time Level
-			div.relative
-				Listbox(v-model="selectedTimeLevel")
-					ListboxButton.button.bg-utd-orange.text-white.w-40
-						| {{ selectedTimeLevel }}
-					ListboxOptions.text-center.border.rounded-xl.overflow-hidden.absolute.bg-white.w-full.z-10
-						ListboxOption(v-for="timeLevel in timeLevels" :key="timeLevel" :value="timeLevel").cursor-pointer.border.p-1.hover_bg-black.hover_text-white
-							| {{ timeLevel }}
-			p Time Filter
-			VueDatePicker(
-				auto-position="bottom"
-				range
-				v-model="dateRange"
-				:enable-time-picker="false"
-				:max-date="new Date()"
-				:preset-dates="presetDates"
-				:teleport="true"
-			)
-			p View Level
-			div.relative
-				Listbox(v-model="selectedViewLevel")
-					ListboxButton.button.bg-utd-orange.text-white.w-40
-						| {{ selectedViewLevel }}
-					ListboxOptions.text-center.border.rounded-xl.overflow-hidden.absolute.bg-white.w-full.z-10
-						ListboxOption(v-for="viewLevel in viewLevels" :key="viewLevel" :value="viewLevel").cursor-pointer.border.p-1.hover_bg-black.hover_text-white
-							| {{ viewLevel }}
-			p View Filter
-			Combobox(multiple v-model="selectedViewFilters")
-				ul(v-if="selectedViewFilters").flex.flex-row.gap-1.m-1
-					li(v-for="selectedViewFilter in selectedViewFilters" :key="selectedViewFilter" :value="selectedViewFilter")
-						div.bg-utd-orange.text-white.pl-2.pr-2.pt-1.pb-1.rounded-xl
-							| {{ selectedViewFilter }}
-				ComboboxInput(@change="query = $event.target.value").text-black.border.w-full.p-1
-				ComboboxOptions.text-black.border
-					ComboboxOption(v-for="viewFilter in filteredViews" :key="viewFilter" :value="viewFilter").hover_bg-black.hover_text-white.p-1
-						| {{ viewFilter }}
-			p Aggregations
+		div.min-w-72.border-2.border-black.flex.flex-col.overflow-y-hidden.overflow-y-scroll.p-4.gap-y-2
 			div
-				button(@click="aggregation = !aggregation").button.bg-utd-green.text-white.w-full.px-4
-					| Toggle Aggregate by time ({{ aggregation }})
+				Listbox(v-model="selectedQuery")
+					ListboxButton(@click="queryOptionOpen = !queryOptionOpen").flex.w-full.items-center
+						p Query
+						ChevronUpIcon(v-if="queryOptionOpen").h-7.ml-auto
+						ChevronDownIcon(v-else).h-7.ml-auto
+					div(v-show="queryOptionOpen")
+						ListboxOptions(static).border.rounded-xl.bg-white.w-full
+							ListboxOption(v-for="query in queries" :key="query" v-slot="{ selected }" :value="query")
+								div(:class="'cursor-pointer border p-2 ' + (selected ? 'bg-utd-orange text-white' : 'hover_bg-utd-orange hover_text-white')")
+									| {{ query }}
+			hr.border-black
+			div
+				Listbox(v-model="selectedTimeLevel")
+					ListboxButton(@click="timeLevelOptionOpen = !timeLevelOptionOpen").flex.w-full.items-center
+						p Time Level
+						ChevronUpIcon(v-if="timeLevelOptionOpen").h-7.ml-auto
+						ChevronDownIcon(v-else).h-7.ml-auto
+					div(v-show="timeLevelOptionOpen")
+						ListboxOptions(static).border.rounded-xl.bg-white.w-full
+							ListboxOption(v-for="timeLevel in timeLevels" :key="timeLevel" v-slot="{ selected }" :value="timeLevel")
+								div(:class="'cursor-pointer border p-2 ' + (selected ? 'bg-utd-orange text-white' : 'hover_bg-utd-orange hover_text-white')")
+									| {{ timeLevel }}
+			hr.border-black
+			button(@click="timeFilterOptionOpen = !timeFilterOptionOpen").flex.w-full.items-center
+				p Time Filter
+				ChevronUpIcon(v-if="timeFilterOptionOpen").h-7.ml-auto
+				ChevronDownIcon(v-else).h-7.ml-auto
+			div(v-show="timeFilterOptionOpen")
+				VueDatePicker(
+					auto-position="bottom"
+					range
+					v-model="dateRange"
+					:enable-time-picker="false"
+					:max-date="new Date()"
+					:preset-dates="presetDates"
+					:teleport="true"
+				)
+			hr.border-black
+			div(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut")
+				Listbox(v-model="selectedViewLevel")
+					ListboxButton(@click="viewLevelOptionOpen = !viewLevelOptionOpen").flex.w-full.items-center
+						p View Level
+						ChevronUpIcon(v-if="viewLevelOptionOpen").h-7.ml-auto
+						ChevronDownIcon(v-else).h-7.ml-auto
+					div(v-show="viewLevelOptionOpen")
+						ListboxOptions(static).border.rounded-xl.bg-white.w-full
+							ListboxOption(v-for="viewLevel in viewLevels" :key="viewLevel" v-slot="{ selected }" :value="viewLevel")
+								div(:class="'cursor-pointer border p-2 ' + (selected ? 'bg-utd-orange text-white' : 'hover_bg-utd-orange hover_text-white')")
+									| {{ viewLevel }}
+			hr(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut").border-black
+			div(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut")
+				button(@click="viewFilterOptionOpen = !viewFilterOptionOpen").flex.w-full.items-center
+					p View Filter
+					ChevronUpIcon(v-if="viewFilterOptionOpen").h-7.ml-auto
+					ChevronDownIcon(v-else).h-7.ml-auto
+				div(v-show="viewFilterOptionOpen")
+					Combobox(multiple v-model="selectedViewFilters")
+						ul(v-if="selectedViewFilters").flex.flex-row.gap-1.m-1
+							li(v-for="selectedViewFilter in selectedViewFilters" :key="selectedViewFilter" :value="selectedViewFilter")
+								div.bg-utd-orange.text-white.pl-2.pr-2.pt-1.pb-1.rounded-xl
+									| {{ selectedViewFilter }}
+						ComboboxInput(@change="query = $event.target.value").text-black.border.w-full.p-1
+						ComboboxOptions.text-black.border
+							ComboboxOption(v-for="viewFilter in filteredViews" :key="viewFilter" :value="viewFilter").hover_bg-black.hover_text-white.p-1
+								| {{ viewFilter }}
+			hr(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut").border-black
+			div(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut")
+				Listbox(v-model="selectedAggregation")
+					ListboxButton(@click="aggregationOptionOpen = !aggregationOptionOpen").flex.w-full.items-center
+						p Aggregation
+						ChevronUpIcon(v-if="aggregationOptionOpen").h-7.ml-auto
+						ChevronDownIcon(v-else).h-7.ml-auto
+					div(v-show="aggregationOptionOpen")
+						ListboxOptions(static).border.rounded-xl.bg-white.w-full
+							ListboxOption(v-for="agg in aggregations" :key="agg" v-slot="{ selected }" :value="agg")
+								div(:class="'cursor-pointer border p-2 ' + (selected ? 'bg-utd-orange text-white' : 'hover_bg-utd-orange hover_text-white')")
+									| {{ agg }}
+			hr(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut").border-black
 		div.p-2.border-black.border-2.w-full.h-screen.md_h-full
 			ClientOnly
 				DataProcessedChart(
-					:aggregation="aggregation ? { field: 'time' } : {}"
+					:aggregation="aggregation"
 					:data="processedData"
+					:showLegend="showLegend"
 					:timeFilter="{ start: startDate, end: endDate }"
 					:timeLevel="selectedTimeLevel"
 					:title="selectedQuery"
-					:viewLevel="selectedViewLevel"
+					:viewLevel="selectedQuery === QueryType.ItemsIn || (selectedQuery === QueryType.ItemsOut && selectedViewLevel !== 'Source') ? selectedViewLevel : 'All'"
 				)
 </template>
 
 <script lang="ts" setup>
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from "@headlessui/vue"
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
 import VueDatePicker from "@vuepic/vue-datepicker"
 import "@vuepic/vue-datepicker/dist/main.css"
 
@@ -82,18 +115,58 @@ const presetDates = ref([
 	{ label: "Last Year", value: [new Date(new Date().setFullYear(new Date().getFullYear() - 1)), new Date()] },
 ])
 
-const queries = ["itemsIn", "itemsOut", "numUsers", "numUniqueUsers"]
-const selectedQuery = ref(queries[0])
-const timeLevels = ["Day", "Week", "Month", "Semester", "Year"]
-const selectedTimeLevel = ref(timeLevels[0])
+enum QueryType {
+	ItemsIn = "Items In",
+	ItemsOut = "Items Out",
+	NumUsers = "Num Users",
+	NumUniqueUsers = "Num Unique Users",
+}
+
+const queries = [QueryType.ItemsIn, QueryType.ItemsOut, QueryType.NumUsers, QueryType.NumUniqueUsers]
+const selectedQuery = ref(QueryType.ItemsIn)
+const timeLevels = [TimeLevelType.Day, TimeLevelType.Week, TimeLevelType.Month, TimeLevelType.Semester, TimeLevelType.Year]
+const selectedTimeLevel = ref(TimeLevelType.Week)
 const viewLevels = ["Item", "Category", "Source", "All"]
 const selectedViewLevel = ref(viewLevels[0])
-const dateRange = ref(presetDates.value[1].value)
+const dateRange = ref(presetDates.value[2].value)
 const viewFilters = ["Grain", "NTFB", "Protein", "Vegetable", "Fruit"]
-const selectedViewFilters = ref([viewFilters[0]])
-const aggregation = ref(false)
-
+const selectedViewFilters = ref([])
+const aggregations = ["none", "time", "view"]
+const selectedAggregation = ref("none")
 const query = ref("")
+
+const queryOptionOpen = ref(true)
+const timeLevelOptionOpen = ref(false)
+const timeFilterOptionOpen = ref(false)
+const viewLevelOptionOpen = ref(false)
+const viewFilterOptionOpen = ref(false)
+const aggregationOptionOpen = ref(false)
+
+// just to place legend correctly
+const windowWidth = ref(1)
+onMounted(() => {
+	windowWidth.value = window.innerWidth
+	window.addEventListener("resize", () => {
+		windowWidth.value = window.innerWidth
+	})
+	open.value = true
+})
+onUnmounted(() => {
+	window.removeEventListener("resize", () => {
+		windowWidth.value = window.innerWidth
+	})
+})
+
+const aggregation = computed(() => {
+	if (selectedAggregation.value !== "none" && (selectedQuery.value === QueryType.ItemsIn || selectedQuery.value === QueryType.ItemsOut)) {
+		return { field: selectedAggregation.value }
+	}
+	return {}
+})
+
+const showLegend = computed(() => {
+	return windowWidth.value > 825
+})
 
 const startDate = computed(() => {
 	if (dateRange.value[0] === undefined) {
@@ -117,7 +190,7 @@ const filteredViews = computed(() =>
 )
 
 const processedData = computed(() => {
-	if (selectedQuery.value === "itemsIn") {
+	if (selectedQuery.value === QueryType.ItemsIn) {
 		return itemsIn.value.map((itemCountChange) => {
 			return {
 				date: new Date(itemCountChange.date),
@@ -127,7 +200,7 @@ const processedData = computed(() => {
 				Source: itemCountChange.sourceName,
 			}
 		})
-	} else if (selectedQuery.value === "itemsOut") {
+	} else if (selectedQuery.value === QueryType.ItemsOut) {
 		return itemsOut.value.flatMap((order) => {
 			return order.OrderItems.map((item) => {
 				return {
@@ -138,14 +211,14 @@ const processedData = computed(() => {
 				}
 			})
 		})
-	} else if (selectedQuery.value === "numUsers") {
+	} else if (selectedQuery.value === QueryType.NumUsers) {
 		return itemsOut.value.map((order) => {
 			return {
 				date: new Date(order.date),
 				count: 1,
 			}
 		})
-	} else if (selectedQuery.value === "numUniqueUsers") {
+	} else if (selectedQuery.value === QueryType.NumUniqueUsers) {
 		// num unique users per time period
 		let result = itemsOut.value.map((order) => {
 			return {

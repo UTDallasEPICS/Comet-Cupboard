@@ -64,9 +64,14 @@ const props = defineProps({
 			return {}
 		},
 	},
+	showLegend: {
+		type: Boolean,
+		required: false,
+		default: true,
+	},
 })
 
-const { title, data, timeLevel, timeFilter, viewLevel, viewFilter, aggregation } = toRefs(props)
+const { title, data, timeLevel, timeFilter, viewLevel, viewFilter, aggregation, showLegend } = toRefs(props)
 
 /*
 
@@ -91,23 +96,6 @@ const isObjectEmpty = (obj) => {
 	return obj && Object.keys(obj).length === 0 && obj.constructor === Object
 }
 
-// just to place legend correctly
-const windowWidth = ref(1)
-onMounted(() => {
-	window.addEventListener("resize", () => {
-		windowWidth.value = window.innerWidth
-	})
-})
-onUnmounted(() => {
-	window.removeEventListener("resize", () => {
-		windowWidth.value = window.innerWidth
-	})
-})
-
-const showLegend = computed(() => {
-	return windowWidth.value > 825
-})
-
 const layout = computed(() => {
 	return {
 		title: {
@@ -119,11 +107,17 @@ const layout = computed(() => {
 			linecolor: "black",
 			linewidth: 2,
 			mirror: true,
+			title: {
+				text: aggregation.value.field === "view" ? "View" : "Time",
+			},
 		},
 		yaxis: {
 			linecolor: "black",
 			linewidth: 2,
 			mirror: true,
+			title: {
+				text: "Count",
+			},
 		},
 		plot_bgcolor: "#D9D9D9",
 		hoverlabel: {
@@ -132,6 +126,8 @@ const layout = computed(() => {
 		margin: {
 			l: 25,
 			r: 25,
+			t: 75,
+			b: 100,
 		},
 		showlegend: showLegend.value,
 	}
@@ -301,7 +297,32 @@ const processedData = computed(() => {
 			},
 		]
 	}
+
 	// if aggregation field is viewLevel, across a stack
+	if (!isObjectEmpty(aggregation.value) && aggregation.value.field == "view") {
+		const x = Object.keys(result).map((stack) => {
+			return stack
+		})
+		const y = Object.keys(result).map((stack) => {
+			return Object.keys(result[stack]).reduce((acc, time) => {
+				return (
+					acc +
+					result[stack][time].reduce((acc2, element) => {
+						return acc2 + element.count
+					}, 0)
+				)
+			}, 0)
+		})
+		return [
+			{
+				x: x,
+				y: y,
+				type: "bar",
+				hoverinfo: "x+y",
+				text: y,
+			},
+		]
+	}
 
 	// assign x and y values
 	result = Object.keys(result).map((stack) => {
