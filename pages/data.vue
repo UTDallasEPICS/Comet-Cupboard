@@ -1,39 +1,45 @@
 <template lang="pug">
 div
-	div.overflow-visible.p-3
-		div.flex.gap-1.w-fit
-			VueDatePicker(v-model="startDate" :enable-time-picker="false")
-			VueDatePicker(v-model="endDate" :enable-time-picker="false")
-
-		div.flex.flex-wrap.gap-1.mt-1
-			div.relative.z-10
+	p I know these plots aren't the most intuitive to interact with
+	p scroll on an axis or the graph to zoom in/out
+	p drag-click on an axis or the graph to move it
+	div(class="md_h-[calc(100vh-80px)]").flex.flex-col.md_flex-row.gap-4
+		div.min-w-72.border-2.border-black.flex.flex-col.overflow-y-hidden.overflow-y-scroll
+			p Query
+			div.relative
 				Listbox(v-model="selectedQuery")
 					ListboxButton.button.bg-utd-orange.text-white.w-40
 						| {{ selectedQuery }}
-					ListboxOptions.text-center.border.rounded-xl.overflow-hidden.absolute.bg-white.w-full
+					ListboxOptions.text-center.border.rounded-xl.overflow-hidden.absolute.bg-white.w-full.z-10
 						ListboxOption(v-for="query in queries" :key="query" :value="query").cursor-pointer.border.p-1.hover_bg-black.hover_text-white
 							| {{ query }}
-			div.relative.z-10
+			p Time Level
+			div.relative
 				Listbox(v-model="selectedTimeLevel")
 					ListboxButton.button.bg-utd-orange.text-white.w-40
 						| {{ selectedTimeLevel }}
-					ListboxOptions.text-center.border.rounded-xl.overflow-hidden.absolute.bg-white.w-full
+					ListboxOptions.text-center.border.rounded-xl.overflow-hidden.absolute.bg-white.w-full.z-10
 						ListboxOption(v-for="timeLevel in timeLevels" :key="timeLevel" :value="timeLevel").cursor-pointer.border.p-1.hover_bg-black.hover_text-white
 							| {{ timeLevel }}
-
-			div.relative.z-10
+			p Time Filter
+			VueDatePicker(
+				auto-position="bottom"
+				range
+				v-model="dateRange"
+				:enable-time-picker="false"
+				:max-date="new Date()"
+				:preset-dates="presetDates"
+				:teleport="true"
+			)
+			p View Level
+			div.relative
 				Listbox(v-model="selectedViewLevel")
 					ListboxButton.button.bg-utd-orange.text-white.w-40
 						| {{ selectedViewLevel }}
-					ListboxOptions.text-center.border.rounded-xl.overflow-hidden.absolute.bg-white.w-full
+					ListboxOptions.text-center.border.rounded-xl.overflow-hidden.absolute.bg-white.w-full.z-10
 						ListboxOption(v-for="viewLevel in viewLevels" :key="viewLevel" :value="viewLevel").cursor-pointer.border.p-1.hover_bg-black.hover_text-white
 							| {{ viewLevel }}
-
-			div.z-9
-				button(@click="aggregation = !aggregation").button.bg-utd-green.text-white.w-full.px-4
-					| Toggle Aggregate by time ({{ aggregation }})
-
-		div
+			p View Filter
 			Combobox(multiple v-model="selectedViewFilters")
 				ul(v-if="selectedViewFilters").flex.flex-row.gap-1.m-1
 					li(v-for="selectedViewFilter in selectedViewFilters" :key="selectedViewFilter" :value="selectedViewFilter")
@@ -43,16 +49,20 @@ div
 				ComboboxOptions.text-black.border
 					ComboboxOption(v-for="viewFilter in filteredViews" :key="viewFilter" :value="viewFilter").hover_bg-black.hover_text-white.p-1
 						| {{ viewFilter }}
-
-	ClientOnly
-		DataProcessedChart(
-			:aggregation="aggregation ? { field: 'time' } : {}"
-			:data="processedData"
-			:timeFilter="{ start: startDate, end: endDate }"
-			:timeLevel="selectedTimeLevel"
-			:title="selectedQuery"
-			:viewLevel="selectedViewLevel"
-		).h-screen.w-full
+			p Aggregations
+			div
+				button(@click="aggregation = !aggregation").button.bg-utd-green.text-white.w-full.px-4
+					| Toggle Aggregate by time ({{ aggregation }})
+		div.p-2.border-black.border-2.w-full.h-screen.md_h-full
+			ClientOnly
+				DataProcessedChart(
+					:aggregation="aggregation ? { field: 'time' } : {}"
+					:data="processedData"
+					:timeFilter="{ start: startDate, end: endDate }"
+					:timeLevel="selectedTimeLevel"
+					:title="selectedQuery"
+					:viewLevel="selectedViewLevel"
+				)
 </template>
 
 <script lang="ts" setup>
@@ -65,19 +75,41 @@ const { data: itemsOut } = await useFetch("/api/data/itemsOut")
 
 // num of users, use All for viewLevel and have no viewFilters
 
+const presetDates = ref([
+	{ label: "Today", value: [new Date(), new Date()] },
+	{ label: "Last 7 Days", value: [new Date(new Date().setDate(new Date().getDate() - 7)), new Date()] },
+	{ label: "Last 30 Days", value: [new Date(new Date().setDate(new Date().getDate() - 30)), new Date()] },
+	{ label: "Last Year", value: [new Date(new Date().setFullYear(new Date().getFullYear() - 1)), new Date()] },
+])
+
 const queries = ["itemsIn", "itemsOut", "numUsers", "numUniqueUsers"]
 const selectedQuery = ref(queries[0])
 const timeLevels = ["Day", "Week", "Month", "Semester", "Year"]
 const selectedTimeLevel = ref(timeLevels[0])
 const viewLevels = ["Item", "Category", "Source", "All"]
 const selectedViewLevel = ref(viewLevels[0])
-const startDate = ref(null)
-const endDate = ref(null)
+const dateRange = ref(presetDates.value[1].value)
 const viewFilters = ["Grain", "NTFB", "Protein", "Vegetable", "Fruit"]
 const selectedViewFilters = ref([viewFilters[0]])
 const aggregation = ref(false)
 
 const query = ref("")
+
+const startDate = computed(() => {
+	if (dateRange.value[0] === undefined) {
+		return new Date()
+	} else {
+		return dateRange.value[0]
+	}
+})
+const endDate = computed(() => {
+	if (dateRange.value[1] === undefined) {
+		return new Date()
+	} else {
+		return dateRange.value[1]
+	}
+})
+
 const filteredViews = computed(() =>
 	query.value === ""
 		? viewFilters
@@ -158,6 +190,7 @@ enum TimeLevelType {
 	Semester = "Semester",
 	Year = "Year",
 }
+
 const semesterFromDate = (date) => {
 	const springSemesterStart = new Date(date.getFullYear(), 0)
 	const springSemesterEnd = new Date(date.getFullYear(), 4, 31)

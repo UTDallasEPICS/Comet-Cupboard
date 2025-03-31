@@ -1,11 +1,11 @@
 <template lang="pug">
-div
+div.h-full.w-full
 	ClientOnly
 		DataPlotlyChart(
 			:config="{ scrollZoom: true, responsive: true, displaylogo: false, modeBarButtonsToRemove: ['lasso2d', 'zoom2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d', 'pan2d', 'select2d'], displayModeBar: true }"
 			:data="processedData"
 			:layout="layout"
-		).h-screen
+		).h-full.w-full
 </template>
 
 <script lang="ts" setup>
@@ -91,6 +91,23 @@ const isObjectEmpty = (obj) => {
 	return obj && Object.keys(obj).length === 0 && obj.constructor === Object
 }
 
+// just to place legend correctly
+const windowWidth = ref(1)
+onMounted(() => {
+	window.addEventListener("resize", () => {
+		windowWidth.value = window.innerWidth
+	})
+})
+onUnmounted(() => {
+	window.removeEventListener("resize", () => {
+		windowWidth.value = window.innerWidth
+	})
+})
+
+const showLegend = computed(() => {
+	return windowWidth.value > 825
+})
+
 const layout = computed(() => {
 	return {
 		title: {
@@ -109,6 +126,14 @@ const layout = computed(() => {
 			mirror: true,
 		},
 		plot_bgcolor: "#D9D9D9",
+		hoverlabel: {
+			bgcolor: "#FFFFFF",
+		},
+		margin: {
+			l: 25,
+			r: 25,
+		},
+		showlegend: showLegend.value,
 	}
 })
 
