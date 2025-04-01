@@ -30,7 +30,7 @@ div.w-full.sm_w-80.drop-shadow-standard.bg-white.flex.flex-col.text-xl
 			div(class="h-[1px]").bg-black
 
 			button(v-if="pending" @click="emit('openPendingModal')").bg-utd-green.text-white.w-full.button Pending Cart...
-			button(v-else @click="submitCart").button.bg-utd-green.text-white.w-full Submit Cart
+			button(v-else @click="emit('openPendingModal')").button.bg-utd-green.text-white.w-full Submit Cart
 </template>
 
 <script setup lang="ts">
@@ -43,6 +43,7 @@ const { resetCartView, getCart } = store
 const { cartItems, cartTotalCount, cartAdjustedCount, pending } = storeToRefs(store)
 
 const emit = defineEmits(["openPendingModal"])
+const props = defineProps<{ state: string }>()
 
 const markExpiredItems = ref(false)
 
@@ -57,13 +58,19 @@ const toggleMarkExpiredItems = async () => {
 	}
 }
 
+watch(() => props.state, (newState) => {
+	if (newState === "PENDING") {
+		submitCart()
+	}
+})
+
 const submitCart = async () => {
 	await $fetch("/api/verification/cartRequestVerification", { method: "POST" })
 	await getCart()
-	emit("openPendingModal")
 }
 
 onMounted(async () => {
 	await getCart()
 })
+
 </script>

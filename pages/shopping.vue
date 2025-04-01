@@ -24,10 +24,10 @@ div
 					button(class="w-[50px]" @click="scrollToTop").button.bg-utd-green.text-white.drop-shadow-standard.pointer-events-auto
 						ChevronUpIcon.m-auto.h-6.fill-white.stroke-white
 				TransitionsSlideLeft
-					CartView(v-if="cartView" @openPendingModal="currentModal = ModalType.ACCEPTING").fixed.z-50.right-0.top-20.bottom-0
+					CartView(v-if="cartView" @openPendingModal="currentModal = ModalType.ACCEPTING" :state="currentModal").fixed.z-50.right-0.top-20.bottom-0
 				// Forces the Statement of understanding to be accepted before review can begin
-				Modal(v-if="currentModal == ModalType.ACCEPTING" title="Agreement and Terms" @toggleModal="() => { closeModal(), retractCart() }")
-					StatementOfUnderstanding(@accept="currentModal = ModalType.PENDING" @cancel="() => { closeModal(), retractCart() }")
+				Modal(v-if="currentModal == ModalType.ACCEPTING" title="Agreement and Terms" @toggleModal="() => { closeModal(), resetCartView() }")
+					StatementOfUnderstanding(@accept="currentModal = ModalType.PENDING" @cancel="() => { closeModal(), resetCartView() }")
 
 				// Rejected Pop-Up
 				Modal(v-if="currentModal == ModalType.REJECTED" title="Cart Rejected" @toggleModal="closeModal")
@@ -73,7 +73,6 @@ div
 </template>
 
 <script lang="ts" setup>
-
 import { ChevronUpIcon } from "@heroicons/vue/24/solid"
 import { useCartStore } from "~/stores/cart"
 
