@@ -29,7 +29,7 @@ const props = defineProps({
 })
 
 const addSource = async () => {
-	await $fetch("/api/controls/sources", {
+	await $fetch("/api/inventory/source", {
 		method: "PUT",
 		body: JSON.stringify({ source: newSource.value }),
 	})

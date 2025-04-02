@@ -47,7 +47,6 @@ const apiAccessMap: { [route: string]: { [method: string]: AccessPermission } } 
 	},
 	"/api/controls/sources": {
 		GET: AccessPermission.INVENTORY_MANAGEMENT,
-		PUT: AccessPermission.INVENTORY_MANAGEMENT,
 	},
 	"/api/inventory/deal": {
 		DELETE: AccessPermission.INVENTORY_MANAGEMENT,
