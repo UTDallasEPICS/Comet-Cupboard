@@ -24,8 +24,10 @@ div.sticky.top-0.z-50
 						NuxtLink(:to="adminDashboardPath").cursor-pointer.text-nowrap
 							| Admin Dashboard
 				div.flex.flex-row.space-x-1.tn_space-x-2.sm_space-x-4
-					button(v-if="page === shoppingPath" style="text-decoration-color: white" @click="toggleCartView").hover_underline
-						ShoppingBagIcon.size-10.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
+					button(v-if="page === shoppingPath" style="text-decoration-color: white" @click="toggleCartView").relative
+						ShoppingCartIcon.size-11.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
+						span(v-if="cartTotalCount != 0").px-2.text-xl.absolute.font-bold.-top-2.rounded-full.-right-2.text-xl.text-white.bg-utd-orange {{ cartTotalCount }}
+
 					// for now this is a link to the sign in page (test + nowhere else yet)
 					button(@click="logout").cursor-pointer
 						ArrowRightStartOnRectangleIcon.size-10.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
@@ -65,8 +67,9 @@ div.sticky.top-0.z-50
 </template>
 
 <script lang="ts" setup>
-import { Bars3Icon, ShoppingBagIcon, ArrowRightStartOnRectangleIcon, XMarkIcon } from "@heroicons/vue/24/solid"
+import { Bars3Icon, ShoppingCartIcon, ArrowRightStartOnRectangleIcon, XMarkIcon } from "@heroicons/vue/24/solid"
 import { useCartStore } from "~/stores/cart"
+import { storeToRefs } from "pinia"
 
 const { toggleCartView } = useCartStore()
 
@@ -104,4 +107,7 @@ const logout = async () => {
 
 	await navigateTo("/")
 }
+
+const store = useCartStore()
+const { cartTotalCount } = storeToRefs(store)
 </script>
