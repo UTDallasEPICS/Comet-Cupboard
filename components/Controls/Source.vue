@@ -20,7 +20,7 @@ div.flex.grow.relative
 			).md_max-h-96.absolute.top-14.z-30.bg-white.rounded-xl.w-full.max-h-96.divide-y.divide-cupboard-lg.overflow-y-auto.overscroll-contain.drop-shadow-standard
 				ListboxOption(v-for="source in sources" @click="handleSource(source.name)").p-1.text-center.text-xl.cursor-pointer.text-wrap.hover_bg-cupboard-lg
 					| {{ source.name }}
-			.div.div.flex.items-center.gap-2.p-2.border-t.mt-2
+			div.div.div.flex.items-center.gap-2.p-2.border-t.mt-2
 				input(
 					placeholder="Enter new source"
 					type="text"
@@ -30,7 +30,6 @@ div.flex.grow.relative
 				).flex-1.p-2.border.rounded-lg.outline-none
 				button(@click="addSource").bg-utd-green.text-white.rounded-full.w-12.h-12.flex.place-content-center.place-items-center.hover_drop-shadow-standard
 					| +
-
 </template>
 
 <script lang="ts" setup>
