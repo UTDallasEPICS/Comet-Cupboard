@@ -34,19 +34,19 @@ div.w-72.relative
 		div.flex.justify-center.items-center.space-x-6.mt-4
 			button(
 				@click="$emit('changeAmountUpdate', itemID, -changeInput)"
-			).bg-utd-green.text-white.rounded-full.w-12.h-12.flex.place-content-center.place-items-center.hover_drop-shadow-standard
+			).bg-utd-green.text-white.rounded-full.w-12.h-12.flex.place-content-center.place-items-center.soft-button
 				MinusIcon.fill-white.stroke-white.h-6
 
 			input(min="1" step="1" type="number" v-model="changeInput").input.no-spinner.border-b-2.w-10.text-center
 
 			button(
 				@click="$emit('changeAmountUpdate', itemID, changeInput)"
-			).bg-utd-green.text-white.rounded-full.w-12.h-12.flex.place-content-center.place-items-center.hover_drop-shadow-standard
+			).bg-utd-green.text-white.rounded-full.w-12.h-12.flex.place-content-center.place-items-center.soft-button
 				PlusIcon.fill-white.stroke-white.h-6
 
 	// Shopping Display 
 	div(v-if="typeOfCard === 'SHOPPING'").mt-4.text-lg
-		button(@click="addToCart").bg-utd-green.text-white.py-1.rounded-full.w-full.font-semibold.hover_drop-shadow-standard Add to Cart
+		button(@click="addToCart").bg-utd-green.text-white.py-1.rounded-full.w-full.font-semibold.soft-button Add to Cart
 
 	// Name 
 	div.mt-3.text-center

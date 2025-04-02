@@ -43,9 +43,11 @@ div
 						)
 					// submit button
 					div.sticky.bottom-8.z-20.flex.justify-end.pointer-events-none
-						button(v-if="JSON.stringify(inventoryCountChanges) === '{}'").button.bg-red-negative.text-white.w-full.sm_w-72.cursor-not-allowed.pointer-events-auto No Changes
+						button(
+							v-if="JSON.stringify(inventoryCountChanges) === '{}'"
+						).button.static.bg-red-negative.text-white.w-full.sm_w-72.cursor-not-allowed.pointer-events-auto No Changes
 						button(v-else @click="currentModal = ModalType.REVIEW").button.bg-utd-green.text-white.w-full.sm_w-72.pointer-events-auto Review Changes
-						button(class="w-[50px]" @click="scrollToTop").button.bg-utd-green.text-white.drop-shadow-standard.pointer-events-auto
+						button(class="w-[50px]" @click="scrollToTop").button.bg-utd-green.text-white.pointer-events-auto
 							ChevronUpIcon.m-auto.h-6.fill-white.stroke-white
 		//- Skeleton
 		template(#fallback)

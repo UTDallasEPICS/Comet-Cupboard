@@ -7,7 +7,7 @@ div.flex.flex-col.pt-2.pb-5.px-5.overflow-y-auto.overscroll-contain
 	div.flex.flex-row.justify-end.space-x-5
 		button(@click="emit('cancel')").modal-button.w-40.bg-red-negative.text-white
 			| Cancel
-		button(v-if="source === ''").modal-button.bg-red-negative.text-white.w-full.sm_w-72.cursor-not-allowed.pointer-events-auto No Source Selected
+		button(v-if="source === ''").modal-button.static.bg-red-negative.text-white.w-full.sm_w-72.cursor-not-allowed.pointer-events-auto No Source Selected
 		button(v-else @click="emit('accept', source)").modal-button.w-40.bg-utd-green.text-white
 			| Submit
 </template>
