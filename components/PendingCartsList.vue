@@ -1,6 +1,5 @@
 <template lang="pug">
 div.flex.flex-col.gap-y-4.min-w-60
-
 	div(v-if="pendingCartIDsAndAdjQTY.length === 0").flex.flex-row.p-1.text-center.text-xl.text-gray-500.justify-center
 		p No Pending Carts
 	div(v-else)
@@ -8,10 +7,10 @@ div.flex.flex-col.gap-y-4.min-w-60
 			v-for="pendingCart in pendingCartIDsAndAdjQTY"
 			:class="pendingCart.cartID === selectedCart ? 'bg-utd-orange text-white' : 'bg-cupboard-lg'"
 			@click="emit('update:select-cart', pendingCart.cartID)"
-		).h-12.rounded-xl.cursor-pointer.hover_bg-utd-orange.hover_text-white.soft-button
+		).h-12.rounded-xl.hover_bg-utd-orange.hover_text-white
 			div.flex.flex-row.justify-between
-				span.px-4.text-xl.text-left {{ pendingCart.cartID }}
-				span.px-4.text-xl.text-right QTY: {{ pendingCart.adjQTY }}
+				span.px-4.text-xl.text-left.font-normal {{ pendingCart.cartID }}
+				span.px-4.text-xl.text-right.font-normal QTY: {{ pendingCart.adjQTY }}
 </template>
 
 <script lang="ts" setup>

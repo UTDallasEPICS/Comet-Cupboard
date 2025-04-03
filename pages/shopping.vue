@@ -21,7 +21,7 @@ div
 								:name="item.name"
 							)
 				div.sticky.bottom-5.flex.justify-end
-					button(class="w-[50px]" @click="scrollToTop").button.bg-utd-green.text-white.pointer-events-auto
+					button(class="w-[50px]" @click="scrollToTop").bg-utd-green.text-white.h-12
 						ChevronUpIcon.m-auto.h-6.fill-white.stroke-white
 				TransitionsSlideLeft
 					CartView(v-if="cartView" @openPendingModal="currentModal = ModalType.PENDING").fixed.z-50.right-0.top-20.bottom-0

@@ -16,8 +16,7 @@
     }
 
     /* button styling */
-    .button {
-        height: 50px;
+    button {
         text-align: center;
         font-family: theme('fontFamily.utd');
         font-size: x-large;
@@ -26,49 +25,39 @@
         /* horizontal, vertical, blur, grow, color */
     }
 
-    .button:hover {
+    button:hover {
         box-shadow: 0px 4px 5px 1px rgba(25,25,25,.4); 
     }
 
-    .button:active {
-        transform: scale(0.97);;
-    }
-
-    /* Soft button*/
-    /* Adding shadow and active effect while not editing styling or size */
-    .soft-button:hover {
-        box-shadow: 0px 4px 5px 1px rgba(25,25,25,.4); 
-    }
-
-    .soft-button:active {
+    button:active {
         transform: scale(0.97);
+    }
+
+    button:disabled {
+        cursor: not-allowed;
+    }
+
+    button:disabled:hover {
+        box-shadow: none;
+    }
+
+    button:disabled:active {
+        transform: none;
+    }
+
+    .remove-button-effects:hover {
+        box-shadow: none;
+    }
+
+    .remove-button-effects:active {
+        transform: none;
     }
 
     .modal-button {
         height: 40px;
-        text-align: center;
-        font-family: theme('fontFamily.utd');
-        font-size: x-large;
         font-weight: 600;
         border-radius: 8px;
         /* horizontal, vertical, blur, grow, color */
-    }
-
-    .modal-button:hover{
-        box-shadow: 0px 4px 5px 1px rgba(25,25,25,.4);
-    }
-
-    .modal-button:active {
-        transform: scale(0.97);
-    }
-
-    /* For buttons that need to not have hover or click effects */
-    .static:hover{
-        box-shadow: none; /* Remove hover shadow effect */
-    }
-
-    .static:active {
-        transform: none; /* Remove click scale effect */
     }
 
     .drop-shadow-standard {

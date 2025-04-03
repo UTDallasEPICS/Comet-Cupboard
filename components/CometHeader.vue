@@ -24,12 +24,12 @@ div.sticky.top-0.z-50
 						NuxtLink(:to="adminDashboardPath").cursor-pointer.text-nowrap
 							| Admin Dashboard
 				div.flex.flex-row.space-x-1.tn_space-x-2.sm_space-x-4
-					button(v-if="page === shoppingPath" style="text-decoration-color: white" @click="toggleCartView").relative
+					button(v-if="page === shoppingPath" style="text-decoration-color: white" @click="toggleCartView").relative.remove-button-effects
 						ShoppingCartIcon.size-11.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
 						span(v-if="cartTotalCount != 0").px-2.text-xl.absolute.font-bold.-top-2.rounded-full.-right-2.text-xl.text-white.bg-utd-orange {{ cartTotalCount }}
 
 					// for now this is a link to the sign in page (test + nowhere else yet)
-					button(@click="logout").cursor-pointer
+					button(@click="logout").remove-button-effects
 						ArrowRightStartOnRectangleIcon.size-10.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
 	// mobile navigation menu 
 	div(v-show="mobileNav").z-40.flex-grow.h-screen.w-screen.bg-utd-green
@@ -37,7 +37,7 @@ div.sticky.top-0.z-50
 		div.relative.h-20.w-full.bg-utd-orange.content-center
 			div.text-3xl.text-center.font-bold.text-white
 				| Navigation
-			button(@click="mobileNav = false").absolute.inset-y-0.right-5
+			button(@click="mobileNav = false").absolute.inset-y-0.right-5.remove-button-effects
 				XMarkIcon.size-10.fill-white.stroke-white.hover_fill-black.hover_stroke-black
 		div.h-1.w-full.overflow-y-clip.overscroll-none.bg-white
 		div.mt-6.flex.flex-col.text-white

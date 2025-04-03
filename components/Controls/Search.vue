@@ -2,10 +2,10 @@
 div.relative.flex.grow
 	Combobox(nullable v-model="searchTerm")
 		ComboboxInput(placeholder="Search" @change="searchTerm = $event.target.value.trim()" :displayValue="(searchTerm) => searchTerm").input.pl-10.w-full
-		ComboboxButton.absolute.left-0.top-3
-			MagnifyingGlassIcon.h-7.fill-black.pointer-events-none
-		button(@click="clear").absolute.right-0.top-3
-			XMarkIcon.h-7.fill-black.pointer-events-none
+		ComboboxButton.absolute.left-0.top-3.remove-button-effects
+			MagnifyingGlassIcon.h-7.fill-black
+		button(@click="clear").absolute.right-0.top-3.remove-button-effects
+			XMarkIcon.h-7.fill-black
 		// list filtered results (filtered in prisma api call)
 		TransitionsDropDown
 			ComboboxOptions.absolute.top-14.z-10.bg-white.drop-shadow-standard.rounded-xl.w-full.max-h-96.divide-y.divide-cupboard-lg.overflow-y-scroll.overscroll-contain

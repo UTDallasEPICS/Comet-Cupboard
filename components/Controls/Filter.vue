@@ -1,7 +1,7 @@
 <template lang="pug">
 div.flex.relative
 	Listbox(multiple v-model="selectedFilters" v-slot="{ open }")
-		ListboxButton.button.flex.flex-row.w-full.md_w-44.bg-utd-orange.text-white.px-4.text-left.items-center
+		ListboxButton.flex.flex-row.w-full.md_w-44.bg-utd-orange.text-white.px-4.text-left.items-center
 			div.grow.overflow-x-hidden
 				| Filters
 			ChevronUpIcon(v-if="open").fill-white.stroke-white.h-7

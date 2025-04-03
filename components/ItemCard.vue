@@ -10,7 +10,7 @@ div.w-72.relative
 	// Inventory Display 
 	div(v-if="typeOfCard === 'INVENTORY'")
 		Menu
-			MenuButton.absolute.top-2.right-2.bg-gray-300.bg-opacity-90.cursor-pointer.w-12.h-12.content-center.rounded-full.hover_drop-shadow-standard
+			MenuButton.absolute.top-2.right-2.bg-gray-300.bg-opacity-90.w-12.h-12.content-center.rounded-full.hover_drop-shadow-standard
 				div.flex.flex-row.space-x-1.justify-center
 					div.w-2.h-2.bg-white.border-2.border-black.rounded-full
 					div.w-2.h-2.bg-white.border-2.border-black.rounded-full
@@ -34,23 +34,21 @@ div.w-72.relative
 		div.flex.justify-center.items-center.space-x-6.mt-4
 			button(
 				@click="$emit('changeAmountUpdate', itemID, -changeInput)"
-			).bg-utd-green.text-white.rounded-full.w-12.h-12.flex.place-content-center.place-items-center.soft-button
+			).bg-utd-green.text-white.rounded-full.w-12.h-12.flex.place-content-center.place-items-center
 				MinusIcon.fill-white.stroke-white.h-6
 
 			input(min="1" step="1" type="number" v-model="changeInput").input.no-spinner.border-b-2.w-10.text-center
 
 			button(
 				@click="$emit('changeAmountUpdate', itemID, changeInput)"
-			).bg-utd-green.text-white.rounded-full.w-12.h-12.flex.place-content-center.place-items-center.soft-button
+			).bg-utd-green.text-white.rounded-full.w-12.h-12.flex.place-content-center.place-items-center
 				PlusIcon.fill-white.stroke-white.h-6
 
 	// Shopping Display 
-	div(v-if="typeOfCard === 'SHOPPING'").mt-4.text-lg
-		button(@click="addToCart").bg-utd-green.text-white.py-1.rounded-full.w-full.font-semibold.soft-button Add to Cart
+	button(v-if="typeOfCard === 'SHOPPING'" @click="addToCart").mt-4.bg-utd-green.text-lg.text-white.py-1.rounded-full.w-full.font-semibold Add to Cart
 
 	// Name 
-	div.mt-3.text-center
-		p.text-xl {{ name }}
+	p.mt-3.text-center.text-xl {{ name }}
 </template>
 
 <script lang="ts" setup>

@@ -23,7 +23,7 @@ div.flex.flex-row.items-center.text-xl
 				@keydown.enter="checkZeroExpired(expiredCountValue)"
 				:max="countValue"
 			).input.no-spinner.border-b-2.text-center.text-xl.h-min.w-10.ml-auto
-	button(@click="removeCartItem").ml-5
+	button(@click="removeCartItem").ml-5.remove-button-effects
 		XMarkIcon.size-8.fill-utd-green.stroke-utd-green.hover_fill-red-negative.hover_stroke-red-negative
 </template>
 

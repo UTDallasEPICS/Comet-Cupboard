@@ -14,6 +14,6 @@ div
 				p UTD Comet Cupboard does not and shall not discriminate on the basis of race, color, religion (creed), gender, gender expression, age, national origin (ancestry), disability, marital status, sexual orientation, or military status, in any of its activities or operations
 		div.flex.place-content-evenly.items-center.mb-8
 			NuxtLink(to="/shopping")
-				button.button.bg-red-negative.text-white.w-28.sm_w-40 Decline
-				button.button.bg-utd-green.text-white.w-28.sm_w-40 Accept
+				button.bg-red-negative.text-white.w-28.sm_w-40 Decline
+				button.bg-utd-green.text-white.w-28.sm_w-40 Accept
 </template>

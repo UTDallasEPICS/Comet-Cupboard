@@ -5,9 +5,9 @@ div.flex.flex-col.pt-2.pb-5.px-5.overflow-y-auto.overscroll-contain
 		div(v-for="(change, index) in props.changes").py-2
 			InventoryReviewItemCard(:change="change" :id="index")
 	div.flex.flex-row.justify-end.space-x-5
-		button(@click="emit('cancel')").modal-button.w-40.bg-red-negative.text-white
+		button(@click="emit('cancel')").modal-button.w-40.bg-cupboard-dg.text-white
 			| Cancel
-		button(v-if="source === ''").modal-button.static.bg-red-negative.text-white.w-full.sm_w-72.cursor-not-allowed.pointer-events-auto No Source Selected
+		button(v-if="source === ''" disabled).modal-button.bg-red-negative.text-white.w-full.sm_w-72 No Source Selected
 		button(v-else @click="emit('accept', source)").modal-button.w-40.bg-utd-green.text-white
 			| Submit
 </template>
