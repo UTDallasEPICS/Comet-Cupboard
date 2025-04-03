@@ -4,10 +4,25 @@ div.flex.flex-row.items-center.text-xl
 	div.w-full.ml-2
 		div.flex.flex-row
 			p.text-wrap.break-words {{ name }}
-			input(min="0" step="1" type="number" v-model="countValue").input.no-spinner.border-b-2.text-center.text-xl.h-min.w-10.ml-auto
+			input(
+				min="0"
+				step="1"
+				type="number"
+				v-model="countValue"
+				@blur="checkZero(countValue)"
+				@keydown.enter="checkZero(countValue)"
+			).input.no-spinner.border-b-2.text-center.text-xl.h-min.w-10.ml-auto
 		div(v-if="showExpired").flex.flex-row
 			p.text-red-negative Expired
-			input(min="0" step="1" type="number" v-model="expiredCountValue" :max="countValue").input.no-spinner.border-b-2.text-center.text-xl.h-min.w-10.ml-auto
+			input(
+				min="0"
+				step="1"
+				type="number"
+				v-model="expiredCountValue"
+				@blur="checkZeroExpired(expiredCountValue)"
+				@keydown.enter="checkZeroExpired(expiredCountValue)"
+				:max="countValue"
+			).input.no-spinner.border-b-2.text-center.text-xl.h-min.w-10.ml-auto
 	button(@click="removeCartItem").ml-5
 		XMarkIcon.size-8.fill-utd-green.stroke-utd-green.hover_fill-red-negative.hover_stroke-red-negative
 </template>
@@ -72,19 +87,20 @@ const removeCartItem = async () => {
 	emit("update:cart")
 }
 
-watch(countValue, async (newCountValue, oldCountValue) => {
+const checkZero = async (newCountValue: number) => {
 	if (typeof newCountValue !== "number") {
 		countValue.value = 0
-		return
+	}
+	if (countValue.value == 0) {
+		countValue.value = 0
 	}
 	await changeCartItemCount()
-})
+}
 
-watch(expiredCountValue, async (newExpiredCountValue, oldExpiredCountValue) => {
+const checkZeroExpired = async (newExpiredCountValue: number) => {
 	if (typeof newExpiredCountValue !== "number") {
 		expiredCountValue.value = 0
-		return
 	}
 	await changeCartItemExpiredCount()
-})
+}
 </script>
