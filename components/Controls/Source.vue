@@ -1,5 +1,5 @@
 <template lang="pug">
-div.flex.grow.relative
+div.flex
 	Listbox(v-slot="{ open }")
 		ListboxButton.button.flex.flex-row.w-full.md_w-44.bg-utd-orange.text-white.px-4.items-center.text-left
 			// default, shown when no source
@@ -18,7 +18,6 @@ div.flex.grow.relative
 			ListboxOptions(
 				class="max-h-[600px]"
 			).md_max-h-96.absolute.top-14.z-30.bg-white.rounded-xl.w-full.max-h-96.divide-y.divide-cupboard-lg.overflow-y-auto.overscroll-contain.drop-shadow-standard
-				refreshNewSource
 				ListboxOption(v-for="source in sources" @click="handleSource(source.name)").p-1.text-center.text-xl.cursor-pointer.text-wrap.hover_bg-cupboard-lg
 					| {{ source.name }}
 </template>
@@ -31,7 +30,7 @@ const emit = defineEmits(["sourceChange"])
 
 const selectedSource = ref("")
 
-const { data: sources, refresh } = await useFetch("/api/controls/sources")
+const { data: sources } = await useFetch("/api/controls/sources")
 
 const handleSource = (sourceName) => {
 	if (selectedSource.value === sourceName) {
@@ -39,10 +38,6 @@ const handleSource = (sourceName) => {
 	} else {
 		selectedSource.value = sourceName
 	}
-}
-
-const refreshNewSource = () => {
-	refresh()
 }
 
 // emit source changes
