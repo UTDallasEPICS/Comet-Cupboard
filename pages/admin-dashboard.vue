@@ -13,12 +13,12 @@ div
 			@keydown.enter="addVolunteer"
 		).w-full.h-12.text-lg.p-3.border.border-gray-300
 		div.flex.justify-between.items-center.px-3
-			button(@click="addVolunteer").button.w-40.bg-utd-green.text-white Add
+			button(@click="addVolunteer").w-40.bg-utd-green.text-white.h-12 Add
 
 	div
 		div(v-for="volunteer in volunteers" :key="volunteer.netID" :value="volunteer.netID").flex.justify-between.items-center.p-3.border.border-gray-300
 			p.text-lg.p-3.font-bold {{ volunteer.netID }}
-			button(@click="removeVolunteer(volunteer.netID)").button.w-40.bg-red-negative.text-white Remove
+			button(@click="removeVolunteer(volunteer.netID)").w-40.bg-red-negative.text-white.h-12 Remove
 </template>
 
 <script setup>
