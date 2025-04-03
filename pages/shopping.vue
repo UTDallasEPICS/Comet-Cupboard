@@ -24,17 +24,15 @@ div
 					button(class="w-[50px]" @click="scrollToTop").bg-utd-green.text-white.h-12
 						ChevronUpIcon.m-auto.h-6.fill-white.stroke-white
 				TransitionsSlideLeft
-					CartView(v-if="cartView" @openPendingModal="currentModal = ModalType.PENDING").fixed.z-50.right-0.top-20.bottom-0
-				// Pending Review Pop-Up
-				Modal(v-if="currentModal == ModalType.PENDING" title="Pending Review" @toggleModal="closeModal")
-					div.flex.flex-col.p-5
-						div.text-xl.h-20
-							| Your cart has been submitted, please take it to a volunteer for review.
-						div.flex.flex-row.mt-auto
-							button(@click="retractCart").modal-button.bg-utd-orange.text-white.ml-auto.w-full.sm_w-32.mr-5
-								| Edit Cart
-							button(@click="closeModal").modal-button.bg-utd-green.text-white.w-full.sm_w-32
-								| Close
+					CartView(
+						v-if="cartView"
+						@retractCart="retractCart"
+						@submitCart="currentModal = ModalType.ACCEPTING"
+						:state="currentModal"
+					).fixed.z-50.right-0.top-20.bottom-0
+				// Forces the Statement of understanding to be accepted before review can begin
+				Modal(v-if="currentModal == ModalType.ACCEPTING" title="Agreement and Terms" @toggleModal="() => { closeModal(), resetCartView() }")
+					StatementOfUnderstanding(@accept="submitCart" @cancel="() => { closeModal(), resetCartView() }")
 
 				// Rejected Pop-Up
 				Modal(v-if="currentModal == ModalType.REJECTED" title="Cart Rejected" @toggleModal="closeModal")
@@ -94,6 +92,7 @@ const verificationUpdate = ref<EventSource>()
 
 const ModalType = Object.freeze({
 	PENDING: "PENDING",
+	ACCEPTING: "ACCEPTING", //For statement of understanding
 	ACCEPTED: "ACCEPTED",
 	REJECTED: "REJECTED",
 })
@@ -146,6 +145,12 @@ const filteredCategoryItems = computed(() => {
 
 const closeModal = () => {
 	currentModal.value = ""
+}
+
+const submitCart = async () => {
+	await $fetch("/api/verification/cartRequestVerification", { method: "POST" })
+	await getCart()
+	closeModal()
 }
 
 const retractCart = async () => {

@@ -29,8 +29,8 @@ div.w-full.sm_w-80.drop-shadow-standard.bg-white.flex.flex-col.text-xl
 				p.ml-2.text-nowrap.hover_underline Mark Expired Items
 			div(class="h-[1px]").bg-black
 
-			button(v-if="pending" @click="emit('openPendingModal')").bg-utd-green.text-white.w-full.h-12 Pending Cart...
-			button(v-else @click="submitCart").bg-utd-green.text-white.w-full.h-12 Submit Cart
+			button(v-if="pending" @click="emit('retractCart')").bg-utd-green.text-white.w-full.h-12 Pending Cart...
+			button(v-else @click="emit('submitCart')").bg-utd-green.text-white.w-full.h-12 Submit Cart
 </template>
 
 <script setup lang="ts">
@@ -42,7 +42,7 @@ const store = useCartStore()
 const { resetCartView, getCart } = store
 const { cartItems, cartTotalCount, cartAdjustedCount, pending } = storeToRefs(store)
 
-const emit = defineEmits(["openPendingModal"])
+const emit = defineEmits(["submitCart", "retractCart"])
 
 const markExpiredItems = ref(false)
 
@@ -50,17 +50,11 @@ const toggleMarkExpiredItems = async () => {
 	markExpiredItems.value = !markExpiredItems.value
 	// reset all expired counts to 0 because we want users to clearly know if they are marking expired items in cart
 	if (!markExpiredItems.value) {
-		cartItems.forEach((cartItem) => {
+		cartItems.value.forEach((cartItem) => {
 			$fetch("/api/cart/cartItem", { method: "POST", body: { itemID: cartItem.itemID, incrementChange: 0, expiredCount: 0 } })
 		})
 		await getCart()
 	}
-}
-
-const submitCart = async () => {
-	await $fetch("/api/verification/cartRequestVerification", { method: "POST" })
-	await getCart()
-	emit("openPendingModal")
 }
 
 onMounted(async () => {
