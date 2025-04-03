@@ -8,8 +8,8 @@ div(class="h-[calc(100vh-80px)]").fixed.inset-0.z-40.flex.mt-20.w-screen.justify
 		).absolute.flex.flex-col.drop-shadow-standard.bg-white.pointer-events-auto.rounded-none.sm_rounded-2xl.w-full.sm_min-h-52.h-auto
 			div.relative.flex.justify-center.items-center.bg-utd-orange.p-2.rounded-none.sm_rounded-t-2xl
 				h1.text-xl.text-white.font-semibold {{ props.title }}
-				button(@click="toggleModal").absolute.end-2
-					XMarkIcon.h-7.fill-white.stroke-white
+				button(@click="toggleModal").absolute.end-2.remove-button-effects
+					XMarkIcon.h-7.fill-white.stroke-white.hover_fill-black.hover_stroke-black
 			slot
 </template>
 

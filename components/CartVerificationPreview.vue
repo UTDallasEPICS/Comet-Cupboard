@@ -21,9 +21,9 @@ div.w-full.h-min.flex.flex-col.gap-y-4
 					:name="cartItem.name"
 					:totalQTY="cartItem.totalQTY"
 				)
-		div.flex.flex-row.gap-x-4.justify-center.lg_justify-end
-			button(@click="rejectCart").button.w-40.bg-red-negative.text-white Decline
-			button(@click="acceptCart").button.w-40.bg-utd-green.text-white Accept
+		div.flex.flex-row.gap-x-4.justify-center.lg_justify-end.h-12
+			button(@click="rejectCart").w-40.bg-red-negative.text-white Decline
+			button(@click="acceptCart").w-40.bg-utd-green.text-white Accept
 </template>
 
 <script lang="ts" setup>

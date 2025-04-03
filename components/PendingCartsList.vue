@@ -7,10 +7,10 @@ div.flex.flex-col.gap-y-4.min-w-60
 			v-for="pendingCart in pendingCartIDsAndAdjQTY"
 			:class="pendingCart.cartID === selectedCart ? 'bg-utd-orange text-white' : 'bg-cupboard-lg'"
 			@click="emit('update:select-cart', pendingCart.cartID)"
-		).h-12.rounded-xl.cursor-pointer.hover_bg-utd-orange.hover_text-white.hover_drop-shadow-standard
+		).h-12.rounded-xl.hover_bg-utd-orange.hover_text-white
 			div.flex.flex-row.justify-between
-				span.px-4.text-xl.text-left {{ pendingCart.cartID }}
-				span.px-4.text-xl.text-right QTY: {{ pendingCart.adjQTY }}
+				span.px-4.text-xl.text-left.font-normal {{ pendingCart.cartID }}
+				span.px-4.text-xl.text-right.font-normal QTY: {{ pendingCart.adjQTY }}
 </template>
 
 <script lang="ts" setup>

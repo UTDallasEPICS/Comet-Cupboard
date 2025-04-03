@@ -10,7 +10,7 @@ div
 						div.flex.flex-col.md_flex-row.md_space-x-5
 							ControlsFilter(@filterChange="(selectedFilters) => (filters = selectedFilters)")
 							div.max-md_order-first.flex.flex-row.space-x-5.max-md_pb-3
-								button(@click="currentModal = ModalType.ADD").button.flex.w-24.md_w-12.bg-utd-green.text-white.place-content-center.place-items-center
+								button(@click="currentModal = ModalType.ADD").flex.w-24.md_w-12.bg-utd-green.text-white.place-content-center.place-items-center
 									PlusIcon.fill-white.stroke-white.h-7
 						div.flex.grow
 							ControlsSearch(@searchTermChange="(newTerm) => searchTermChange(newTerm)")
@@ -42,10 +42,10 @@ div
 							:name="item.name"
 						)
 					// submit button
-					div.sticky.bottom-8.z-20.flex.justify-end.pointer-events-none
-						button(v-if="JSON.stringify(inventoryCountChanges) === '{}'").button.bg-red-negative.text-white.w-full.sm_w-72.cursor-not-allowed.pointer-events-auto No Changes
-						button(v-else @click="currentModal = ModalType.REVIEW").button.bg-utd-green.text-white.w-full.sm_w-72.pointer-events-auto Review Changes
-						button(class="w-[50px]" @click="scrollToTop").button.bg-utd-green.text-white.drop-shadow-standard.pointer-events-auto
+					div.sticky.bottom-8.z-20.flex.justify-end.h-12
+						button(v-if="JSON.stringify(inventoryCountChanges) === '{}'" disabled).bg-red-negative.text-white.w-full.sm_w-72 No Changes
+						button(v-else @click="currentModal = ModalType.REVIEW").bg-utd-green.text-white.w-full.sm_w-72 Review Changes
+						button(class="w-[50px]" @click="scrollToTop").bg-utd-green.text-white
 							ChevronUpIcon.m-auto.h-6.fill-white.stroke-white
 		//- Skeleton
 		template(#fallback)
