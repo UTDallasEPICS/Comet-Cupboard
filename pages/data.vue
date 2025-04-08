@@ -63,7 +63,7 @@ div
 					ChevronDownIcon(v-else).h-7.ml-auto
 				div(v-show="viewFilterOptionOpen")
 					Combobox(multiple v-model="selectedViewFilters")
-						ul(v-if="selectedViewFilters").flex.flex-row.gap-1.m-1
+						ul(v-if="selectedViewFilters").flex.flex-row.gap-1.m-1.flex-wrap
 							li(v-for="selectedViewFilter in selectedViewFilters" :key="selectedViewFilter" :value="selectedViewFilter")
 								div(
 									@click="selectedViewFilters = selectedViewFilters.filter((f) => f != selectedViewFilter)"
@@ -73,7 +73,11 @@ div
 						ComboboxOptions.text-black.border
 							div(v-for="filterType in Object.keys(viewFiltersCategories)" :key="filterType" :value="filterType")
 								| {{ filterType }}
-								ComboboxOption(v-for="viewFilter in viewFiltersCategories[filterType].filter(v => filteredViews.includes(v))" :key="viewFilter" :value="viewFilter").hover_bg-utd-orange.hover_text-white.pl-2
+								ComboboxOption(
+									v-for="viewFilter in viewFiltersCategories[filterType].filter((v) => filteredViews.includes(v))"
+									:key="viewFilter"
+									:value="viewFilter"
+								).hover_bg-utd-orange.hover_text-white.pl-2
 									| {{ viewFilter }}
 									div(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut")
 			hr(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut").border-black
@@ -136,9 +140,9 @@ const selectedViewLevel = ref(viewLevels[0])
 const dateRange = ref(presetDates.value[2].value)
 const viewFilters = ["Grain", "NTFB", "Protein", "Vegetable", "Fruit", "Beans"]
 const viewFiltersCategories = {
-	"Source" : ["NTFB"],
-	"Category" : ["Protein", "Vegetable", "Fruit", "Frozen",],
-	"Item" : ["Beans", "Rice"],
+	Source: ["NTFB"],
+	Category: ["Protein", "Vegetable", "Fruit", "Frozen"],
+	Item: ["Beans", "Rice"],
 }
 const selectedViewFilters = ref([])
 const aggregations = ["none", "time", "view"]
@@ -195,16 +199,13 @@ const endDate = computed(() => {
 
 //NOTICE: There is likely a much more streamlined way to do this
 const filteredViews = computed(() => {
-	const allCategoryViews = Object.values(viewFiltersCategories).flat();
-	const normalizedQuery = query.value.toLowerCase().replace(/\s+/g, "");
+	const allCategoryViews = Object.values(viewFiltersCategories).flat()
+	const normalizedQuery = query.value.toLowerCase().replace(/\s+/g, "")
 
 	return query.value === ""
 		? allCategoryViews
-		: allCategoryViews.filter((viewFilter) =>
-			viewFilter.toLowerCase().replace(/\s+/g, "").includes(normalizedQuery)
-		);
-});
-
+		: allCategoryViews.filter((viewFilter) => viewFilter.toLowerCase().replace(/\s+/g, "").includes(normalizedQuery))
+})
 
 const processedData = computed(() => {
 	if (selectedQuery.value === QueryType.ItemsIn) {
