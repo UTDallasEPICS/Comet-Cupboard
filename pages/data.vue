@@ -65,12 +65,17 @@ div
 					Combobox(multiple v-model="selectedViewFilters")
 						ul(v-if="selectedViewFilters").flex.flex-row.gap-1.m-1
 							li(v-for="selectedViewFilter in selectedViewFilters" :key="selectedViewFilter" :value="selectedViewFilter")
-								div(@click = "selectedViewFilters = selectedViewFilters.filter(f=>f!=selectedViewFilter)").bg-utd-orange.text-white.pl-2.pr-2.pt-1.pb-1.rounded-xl.hover_cursor-pointer
+								div(
+									@click="selectedViewFilters = selectedViewFilters.filter((f) => f != selectedViewFilter)"
+								).bg-utd-orange.text-white.pl-2.pr-2.pt-1.pb-1.rounded-xl.hover_cursor-pointer
 									| {{ selectedViewFilter }}
 						ComboboxInput(@change="query = $event.target.value").text-black.border.w-full.p-1
 						ComboboxOptions.text-black.border
-							ComboboxOption(v-for="viewFilter in filteredViews" :key="viewFilter" :value="viewFilter").hover_bg-utd-orange.hover_text-white.p-1
-								| {{ viewFilter }}
+							div(v-for="filterType in Object.keys(viewFiltersCategories)" :key="filterType" :value="filterType")
+								| {{ filterType }}
+								ComboboxOption(v-for="viewFilter in viewFiltersCategories[filterType].filter(v => filteredViews.includes(v))" :key="viewFilter" :value="viewFilter").hover_bg-utd-orange.hover_text-white.pl-2
+									| {{ viewFilter }}
+									div(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut")
 			hr(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut").border-black
 			div(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut")
 				Listbox(v-model="selectedAggregation")
@@ -129,7 +134,12 @@ const selectedTimeLevel = ref(TimeLevelType.Week)
 const viewLevels = ["Item", "Category", "Source", "All"]
 const selectedViewLevel = ref(viewLevels[0])
 const dateRange = ref(presetDates.value[2].value)
-const viewFilters = ["Grain", "NTFB", "Protein", "Vegetable", "Fruit", "beans"]
+const viewFilters = ["Grain", "NTFB", "Protein", "Vegetable", "Fruit", "Beans"]
+const viewFiltersCategories = {
+	"Source" : ["NTFB"],
+	"Category" : ["Protein", "Vegetable", "Fruit", "Frozen",],
+	"Item" : ["Beans", "Rice"],
+}
 const selectedViewFilters = ref([])
 const aggregations = ["none", "time", "view"]
 const selectedAggregation = ref("none")
@@ -183,11 +193,18 @@ const endDate = computed(() => {
 	}
 })
 
-const filteredViews = computed(() =>
-	query.value === ""
-		? viewFilters
-		: viewFilters.filter((viewFilter) => viewFilter.toLowerCase().replace(/\s+/g, "").includes(query.value.toLowerCase().replace(/\s+/g, "")))
-)
+//NOTICE: There is likely a much more streamlined way to do this
+const filteredViews = computed(() => {
+	const allCategoryViews = Object.values(viewFiltersCategories).flat();
+	const normalizedQuery = query.value.toLowerCase().replace(/\s+/g, "");
+
+	return query.value === ""
+		? allCategoryViews
+		: allCategoryViews.filter((viewFilter) =>
+			viewFilter.toLowerCase().replace(/\s+/g, "").includes(normalizedQuery)
+		);
+});
+
 
 const processedData = computed(() => {
 	if (selectedQuery.value === QueryType.ItemsIn) {
