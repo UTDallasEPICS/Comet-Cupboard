@@ -11,7 +11,7 @@ div
 							ControlsFilter(@filterChange="(selectedFilters) => (filters = selectedFilters)")
 							div.max-md_order-first.flex.flex-row.space-x-5.max-md_pb-3.md_px-3
 								button(@click="currentModal = ModalType.ADD").flex.flex-row.w-full.md_w-40.bg-utd-green.text-white.px-4.text-left.items-center.text-justify
-									| Add Item 
+									| Add Item
 									PlusIcon.fill-white.stroke-white.h-7.ml-auto
 						div.flex.grow
 							ControlsSearch(@searchTermChange="(newTerm) => searchTermChange(newTerm)")
