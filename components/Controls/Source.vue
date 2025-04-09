@@ -16,8 +16,8 @@ div.flex
 			ChevronDownIcon(v-else).fill-white.stroke-white.h-7
 		TransitionsDropDown
 			ListboxOptions(
-				class="max-h-[600px]"
-			).md_max-h-96.absolute.top-14.z-30.bg-white.rounded-xl.w-full.max-h-96.divide-y.divide-cupboard-lg.overflow-y-auto.overscroll-contain.drop-shadow-standard
+				class="max-h-[calc(100%-80px)] w-[calc(100%-40px)]"
+			).absolute.top-14.z-30.bg-white.rounded-xl.divide-y.divide-cupboard-lg.overflow-auto.overscroll-contain.drop-shadow-standard
 				ListboxOption(v-for="source in sources" @click="handleSource(source.name)").p-1.text-center.text-xl.cursor-pointer.text-wrap.hover_bg-cupboard-lg
 					| {{ source.name }}
 </template>
