@@ -1,11 +1,11 @@
 <template lang="pug">
 div(class="h-[calc(100vh-80px)]").fixed.inset-0.z-40.flex.mt-20.w-screen.justify-center.items-center.pointer-events-none
 	TransitionsFadeIn
-		div(@click.self="toggleModal").bg-black.bg-opacity-70.w-screen.h-screen.pointer-events-auto
+		div(@click.self="toggleModal").bg-black.bg-opacity-70.w-screen.h-full.pointer-events-auto
 	TransitionsPopUp
 		div(
 			class="sm_w-7/12 lg_w-5/12 2xl_w-3/12 sm_min-w-[550px] sm_max-h-[75vh]"
-		).absolute.flex.flex-col.drop-shadow-standard.bg-white.pointer-events-auto.rounded-none.sm_rounded-2xl.w-full.sm_min-h-52.h-auto
+		).absolute.flex.flex-col.drop-shadow-standard.bg-white.pointer-events-auto.rounded-none.sm_rounded-2xl.w-full.sm_min-h-52.h-full
 			div.relative.flex.justify-center.items-center.bg-utd-orange.p-2.rounded-none.sm_rounded-t-2xl
 				h1.text-xl.text-white.font-semibold {{ props.title }}
 				button(@click="toggleModal").absolute.end-2.remove-button-effects
