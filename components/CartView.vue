@@ -1,10 +1,10 @@
 <template lang="pug">
 div.w-full.sm_w-80.drop-shadow-standard.bg-white.flex.flex-col.text-xl
-	div.relative.h-12.w-full.bg-utd-orange.content-center.z-10
+	div.relative.h-12.w-full.bg-utd-orange.content-center
 		p.text-3xl.text-center.font-bold.text-white Cart View
 		button(@click="resetCartView").absolute.inset-y-0.right-2.remove-button-effects
 			XMarkIcon.size-10.fill-white.stroke-white.hover_fill-black.hover_stroke-black
-	div.px-5.py-5.h-full.flex.flex-col.gap-y-4.overflow-y-scroll.z-10
+	div.px-5.py-5.h-full.flex.flex-col.gap-y-4.overflow-y-scroll
 		CartItemCard(
 			v-for="cartItem in cartItems"
 			:key="cartItem"
