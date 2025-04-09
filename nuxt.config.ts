@@ -3,10 +3,10 @@ export default defineNuxtConfig({
 	devtools: { enabled: true },
 	modules: ["@nuxt/eslint", "@nuxtjs/tailwindcss", "@pinia/nuxt", "@nuxt/test-utils/module"],
 	css: ["~/assets/css/main.css"],
-	runtimeConfig:{
-		public:{
+	runtimeConfig: {
+		public: {
 			LOCAL_URL: '',
-		}
+		},
 	},
 
 	postcss: {
