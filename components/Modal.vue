@@ -1,5 +1,5 @@
 <template lang="pug">
-div(class="h-[calc(100vh-80px)]").fixed.inset-0.z-40.flex.mt-20.w-screen.justify-center.items-center.pointer-events-none
+div(class="h-[calc(100vh-80px)]").fixed.inset-0.flex.mt-20.w-screen.justify-center.items-center.pointer-events-none
 	TransitionsFadeIn
 		div(@click.self="toggleModal").bg-black.bg-opacity-70.w-screen.h-full.pointer-events-auto
 	TransitionsPopUp

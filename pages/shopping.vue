@@ -38,7 +38,7 @@ div
 				Modal(v-if="currentModal == ModalType.REJECTED" title="Cart Rejected" @toggleModal="closeModal").z-40
 					div.flex.flex-col.p-5
 						div.text-xl.h-20
-							| Your cart has been rejected, possible reasons include:
+							| Your cart has been rejected.
 						div.flex.flex-row.mt-auto
 							button(@click="closeModal").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
 								| Close
@@ -47,9 +47,9 @@ div
 				Modal(v-if="currentModal == ModalType.ACCEPTED" title="Cart Accepted" @toggleModal="closeModal").z-40
 					div.flex.flex-col.p-5
 						div.text-xl.h-20
-							| Your cart has been approved!
+							| Your cart has been approved.
 						div.flex.flex-row.mt-auto
-							button(@click="closeModal").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
+							button(@click="() => { closeModal(), getCart(), resetCartView() }").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
 								| Close
 
 		//- Skeleton - change as needed when UI changes, hardcoded here to reduce maintaining skeleton components
