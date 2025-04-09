@@ -211,9 +211,14 @@ const processedData = computed(() => {
 		result = result.filter((element) => {
 			// check if element has any of the viewFilter fields
 			return Object.keys(viewFilter.value).find((key) => {
-				return element[key] !== undefined && viewFilter[key].includes(element[key])
+				return element[key] !== undefined && viewFilter.value[key].includes(element[key])
 			})
 		})
+	}
+
+	// if no data, return empty array
+	if (result.length === 0) {
+		return []
 	}
 
 	// get the first and last time level

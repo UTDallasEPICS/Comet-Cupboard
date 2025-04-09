@@ -4,7 +4,7 @@ div
 	p scroll on an axis or the graph to zoom in/out
 	p drag-click on an axis or the graph to move it
 	div(class="md_h-[calc(100vh-80px)]").flex.flex-col.md_flex-row.gap-4
-		div.min-w-72.border-2.border-black.flex.flex-col.overflow-y-hidden.overflow-y-scroll.p-4.gap-y-2
+		div.min-w-72.md_max-w-72.border-2.border-black.flex.flex-col.overflow-y-hidden.overflow-y-scroll.p-4.gap-y-2
 			div
 				Listbox(v-model="selectedQuery")
 					ListboxButton(@click="queryOptionOpen = !queryOptionOpen").flex.w-full.items-center
@@ -57,29 +57,35 @@ div
 									| {{ viewLevel }}
 			hr(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut").border-black
 			div(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut")
-				button(@click="viewFilterOptionOpen = !viewFilterOptionOpen").flex.w-full.items-center
-					p View Filter
-					ChevronUpIcon(v-if="viewFilterOptionOpen").h-7.ml-auto
-					ChevronDownIcon(v-else).h-7.ml-auto
-				div(v-show="viewFilterOptionOpen")
-					Combobox(multiple v-model="selectedViewFilters")
+				Combobox(multiple v-model="selectedViewFilters")
+					ComboboxButton(@click="viewFilterOptionOpen = !viewFilterOptionOpen").flex.w-full.items-center
+						p View Filter
+						ChevronUpIcon(v-if="viewFilterOptionOpen").h-7.ml-auto
+						ChevronDownIcon(v-else).h-7.ml-auto
+					div(v-show="viewFilterOptionOpen")
+						button(@click="selectedViewFilters = []").bg-cupboard-mg.text-white.p-2.w-full.text-lg.text.font-semibold.rounded-md
+							| Clear All
 						ul(v-if="selectedViewFilters").flex.flex-row.gap-1.m-1.flex-wrap
 							li(v-for="selectedViewFilter in selectedViewFilters" :key="selectedViewFilter" :value="selectedViewFilter")
 								div(
 									@click="selectedViewFilters = selectedViewFilters.filter((f) => f != selectedViewFilter)"
-								).bg-utd-orange.text-white.pl-2.pr-2.pt-1.pb-1.rounded-xl.hover_cursor-pointer
-									| {{ selectedViewFilter }}
-						ComboboxInput(@change="query = $event.target.value").text-black.border.w-full.p-1
-						ComboboxOptions.text-black.border
+								).bg-utd-orange.text-white.pl-2.pr-2.pt-1.pb-1.rounded-xl.hover_cursor-pointer.flex.flex-row.flex-nowrap
+									p {{ selectedViewFilter }}
+									XMarkIcon.fill-white.stroke-white.h-6.w-6
+						ComboboxInput(placeholder="Search for filter" @change="query = $event.target.value").text-black.border-2.border-black.w-full.p-1
+						ComboboxOptions(static).text-black.border-black.border-2.mt-2
 							div(v-for="filterType in Object.keys(viewFiltersCategories)" :key="filterType" :value="filterType")
-								| {{ filterType }}
+								p.bg-cupboard-mg.text-white.text-lg.font-semibold.pl-2 {{ filterType }}
 								ComboboxOption(
 									v-for="viewFilter in viewFiltersCategories[filterType].filter((v) => filteredViews.includes(v))"
 									:key="viewFilter"
+									as="div"
+									v-slot="{ selected }"
 									:value="viewFilter"
-								).hover_bg-utd-orange.hover_text-white.pl-2
-									| {{ viewFilter }}
-									div(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut")
+								)
+									div(:class="selected ? 'bg-utd-orange text-white' : ''").pl-6.hover_bg-utd-orange.hover_text-white.pl-4.cursor-pointer.flex.flex-row.w-full
+										p {{ viewFilter }}
+										CheckIcon(v-if="selected").fill-white.stroke-white.h-6.w-6.ml-auto
 			hr(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut").border-black
 			div(v-if="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut")
 				Listbox(v-model="selectedAggregation")
@@ -102,18 +108,32 @@ div
 					:timeFilter="{ start: startDate, end: endDate }"
 					:timeLevel="selectedTimeLevel"
 					:title="selectedQuery"
+					:viewFilter="selectedQuery === QueryType.ItemsIn || selectedQuery === QueryType.ItemsOut ? processedSelectedViewFilters : {}"
 					:viewLevel="selectedQuery === QueryType.ItemsIn || (selectedQuery === QueryType.ItemsOut && selectedViewLevel !== 'Source') ? selectedViewLevel : 'All'"
 				)
 </template>
 
 <script lang="ts" setup>
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from "@headlessui/vue"
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
+import {
+	Listbox,
+	ListboxButton,
+	ListboxOption,
+	ListboxOptions,
+	Combobox,
+	ComboboxInput,
+	ComboboxButton,
+	ComboboxOptions,
+	ComboboxOption,
+} from "@headlessui/vue"
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon, XMarkIcon } from "@heroicons/vue/24/solid"
 import VueDatePicker from "@vuepic/vue-datepicker"
 import "@vuepic/vue-datepicker/dist/main.css"
 
 const { data: itemsIn } = await useFetch("/api/data/itemsIn")
 const { data: itemsOut } = await useFetch("/api/data/itemsOut")
+const { data: sources } = await useFetch("/api/controls/sources")
+const { data: categories } = await useFetch("/api/controls/categories")
+const { data: items } = await useFetch("/api/inventory/items")
 
 // num of users, use All for viewLevel and have no viewFilters
 
@@ -138,12 +158,11 @@ const selectedTimeLevel = ref(TimeLevelType.Week)
 const viewLevels = ["Item", "Category", "Source", "All"]
 const selectedViewLevel = ref(viewLevels[0])
 const dateRange = ref(presetDates.value[2].value)
-const viewFilters = ["Grain", "NTFB", "Protein", "Vegetable", "Fruit", "Beans"]
-const viewFiltersCategories = {
-	Source: ["NTFB"],
-	Category: ["Protein", "Vegetable", "Fruit", "Frozen"],
-	Item: ["Beans", "Rice"],
-}
+const viewFiltersCategories = ref({
+	Source: sources.value.map((source) => source.name),
+	Category: categories.value.map((category) => category.name),
+	Item: items.value.map((item) => item.name).sort(),
+})
 const selectedViewFilters = ref([])
 const aggregations = ["none", "time", "view"]
 const selectedAggregation = ref("none")
@@ -199,12 +218,24 @@ const endDate = computed(() => {
 
 //NOTICE: There is likely a much more streamlined way to do this
 const filteredViews = computed(() => {
-	const allCategoryViews = Object.values(viewFiltersCategories).flat()
+	const allCategoryViews = Object.values(viewFiltersCategories.value).flat()
 	const normalizedQuery = query.value.toLowerCase().replace(/\s+/g, "")
-
 	return query.value === ""
 		? allCategoryViews
 		: allCategoryViews.filter((viewFilter) => viewFilter.toLowerCase().replace(/\s+/g, "").includes(normalizedQuery))
+})
+
+const processedSelectedViewFilters = computed(() => {
+	// return {} if all filters are empty, ProcessedChart will handle nicely
+	if (selectedViewFilters.value.length === 0) {
+		return {}
+	}
+
+	return {
+		Source: viewFiltersCategories.value["Source"].filter((v) => selectedViewFilters.value.includes(v)),
+		Category: viewFiltersCategories.value["Category"].filter((v) => selectedViewFilters.value.includes(v)),
+		Item: viewFiltersCategories.value["Item"].filter((v) => selectedViewFilters.value.includes(v)),
+	}
 })
 
 const processedData = computed(() => {
