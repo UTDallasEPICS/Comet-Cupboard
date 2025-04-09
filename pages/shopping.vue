@@ -29,7 +29,7 @@ div
 						@retractCart="retractCart"
 						@submitCart="currentModal = ModalType.ACCEPTING"
 						:state="currentModal"
-					).fixed.z-50.right-0.top-20.bottom-0
+					).fixed.z-40.right-0.top-20.bottom-0
 				// Forces the Statement of understanding to be accepted before review can begin
 				Modal(v-if="currentModal == ModalType.ACCEPTING" title="Agreement and Terms" @toggleModal="() => { closeModal(), resetCartView() }").z-50
 					StatementOfUnderstanding(@accept="submitCart" @cancel="() => { closeModal(), resetCartView() }")

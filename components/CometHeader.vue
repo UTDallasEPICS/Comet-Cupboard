@@ -7,7 +7,7 @@ div.sticky.top-0.z-50
 			TransitionsDropDown
 				MenuItems(
 					class="h-[calc(100vh-80px)]"
-				).-left-4.flex.flex-col.items-center.text-center.absolute.top-20.w-screen.sm_w-80.border-black.border-r-2.text-2xl.bg-white.gap-4.p-4
+				).z-50.-left-4.flex.flex-col.items-center.text-center.absolute.top-20.w-screen.sm_w-80.border-black.border-r-2.text-2xl.bg-white.gap-4.p-4
 					MenuItem(v-if="permissions['SHOPPING']" as="div").w-full.cursor-pointer.hover_underline
 						NuxtLink(@click.native="close" :to="shoppingPath")
 							| Shopping
