@@ -38,7 +38,7 @@ const pendingCartIDsAndAdjQTY = computed(() => {
 if (import.meta.client) {
 	// change this to use env later
 	// also probably use zod to type check the message...
-	pendingCartUpdates.value = new EventSource('config.public.LOCAL_URL/api/verification/pendingCartsUpdate')
+	pendingCartUpdates.value = new EventSource(`${config.public.LOCAL_URL}api/verification/pendingCartsUpdate`)
 	pendingCartUpdates.value.onmessage = (event) => {
 		const { type, payload } = JSON.parse(event.data)
 		if (type === "NEW CART") {
