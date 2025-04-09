@@ -106,7 +106,7 @@ const createRestocks = async () => {
 			pickedItems.forEach((itemID) => {
 				itemCountChanges.push({
 					itemID: itemID,
-					date: tempDate,
+					date: new Date(tempDate),
 					amountChanged: Math.floor(Math.random() * 10) + 5,
 					sourceName: sources[Math.floor(Math.random() * sources.length)],
 				})
@@ -147,7 +147,7 @@ const createOrders = async () => {
 
 			orders.push({
 				netID: randomUser,
-				date: tempDate,
+				date: new Date(tempDate),
 			})
 
 			ordersItems.push(

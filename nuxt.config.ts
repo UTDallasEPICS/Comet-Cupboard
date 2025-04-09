@@ -15,6 +15,9 @@ export default defineNuxtConfig({
 			autoprefixer: {},
 		},
 	},
+	build: {
+		transpile: ["@vuepic/vue-datepicker"],
+	},
 
 	compatibilityDate: "2025-03-07",
 })
