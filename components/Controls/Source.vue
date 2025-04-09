@@ -1,7 +1,7 @@
 <template lang="pug">
-div.flex.grow.relative
+div.flex
 	Listbox(v-slot="{ open }")
-		ListboxButton.button.flex.flex-row.w-full.md_w-44.bg-utd-orange.text-white.px-4.items-center.text-left
+		ListboxButton.flex.flex-row.w-full.md_w-44.bg-utd-orange.text-white.px-4.items-center.text-left.h-12
 			// default, shown when no source
 			div(v-if="selectedSource === ''").grow
 				| Source

@@ -2,7 +2,7 @@
 div.w-full.sm_w-80.drop-shadow-standard.bg-white.flex.flex-col.text-xl
 	div.relative.h-12.w-full.bg-utd-orange.content-center
 		p.text-3xl.text-center.font-bold.text-white Cart View
-		button(@click="resetCartView").absolute.inset-y-0.right-2
+		button(@click="resetCartView").absolute.inset-y-0.right-2.remove-button-effects
 			XMarkIcon.size-10.fill-white.stroke-white.hover_fill-black.hover_stroke-black
 	div.px-5.py-5.h-full.flex.flex-col.gap-y-4.overflow-y-scroll
 		CartItemCard(
@@ -29,8 +29,8 @@ div.w-full.sm_w-80.drop-shadow-standard.bg-white.flex.flex-col.text-xl
 				p.ml-2.text-nowrap.hover_underline Mark Expired Items
 			div(class="h-[1px]").bg-black
 
-			button(v-if="pending" @click="emit('openPendingModal')").bg-utd-green.text-white.w-full.button Pending Cart...
-			button(v-else @click="submitCart").button.bg-utd-green.text-white.w-full Submit Cart
+			button(v-if="pending" @click="emit('retractCart')").bg-utd-green.text-white.w-full.h-12 Pending Cart...
+			button(v-else @click="emit('submitCart')").bg-utd-green.text-white.w-full.h-12 Submit Cart
 </template>
 
 <script setup lang="ts">
@@ -42,7 +42,7 @@ const store = useCartStore()
 const { resetCartView, getCart } = store
 const { cartItems, cartTotalCount, cartAdjustedCount, pending } = storeToRefs(store)
 
-const emit = defineEmits(["openPendingModal"])
+const emit = defineEmits(["submitCart", "retractCart"])
 
 const markExpiredItems = ref(false)
 
@@ -50,17 +50,11 @@ const toggleMarkExpiredItems = async () => {
 	markExpiredItems.value = !markExpiredItems.value
 	// reset all expired counts to 0 because we want users to clearly know if they are marking expired items in cart
 	if (!markExpiredItems.value) {
-		cartItems.forEach((cartItem) => {
+		cartItems.value.forEach((cartItem) => {
 			$fetch("/api/cart/cartItem", { method: "POST", body: { itemID: cartItem.itemID, incrementChange: 0, expiredCount: 0 } })
 		})
 		await getCart()
 	}
-}
-
-const submitCart = async () => {
-	await $fetch("/api/verification/cartRequestVerification", { method: "POST" })
-	await getCart()
-	emit("openPendingModal")
 }
 
 onMounted(async () => {

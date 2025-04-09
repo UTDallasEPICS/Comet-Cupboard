@@ -7,7 +7,7 @@ div.bg-cupboard-dg
 			h2.text-2xl.font-bold
 				| Contact
 			div
-				button(@click="handleRoom").space-x-1.cursor-pointer.text-left
+				button(@click="handleRoom").space-x-1.text-left.remove-button-effects.text-base.font-normal
 					p.font-bold.inline-flex
 						| Location:
 					p.inline-flex
@@ -15,7 +15,7 @@ div.bg-cupboard-dg
 					div(v-show="roomCopied").inline-flex
 						ClipboardDocumentCheckIcon.w-4.size4.fill-white
 			div
-				button(@click="handleEmail").space-x-1.cursor-pointer.text-left
+				button(@click="handleEmail").space-x-1.text-left.remove-button-effects.text-base.font-normal
 					p.font-bold.inline-flex
 						| Email:
 					p.inline-flex
@@ -23,7 +23,7 @@ div.bg-cupboard-dg
 					div(v-show="emailCopied").inline-flex
 						ClipboardDocumentCheckIcon.w-4.size4.fill-white
 			div
-				button(@click="handlePhone").space-x-1.cursor-pointer.text-left
+				button(@click="handlePhone").space-x-1.text-left.remove-button-effects.text-base.font-normal
 					p.font-bold.inline-flex
 						| Phone
 					p.inline-flex

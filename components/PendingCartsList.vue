@@ -1,13 +1,16 @@
 <template lang="pug">
 div.flex.flex-col.gap-y-4.min-w-60
-	button(
-		v-for="pendingCart in pendingCartIDsAndAdjQTY"
-		:class="pendingCart.cartID === selectedCart ? 'bg-utd-orange text-white' : 'bg-cupboard-lg'"
-		@click="emit('update:select-cart', pendingCart.cartID)"
-	).h-12.rounded-xl.cursor-pointer.hover_bg-utd-orange.hover_text-white.hover_drop-shadow-standard
-		div.flex.flex-row.justify-between
-			span.px-4.text-xl.text-left {{ pendingCart.cartID }}
-			span.px-4.text-xl.text-right QTY: {{ pendingCart.adjQTY }}
+	div(v-if="pendingCartIDsAndAdjQTY.length === 0").flex.flex-row.p-1.text-center.text-xl.text-gray-500.justify-center
+		p No Pending Carts
+	div(v-else)
+		button(
+			v-for="pendingCart in pendingCartIDsAndAdjQTY"
+			:class="pendingCart.cartID === selectedCart ? 'bg-utd-orange text-white' : 'bg-cupboard-lg'"
+			@click="emit('update:select-cart', pendingCart.cartID)"
+		).h-12.rounded-xl.hover_bg-utd-orange.hover_text-white
+			div.flex.flex-row.justify-between
+				span.px-4.text-xl.text-left.font-normal {{ pendingCart.cartID }}
+				span.px-4.text-xl.text-right.font-normal QTY: {{ pendingCart.adjQTY }}
 </template>
 
 <script lang="ts" setup>
@@ -24,6 +27,7 @@ const { data: pendingCarts } = await useFetch("/api/verification/pendingCarts")
 
 const pendingCartUpdates = ref<EventSource>()
 const pendingCartsList = ref(pendingCarts)
+const config = useRuntimeConfig()
 
 const pendingCartIDsAndAdjQTY = computed(() => {
 	if (!pendingCartsList.value) {
@@ -37,7 +41,7 @@ const pendingCartIDsAndAdjQTY = computed(() => {
 if (import.meta.client) {
 	// change this to use env later
 	// also probably use zod to type check the message...
-	pendingCartUpdates.value = new EventSource("http://localhost:3000/api/verification/pendingCartsUpdate")
+	pendingCartUpdates.value = new EventSource(`${config.public.LOCAL_URL}api/verification/pendingCartsUpdate`)
 	pendingCartUpdates.value.onmessage = (event) => {
 		const { type, payload } = JSON.parse(event.data)
 		if (type === "NEW CART") {
