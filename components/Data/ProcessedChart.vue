@@ -201,8 +201,8 @@ const processedData = computed(() => {
 	// filter by time
 	result = result.filter((element) => {
 		return (
-			(timeFilter.value.start == undefined || element.date >= timeFilter.value.start) &&
-			(timeFilter.value.end == undefined || element.date <= timeFilter.value.end)
+			(timeFilter.value.start == undefined || new Date(element.date.toDateString()) >= new Date(timeFilter.value.start.toDateString())) &&
+			(timeFilter.value.end == undefined || new Date(element.date.toDateString()) <= new Date(timeFilter.value.end.toDateString()))
 		)
 	})
 
