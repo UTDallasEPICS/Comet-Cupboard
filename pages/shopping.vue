@@ -20,7 +20,7 @@ div
 								:itemID="item.itemID"
 								:name="item.name"
 							)
-				div.sticky.bottom-5.flex.justify-end
+				div.sticky.bottom-5.flex.justify-end.w-min.ml-auto
 					button(class="w-[50px]" @click="scrollToTop").bg-utd-green.text-white.h-12
 						ChevronUpIcon.m-auto.h-6.fill-white.stroke-white
 				TransitionsSlideLeft
