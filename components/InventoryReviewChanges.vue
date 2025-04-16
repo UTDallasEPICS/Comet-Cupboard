@@ -1,12 +1,18 @@
 <template lang="pug">
-div.flex.flex-col.pt-2.pb-5.px-5.overflow-y-auto.overscroll-contain
-	div.flex.items-center.max-md_order-first.max-md_pb-3.relative.overflow-visible
+div.flex.flex-col.pt-2.pb-5.px-5.overflow-y-auto.overscroll-contain.relative
+	div.flex.items-center.max-md_order-first.max-md_pb-3
 		ControlsSource(:key="addedSource" @sourceChange="(selectedSource) => (source = selectedSource)").mr-3
 		button(
 			@click="showInput = !showInput"
-		).bg-utd-green.text-white.rounded-full.min-w-12.max-w-12.h-12.flex.place-content-center.place-items-center.hover_drop-shadow-standard
+		).bg-utd-green.text-white.rounded-full.min-w-12.min-h-12.flex.place-content-center.place-items-center.hover_drop-shadow-standard.overflow-y-auto.mr-3
 			PlusIcon.fill-white.stroke-white.h-6
-		input(v-if="showInput" placeholder="Enter new source" type="text" v-model="newSource" @keydown.enter="addSource").p-2.border.rounded-lg.outline-none.w-full
+		input(
+			v-if="showInput"
+			placeholder="Enter new source"
+			type="text"
+			v-model="newSource"
+			@keydown.enter="addSource"
+		).flex-1.p-2.border.rounded-lg.outline-none.overflow-hidden.w-full
 	div.divide-y.divide-cupboard-lg.mb-5
 		div(v-for="(change, index) in props.changes").py-2
 			InventoryReviewItemCard(:change="change" :id="index")
