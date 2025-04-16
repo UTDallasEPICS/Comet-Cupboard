@@ -24,14 +24,21 @@ import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/vue/24/solid"
 const emit = defineEmits(["searchTermChange"])
 
 const searchTerm = ref("")
-const { data: filteredResults } = await useFetch("/api/controls/filteredItems", { query: { term: searchTerm.value } })
+const { data: holder } = await useFetch("/api/controls/filteredItems", {
+	query: { term: searchTerm.value !== null && searchTerm.value !== "" ? searchTerm.value : null },
+}) //Holds all the items to be displayed when the search term is empty
+// const filteredResults = ref([])
+
+const filteredResults = computed(() => {
+	//If the search term is empty, reset the filtered results to the holder value
+	if (searchTerm.value === null || searchTerm.value === "") {
+		return holder.value || []
+	}
+	return holder.value.filter((item) => item.name.toLowerCase().includes(searchTerm.value.toLowerCase()))
+})
 
 // emit searchTerm changes
-watch(searchTerm, () => {
-	// if the field is empty, the search term is null, return empty string
-	if (searchTerm.value === null) {
-		searchTerm.value = ""
-	}
+watch(searchTerm, (newValue) => {
 	// return id of the searched for entry
 	emit("searchTermChange", searchTerm.value)
 })
