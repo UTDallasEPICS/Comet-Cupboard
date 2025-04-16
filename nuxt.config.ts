@@ -5,7 +5,7 @@ export default defineNuxtConfig({
 	css: ["~/assets/css/main.css"],
 	runtimeConfig: {
 		public: {
-			LOCAL_URL: '',
+			LOCAL_URL: "",
 		},
 	},
 
