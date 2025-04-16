@@ -29,7 +29,8 @@ div.w-full.sm_w-80.drop-shadow-standard.bg-white.flex.flex-col.text-xl
 				p.ml-2.text-nowrap.hover_underline Mark Expired Items
 			div(class="h-[1px]").bg-black
 
-			button(v-if="pending" @click="emit('retractCart')").bg-utd-green.text-white.w-full.h-12 Pending Cart...
+			button(v-if="cartTotalCount === 0" disabled).bg-cupboard-dg.text-white.w-full.h-12 Enter Items to Cart
+			button(v-else-if="pending" @click="emit('retractCart')").bg-utd-green.text-white.w-full.h-12 Pending Cart...
 			button(v-else @click="emit('submitCart')").bg-utd-green.text-white.w-full.h-12 Submit Cart
 </template>
 
