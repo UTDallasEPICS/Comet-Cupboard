@@ -30,10 +30,14 @@ const props = defineProps({
 })
 
 const renderChart = () => {
-	Plotly.newPlot(plotElement.value, props.data, props.layout)
+	Plotly.newPlot(plotElement.value, props.data, props.layout, props.config)
 }
 
 onMounted(() => {
+	renderChart()
+})
+
+onUpdated(() => {
 	renderChart()
 })
 </script>

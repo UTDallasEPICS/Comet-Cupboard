@@ -7,23 +7,24 @@ div
 				div.relative.z-0
 					// page control components
 					div.flex.flex-col.md_flex-row.pb-7.max-md_space-y-3.md_space-x-10.sm_text-nowrap
-						div.flex.flex-col.md_flex-row.md_space-x-5
+						div.flex.flex-col.md_flex-row.z-40
 							ControlsFilter(@filterChange="(selectedFilters) => (filters = selectedFilters)")
-							div.max-md_order-first.flex.flex-row.space-x-5.max-md_pb-3
-								button(@click="currentModal = ModalType.ADD").flex.w-24.md_w-12.bg-utd-green.text-white.place-content-center.place-items-center
-									PlusIcon.fill-white.stroke-white.h-7
+							div.max-md_order-first.flex.flex-row.space-x-5.max-md_pb-3.md_px-3
+								button(@click="currentModal = ModalType.ADD").flex.flex-row.w-full.md_w-40.bg-utd-green.text-white.px-4.text-left.items-center.text-justify
+									| Add Item
+									PlusIcon.fill-white.stroke-white.h-7.ml-auto
 						div.flex.grow
 							ControlsSearch(@searchTermChange="(newTerm) => searchTermChange(newTerm)")
 
-					Modal(v-if="currentModal == ModalType.ADD" title="Add Item" @toggleModal="closeModal")
+					Modal(v-if="currentModal == ModalType.ADD" title="Add Item" @toggleModal="closeModal").z-40
 						AddItem(@submit="closeModal")
-					Modal(v-if="currentModal == ModalType.EDIT" title="Edit Item" @toggleModal="closeModal")
+					Modal(v-if="currentModal == ModalType.EDIT" title="Edit Item" @toggleModal="closeModal").z-40
 						EditItem(@submit="closeModal" :item="editingItem")
-					Modal(v-if="currentModal == ModalType.DELETE" title="Remove Item" @toggleModal="closeModal")
+					Modal(v-if="currentModal == ModalType.DELETE" title="Remove Item" @toggleModal="closeModal").z-40
 						DeleteItem(@submit="closeModal" :item="deleteItem")
-					Modal(v-if="currentModal == ModalType.DEAL" title="Item Deal" @toggleModal="closeModal")
+					Modal(v-if="currentModal == ModalType.DEAL" title="Item Deal" @toggleModal="closeModal").z-40
 						EditDeal(@submit="closeModal" :item="dealItem")
-					Modal(v-if="currentModal == ModalType.REVIEW" title="Review Changes" @toggleModal="closeModal")
+					Modal(v-if="currentModal == ModalType.REVIEW" title="Review Changes" @toggleModal="closeModal").z-40
 						InventoryReviewChanges(@accept="submitInventoryCountChanges" @cancel="closeModal" :changes="inventoryCountChanges")
 
 					CategoryItemsGrid(v-for="category in Object.keys(filteredCategoryItems)" :headingName="category").my-4
@@ -89,13 +90,13 @@ const editingItem = ref(null)
 const deleteItem = ref(null)
 const dealItem = ref(null)
 
-const ModalType = Object.freeze({
-	ADD: "ADD",
-	EDIT: "EDIT",
-	DELETE: "DELETE",
-	DEAL: "DEAL",
-	REVIEW: "REVIEW",
-})
+enum ModalType {
+	ADD = "ADD",
+	EDIT = "EDIT",
+	DELETE = "DELETE",
+	DEAL = "DEAL",
+	REVIEW = "REVIEW",
+}
 
 const { data: items, refresh } = await useFetch("/api/inventory/items", {
 	query: { getCounts: true },
