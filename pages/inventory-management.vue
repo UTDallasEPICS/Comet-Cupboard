@@ -44,7 +44,7 @@ div
 						)
 					// submit button
 					div.sticky.bottom-8.z-20.flex.justify-end.h-12.space-x-2.sm_w-min.sm_ml-auto
-						button(v-if="JSON.stringify(inventoryCountChanges) === '{}'" disabled).bg-red-negative.text-white.w-full.sm_w-72 No Changes
+						button(v-if="JSON.stringify(inventoryCountChanges) === '{}'" disabled).bg-cupboard-dg.text-white.w-full.sm_w-72 No Changes
 						button(v-else @click="currentModal = ModalType.REVIEW").bg-utd-green.text-white.w-full.sm_w-72 Review Changes
 						button(class="w-[50px]" @click="scrollToTop").bg-utd-green.text-white
 							ChevronUpIcon.m-auto.h-6.fill-white.stroke-white
