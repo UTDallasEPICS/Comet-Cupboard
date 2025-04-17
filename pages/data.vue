@@ -3,7 +3,10 @@ div
 	p I know these plots aren't the most intuitive to interact with
 	p scroll on an axis or the graph to zoom in/out
 	p drag-click on an axis or the graph to move it
-	div(class="md_h-[calc(100vh-80px)]").flex.flex-col.md_flex-row.gap-4
+	div.flex
+		a(download href="/api/data/dbExport").bg-utd-orange.text-white.p-2.ml-auto
+			| Export Database to Excel
+	div(class="md_h-[calc(100vh-80px)]").flex.flex-col.md_flex-row.gap-4.mt-4
 		div.min-w-72.md_max-w-72.border-2.border-black.flex.flex-col.overflow-y-hidden.overflow-y-scroll.p-4.gap-y-2
 			div
 				Listbox(v-model="selectedQuery")
