@@ -55,4 +55,10 @@ if (import.meta.client) {
 		}
 	}
 }
+
+onBeforeUnmount(() => {
+	if (pendingCartUpdates.value) {
+		pendingCartUpdates.value.close()
+	}
+})
 </script>
