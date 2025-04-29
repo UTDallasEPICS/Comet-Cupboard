@@ -26,14 +26,14 @@ div.flex.flex-col.pt-2.pb-5.px-5.overflow-y-auto.overscroll-contain.relative
 					button(v-if="source === ''" disabled).modal-button.bg-cupboard-dg.text-white.w-full.sm_w-72 No Source Selected
 					button(v-else @click="emit('accept', source)").modal-button.w-40.bg-utd-green.text-white
 						| Submit
+
+		//- Skeleton
 		template(#fallback)
 			div.flex.flex-row
 				div.w-screen
 					// page control components
 					div.flex.flex-row.md_flex-row.pb-3.md_space-x-3
 						div.skeleton.w-full.h-12.md_w-44.rounded-xl
-						//Circle Plus
-						div.skeleton.w-12.h-12.rounded-full
 					//Boxes
 					div.flex.flex-col.divide-y.divide-cupboard-lg.mb-5
 						div.skeleton.w-full.h-20.rounded-xl
