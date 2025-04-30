@@ -1,6 +1,6 @@
 <template lang="pug">
 div.w-full.flex.flex-col.border-2.border-black.rounded-md.bg-white
-	div.text-2xl.font-bold.text-center.border-b-2.border-black
+	div.text-2xl.font-bold.text-center.border-b-2.border-black.bg-cupboard-mg.text-white
 		| In Queue
 	//- No matter what if the queue is empty, display a message that it is empty
 	div(v-if="queue.length == 0").flex.flex-col.items-center.justify-center.h-72
@@ -29,10 +29,7 @@ div.w-full.flex.flex-col.border-2.border-black.rounded-md.bg-white
 </template>
 
 <script lang="ts" setup>
-import { IdentificationIcon } from "@heroicons/vue/20/solid"
-
 const emit = defineEmits(["addToCupboard"])
-
 const queue = ref([
 	"Mary",
 	"John",
@@ -51,6 +48,7 @@ const queue = ref([
 	"Ivy",
 	"Jack",
 ] as string[])
+
 const accessCookie = ref(useCookie("AccessPermission"))
 const permissions = ref(accessCookie.value && typeof accessCookie.value === "object" ? accessCookie.value : {}) //Dirty
 

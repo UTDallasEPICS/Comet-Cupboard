@@ -1,7 +1,7 @@
 <template lang="pug">
 div.flex.flex-row.items-center.justify-between.border-b.border-black.w-full
 	//- Leftmost is ID
-	div(class="w-[80px]").flex.flex-row.justify-start.pl-2.mr-20.gap-2
+	div(class="w-[80px]").flex.flex-row.justify-start.pl-2.sm_mr-10.md_mr-20.gap-2
 		div.w-2
 			| {{ position }}
 		div
@@ -11,13 +11,21 @@ div.flex.flex-row.items-center.justify-between.border-b.border-black.w-full
 		| 00:00:00
 		//- **************WILL CONTAIN THE TIMER FUNCTION***************
 	//- At the end is the confirm and remove buttons
-	div.flex.justify-end
-		button(@click="intoCupboard").flex.items-center.justify-center.m-2.bg-green-500.bg-green-700.text-white.font-bold.py-2.px-4.rounded-md.modal-button
+	div.flex.flex-row.justify-end
+		button(@click="intoCupboard").hidden.md_flex.items-center.justify-center.m-2.bg-green-500.bg-green-700.text-white.font-bold.py-2.px-4.rounded-md.modal-button
 			| Confirm
-		button(@click="removeFromQueue").flex.items-center.justify-center.m-2.bg-red-500.bg-red-700.text-white.font-bold.py-2.px-4.rounded-md.modal-button
+		button(@click="removeFromQueue").hidden.md_flex.items-center.justify-center.m-2.bg-red-500.bg-red-700.text-white.font-bold.py-2.px-4.rounded-md.modal-button
 			| Remove
+		button(@click="intoCupboard").flex.items-center.justify-center.m-2.rounded-md.md_hidden
+			CheckCircleIcon(class="h-6 w-6 text-green-500")
+		button(@click="removeFromQueue").flex.items-center.justify-center.m-2.rounded-md.md_hidden
+			XCircleIcon(class="h-6 w-6 text-red-500")
+		
 </template>
 <script lang="ts" setup>
+import { CheckCircleIcon } from "@heroicons/vue/24/solid"
+import { XCircleIcon } from "@heroicons/vue/16/solid" 
+
 const props = defineProps({
 	identification: {
 		type: String,
