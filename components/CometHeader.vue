@@ -20,6 +20,10 @@ div.sticky.top-0.z-50
 						NuxtLink(@click.native="close" :to="inventoryPath")
 							| Inventory Management
 						hr.border-black.w-full.mt-4
+					MenuItem(v-if="permissions['VERIFY_CART']" as="div").w-full.cursor-pointer.hover_underline
+						NuxtLink(@click.native="close" :to="queuePath")
+							| Queue
+						hr.border-black.w-full.mt-4
 					MenuItem(v-if="permissions['ADMIN']" as="div").w-full.cursor-pointer.hover_underline
 						NuxtLink(@click.native="close" :to="dataPath")
 							| Data
@@ -63,6 +67,8 @@ const inventoryPath = "/inventory-management"
 const dataPath = "/data"
 // path to the admin dashboard page
 const adminDashboardPath = "/admin-dashboard"
+//Path to the queue page
+const queuePath = "/queue"
 
 // get the route to check if the user is on the shopping page
 watch(route, () => {
