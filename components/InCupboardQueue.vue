@@ -1,5 +1,5 @@
 <template lang="pug">
-div.w-full.flex.flex-col.border-2.border-utd-green.rounded-md.overflow-auto
+div.w-full.flex.flex-col.border-2.border-utd-green.rounded-md.overflow-auto.bg-white
 	div.text-2xl.font-bold.text-center.border-b-2.border-utd-green
 		| In Cupboard
 	div(v-if="queue.length == 0").flex.flex-col.items-center.justify-center.h-72

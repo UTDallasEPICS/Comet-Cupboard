@@ -1,5 +1,5 @@
 <template lang="pug">
-div.w-full.flex.flex-col.border-2.border-black.rounded-md
+div.w-full.flex.flex-col.border-2.border-black.rounded-md.bg-white
 	div.text-2xl.font-bold.text-center.border-b-2.border-black
 		| In Queue
 	//- No matter what if the queue is empty, display a message that it is empty

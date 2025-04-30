@@ -5,7 +5,7 @@ div.w-72.relative
 		p.text-white.text-center.font-semibold {{ dealText }}
 
 	// Image 
-	img(:alt="name" :src="`api/image/${imgName}`").w-72.h-72.drop-shadow-standard.object-cover.rounded-md
+	img(:alt="name" :src="`api/image/${imgName}`").w-72.h-72.drop-shadow-standard.object-cover.rounded-md.bg-white
 
 	// Inventory Display 
 	div(v-if="typeOfCard === 'INVENTORY'")
