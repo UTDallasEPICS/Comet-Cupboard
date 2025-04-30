@@ -12,16 +12,15 @@ div.flex.flex-row.items-center.justify-between.border-b.border-black.w-full
 		//- **************WILL CONTAIN THE TIMER FUNCTION***************
 	//- At the end is the confirm and remove buttons
 	div.flex.flex-row.justify-end
-		button(
-			@click="intoCupboard"
-		).hidden.md_flex.items-center.justify-center.m-2.bg-green-500.bg-green-700.text-white.font-bold.py-2.px-4.rounded-md.modal-button
+		button(@click="intoCupboard").hidden.md_flex.items-center.justify-center.m-2.bg-green-500.bg-green-700.text-white.font-bold.py-2.px-4.rounded-md.modal-button
 			| Confirm
 		button(@click="removeFromQueue").hidden.md_flex.items-center.justify-center.m-2.bg-red-500.bg-red-700.text-white.font-bold.py-2.px-4.rounded-md.modal-button
 			| Remove
 		button(@click="intoCupboard").flex.items-center.justify-center.m-2.rounded-md.md_hidden
-			CheckCircleIcon
-		button(@click="removeFromQueue").h-6.w-6.text-green-500.flex.items-center.justify-center.m-2.rounded-md.md_hidden
-			XCircleIcon
+			CheckCircleIcon(class="h-6 w-6 text-green-500")
+		button(@click="removeFromQueue").flex.items-center.justify-center.m-2.rounded-md.md_hidden
+			XCircleIcon(class="h-6 w-6 text-red-500")
+		
 </template>
 <script lang="ts" setup>
 import { CheckCircleIcon } from "@heroicons/vue/24/solid"
