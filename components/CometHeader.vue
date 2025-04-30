@@ -20,7 +20,7 @@ div.sticky.top-0.z-50
 						NuxtLink(@click.native="close" :to="inventoryPath")
 							| Inventory Management
 						hr.border-black.w-full.mt-4
-					MenuItem(v-if="permissions['VERIFY_CART']" as="div").w-full.cursor-pointer.hover_underline
+					MenuItem(v-if="permissions['SHOPPING']" as="div").w-full.cursor-pointer.hover_underline
 						NuxtLink(@click.native="close" :to="queuePath")
 							| Queue
 						hr.border-black.w-full.mt-4
