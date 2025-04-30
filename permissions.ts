@@ -22,6 +22,8 @@ const pageAccessMap: { [route: string]: AccessPermission } = {
 	"/verify-cart": AccessPermission.VERIFY_CART,
 	"/data": AccessPermission.ADMIN,
 	"/admin-dashboard": AccessPermission.ADMIN,
+	"/queue": AccessPermission.PUBLIC,
+	"/removed": AccessPermission.PUBLIC,
 }
 const apiAccessMap: { [route: string]: { [method: string]: AccessPermission } } = {
 	"/api/login": {
