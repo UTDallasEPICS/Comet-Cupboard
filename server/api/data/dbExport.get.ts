@@ -21,6 +21,7 @@ export default defineEventHandler(async (event) => {
 		{ header: "Item Name", key: "item_name", width: 20 },
 		{ header: "Source", key: "source", width: 20 },
 		{ header: "Amount Changed", key: "amount_changed", width: 20 },
+		{ header: "Field Map", key: "field_map", width: 20 },
 	]
 	itemCountChanges.forEach((itemCountChange) => {
 		worksheetInventory.addRow({
@@ -30,6 +31,7 @@ export default defineEventHandler(async (event) => {
 			item_name: itemCountChange.Item.name,
 			source: itemCountChange.sourceName,
 			amount_changed: itemCountChange.amountChanged,
+			field_map: itemCountChange.fieldMap
 		})
 	})
 	const worksheetOrders = workbook.addWorksheet("Orders")

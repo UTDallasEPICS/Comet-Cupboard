@@ -69,7 +69,7 @@ model ItemCountChange {
   itemID        String   @map("item_id")
   Source        Source   @relation(fields: [sourceName], references: [name], onDelete: NoAction, onUpdate: Cascade)
   sourceName    String   @map("source_name")
-  fieldMap      Json?     @map("fieldMap")
+  fieldMap      Json?    @map("field_map")
 
   @@map("item_count_change")
 }
