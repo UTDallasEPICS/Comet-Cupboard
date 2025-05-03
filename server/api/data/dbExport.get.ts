@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
 			item_name: itemCountChange.Item.name,
 			source: itemCountChange.sourceName,
 			amount_changed: itemCountChange.amountChanged,
-			field_map: itemCountChange.fieldMap
+			field_map: itemCountChange.fieldMap,
 		})
 	})
 	const worksheetOrders = workbook.addWorksheet("Orders")

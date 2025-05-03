@@ -11,7 +11,6 @@ const validateSchema = schema.strict()
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
-		console.error("Validation Error:", result.error)
 		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
 	}
 	const { source, inventoryCountChanges, fieldMap } = result.data
