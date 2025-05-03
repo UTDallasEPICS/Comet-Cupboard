@@ -25,18 +25,16 @@ export default defineEventHandler(async (event) => {
 	}
 
 	const transactionResult = await event.context.prisma.$transaction(async (tx) => {
-		await Promise.all(
-			inventoryCountChanges.map(async (inventoryCountChange) => {
-				await tx.item.update({
-					where: {
-						itemID: inventoryCountChange.itemID,
-					},
-					data: {
-						quantity: { increment: inventoryCountChange.countChange },
-					},
-				})
+		inventoryCountChanges.forEach(async (inventoryCountChange) => {
+			await tx.item.update({
+				where: {
+					itemID: inventoryCountChange.itemID,
+				},
+				data: {
+					quantity: { increment: inventoryCountChange.countChange },
+				},
 			})
-		)
+		})
 		const result = await tx.itemCountChange.createManyAndReturn({
 			data: inventoryCountChanges.map((inventoryCountChange) => {
 				return {
