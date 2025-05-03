@@ -1,37 +1,24 @@
 <template lang="pug">
 div.flex.flex-col.pt-2.pb-5.px-5.overflow-y-auto.overscroll-contain.relative
-	div.flex.items-center.max-md_order-first.max-md_pb-3
-		ControlsSource(:key="addedSource" @sourceChange="(selectedSource) => (source = selectedSource)").mr-3
-		button(
-			@click="showInput = !showInput"
-		).bg-utd-green.text-white.rounded-full.min-w-12.min-h-12.flex.place-content-center.place-items-center.hover_drop-shadow-standard.overflow-y-auto.mr-3
-			PlusIcon.fill-white.stroke-white.h-6
-		input(
-			v-if="showInput"
-			placeholder="Enter new source"
-			type="text"
-			v-model="newSource"
-			@keydown.enter="addSource"
-		).flex-1.p-2.border.rounded-lg.outline-none.overflow-hidden.w-full
+	div.flex.items-start.gap-x-8.max-md_order-first.max-md_pb-3
+		ControlsSource(@sourceChange="(selectedSource) => (source = selectedSource)").mr-3
+		div(v-if="fields.length > 0").flex.flex-col.space-y-3
+			div(v-for="fieldName in fields" :key="fieldName").flex.flex-col
+				label(:for="fieldName").text-xl.font-semibold {{ fieldName }}
+				input(type="text" v-model="fieldInputs[fieldName]" :id="fieldName").border.p-2.rounded-md
 	div.divide-y.divide-cupboard-lg.mb-5
-		div(v-for="(change, index) in props.changes").py-2
+		div(v-for="(change, index) in props.changes" :key="index").py-2
 			InventoryReviewItemCard(:change="change" :id="index")
-	div.flex.flex-row.justify-end.space-x-5
-		button(@click="emit('cancel')").modal-button.w-40.bg-cupboard-dg.text-white
-			| Cancel
-		button(v-if="source === ''" disabled).modal-button.bg-cupboard-dg.text-white.w-full.sm_w-72 No Source Selected
-		button(v-else @click="emit('accept', source)").modal-button.w-40.bg-utd-green.text-white
-			| Submit
+		div.flex.flex-row.justify-end.space-x-5.mt-8
+			button(@click="emit('cancel')").modal-button.w-40.bg-cupboard-dg.text-white
+				| Cancel
+			button(v-if="source === ''" disabled).modal-button.bg-cupboard-dg.text-white.w-full.sm_w-72
+				| No Source Selected
+			button(v-else @click="emit('accept', { source: source, fieldMap: fieldInputs })").modal-button.w-40.bg-utd-green.text-white
+				| Submit
 </template>
 
 <script lang="ts" setup>
-import { PlusIcon } from "@heroicons/vue/24/solid"
-
-const newSource = ref("")
-// key used to refresh the source list when a new source is added
-const addedSource = ref("")
-const showInput = ref(false)
-
 const props = defineProps({
 	changes: {
 		type: Object,
@@ -39,15 +26,22 @@ const props = defineProps({
 	},
 })
 
-const addSource = async () => {
-	await $fetch("/api/inventory/source", {
-		method: "PUT",
-		body: JSON.stringify({ source: newSource.value }),
-	})
-	addedSource.value = newSource.value
-	newSource.value = ""
-}
-
 const emit = defineEmits(["cancel", "accept", "sourceChange"])
+
 const source = ref("")
+const fields = ref<string[]>([])
+const fieldInputs = ref<Record<string, string>>({})
+
+watch(source, async (newSource) => {
+	if (newSource) {
+		const { data } = await useFetch("/api/controls/fields", {
+			query: { source: newSource },
+		})
+		fields.value = data.value?.map((field) => field.name) || []
+		fieldInputs.value = Object.fromEntries(fields.value.map((name) => [name, ""]))
+	} else {
+		fields.value = []
+		fieldInputs.value = {}
+	}
+})
 </script>
