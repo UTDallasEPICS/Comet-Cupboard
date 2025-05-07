@@ -5,6 +5,7 @@ enum AccessPermission {
 	INVENTORY_MANAGEMENT = "INVENTORY_MANAGEMENT",
 	VERIFY_CART = "VERIFY_CART",
 	ADMIN = "ADMIN",
+	RESTRICTED = "RESTRICTED",
 }
 
 /* 
@@ -23,7 +24,7 @@ const pageAccessMap: { [route: string]: AccessPermission } = {
 	"/data": AccessPermission.ADMIN,
 	"/admin-dashboard": AccessPermission.ADMIN,
 	"/queue": AccessPermission.PUBLIC,
-	"/removed": AccessPermission.PUBLIC,
+	"/removed": AccessPermission.RESTRICTED,
 }
 const apiAccessMap: { [route: string]: { [method: string]: AccessPermission } } = {
 	"/api/login": {
@@ -81,6 +82,12 @@ const apiAccessMap: { [route: string]: { [method: string]: AccessPermission } } 
 	},
 	"/api/verification/pendingCartsUpdate": {
 		GET: AccessPermission.VERIFY_CART,
+	},
+	"/api/queue": {
+		POST: AccessPermission.PUBLIC,
+		GET: AccessPermission.PUBLIC,
+		DELETE: AccessPermission.PUBLIC,
+		PUT: AccessPermission.PUBLIC,
 	},
 	// DATA APIS
 }

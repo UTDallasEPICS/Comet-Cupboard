@@ -14,46 +14,31 @@ div.w-full.flex.flex-col.border-2.border-utd-green.rounded-md.overflow-auto.bg-w
 					| {{ queueItem }}
 </template>
 <script lang="ts" setup>
+const queue = ref([] as string[])
 
+const refreshQueue = async () => {
+	const { data, error } = await useFetch("/api/queue?state=INSIDE", {
+		method: "GET",
+	})
 
-
-const props = defineProps({
-	identification: {
-		type: String,
-		required: true,
-	},
-})
-watch(
-	() => props.identification,
-	(newVal) => {
-		if (newVal) {
-			// If the identification prop is set, add it to the queue
-			queue.value.push(newVal)
-		}
+	if (error.value) {
+		console.error("Fetch failed:", error.value)
+	} else {
+		queue.value = [...(data.value || []).map((item: { netID: string }) => item.netID)] // Extract netID as strings
 	}
-)
-const queue = ref([
-	"Alice",
-	"Bob",
-	"Charlie",
-	"Diana",
-	"Eve",
-	"Frank",
-	"Grace",
-	"Hank",
-	"Ivy",
-	"Jack",
-	"Karen",
-	"Leo",
-	"Mona",
-	"Nina",
-	"Oscar",
-	"Paul",
-	"Quinn",
-	"Rachel",
-	"Steve",
-	"Tina",
-])
+}
+
+onMounted(() => {
+	refreshQueue() // Load once right away
+
+	const interval = setInterval(() => {
+		refreshQueue()
+	}, 3000) // every 3 seconds
+
+	onUnmounted(() => {
+		clearInterval(interval) // clean up when component is destroyed
+	})
+})
 
 const emit = defineEmits(["update:queue"])
 </script>

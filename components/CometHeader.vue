@@ -76,9 +76,26 @@ watch(route, () => {
 })
 
 const logout = async () => {
-	await $fetch("/api/cart/cart", {
-		method: "DELETE",
-	})
+	try {
+		await $fetch("/api/cart/cart", {
+			method: "DELETE",
+		})
+	} catch (err) {
+		//We don't care about this error, we just don't want this to stop us though
+	}
+
+	// If the user is in the queue, remove them from the queue
+	try {
+		await $fetch("/api/queue", {
+			method: "DELETE",
+			body: {
+				netID: useCookie("netID").value,
+			},
+		})
+	} catch (err) {
+		//We don't care about this error, we just don't want this to stop us though
+	}
+
 	const netIDCookie = useCookie("netID")
 	netIDCookie.value = null
 	accessCookie.value = null

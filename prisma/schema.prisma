@@ -1,5 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -8,12 +8,13 @@ datasource db {
 }
 
 model User {
-  netID     String     @id @map("net_id")
-  Student   Student?
-  Volunteer Volunteer?
-  Admin     Admin?
-  Cart      Cart?
-  Orders    Order[]
+  netID      String      @id @map("net_id")
+  Student    Student?
+  Volunteer  Volunteer?
+  Admin      Admin?
+  Cart       Cart?
+  Orders     Order[]
+  queueEntry QueueEntry?
 
   @@map("user")
 }
@@ -53,7 +54,7 @@ model Item {
   categoryName     String            @map("category_name")
   quantity         Int               @default(0) @map("quantity")
   Deal             Deal?
-  imgName           String            @map("img_name")
+  imgName          String            @map("img_name")
   ItemCountChanges ItemCountChange[]
   CartItems        CartItem[]
   OrderItems       OrderItem[]
@@ -130,4 +131,21 @@ model Deal {
   adjustedCount Int    @map("adjusted_count")
 
   @@map("deal")
+}
+
+model QueueEntry {
+  id       Int        @id @default(autoincrement())
+  netID    String     @unique
+  state    QueueState
+  joinedAt DateTime   @default(now())
+
+  User User @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([state])
+  @@map("queue_entry")
+}
+
+enum QueueState {
+  WAITING
+  INSIDE
 }

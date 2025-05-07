@@ -13,10 +13,9 @@ div.flex.flex-row.items-center.justify-between.border-b.border-black.w-full
 	//- At the end is the confirm and remove buttons
 	div.flex.flex-row.justify-end
 		button(@click="intoCupboard").flex.items-center.justify-center.m-2.remove-button-effects
-			CheckCircleIcon(class="h-10 w-10 text-green-500")
+			CheckCircleIcon.h-10.w-10.text-green-500.hover_drop-shadow-lg
 		button(@click="removeFromQueue").flex.items-center.justify-center.m-2.remove-button-effects
-			XCircleIcon(class="h-10 w-10 text-red-500")
-		
+			XCircleIcon.h-10.w-10.text-red-500.hover_drop-shadow-lg
 </template>
 <script lang="ts" setup>
 import { CheckCircleIcon } from "@heroicons/vue/24/solid"
@@ -32,14 +31,36 @@ const props = defineProps({
 		required: true,
 	},
 })
-const emit = defineEmits(["removeFromQueue", "addToCupboard"])
+const emit = defineEmits(["refresh"])
 // Visually removes the item from the queue, needs to update student's permission to removed so they have no access to site until they log in again
-const removeFromQueue = () => {
-	emit("removeFromQueue", props.identification)
+const removeFromQueue = async () => {
+	try {
+		await $fetch("/api/queue", {
+			method: "DELETE",
+			body: {
+				netID: props.identification,
+			},
+		})
+		console.log("Successfully deleted from queue")
+		emit("refresh")
+	} catch (err) {
+		console.error("Error deleting from cupboard:", err)
+	}
 }
 
 // Visually adds the student into the cupboard. Updates permission of student to allow them access shopping cart
-const intoCupboard = () => {
-	emit("addToCupboard", props.identification)
+const intoCupboard = async () => {
+	try {
+		await $fetch("/api/queue", {
+			method: "PUT",
+			body: {
+				netID: props.identification,
+			},
+		})
+		console.log("Successfully added to cupboard")
+		emit("refresh")
+	} catch (err) {
+		console.error("Error adding to cupboard:", err)
+	}
 }
 </script>
