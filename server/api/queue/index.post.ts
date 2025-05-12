@@ -1,3 +1,5 @@
+import { broadcastToQueue } from "~/server/utils/queueVerificationUtil"
+
 export default defineEventHandler(async (event) => {
 	const netID = event.context.user.netID
 
@@ -23,13 +25,21 @@ export default defineEventHandler(async (event) => {
 		})
 	}
 
-	// By default, but in the WAITING queue
+	// By default, put in the WAITING queue
 	const newEntry = await event.context.prisma.queueEntry.create({
 		data: {
 			netID,
 			state: "WAITING",
 		},
 	})
+
+	await broadcastToQueue(
+		JSON.stringify({
+			//The type will be ADD_QUEUE as the inside queue does not need to check for when items are added
+			type: "QUEUE_ADD",
+			payload: { netID, action: "ADD" },
+		})
+	)
 
 	return {
 		message: "Successfully added to queue",

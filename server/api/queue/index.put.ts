@@ -1,3 +1,5 @@
+import { broadcastToQueue } from "~/server/utils/queueVerificationUtil"
+
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
 	const netID = body.netID
@@ -35,8 +37,16 @@ export default defineEventHandler(async (event) => {
 		data: { state: "INSIDE" },
 	})
 
+	//Broadcast to the queue that the user has moved to INSIDE queue
+	await broadcastToQueue(
+		JSON.stringify({
+			type: "QUEUE_UPDATE",
+			payload: newEntry,
+		})
+	)
+
 	return {
-		message: "Successfully added to queue",
+		message: "Successfully moved to INSIDE queue",
 		queueEntry: newEntry,
 	}
 })

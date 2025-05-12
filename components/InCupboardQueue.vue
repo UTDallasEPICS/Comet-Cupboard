@@ -14,31 +14,7 @@ div.w-full.flex.flex-col.border-2.border-utd-green.rounded-md.overflow-auto.bg-w
 					| {{ queueItem }}
 </template>
 <script lang="ts" setup>
-const queue = ref([] as string[])
-
-const refreshQueue = async () => {
-	const { data, error } = await useFetch("/api/queue?state=INSIDE", {
-		method: "GET",
-	})
-
-	if (error.value) {
-		console.error("Fetch failed:", error.value)
-	} else {
-		queue.value = [...(data.value || []).map((item: { netID: string }) => item.netID)] // Extract netID as strings
-	}
-}
-
-onMounted(() => {
-	refreshQueue() // Load once right away
-
-	const interval = setInterval(() => {
-		refreshQueue()
-	}, 3000) // every 3 seconds
-
-	onUnmounted(() => {
-		clearInterval(interval) // clean up when component is destroyed
-	})
-})
-
-const emit = defineEmits(["update:queue"])
+const props = defineProps<{
+	queue: string[]
+}>()
 </script>
