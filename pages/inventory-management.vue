@@ -136,6 +136,10 @@ const updateItemChangeAmount = (itemID, amountChange) => {
 	if (amountChange) {
 		inventoryCountChanges.value[itemID] += amountChange
 	}
+
+	if (inventoryCountChanges.value[itemID] === 0) {
+		inventoryCountChanges.value = Object.fromEntries(Object.entries(inventoryCountChanges.value).filter(([key]) => key !== itemID))
+	}
 }
 
 const submitInventoryCountChanges = async (source) => {
