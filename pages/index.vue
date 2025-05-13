@@ -17,7 +17,17 @@ onMounted(async () => {
 		})
 		const accessCookiePermission = useCookie("AccessPermission")
 		const permissions = accessCookiePermission.value && typeof accessCookiePermission.value === "object" ? accessCookiePermission.value : {}
-		await navigateTo("/shopping")
+		if (!permissions["VERIFY_CART"]) {
+			//Enters the student into the queue
+			permissions["SHOPPING"] = false
+			permissions["RESTRICTED"] = false
+			await $fetch("/api/queue", {
+				method: "POST",
+			})
+			await navigateTo("/queue")
+		} else {
+			await navigateTo("/shopping")
+		}
 	}
 })
 

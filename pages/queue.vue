@@ -6,12 +6,6 @@ div
 			InCupboardQueue(:queue="insideQueue")
 		div.flex.items-center.justify-center.flex-grow.w-full
 			WaitingQueue(:queue="waitingQueue")
-		<button @click="handleClick" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">
-			Click Me
-		</button>
-		<button @click="handleAddClick" Add to Queue class="bg-blue-500 text-white font-bold py-2 px-4 rounded">
-			Add to Queue
-		</button>
 </template>
 <script lang="ts" setup>
 import { $fetch } from "ofetch"
@@ -20,27 +14,61 @@ import { $fetch } from "ofetch"
 const waitingQueue = ref([] as string[])
 const insideQueue = ref([] as string[])
 
+const { data: waitingData } = await useFetch("/api/queue?state=WAITING", {
+	method: "GET",
+})
+const { data: insideData } = await useFetch("/api/queue?state=INSIDE", {
+	method: "GET",
+})
+
+waitingQueue.value = [...(waitingData.value || []).map((item: { netID: string }) => item.netID)]
+insideQueue.value = [...(insideData.value || []).map((item: { netID: string }) => item.netID)]
+
 // Server Side Fetching
 const queueUpdates = ref<EventSource | null>(null)
 
-onMounted(() => {
-	console.log("hello")
-	refreshWaitingQueue()
-	refreshInsideQueue()
+onMounted(async () => {
 	queueUpdates.value = new EventSource("/api/queue/queueUpdate")
 
-	queueUpdates.value.onmessage = (event) => {
+	queueUpdates.value.onmessage = async (event) => {
 		const { type, payload } = JSON.parse(event.data)
 
 		if (type === "QUEUE_UPDATE" || type === "QUEUE_ADD") {
-			refreshWaitingQueue()
+			await refreshWaitingQueue()
 			console.log("Received queue update:", payload)
 		}
 		if (type == "QUEUE_UPDATE") {
-			refreshInsideQueue()
-			console.log("U[dated Inside Queue]")
+			await refreshInsideQueue()
+			console.log("Updated Inside Queue]")
 		}
-		console.log("Message seen")
+
+		const userID = useCookie("netID").value
+		const accessCookiePermission = useCookie("AccessPermission")
+		const permissions = accessCookiePermission.value && typeof accessCookiePermission.value === "object" ? accessCookiePermission.value : {}
+
+		//We want to simulate an entire logout process if this is true
+		if (!waitingQueue.value.includes(userID) && !insideQueue.value.includes(userID) && !permissions["SHOPPING"]) {
+			permissions["RESTRICTED"] = true
+			permissions["PUBLIC"] = false
+			accessCookiePermission.value = permissions
+			try {
+				await $fetch("/api/cart/cart", {
+					method: "DELETE",
+				})
+			} catch (err) {
+				//We don't care about this error, we just don't want this to stop us though
+			}
+
+			await navigateTo("/removed")
+			reloadNuxtApp()
+		} else if (insideQueue.value.includes(userID) && !permissions["SHOPPING"]) {
+			permissions["SHOPPING"] = true
+			permissions["SHOPPING_ACTION"] = true
+
+			accessCookiePermission.value = permissions
+			await navigateTo("/shopping")
+			reloadNuxtApp()
+		}
 	}
 })
 
@@ -60,7 +88,6 @@ const refreshWaitingQueue = async () => {
 		console.error("Fetch failed:", error.value)
 	} else {
 		waitingQueue.value = [...(data.value || []).map((item: { netID: string }) => item.netID)]
-		console.log("Waiting queue updated!")
 	}
 }
 
@@ -74,31 +101,6 @@ const refreshInsideQueue = async () => {
 		console.error("Fetch failed:", error.value)
 	} else {
 		insideQueue.value = [...(data.value || []).map((item: { netID: string }) => item.netID)] // Extract netID as strings
-	}
-}
-
-// Test Buttons
-const handleClick = async () => {
-	console.log("Button clicked!")
-	refreshWaitingQueue
-
-	const { data, error } = await useFetch("/api/queue?state=WAITING")
-
-	if (error.value) {
-		console.error("Fetch failed:", error.value)
-	} else {
-		console.log("Queue netIDs:", [...(data.value || [])]) // Should be [] right now
-	}
-}
-
-const handleAddClick = async () => {
-	try {
-		await $fetch("/api/queue", {
-			method: "POST",
-		})
-		console.log("Successfully added to queue")
-	} catch (err) {
-		console.error("Error adding to cupboard:", err)
 	}
 }
 </script>
