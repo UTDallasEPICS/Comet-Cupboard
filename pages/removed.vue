@@ -18,5 +18,9 @@ onMounted(async () => {
 	} catch (err) {
 		//We don't care about this error, we just don't want this to stop us though
 	}
+
+	const netIDCookie = useCookie("netID")
+	netIDCookie.value = null
+	permissions.value = accessCookie.value && typeof accessCookie.value === "object" ? accessCookie.value : {}
 })
 </script>
