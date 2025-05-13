@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 		if (state !== "WAITING" && state !== "INSIDE") {
 			throw createError({
 				statusCode: 400,
-				statusMessage: "Invalid or missing queue state. Use WAITING or INSIDE.",
+				statusMessage: "Invalid queue state",
 			})
 		}
 
@@ -19,6 +19,7 @@ export default defineEventHandler(async (event) => {
 				netID: true,
 			},
 		})
+
 		return queue
 	} catch (error) {
 		throw createError({
