@@ -142,11 +142,12 @@ const updateItemChangeAmount = (itemID, amountChange) => {
 	}
 }
 
-const submitInventoryCountChanges = async (source) => {
+const submitInventoryCountChanges = async (sourceArgs) => {
 	await $fetch("/api/inventory/itemCountChanges", {
 		method: "POST",
 		body: {
-			source: source,
+			source: sourceArgs.source,
+			fieldMap: sourceArgs.fieldMap ?? {},
 			inventoryCountChanges: Object.keys(inventoryCountChanges.value).map((itemKey) => {
 				return { itemID: itemKey, countChange: inventoryCountChanges.value[itemKey] }
 			}),

@@ -4,7 +4,18 @@ export default defineEventHandler(async (event) => {
 	const itemCountChanges = await event.context.prisma.itemCountChange.findMany({
 		include: {
 			Item: true,
+			Source: {
+				include: {
+					Fields: true,
+				},
+			},
 		},
+	})
+	const allFieldNames = new Set<string>()
+	itemCountChanges.forEach((change) => {
+		change.Source.Fields.forEach((field) => {
+			allFieldNames.add(field.name)
+		})
 	})
 	const orderItems = await event.context.prisma.orderItem.findMany({
 		include: {
@@ -12,6 +23,12 @@ export default defineEventHandler(async (event) => {
 			Item: true,
 		},
 	})
+	const fields = await event.context.prisma.field.findMany()
+	const fieldKeys = fields.map((field) => ({
+		key: `(${field.sourceName})_${field.name}`,
+		name: field.name,
+		source: field.sourceName,
+	}))
 	const workbook = new ExcelJS.Workbook()
 	const worksheetInventory = workbook.addWorksheet("Inventory Count Changes")
 	worksheetInventory.columns = [
@@ -21,16 +38,31 @@ export default defineEventHandler(async (event) => {
 		{ header: "Item Name", key: "item_name", width: 20 },
 		{ header: "Source", key: "source", width: 20 },
 		{ header: "Amount Changed", key: "amount_changed", width: 20 },
+		...fieldKeys.map((f) => ({
+			header: f.key,
+			key: f.key,
+			width: 20,
+		})),
 	]
 	itemCountChanges.forEach((itemCountChange) => {
-		worksheetInventory.addRow({
+		const fieldMap = itemCountChange.fieldMap as Record<string, any> | null
+		const baseRow: { [key: string]: any } = {
 			id: itemCountChange.countChangeID,
 			timestamp: itemCountChange.date,
 			item_id: itemCountChange.itemID,
 			item_name: itemCountChange.Item.name,
 			source: itemCountChange.sourceName,
 			amount_changed: itemCountChange.amountChanged,
+			field_map: JSON.stringify(itemCountChange.fieldMap),
+		}
+		fieldKeys.forEach((field) => {
+			if (itemCountChange.sourceName === field.source) {
+				baseRow[field.key] = fieldMap?.[field.name] ?? ""
+			} else {
+				baseRow[field.key] = ""
+			}
 		})
+		worksheetInventory.addRow(baseRow)
 	})
 	const worksheetOrders = workbook.addWorksheet("Orders")
 	worksheetOrders.columns = [
