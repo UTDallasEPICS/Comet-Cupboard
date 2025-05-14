@@ -136,13 +136,18 @@ const updateItemChangeAmount = (itemID, amountChange) => {
 	if (amountChange) {
 		inventoryCountChanges.value[itemID] += amountChange
 	}
+
+	if (inventoryCountChanges.value[itemID] === 0) {
+		inventoryCountChanges.value = Object.fromEntries(Object.entries(inventoryCountChanges.value).filter(([key]) => key !== itemID))
+	}
 }
 
-const submitInventoryCountChanges = async (source) => {
+const submitInventoryCountChanges = async (sourceArgs) => {
 	await $fetch("/api/inventory/itemCountChanges", {
 		method: "POST",
 		body: {
-			source: source,
+			source: sourceArgs.source,
+			fieldMap: sourceArgs.fieldMap ?? {},
 			inventoryCountChanges: Object.keys(inventoryCountChanges.value).map((itemKey) => {
 				return { itemID: itemKey, countChange: inventoryCountChanges.value[itemKey] }
 			}),

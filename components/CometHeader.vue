@@ -8,32 +8,31 @@ div.sticky.top-0.z-50
 				MenuItems(
 					class="h-[calc(100vh-80px)]"
 				).z-50.-left-4.flex.flex-col.items-center.text-center.absolute.top-20.w-screen.sm_w-80.border-black.border-r-2.text-2xl.bg-white.gap-4.p-4
-					MenuItem(v-if="permissions['SHOPPING']" as="div").w-full.cursor-pointer.hover_underline
-						NuxtLink(@click.native="close" :to="shoppingPath")
+					MenuItem(v-if="permissions['SHOPPING']" as="div").w-full
+						NuxtLink(@click.native="close" :to="shoppingPath").cursor-pointer.hover_underline
 							| Shopping
 						hr.border-black.w-full.mt-4
-					MenuItem(v-if="permissions['VERIFY_CART']" as="div").w-full.cursor-pointer.hover_underline
-						NuxtLink(@click.native="close" :to="verifyPath")
+					MenuItem(v-if="permissions['VERIFY_CART']" as="div").w-full
+						NuxtLink(@click.native="close" :to="verifyPath").cursor-pointer.hover_underline
 							| Verify Carts
 						hr.border-black.w-full.mt-4
-					MenuItem(v-if="permissions['INVENTORY_MANAGEMENT']" as="div").w-full.cursor-pointer.hover_underline
-						NuxtLink(@click.native="close" :to="inventoryPath")
+					MenuItem(v-if="permissions['INVENTORY_MANAGEMENT']" as="div").w-full
+						NuxtLink(@click.native="close" :to="inventoryPath").cursor-pointer.hover_underline
 							| Inventory Management
 						hr.border-black.w-full.mt-4
-					MenuItem(v-if="permissions['PUBLIC']" as="div").w-full.cursor-pointer.hover_underline
-						NuxtLink(@click.native="close" :to="queuePath")
+					MenuItem(v-if="permissions['PUBLIC']" as="div").w-full
+						NuxtLink(@click.native="close" :to="queuePath").cursor-pointer.hover_underline
 							| Queue
 						hr.border-black.w-full.mt-4
-					MenuItem(v-if="permissions['ADMIN']" as="div").w-full.cursor-pointer.hover_underline
-						NuxtLink(@click.native="close" :to="dataPath")
+					MenuItem(v-if="permissions['ADMIN']" as="div").w-full
+						NuxtLink(@click.native="close" :to="dataPath").cursor-pointer.hover_underline
 							| Data
 						hr.border-black.w-full.mt-4
-					MenuItem(v-if="permissions['ADMIN']" as="div").w-full.cursor-pointer.hover_underline
-						NuxtLink(@click.native="close" :to="adminDashboardPath")
+					MenuItem(v-if="permissions['ADMIN']" as="div").w-full
+						NuxtLink(@click.native="close" :to="adminDashboardPath").cursor-pointer.hover_underline
 							| Admin Dashboard
 						hr.border-black.w-full.mt-4
-		a(href="https://cometcupboard.utdallas.edu/")
-			img(src="/CometCupboardLogo1.png").h-14
+		img(src="/CometCupboardLogo1.png").h-14
 		div.ml-auto
 			button(v-if="page === shoppingPath" style="text-decoration-color: white" @click="toggleCartView").relative.remove-button-effects
 				ShoppingCartIcon.size-11.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange

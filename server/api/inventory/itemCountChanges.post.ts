@@ -3,16 +3,17 @@ import { z } from "zod"
 const schema = z.object({
 	source: z.string(),
 	inventoryCountChanges: z.array(z.object({ itemID: z.string(), countChange: z.number().int() })),
+	fieldMap: z.record(z.string(), z.string()).optional(),
 })
 
-const validateSchema = schema.strict().required()
+const validateSchema = schema.strict()
 
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
 		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
 	}
-	const { source, inventoryCountChanges } = result.data
+	const { source, inventoryCountChanges, fieldMap } = result.data
 
 	const foundSource = await event.context.prisma.source.findUnique({
 		where: {
@@ -40,6 +41,7 @@ export default defineEventHandler(async (event) => {
 					amountChanged: inventoryCountChange.countChange,
 					itemID: inventoryCountChange.itemID,
 					sourceName: source,
+					fieldMap: fieldMap ?? {},
 				}
 			}),
 		})

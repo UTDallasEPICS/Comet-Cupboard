@@ -1,0 +1,29 @@
+import { z } from "zod"
+
+const schema = z.object({
+	source: z.string(),
+	fieldName: z.string(),
+})
+
+const validateSchema = schema.strict().required()
+
+export default defineEventHandler(async (event) => {
+	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
+	if (!result.success) {
+		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
+	}
+	const { source, fieldName } = result.data
+
+	const field = event.context.prisma.field.create({
+		data: {
+			name: fieldName,
+			sourceName: source,
+		},
+	})
+
+	if (!field) {
+		throw createError({ statusCode: 500, statusMessage: "Failed to add field: " + fieldName })
+	}
+
+	return field
+})
