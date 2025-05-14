@@ -31,26 +31,26 @@ export default defineEventHandler(async (event) => {
 				Volunteer: true,
 				Admin: true,
 				Cart: { include: { CartItems: { include: { Item: { omit: { quantity: true }, include: { Deal: true } } } } } },
+				QueueEntry: true,
 			},
 		})
 
 		if (user) {
 			event.context.user = user
 			//Student will get shopping permissions after queue. Otherwise, restricted to PUBLIC permissions like queue and login
-
-			event.context.permissions[AccessPermission.SHOPPING] = true
-			event.context.permissions[AccessPermission.SHOPPING_ACTION] = true
-			if (user.Student) {
-				event.context.permissions[AccessPermission.RESTRICTED] = true
+			if (user.QueueEntry && user.QueueEntry.state == "INSIDE") {
+				event.context.permissions[AccessPermission.SHOPPING] = true
+			} else {
+				event.context.permissions[AccessPermission.SHOPPING] = false
 			}
 
 			if (user.Volunteer) {
 				event.context.permissions[AccessPermission.SHOPPING] = true
-				event.context.permissions[AccessPermission.SHOPPING_ACTION] = true
 				event.context.permissions[AccessPermission.INVENTORY_MANAGEMENT] = true
 				event.context.permissions[AccessPermission.VERIFY_CART] = true
 			}
 			if (user.Admin) {
+				event.context.permissions[AccessPermission.SHOPPING] = true
 				event.context.permissions[AccessPermission.INVENTORY_MANAGEMENT] = true
 				event.context.permissions[AccessPermission.VERIFY_CART] = true
 				event.context.permissions[AccessPermission.ADMIN] = true

@@ -14,5 +14,5 @@ export default defineEventHandler((event) => {
 			throw createError({ statusCode: 403, statusMessage: "Unauthorized" })
 		}
 	}
-	console.log("AUTHORIZING" + ` ${event.method} ${requestPath}`)
+	// console.log("AUTHORIZING" + ` ${event.method} ${requestPath}`)
 })

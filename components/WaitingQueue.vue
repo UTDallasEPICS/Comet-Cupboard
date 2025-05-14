@@ -5,11 +5,11 @@ div.w-full.flex.flex-col.border-2.border-black.rounded-md.bg-white
 	//- No matter what if the queue is empty, display a message that it is empty
 	div(v-if="queue.length == 0").flex.flex-col.items-center.justify-center.h-72.text-xl
 		| Queue is empty
-	//- For volenteers, display the first 5 people in the queue with control elements
+	//- For volunteers, display the first 5 people in the queue with control elements
 	div(v-else-if="permissions['VERIFY_CART']" as="div").flex.flex-col.justify-start.items-start
 		div.w-full
 			div(v-for="(queueItem, index) in queue.slice(0, 5)" :key="index")
-				QueueHeader(:identification="queueItem" :position="index + 1")
+				QueueCard(:identification="queueItem" :position="index + 1")
 		//-Display the rest as text
 		div(v-for="(queueItem, index) in queue.slice(5)" :key="index").w-full.mb-1
 			div.flex.flex-row.justify-start.pl-2.gap-2
@@ -23,7 +23,7 @@ div.w-full.flex.flex-col.border-2.border-black.rounded-md.bg-white
 		div(v-for="(queueItem, index) in queue" :key="index").w-full.mb-1
 			div.flex.flex-row.justify-start.pl-2.gap-2
 				div.w-4
-					| {{ Number(index) + 1 }}
+					| {{ index + 1 }}
 				div
 					| {{ queueItem }}
 </template>

@@ -8,18 +8,12 @@ div
 			WaitingQueue(:queue="waitingQueue")
 </template>
 <script lang="ts" setup>
-import { $fetch } from "ofetch"
-
 // Queues for children components
 const waitingQueue = ref([] as string[])
 const insideQueue = ref([] as string[])
 
-const { data: waitingData } = await useFetch("/api/queue?state=WAITING", {
-	method: "GET",
-})
-const { data: insideData } = await useFetch("/api/queue?state=INSIDE", {
-	method: "GET",
-})
+const { data: waitingData, refresh: refreshWaitingQueue } = await useFetch("/api/queue?state=WAITING")
+const { data: insideData, refresh: refreshInsideQueue } = await useFetch("/api/queue?state=INSIDE")
 
 waitingQueue.value = [...(waitingData.value || []).map((item: { netID: string }) => item.netID)]
 insideQueue.value = [...(insideData.value || []).map((item: { netID: string }) => item.netID)]
@@ -28,9 +22,6 @@ insideQueue.value = [...(insideData.value || []).map((item: { netID: string }) =
 const queueUpdates = ref<EventSource | null>(null)
 
 onMounted(async () => {
-	//Force refresh to update the nav bar
-	reloadNuxtApp()
-
 	queueUpdates.value = new EventSource("/api/queue/queueUpdate")
 
 	queueUpdates.value.onmessage = async (event) => {
@@ -51,7 +42,6 @@ onMounted(async () => {
 
 		//We want to simulate an entire logout process if this is true
 		if (!waitingQueue.value.includes(userID) && !insideQueue.value.includes(userID) && !permissions["SHOPPING"] && permissions) {
-			permissions["RESTRICTED"] = true
 			permissions["PUBLIC"] = false
 			accessCookiePermission.value = permissions
 			try {
@@ -61,15 +51,17 @@ onMounted(async () => {
 			} catch (err) {
 				//We don't care about this error, we just don't want this to stop us though
 			}
-
-			await navigateTo("/removed")
-			reloadNuxtApp()
+			const netIDCookie = useCookie("netID")
+			netIDCookie.value = null
+			await navigateTo("/")
 		} else if (insideQueue.value.includes(userID) && !permissions["SHOPPING"]) {
-			permissions["SHOPPING"] = true
-			permissions["SHOPPING_ACTION"] = true
-
-			accessCookiePermission.value = permissions
+			await $fetch("/api/updatePermissions", {
+				method: "GET",
+			})
 			await navigateTo("/shopping")
+			//Force refresh to update the nav bar
+			refreshCookie("netID")
+			refreshCookie("AccessPermission")
 			reloadNuxtApp()
 		}
 	}
@@ -80,30 +72,4 @@ onBeforeUnmount(() => {
 		queueUpdates.value.close()
 	}
 })
-
-// Refresh Waiting Queue
-const refreshWaitingQueue = async () => {
-	const { data, error } = await useFetch("/api/queue?state=WAITING", {
-		method: "GET",
-	})
-
-	if (error.value) {
-		console.error("Fetch failed:", error.value)
-	} else {
-		waitingQueue.value = [...(data.value || []).map((item: { netID: string }) => item.netID)]
-	}
-}
-
-//Refresh Inside Queue
-const refreshInsideQueue = async () => {
-	const { data, error } = await useFetch("/api/queue?state=INSIDE", {
-		method: "GET",
-	})
-
-	if (error.value) {
-		console.error("Fetch failed:", error.value)
-	} else {
-		insideQueue.value = [...(data.value || []).map((item: { netID: string }) => item.netID)] // Extract netID as strings
-	}
-}
 </script>
