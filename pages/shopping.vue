@@ -167,4 +167,11 @@ onMounted(async () => {
 		/* lol */
 	}
 })
+
+onBeforeUnmount(() => {
+	if (verificationUpdate.value) {
+		verificationUpdate.value.close()
+	}
+	resetCartView()
+})
 </script>

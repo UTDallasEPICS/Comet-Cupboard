@@ -34,7 +34,7 @@ div.flex.flex-col.pt-2.pb-5.px-5.overflow-y-auto.overscroll-contain.relative
 					//Buttons
 					div.flex.flex-row.justify-end.space-x-5
 						div.skeleton.w-40.h-12.rounded-xl
-						div.skeleton.w-72.h012.rounded-xl
+						div.skeleton.w-72.h-12.rounded-xl
 </template>
 
 <script lang="ts" setup>
