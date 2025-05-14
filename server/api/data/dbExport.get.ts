@@ -7,13 +7,13 @@ export default defineEventHandler(async (event) => {
 			Source: {
 				include: {
 					Fields: true,
-				}
-			}
+				},
+			},
 		},
 	})
 	const allFieldNames = new Set<string>()
-	itemCountChanges.forEach(change => {
-		change.Source.Fields.forEach(field => {
+	itemCountChanges.forEach((change) => {
+		change.Source.Fields.forEach((field) => {
 			allFieldNames.add(field.name)
 		})
 	})
