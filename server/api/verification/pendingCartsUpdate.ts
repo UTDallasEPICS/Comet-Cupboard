@@ -12,9 +12,9 @@ export default defineEventHandler(async (event) => {
 	eventStream.onClosed(async () => {
 		clearInterval(interval)
 		await eventStream.close()
-		if (volunteerMap[event.context.user.netID]) {
+		if (volunteerMap[event.context.user.netID][eventStreamID]) {
 			// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-			delete volunteerMap[event.context.user.netID]
+			delete volunteerMap[event.context.user.netID][eventStreamID]
 		}
 	})
 
