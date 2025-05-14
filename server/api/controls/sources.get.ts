@@ -1,14 +1,8 @@
 export default defineEventHandler(async (event) => {
 	// retrieve the list of sources from the db
 	const sources = await event.context.prisma.source.findMany({
-		select: {
-			name: true,
-			Fields: {
-				select: {
-					fieldID: true,
-					name: true,
-				},
-			},
+		include: {
+			Fields: true,
 		},
 		orderBy: {
 			name: "asc",

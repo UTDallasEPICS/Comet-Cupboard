@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-	h2.flex.text-2xl.font-bold.cursor-pointer(@click="showVolunteers = !showVolunteers")
+	h2(@click="showVolunteers = !showVolunteers").flex.text-2xl.font-bold.cursor-pointer
 		| Add/Remove Volunteers
 		div.mx-3
 			PlusIcon.fill-white.stroke-white.bg-utd-green.h-8
@@ -22,9 +22,9 @@ div
 			div(v-for="volunteer in volunteers" :key="volunteer.netID" :value="volunteer.netID").flex.justify-between.items-center.p-3.border.border-gray-300
 				p.text-lg.p-3.font-bold {{ volunteer.netID }}
 				button(@click="removeVolunteer(volunteer.netID)").w-40.bg-red-negative.text-white.h-12 Remove
-		
+
 	div.py-3
-		h2.flex.text-2xl.font-bold.cursor-pointer(@click="showSources = !showSources")
+		h2(@click="showSources = !showSources").flex.text-2xl.font-bold.cursor-pointer
 			| Add/Edit Sources
 			div.mx-3
 				PlusIcon.fill-white.stroke-white.bg-utd-green.h-8
@@ -103,7 +103,7 @@ const addSource = async () => {
 		body: JSON.stringify({ source: newSource.value }),
 	})
 	newSource.value = ""
-	refreshSources()
+	await refreshSources()
 }
 
 const addFieldToSource = async () => {
@@ -111,7 +111,7 @@ const addFieldToSource = async () => {
 		method: "POST",
 		body: JSON.stringify({
 			source: selectedSource.value.name,
-			fields: [{ name: fieldLabel.value }],
+			fieldName: fieldLabel.value,
 		}),
 	})
 

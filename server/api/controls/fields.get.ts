@@ -9,15 +9,15 @@ const validateSchema = schema.strict().required()
 export default defineEventHandler(async (event) => {
 	const result = await getValidatedQuery(event, (query) => validateSchema.safeParse(query))
 
+	if (!result.success) {
+		throw createError({ statusCode: 400, statusMessage: "Invalid request parameters" })
+	}
+
 	const { source } = result.data
 
 	const fields = await event.context.prisma.field.findMany({
 		where: {
 			sourceName: source,
-		},
-		select: {
-			fieldID: true,
-			name: true,
 		},
 		orderBy: {
 			name: "asc",

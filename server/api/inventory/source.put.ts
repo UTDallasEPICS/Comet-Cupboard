@@ -18,7 +18,6 @@ export default defineEventHandler(async (event) => {
 		const newSource = await event.context.prisma.source.create({
 			data: {
 				name: source,
-				Field: [],
 			},
 		})
 		return newSource

@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
 	})
 	const fields = await event.context.prisma.field.findMany()
 	const fieldKeys = fields.map((field) => ({
-		key: `${field.name} (${field.sourceName})`,
+		key: `(${field.sourceName})_${field.name}`,
 		name: field.name,
 		source: field.sourceName,
 	}))

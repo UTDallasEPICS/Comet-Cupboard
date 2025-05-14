@@ -13,9 +13,15 @@ export default defineEventHandler(async (event) => {
 	}
 	const { fieldID } = result.data
 
-	await event.context.prisma.field.delete({
+	const field = await event.context.prisma.field.delete({
 		where: {
 			fieldID: fieldID,
 		},
 	})
+
+	if (!field) {
+		throw createError({ statusCode: 500, statusMessage: "Failed to delete field: " + fieldID })
+	}
+
+	return field
 })

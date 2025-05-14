@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
 					amountChanged: inventoryCountChange.countChange,
 					itemID: inventoryCountChange.itemID,
 					sourceName: source,
-					fieldMap: (fieldMap as any) ?? {},
+					fieldMap: fieldMap ?? {},
 				}
 			}),
 		})

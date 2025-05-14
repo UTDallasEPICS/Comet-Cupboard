@@ -81,7 +81,6 @@ div
 
 <script lang="ts" setup>
 import { PlusIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
-import { toRaw } from "vue"
 
 const searchTerm = ref("")
 const filters = ref([])
@@ -139,12 +138,12 @@ const updateItemChangeAmount = (itemID, amountChange) => {
 	}
 }
 
-const submitInventoryCountChanges = async (arg) => {
+const submitInventoryCountChanges = async (sourceArgs) => {
 	await $fetch("/api/inventory/itemCountChanges", {
 		method: "POST",
 		body: {
-			source: arg.source,
-			fieldMap: JSON.parse(JSON.stringify(toRaw(arg.fieldMap))),
+			source: sourceArgs.source,
+			fieldMap: sourceArgs.fieldMap ?? {},
 			inventoryCountChanges: Object.keys(inventoryCountChanges.value).map((itemKey) => {
 				return { itemID: itemKey, countChange: inventoryCountChanges.value[itemKey] }
 			}),
