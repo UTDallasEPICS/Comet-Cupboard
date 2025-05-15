@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
 	//Broadcast to the queue that the user has moved to INSIDE queue
 	await broadcastToQueue(
 		JSON.stringify({
-			type: "QUEUE_UPDATE",
+			type: "QUEUE_MOVE_INSIDE",
 			payload: newEntry,
 		})
 	)

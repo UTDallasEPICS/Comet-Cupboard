@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 	if (!queueEntry) {
 		await event.context.prisma.queueEntry.create({
 			data: {
-				netID,
+				netID: netID,
 				state: "WAITING",
 			},
 		})
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
 			JSON.stringify({
 				//The type will be QUEUE_ADD as the inside queue does not need to check for when items are added
 				type: "QUEUE_ADD",
-				payload: { netID, action: "ADD" },
+				payload: { netID: netID },
 			})
 		)
 	}

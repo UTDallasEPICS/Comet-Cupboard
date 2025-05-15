@@ -20,8 +20,8 @@ export default defineEventHandler(async (event) => {
 
 	await broadcastToQueue(
 		JSON.stringify({
-			type: "QUEUE_UPDATE",
-			payload: { netID, action: "DELETE" },
+			type: "QUEUE_DELETE",
+			payload: { netID },
 		})
 	)
 
