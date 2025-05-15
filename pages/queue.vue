@@ -68,6 +68,7 @@ if (import.meta.client) {
 				await logout()
 			} else if (type === "QUEUE_MOVE_INSIDE") {
 				await navigateTo("/shopping")
+				await reloadNuxtApp()
 			}
 		}
 	}
@@ -104,6 +105,9 @@ const logout = async () => {
 	const accessCookie = useCookie("AccessPermission")
 	netIDCookie.value = null
 	accessCookie.value = null
+
+	await reloadNuxtApp()
+
 	await navigateTo("/")
 }
 </script>
