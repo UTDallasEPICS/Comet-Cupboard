@@ -1,144 +1,160 @@
 generator client {
-  provider        = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
 }
 
 model User {
-  netID     String     @id @map("net_id")
-  Student   Student?
-  Volunteer Volunteer?
-  Admin     Admin?
-  Cart      Cart?
-  Orders    Order[]
+    netID      String      @id @map("net_id")
+    Student    Student?
+    Volunteer  Volunteer?
+    Admin      Admin?
+    Cart       Cart?
+    Orders     Order[]
+    QueueEntry QueueEntry?
 
-  @@map("user")
+    @@map("user")
 }
 
 model Student {
-  User  User   @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
-  netID String @id @map("net_id")
+    User  User   @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
+    netID String @id @map("net_id")
 
-  @@map("student")
+    @@map("student")
 }
 
 model Volunteer {
-  User  User   @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
-  netID String @id @map("net_id")
+    User  User   @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
+    netID String @id @map("net_id")
 
-  @@map("volunteer")
+    @@map("volunteer")
 }
 
 model Admin {
-  User  User   @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
-  netID String @id @map("net_id")
+    User  User   @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
+    netID String @id @map("net_id")
 
-  @@map("admin")
+    @@map("admin")
 }
 
 model Category {
-  name  String @id @map("name")
-  Items Item[]
+    name  String @id @map("name")
+    Items Item[]
 
-  @@map("category")
+    @@map("category")
 }
 
 model Item {
-  itemID           String            @id @default(cuid()) @map("item_id")
-  name             String            @map("name")
-  Category         Category          @relation(fields: [categoryName], references: [name], onDelete: Restrict, onUpdate: Cascade)
-  categoryName     String            @map("category_name")
-  quantity         Int               @default(0) @map("quantity")
-  Deal             Deal?
-  imgName           String            @map("img_name")
-  ItemCountChanges ItemCountChange[]
-  CartItems        CartItem[]
-  OrderItems       OrderItem[]
+    itemID           String            @id @default(cuid()) @map("item_id")
+    name             String            @map("name")
+    Category         Category          @relation(fields: [categoryName], references: [name], onDelete: Restrict, onUpdate: Cascade)
+    categoryName     String            @map("category_name")
+    quantity         Int               @default(0) @map("quantity")
+    Deal             Deal?
+    imgName          String            @map("img_name")
+    ItemCountChanges ItemCountChange[]
+    CartItems        CartItem[]
+    OrderItems       OrderItem[]
 
-  @@map("item")
+    @@map("item")
 }
 
 model ItemCountChange {
-  countChangeID String   @id @default(cuid()) @map("count_change_id")
-  date          DateTime @default(now()) @map("date")
-  amountChanged Int      @map("amount_changed")
-  Item          Item     @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-  itemID        String   @map("item_id")
-  Source        Source   @relation(fields: [sourceName], references: [name], onDelete: NoAction, onUpdate: Cascade)
-  sourceName    String   @map("source_name")
-  fieldMap      Json?    @map("field_map")
+    countChangeID String   @id @default(cuid()) @map("count_change_id")
+    date          DateTime @default(now()) @map("date")
+    amountChanged Int      @map("amount_changed")
+    Item          Item     @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+    itemID        String   @map("item_id")
+    Source        Source   @relation(fields: [sourceName], references: [name], onDelete: NoAction, onUpdate: Cascade)
+    sourceName    String   @map("source_name")
+    fieldMap      Json?    @map("field_map")
 
-  @@map("item_count_change")
+    @@map("item_count_change")
 }
 
 model Field {
-  fieldID    String @id @default(cuid()) @map("field_id")
-  name       String 
-  Source     Source @relation(fields: [sourceName], references: [name], onDelete: NoAction, onUpdate: Cascade)
-  sourceName String @map("source_name")
+    fieldID    String @id @default(cuid()) @map("field_id")
+    name       String
+    Source     Source @relation(fields: [sourceName], references: [name], onDelete: NoAction, onUpdate: Cascade)
+    sourceName String @map("source_name")
 
-  @@map("field") 
+    @@map("field")
 }
 
 model Source {
-  name             String            @id @map("name")
-  ItemCountChanges ItemCountChange[]
-  Fields           Field[]
+    name             String            @id @map("name")
+    ItemCountChanges ItemCountChange[]
+    Fields           Field[]
 
-  @@map("source")
+    @@map("source")
 }
 
 model Cart {
-  User      User       @relation(fields: [cartID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
-  cartID    String     @id @map("cart_id")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  CartItems CartItem[]
-  pending   Boolean    @default(false) @map("pending")
+    User      User       @relation(fields: [cartID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
+    cartID    String     @id @map("cart_id")
+    updatedAt DateTime   @updatedAt @map("updated_at")
+    CartItems CartItem[]
+    pending   Boolean    @default(false) @map("pending")
 
-  @@map("cart")
+    @@map("cart")
 }
 
 model CartItem {
-  Item         Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-  itemID       String @map("item_id")
-  Cart         Cart   @relation(fields: [cartID], references: [cartID], onDelete: Cascade, onUpdate: Cascade)
-  cartID       String @map("cart_id")
-  count        Int    @map("count")
-  expiredCount Int    @map("expired_count")
+    Item         Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+    itemID       String @map("item_id")
+    Cart         Cart   @relation(fields: [cartID], references: [cartID], onDelete: Cascade, onUpdate: Cascade)
+    cartID       String @map("cart_id")
+    count        Int    @map("count")
+    expiredCount Int    @map("expired_count")
 
-  @@id(name: "cartItemID", [itemID, cartID])
-  @@map("cart_item")
+    @@id(name: "cartItemID", [itemID, cartID])
+    @@map("cart_item")
 }
 
 model Order {
-  orderID    String      @id @default(cuid()) @map("order_id")
-  User       User        @relation(fields: [netID], references: [netID], onDelete: NoAction, onUpdate: Cascade)
-  netID      String      @map("net_id")
-  date       DateTime    @default(now()) @map("date")
-  OrderItems OrderItem[]
+    orderID    String      @id @default(cuid()) @map("order_id")
+    User       User        @relation(fields: [netID], references: [netID], onDelete: NoAction, onUpdate: Cascade)
+    netID      String      @map("net_id")
+    date       DateTime    @default(now()) @map("date")
+    OrderItems OrderItem[]
 
-  @@map("order")
+    @@map("order")
 }
 
 model OrderItem {
-  Item    Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-  itemID  String @map("item_id")
-  Order   Order  @relation(fields: [orderID], references: [orderID], onDelete: Restrict, onUpdate: Cascade)
-  orderID String @map("order_id")
-  count   Int    @map("count")
+    Item    Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+    itemID  String @map("item_id")
+    Order   Order  @relation(fields: [orderID], references: [orderID], onDelete: Restrict, onUpdate: Cascade)
+    orderID String @map("order_id")
+    count   Int    @map("count")
 
-  @@id(name: "orderItemID", [itemID, orderID])
-  @@map("order_item")
+    @@id(name: "orderItemID", [itemID, orderID])
+    @@map("order_item")
 }
 
 model Deal {
-  Item          Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-  itemID        String @id @map("item_id")
-  actualCount   Int    @map("actual_count")
-  adjustedCount Int    @map("adjusted_count")
+    Item          Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+    itemID        String @id @map("item_id")
+    actualCount   Int    @map("actual_count")
+    adjustedCount Int    @map("adjusted_count")
 
-  @@map("deal")
+    @@map("deal")
+}
+
+model QueueEntry {
+    netID    String     @id
+    state    QueueState
+    joinedAt DateTime   @default(now())
+
+    User User @relation(fields: [netID], references: [netID])
+
+    @@map("queue_entry")
+}
+
+enum QueueState {
+    WAITING
+    INSIDE
 }

@@ -44,12 +44,12 @@ div
 								| Close
 
 				// Accepted Pop-Up
-				Modal(v-if="currentModal == ModalType.ACCEPTED" title="Cart Accepted" @toggleModal="closeModal").z-40
+				Modal(v-if="currentModal == ModalType.ACCEPTED" title="Cart Accepted" @toggleModal="() => { closeModal(), getCart(), resetCartView(), logout() }").z-40
 					div.flex.flex-col.p-5
 						div.text-xl.h-20
 							| Your cart has been approved.
 						div.flex.flex-row.mt-auto
-							button(@click="() => { closeModal(), getCart(), resetCartView() }").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
+							button(@click="() => { closeModal(), getCart(), resetCartView(), logout() }").modal-button.bg-utd-green.text-white.w-full.sm_w-32.ml-auto
 								| Close
 
 		//- Skeleton - change as needed when UI changes, hardcoded here to reduce maintaining skeleton components
@@ -174,4 +174,32 @@ onBeforeUnmount(() => {
 	}
 	resetCartView()
 })
+
+const logout = async () => {
+	try {
+		await $fetch("/api/cart/cart", {
+			method: "DELETE",
+		})
+	} catch (err) {
+		//We don't care about this error, we just don't want this to stop us though
+	}
+
+	// If the user is in the queue, remove them from the queue
+	try {
+		await $fetch("/api/queue", {
+			method: "DELETE",
+			body: {
+				netID: useCookie("netID").value,
+			},
+		})
+	} catch (err) {
+		//We don't care about this error, we just don't want this to stop us though
+	}
+
+	const netIDCookie = useCookie("netID")
+	const accessCookie = useCookie("AccessPermission")
+	netIDCookie.value = null
+	accessCookie.value = null
+	await navigateTo("/")
+}
 </script>

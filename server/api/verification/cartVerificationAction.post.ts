@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { messageToUser, broadcastToVolunteers } from "~/server/utils/cartVerificationUtil"
+import { broadcastToQueue } from "~/server/utils/queueVerificationUtil"
 
 const schema = z.object({
 	cartID: z.string(),
@@ -79,6 +80,18 @@ export default defineEventHandler(async (event) => {
 				payload: "Accepted cart",
 			})
 		)
+
+		await event.context.prisma.queueEntry.delete({
+			where: { netID: cartID },
+		})
+
+		await broadcastToQueue(
+			JSON.stringify({
+				type: "QUEUE_DELETE",
+				payload: { netID: cartID },
+			})
+		)
+
 		return `Successfully accepted cart ${cartID}`
 	} else if (action == "REJECT") {
 		const cart = await event.context.prisma.cart.update({

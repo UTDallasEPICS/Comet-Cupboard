@@ -1,7 +1,6 @@
 enum AccessPermission {
 	PUBLIC = "PUBLIC",
 	SHOPPING = "SHOPPING",
-	SHOPPING_ACTION = "SHOPPING_ACTION",
 	INVENTORY_MANAGEMENT = "INVENTORY_MANAGEMENT",
 	VERIFY_CART = "VERIFY_CART",
 	ADMIN = "ADMIN",
@@ -22,6 +21,7 @@ const pageAccessMap: { [route: string]: AccessPermission } = {
 	"/verify-cart": AccessPermission.VERIFY_CART,
 	"/data": AccessPermission.ADMIN,
 	"/admin-dashboard": AccessPermission.ADMIN,
+	"/queue": AccessPermission.PUBLIC,
 }
 const apiAccessMap: { [route: string]: { [method: string]: AccessPermission } } = {
 	"/api/login": {
@@ -31,13 +31,13 @@ const apiAccessMap: { [route: string]: { [method: string]: AccessPermission } } 
 		GET: AccessPermission.PUBLIC,
 	},
 	"/api/cart/cart": {
-		GET: AccessPermission.SHOPPING_ACTION,
-		PUT: AccessPermission.SHOPPING_ACTION,
-		DELETE: AccessPermission.SHOPPING_ACTION,
+		GET: AccessPermission.SHOPPING,
+		PUT: AccessPermission.SHOPPING,
+		DELETE: AccessPermission.SHOPPING,
 	},
 	"/api/cart/cartItem": {
-		DELETE: AccessPermission.SHOPPING_ACTION,
-		POST: AccessPermission.SHOPPING_ACTION,
+		DELETE: AccessPermission.SHOPPING,
+		POST: AccessPermission.SHOPPING,
 	},
 	"/api/controls/categories": {
 		GET: AccessPermission.SHOPPING,
@@ -63,10 +63,10 @@ const apiAccessMap: { [route: string]: { [method: string]: AccessPermission } } 
 		GET: AccessPermission.SHOPPING,
 	},
 	"/api/verification/cartRequestVerification": {
-		POST: AccessPermission.SHOPPING_ACTION,
+		POST: AccessPermission.SHOPPING,
 	},
 	"/api/verification/cartRequestVerificationResponseWaiting": {
-		GET: AccessPermission.SHOPPING_ACTION,
+		GET: AccessPermission.SHOPPING,
 	},
 	"/api/verification/cartVerificationAction": {
 		POST: AccessPermission.VERIFY_CART,
@@ -79,6 +79,12 @@ const apiAccessMap: { [route: string]: { [method: string]: AccessPermission } } 
 	},
 	"/api/verification/pendingCartsUpdate": {
 		GET: AccessPermission.VERIFY_CART,
+	},
+	"/api/queue": {
+		POST: AccessPermission.PUBLIC,
+		GET: AccessPermission.PUBLIC,
+		DELETE: AccessPermission.PUBLIC,
+		PUT: AccessPermission.PUBLIC,
 	},
 	// DATA APIS
 }

@@ -20,6 +20,10 @@ div.sticky.top-0.z-50
 						NuxtLink(@click.native="close" :to="inventoryPath").cursor-pointer.hover_underline
 							| Inventory Management
 						hr.border-black.w-full.mt-4
+					MenuItem(v-if="permissions['PUBLIC']" as="div").w-full
+						NuxtLink(@click.native="close" :to="queuePath").cursor-pointer.hover_underline
+							| Queue
+						hr.border-black.w-full.mt-4
 					MenuItem(v-if="permissions['ADMIN']" as="div").w-full
 						NuxtLink(@click.native="close" :to="dataPath").cursor-pointer.hover_underline
 							| Data
@@ -62,6 +66,8 @@ const inventoryPath = "/inventory-management"
 const dataPath = "/data"
 // path to the admin dashboard page
 const adminDashboardPath = "/admin-dashboard"
+//Path to the queue page
+const queuePath = "/queue"
 
 // get the route to check if the user is on the shopping page
 watch(route, () => {
@@ -69,9 +75,26 @@ watch(route, () => {
 })
 
 const logout = async () => {
-	await $fetch("/api/cart/cart", {
-		method: "DELETE",
-	})
+	try {
+		await $fetch("/api/cart/cart", {
+			method: "DELETE",
+		})
+	} catch (err) {
+		//We don't care about this error, we just don't want this to stop us though
+	}
+
+	// If the user is in the queue, remove them from the queue
+	try {
+		await $fetch("/api/queue", {
+			method: "DELETE",
+			body: {
+				netID: useCookie("netID").value,
+			},
+		})
+	} catch (err) {
+		//We don't care about this error, we just don't want this to stop us though
+	}
+
 	const netIDCookie = useCookie("netID")
 	netIDCookie.value = null
 	accessCookie.value = null

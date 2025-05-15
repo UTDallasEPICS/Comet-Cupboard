@@ -17,7 +17,19 @@ onMounted(async () => {
 		})
 		const accessCookiePermission = useCookie("AccessPermission")
 		const permissions = accessCookiePermission.value && typeof accessCookiePermission.value === "object" ? accessCookiePermission.value : {}
-		await navigateTo("/shopping")
+		if (!permissions["SHOPPING"]) {
+			//Enters the student into the queue
+			try {
+				await $fetch("/api/queue", {
+					method: "POST",
+				})
+			} catch (err) {
+				//We don't care about this error, we just don't want this to stop us though
+			}
+			await navigateTo("/queue")
+		} else {
+			await navigateTo("/shopping")
+		}
 	}
 })
 
