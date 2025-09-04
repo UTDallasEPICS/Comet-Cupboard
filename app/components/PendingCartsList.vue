@@ -31,7 +31,6 @@ const config = useRuntimeConfig()
 
 const pendingCartIDsAndAdjQTY = computed(() => {
 	if (!pendingCartsList.value) {
-		console.log("empty pendingCartsList")
 		return []
 	}
 	return pendingCartsList.value.map((pendingCart) => {
