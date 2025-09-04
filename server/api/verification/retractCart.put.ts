@@ -1,5 +1,3 @@
-import { messageToUser, broadcastToVolunteers } from "~/server/utils/cartVerificationUtil"
-
 export default defineEventHandler(async (event) => {
 	if (!event.context.user.Cart) {
 		throw createError({ statusCode: 404, statusMessage: `User ${event.context.user.netID} has no active cart` })

@@ -1,4 +1,3 @@
-import { userMap } from "~/server/utils/cartVerificationUtil"
 import { nanoid } from "nanoid"
 
 export default defineEventHandler(async (event) => {

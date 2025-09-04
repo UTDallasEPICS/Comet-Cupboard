@@ -47,7 +47,6 @@ div.sticky.top-0.z-50
 import { Bars3Icon, ShoppingCartIcon, ArrowRightStartOnRectangleIcon, XMarkIcon } from "@heroicons/vue/24/solid"
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue"
 import { useCartStore } from "~/stores/cart"
-import { storeToRefs } from "pinia"
 
 const { toggleCartView } = useCartStore()
 

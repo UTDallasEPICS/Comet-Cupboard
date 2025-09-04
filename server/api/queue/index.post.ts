@@ -1,5 +1,3 @@
-import { broadcastToQueue } from "~/server/utils/queueVerificationUtil"
-
 export default defineEventHandler(async (event) => {
 	const netID = event.context.user.netID
 

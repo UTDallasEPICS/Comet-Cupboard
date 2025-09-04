@@ -1,5 +1,3 @@
-import { pageAccessMap } from "~/permissions"
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default defineNuxtRouteMiddleware((to, from) => {
 	const accessCookie = useCookie("AccessPermission")
