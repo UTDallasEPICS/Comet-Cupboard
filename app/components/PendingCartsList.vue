@@ -30,12 +30,10 @@ const pendingCartsList = ref(pendingCarts.value)
 const config = useRuntimeConfig()
 
 const pendingCartIDsAndAdjQTY = computed(() => {
-	console.log("Recomputing pendingCartIDsAndAdjQTY")
 	if (!pendingCartsList.value) {
 		console.log("empty pendingCartsList")
 		return []
 	}
-	console.log("not empty pendingCartsList:", pendingCartsList.value)
 	return pendingCartsList.value.map((pendingCart) => {
 		return { cartID: pendingCart.cartID, adjQTY: cartCountAdjustment(pendingCart) }
 	})
@@ -49,7 +47,6 @@ if (import.meta.client) {
 		const { type, payload } = JSON.parse(event.data)
 		if (type === "NEW CART") {
 			const newCart = payload
-			console.log("New cart received:", newCart)
 			pendingCartsList.value.push(newCart)
 		} else if (type === "ACCEPT CART" || type === "REJECT CART" || type === "RETRACT CART") {
 			const cartIDToRemove = payload.cartID
