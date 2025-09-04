@@ -1,4 +1,3 @@
-import { broadcastToQueue } from "~/server/utils/queueVerificationUtil"
 import { z } from "zod"
 
 const schema = z.object({

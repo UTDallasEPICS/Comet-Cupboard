@@ -1,4 +1,3 @@
-import { queueMap } from "~/server/utils/queueVerificationUtil"
 import { nanoid } from "nanoid"
 
 export default defineEventHandler(async (event) => {

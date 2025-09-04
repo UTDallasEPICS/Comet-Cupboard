@@ -1,6 +1,5 @@
 import type { Prisma } from "@prisma/client"
 import { PrismaClient } from "@prisma/client"
-import { AccessPermission } from "~/permissions"
 
 const prisma = new PrismaClient()
 

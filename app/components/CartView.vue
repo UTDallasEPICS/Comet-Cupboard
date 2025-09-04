@@ -37,7 +37,6 @@ div.w-full.sm_w-80.drop-shadow-standard.bg-white.flex.flex-col.text-xl
 <script setup lang="ts">
 import { XMarkIcon, CheckIcon } from "@heroicons/vue/24/solid"
 import { useCartStore } from "~/stores/cart"
-import { storeToRefs } from "pinia"
 
 const store = useCartStore()
 const { resetCartView, getCart } = store

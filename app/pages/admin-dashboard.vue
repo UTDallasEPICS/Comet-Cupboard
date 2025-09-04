@@ -124,8 +124,8 @@ const removeField = async (fieldID) => {
 	await $fetch("/api/inventory/field", {
 		method: "DELETE",
 		body: JSON.stringify({ fieldID: fieldID }),
-	}),
-		await refreshSources()
+	})
+	await refreshSources()
 	selectedSource.value = sources.value.find((source) => source.name === selectedSource.value.name)
 }
 </script>

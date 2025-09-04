@@ -1,9 +1,8 @@
 import fs from "fs"
 import path from "path"
-import { pageAccessMap, apiAccessMap } from "~/permissions"
 
 const apiFolder = "server/api"
-const pageFolder = "pages"
+const pageFolder = "app/pages"
 
 // this is just to check if all permissions for pages and apis are covered
 const getAllLeafFilePaths = (folder: string, existingPaths: Array<string>) => {

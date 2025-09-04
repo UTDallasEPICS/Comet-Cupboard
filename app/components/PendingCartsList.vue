@@ -26,7 +26,7 @@ const emit = defineEmits(["update:select-cart"])
 const { data: pendingCarts } = await useFetch("/api/verification/pendingCarts")
 
 const pendingCartUpdates = ref<EventSource>()
-const pendingCartsList = ref(pendingCarts)
+const pendingCartsList = ref(pendingCarts.value)
 const config = useRuntimeConfig()
 
 const pendingCartIDsAndAdjQTY = computed(() => {

@@ -1,5 +1,4 @@
-import type { AccessPermission } from "~/permissions"
-import { pageAccessMap, apiAccessMap } from "~/permissions"
+import type { AccessPermission } from "#shared/utils/permissions"
 
 export default defineEventHandler((event) => {
 	const requestPath = getRequestURL(event).pathname

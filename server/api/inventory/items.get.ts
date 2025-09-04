@@ -1,5 +1,4 @@
 import { z } from "zod"
-import { AccessPermission } from "~/permissions"
 
 const schema = z.object({
 	getCounts: z.string().default("false"),
