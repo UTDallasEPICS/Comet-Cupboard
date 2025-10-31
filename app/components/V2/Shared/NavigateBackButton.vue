@@ -1,8 +1,16 @@
 <template lang="pug">
-div
-    p Put stuff here
+div.flex.items-center.gap-x-2
+    ArrowLeftIcon.w-4.h-4.text-cupboardv2-dg.stroke-2
+    button.text-base.text-cupboardv2-dg {{ backTo }}
 </template>
 
 <script lang="ts" setup>
+const props = defineProps({
+    backTo: {
+        type: String,
+        default: "Page name",
+    },
+})
 
+import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
 </script>

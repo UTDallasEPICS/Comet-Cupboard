@@ -12,9 +12,14 @@ export default {
 				"cupboard-lg": "#D9D9D9",
 				"red-negative": "#E22222",
 				"yellow-warning": "#ffc247",
+				"cupboardv2-dg": "#4A4A4A",
+				"cupboardv2-lg": "#B9B9B9",
+				"cupboardv2-elg": "#D9D9D9",
+				"yellow-warningv2": "#FFD580",
 			},
 			fontFamily: {
 				utd: ["FF Din Pro", "Barlow"],
+				sans: ["Montserrat", "sans-serif"],
 			},
 			screens: {
 				tn: "400px",
