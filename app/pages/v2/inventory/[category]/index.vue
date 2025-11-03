@@ -1,5 +1,5 @@
 <template lang="pug">
-div(class="flex flex-col gap-[10px]")
+div.flex.flex-col.gap-3
     V2SharedSearchBar()
     V2InventoryItemCardRectangle()
     V2InventoryItemCardSquare()
@@ -9,6 +9,8 @@ div(class="flex flex-col gap-[10px]")
     V2SharedCategoryCard()
     V2SharedAddButton()
     V2SharedNavigateBackButton(backTo="Categories")
+    V2SharedHeaderMobileMain()
+    V2SharedHeaderMobileSub()
 </template>
 
 <script lang="ts" setup>
