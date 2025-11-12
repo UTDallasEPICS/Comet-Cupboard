@@ -12,12 +12,12 @@ div.relative(class="w-[500px]")
 </template>
 
 <script lang="ts" setup>
+import { Bars3Icon } from '@heroicons/vue/24/outline'
+
 const props = defineProps({
     headerTitle: {
         type: String,
         default: "Header title",
     },
 })
-
-import { Bars3Icon } from '@heroicons/vue/24/outline'
 </script>

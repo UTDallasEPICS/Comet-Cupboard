@@ -5,12 +5,12 @@ div.flex.items-center.gap-x-2
 </template>
 
 <script lang="ts" setup>
+import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
+
 const props = defineProps({
     backTo: {
         type: String,
         default: "Page name",
     },
 })
-
-import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
 </script>

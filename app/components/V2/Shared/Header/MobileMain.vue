@@ -17,6 +17,8 @@ div.relative.h-44.overflow-hidden(class="w-[500px]")
 </template>
 
 <script lang="ts" setup>
+import { Bars3Icon } from '@heroicons/vue/24/outline'
+
 const props = defineProps({
     headerTitle: {
         type: String,
@@ -24,7 +26,6 @@ const props = defineProps({
     },
 })
 
+// Creates a diagonal line styling with specified percentages to adjust the angle
 const clipStyle = 'clip-path: ellipse(60% 100% at 50% 0%)'
-
-import { Bars3Icon } from '@heroicons/vue/24/outline'
 </script>

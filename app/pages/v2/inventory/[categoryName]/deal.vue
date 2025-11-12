@@ -5,5 +5,4 @@ div
 </template>
 
 <script lang="ts" setup>
-// if category doesn't exist, display error page
 </script>

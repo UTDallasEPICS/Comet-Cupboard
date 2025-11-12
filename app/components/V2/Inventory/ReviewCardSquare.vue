@@ -2,7 +2,8 @@
 div.bg-white.w-96.h-96.rounded-xl.flex.flex-col.items-center.gap-3.justify-top.drop-shadow-standard.relative
     // Image container
     div.relative.w-52.h-52.flex-shrink-0.overflow-hidden.mt-8
-        img.w-full.h-full.object-cover(:src="imageSrc" alt="Category Image")
+        img.w-full.h-full.object-cover(v-if="imageSrc" :src="imageSrc" :alt="itemName")
+        PhotoIcon.w-full.h-full.txt-cupboardv2-dg(v-else)
     // Text container (flex vertical)
     div.flex.flex-col.items-center.gap-4
         // Item name and in stock
@@ -12,6 +13,8 @@ div.bg-white.w-96.h-96.rounded-xl.flex.flex-col.items-center.gap-3.justify-top.d
 </template>
 
 <script lang="ts" setup>
+import { PhotoIcon } from '@heroicons/vue/24/outline'
+
 const props = defineProps({
     itemName: {
         type: String,
@@ -27,7 +30,7 @@ const props = defineProps({
     },
     imageSrc: {
         type: String,
-        default: "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
+        default: '',
     },
 })
 </script>

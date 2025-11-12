@@ -1,17 +1,17 @@
 <template lang="pug">
-div.bg-yellow-warningv2.w-96.h-24.flex.items-center.justify-center.gap-x-5
+div.bg-yellow-warningv2.w-96.h-24.flex.items-center.justify-center.px-3
     // Warning name/icon
-    ExclamationTriangleIcon.w-16.h-16.ml-5
-    p.text-base.font-medium {{ warningName }}
+    ExclamationTriangleIcon.w-10.h-10.flex-shrink-0
+    p.text-base.font-medium.text-left.whitespace-normal.break-words.overflow-hidden.ml-3 {{ warningMessage }}
 </template>
 
 <script lang="ts" setup>
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/solid'
+
 const props = defineProps({
-    warningName: {
+    warningMessage: {
         type: String,
         default: "This is a very scary warning",
     },
 })
-
-import { ExclamationTriangleIcon } from '@heroicons/vue/24/solid'
 </script>
