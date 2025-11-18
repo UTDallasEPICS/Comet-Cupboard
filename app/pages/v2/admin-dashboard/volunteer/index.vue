@@ -1,8 +1,9 @@
 <template lang="pug">
 div
-    p Put stuff here
+    V2AdminDashboardVolunteerListDisplay()
 </template>
 
 <script lang="ts" setup>
+
 
 </script>

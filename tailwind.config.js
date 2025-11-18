@@ -15,6 +15,7 @@ export default {
 			},
 			fontFamily: {
 				utd: ["FF Din Pro", "Barlow"],
+				montserrat: ["Montserrat", "sans-serif"]
 			},
 			screens: {
 				tn: "400px",

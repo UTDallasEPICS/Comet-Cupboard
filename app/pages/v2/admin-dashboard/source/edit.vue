@@ -1,6 +1,6 @@
 <template lang="pug">
 div
-    p Put stuff here
+    V2AdminDashboardEditSourceDisplay()
 </template>
 
 <script lang="ts" setup>
