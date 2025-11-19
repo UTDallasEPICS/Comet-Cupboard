@@ -1,5 +1,5 @@
 <template lang="pug">
-div.flex.flex-col.items-center.justify-center.gap-y-8 
+div.flex.flex-col.items-center.justify-center.gap-y-8(v-if="item")
     div.bg-white.w-80.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
         img(v-if="imageUrl" :src="imageUrl").absolute.inset-0.w-full.h-full.object-cover
         label(
@@ -29,12 +29,12 @@ div.flex.flex-col.items-center.justify-center.gap-y-8
 					).p-1.text-center.text-lg.text-cupboardv2-dg.cursor-pointer.text-wrap.hover_bg-cupboardv2-lg
                         | {{ category.name }}  
         div(v-if="open").min-h-72.sm_hidden
-        div.fixed.bottom-56.left-0.w-full.flex.justify-center.z-50
-            div.flex.flex-row.gap-x-10
-                div.bg-cupboardv2-dg.w-48.h-16.rounded-xl.flex.items-center.justify-center.drop-shadow-standard.relative
-                    button(@click="goBack").text-white.text-3xl.font-bold Cancel
-                div.bg-utd-orange.w-48.h-16.rounded-xl.flex.items-center.justify-center.drop-shadow-standard.relative
-                    button(@click="editItemSubmit").text-white.text-3xl.font-bold Submit
+    // Footer Buttons
+    div.flex.flex-row.gap-x-10.mt-32
+        button(@click="goBack").bg-cupboardv2-dg.w-48.h-16.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
+            p.text-white.text-3xl.font-bold Cancel
+        button(@click="editItemSubmit").bg-utd-orange.w-48.h-16.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
+            p.text-white.text-3xl.font-bold Submit
 
 </template>
 
@@ -48,7 +48,10 @@ const categoryName = route.params.categoryName as string
 const itemID = route.params.itemID as string
 
 // Fetch item data based on route
-const { data: item } = await useFetch(`/api/inventory/item/${itemID}`)
+const { data: item } = await useFetch(`/api/inventory/item`, {
+    params: { itemID }
+})
+
 const { data: categories } = await useFetch("/api/controls/categories")
 
 const itemName = ref("")
@@ -78,7 +81,7 @@ watch(imageFile, (newFile) => {
 const handleFileUpload = (event: Event) => {
 	const target = event.target as HTMLInputElement
 	if (target.files && target.files.length > 0) {
-		imageFile.value = target.files[0]
+		imageFile.value = target.files[0]!
 	}
 }
 

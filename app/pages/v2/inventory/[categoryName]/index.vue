@@ -25,7 +25,7 @@ div
 							@editItem="(item) => openEditForm(item, category)"
 							:changeCount="inventoryCountChanges[item.itemID] ?? 0"
 							:currentCount="item.quantity"
-							:imageSrc="`/test-images/${item.categoryName}/${item.imgName}.png`"
+							:imgName="item.imgName"
 							:itemDeal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
 							:itemID="item.itemID"
 							:itemName="item.name"
@@ -42,7 +42,7 @@ div
 							@editItem="(item) => openEditForm(item, category)"
 							:changeCount="inventoryCountChanges[item.itemID] ?? 0"
 							:currentCount="item.quantity"
-							:imageSrc="item.imgName"
+							:imgName="item.imgName"
 							:itemDeal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
 							:itemID="item.itemID"
 							:itemName="item.name"
@@ -85,6 +85,7 @@ div
 
 <script lang="ts" setup>
 import { useRoute, navigateTo } from '#imports' 
+import { useInventoryStore } from '~/stores/useInventoryStore'
 
 const searchTerm = ref("")
 const filters = ref([])
@@ -95,6 +96,7 @@ const deleteItem = ref(null)
 const dealItem = ref(null)
 const route = useRoute()
 const currentCategory = computed(() => route.params.categoryName)
+const inventoryStore = useInventoryStore()
 
 const { data: items, refresh } = await useFetch("/api/inventory/items", {
 	query: { getCounts: true },
@@ -113,6 +115,21 @@ const goToAddPage = () => {
 // Review Changes Button
 const goToReviewPage = () => {
     const currentCategory = route.params.categoryName
+    const changesArray = Object.entries(inventoryCountChanges.value).map(([itemID, countChange]) => {
+        const original = items.value.find(i => i.itemID === itemID)
+        return {
+            id: itemID,
+            oldCount: original.quantity,
+            newCount: (original.quantity) + countChange,
+            name: original.name,
+            imgName: original.imgName || ''
+        }
+    }).filter(Boolean)
+
+    // Store changes into store
+    inventoryStore.$patch({ 
+        changedItems: changesArray
+    })
     navigateTo(`/v2/inventory/${currentCategory}/review-changes`)
 }
 

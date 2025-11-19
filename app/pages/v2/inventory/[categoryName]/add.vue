@@ -29,12 +29,12 @@ div.flex.flex-col.items-center.justify-center.gap-y-8
 					).p-1.text-center.text-lg.text-cupboardv2-dg.cursor-pointer.text-wrap.hover_bg-cupboardv2-lg
                         | {{ category.name }}  
         div(v-if="open").min-h-72.sm_hidden
-        div.fixed.bottom-56.left-0.w-full.flex.justify-center.z-50
-            div.flex.flex-row.gap-x-10
-                div.bg-cupboardv2-dg.w-48.h-16.rounded-xl.flex.items-center.justify-center.drop-shadow-standard.relative
-                    button(@click="goBack").text-white.text-3xl.font-bold Cancel
-                div.bg-utd-orange.w-48.h-16.rounded-xl.flex.items-center.justify-center.drop-shadow-standard.relative
-                    button(@click="addItemSubmit").text-white.text-3xl.font-bold Submit
+    // Footer Buttons
+    div.flex.flex-row.gap-x-10.mt-32
+        button(@click="goBack").bg-cupboardv2-dg.w-48.h-16.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
+            p.text-white.text-3xl.font-bold Cancel
+        button(@click="addItemSubmit").bg-utd-orange.w-48.h-16.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
+            p.text-white.text-3xl.font-bold Submit
 
 </template>
 
@@ -49,6 +49,7 @@ const itemName = ref<string | null>(null)
 const imageFile = ref<File | null>(null)
 const imageUrl = ref<string | null>(null)
 const selectedCategory = ref(null)
+const currentCategory = route.params.categoryName as string
 
 const { data: categories } = await useFetch("/api/controls/categories")
 
@@ -63,20 +64,18 @@ watch(imageFile, (newFile) => {
 const handleFileUpload = (event: Event) => {
 	const target = event.target as HTMLInputElement
 	if (target.files && target.files.length > 0) {
-		imageFile.value = target.files[0]
+		imageFile.value = target.files[0]!
 	}
 }
 
 const addItemSubmit = async () => {
-	if (!itemName.value || !selectedCategory.value || !imageUrl.value) {
+	if (!itemName.value || !selectedCategory.value || !imageFile.value) {
 		alert("Please fill out all required fields")
 		return
 	}
 	try {
 		if (imageFile.value) {
 			const formData = new FormData()
-			const fileReader = new FileReader()
-			fileReader.readAsArrayBuffer(imageFile.value)
 			formData.append("image", imageFile.value)
 			const { imageName } = await $fetch("/api/image/image", {
 				method: "POST",
@@ -87,17 +86,17 @@ const addItemSubmit = async () => {
 				method: "PUT",
 				body: { itemID: "", name: itemName.value, categoryName: selectedCategory.value, imgName: imageName },
 			})
-			emit("submit")
+			navigateTo(`/v2/inventory/${currentCategory}`)
 		}
 	} catch (error) {
-		// idk for now
+		console.error("Failed to add item:", error)
+        alert("Failed to add item. Check console for details.")
 	}
 }
 
 // --Page navigations for each button--
 // Goes back to the inventory page for the current category
 const goBack = () => {
-    const currentCategory = route.params.categoryName
     navigateTo(`/v2/inventory/${currentCategory}`)
 }
 

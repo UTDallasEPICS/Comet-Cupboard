@@ -16,6 +16,7 @@ export default {
 				"cupboardv2-lg": "#B9B9B9",
 				"cupboardv2-elg": "#D9D9D9",
 				"yellow-warningv2": "#FFD580",
+				"red-negativev2": "#D20B0B",
 			},
 			fontFamily: {
 				utd: ["FF Din Pro", "Barlow"],
