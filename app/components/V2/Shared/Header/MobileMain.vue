@@ -17,27 +17,27 @@ div.relative.z-40
                             MenuItem(as="div").w-full
                                 NuxtLink(@click.native="close" :to="shoppingPath").cursor-pointer.hover_underline.text-cupboardv2-dg
                                     | Shopping
-                                hr.w-full.mt-4(class="border-[1.8px]")
+                                hr.w-full.mt-4(class="border-[1.3px]")
                             MenuItem(as="div").w-full
                                 NuxtLink(@click.native="close" :to="verifyPath").cursor-pointer.hover_underline.text-cupboardv2-dg
                                     | Verify Carts
-                                hr.w-full.mt-4(class="border-[1.8px]")
+                                hr.w-full.mt-4(class="border-[1.3px]")
                             MenuItem(as="div").w-full
                                 NuxtLink(@click.native="close" :to="inventoryPath").cursor-pointer.hover_underline.text-cupboardv2-dg
                                     | Inventory Management
-                                hr.w-full.mt-4(class="border-[1.8px]")
+                                hr.w-full.mt-4(class="border-[1.3px]")
                             MenuItem(as="div").w-full
                                 NuxtLink(@click.native="close" :to="queuePath").cursor-pointer.hover_underline.text-cupboardv2-dg
                                     | Queue
-                                hr.w-full.mt-4(class="border-[1.8px]")
+                                hr.w-full.mt-4(class="border-[1.3px]")
                             MenuItem(as="div").w-full
                                 NuxtLink(@click.native="close" :to="dataPath").cursor-pointer.hover_underline.text-cupboardv2-dg
                                     | Data
-                                hr.w-full.mt-4(class="border-[1.8px]")
+                                hr.w-full.mt-4(class="border-[1.3px]")
                             MenuItem(as="div").w-full
                                 NuxtLink(@click.native="close" :to="adminDashboardPath").cursor-pointer.hover_underline.text-cupboardv2-dg
                                     | Admin Dashboard
-                                hr.w-full.mt-4(class="border-[1.8px]")
+                                hr.w-full.mt-4(class="border-[1.3px]")
                 // Comet Cupboard Logo
                 div.relative.overflow-hidden.ml-4
                     img(src="/CometCupboardLogo1.png").h-10
@@ -109,7 +109,7 @@ const logout = async () => {
 			method: "DELETE",
 		})
 	} catch (err) {
-		//We don't care about this error, we just don't want this to stop us though
+		// We don't care about this error, we just don't want this to stop us though
 	}
 
 	// If the user is in the queue, remove them from the queue

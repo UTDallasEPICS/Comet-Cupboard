@@ -7,31 +7,31 @@ div.sticky.top-0.z-50
 			TransitionsDropDown
 				MenuItems(
 					class="h-[calc(100vh-80px)]"
-				).z-50.-left-4.flex.flex-col.items-center.text-center.absolute.top-20.w-screen.sm_w-80.border-cupboardv2-lg.border-r-2.text-2xl.bg-white.gap-4.p-4
+				).z-50.-left-4.flex.flex-col.items-center.text-center.absolute.top-20.w-screen.sm_w-80.text-2xl.bg-white.gap-4.p-4
 					MenuItem(v-if="permissions['SHOPPING']" as="div").w-full
 						NuxtLink(@click.native="close" :to="shoppingPath").cursor-pointer.hover_underline.text-cupboardv2-dg
 							| Shopping
-						hr.w-full.mt-4(class="border-[1.8px]")
+						hr.w-full.mt-4(class="border-[1.3px]")
 					MenuItem(v-if="permissions['VERIFY_CART']" as="div").w-full
 						NuxtLink(@click.native="close" :to="verifyPath").cursor-pointer.hover_underline.text-cupboardv2-dg
 							| Verify Carts
-						hr.w-full.mt-4(class="border-[1.8px]")
+						hr.w-full.mt-4(class="border-[1.3px]")
 					MenuItem(v-if="permissions['INVENTORY_MANAGEMENT']" as="div").w-full
 						NuxtLink(@click.native="close" :to="inventoryPath").cursor-pointer.hover_underline.text-cupboardv2-dg
 							| Inventory Management
-						hr.w-full.mt-4(class="border-[1.8px]")
+						hr.w-full.mt-4(class="border-[1.3px]")
 					MenuItem(v-if="permissions['PUBLIC']" as="div").w-full
 						NuxtLink(@click.native="close" :to="queuePath").cursor-pointer.hover_underline.text-cupboardv2-dg
 							| Queue
-						hr.w-full.mt-4(class="border-[1.8px]")
+						hr.w-full.mt-4(class="border-[1.3px]")
 					MenuItem(v-if="permissions['ADMIN']" as="div").w-full
 						NuxtLink(@click.native="close" :to="dataPath").cursor-pointer.hover_underline.text-cupboardv2-dg
 							| Data
-						hr.w-full.mt-4(class="border-[1.8px]")
+						hr.w-full.mt-4(class="border-[1.3px]")
 					MenuItem(v-if="permissions['ADMIN']" as="div").w-full
 						NuxtLink(@click.native="close" :to="adminDashboardPath").cursor-pointer.hover_underline.text-cupboardv2-dg
 							| Admin Dashboard
-						hr.w-full.mt-4(class="border-[1.8px]")
+						hr.w-full.mt-4(class="border-[1.3px]")
 		img(src="/CometCupboardLogo1.png").h-14
 		div.ml-auto
 			button(v-if="page === shoppingPath" style="text-decoration-color: white" @click="toggleCartView").relative.remove-button-effects

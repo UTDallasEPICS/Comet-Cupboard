@@ -5,7 +5,7 @@ div.relative.w-64
         class="focus-within_border-blue-400 focus-within_drop-shadow-standard"
     )
         MagnifyingGlassIcon.w-6.h-6.stroke-2.pl-2.text-cupboardv2-dg
-        input.w-full.bg-transparent.outline-none.border-none.text-base.font-bold.text-cupboardv2-dg.pl-2(
+        input.w-full.bg-transparent.outline-none.border-none.text-base.text-cupboardv2-dg.pl-2(
             type="text"
             placeholder="Search Item"
             v-model="searchTerm"

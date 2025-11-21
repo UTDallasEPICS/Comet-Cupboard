@@ -18,7 +18,6 @@ div
                         V2InventoryItemCardRectangle(
 							v-for="item in filteredCategoryItems"
                             :key="item.itemID"
-							typeOfCard="INVENTORY"
 							@changeAmountUpdate="updateItemChangeAmount"
 							@deleteItem="(item) => openDeleteForm(item)"
 							@editDeal="(item) => openDealForm(item, category)"
@@ -35,7 +34,6 @@ div
                         V2InventoryItemCardSquare(
 							v-for="item in filteredCategoryItems"
                             :key="item.itemID"
-							typeOfCard="INVENTORY"
 							@changeAmountUpdate="updateItemChangeAmount"
 							@deleteItem="(item) => openDeleteForm(item)"
 							@editDeal="(item) => openDealForm(item, category)"
@@ -88,12 +86,7 @@ import { useRoute, navigateTo } from '#imports'
 import { useInventoryStore } from '~/stores/useInventoryStore'
 
 const searchTerm = ref("")
-const filters = ref([])
 const inventoryCountChanges = ref({})
-const currentModal = ref("")
-const editingItem = ref(null)
-const deleteItem = ref(null)
-const dealItem = ref(null)
 const route = useRoute()
 const currentCategory = computed(() => route.params.categoryName)
 const inventoryStore = useInventoryStore()
@@ -144,10 +137,6 @@ const filteredCategoryItems = computed(() => {
   return categoryItems.value.filter(item => item.name.toLowerCase().includes(term))
 })
 
-const searchTermChange = (newTerm) => {
-	searchTerm.value = newTerm
-}
-
 const updateItemChangeAmount = (itemID, amountChange) => {
 	if (!(itemID in inventoryCountChanges.value)) {
 		inventoryCountChanges.value[itemID] = 0
@@ -159,21 +148,5 @@ const updateItemChangeAmount = (itemID, amountChange) => {
 	if (inventoryCountChanges.value[itemID] === 0) {
 		inventoryCountChanges.value = Object.fromEntries(Object.entries(inventoryCountChanges.value).filter(([key]) => key !== itemID))
 	}
-}
-
-const submitInventoryCountChanges = async (sourceArgs) => {
-	await $fetch("/api/inventory/itemCountChanges", {
-		method: "POST",
-		body: {
-			source: sourceArgs.source,
-			fieldMap: sourceArgs.fieldMap ?? {},
-			inventoryCountChanges: Object.keys(inventoryCountChanges.value).map((itemKey) => {
-				return { itemID: itemKey, countChange: inventoryCountChanges.value[itemKey] }
-			}),
-		},
-	})
-	inventoryCountChanges.value = {}
-	currentModal.value = ""
-	refresh()
 }
 </script>

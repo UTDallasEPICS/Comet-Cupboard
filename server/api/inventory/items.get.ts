@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
 	const items = await event.context.prisma.item.findMany({
 		where: {
 			// if checking availability, count must be greater than 0
-			...(checkAvailability ? { quantity: { gt: 0 } } : {}),
+			...(checkAvailability ? { quantity: { gte: 0 } } : {}),
 		},
 		omit: { quantity: !showCounts },
 		include: {
