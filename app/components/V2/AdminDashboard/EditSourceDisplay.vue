@@ -19,9 +19,4 @@ div(class="min-w-screen rounded-2xl").bg-white.overflow-auto
 </template>
 
 <script lang="ts" setup>
-let grayColor = false;
-function changeGray() {
-    grayColor = !grayColor;
-    return grayColor;
-}
 </script>
