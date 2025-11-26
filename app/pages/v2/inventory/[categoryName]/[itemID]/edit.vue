@@ -1,47 +1,53 @@
 <template lang="pug">
-div.flex.flex-col.items-center.justify-center.gap-y-8(v-if="item")
-    div.bg-white.w-80.h-80.rounded-xl.flex.flex-col.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
-        img(v-if="imageUrl" :src="imageUrl").absolute.inset-0.w-full.h-full.object-cover
-        label(
-            for="fileInput"
-            :class="{ 'bg-cupboardv2-lg bg-opacity-60': imageUrl }"
-        ).z-10.flex.flex-row.items-center.justify-center.gap-x-3.bg-utd-green.w-52.h-20.rounded-xl.flex.gap-3.drop-shadow-standard.cursor-pointer
-            div.flex.flex-row.items-center.gap-x-3
-                CloudArrowUpIcon.w-12.h-12.text-white
-                p.text-2xl.text-white.font-bold Upload
-        input#fileInput(type="file" accept=".jpg, .jpeg, .png" @change="handleFileUpload").hidden
-    div.flex.flex-col.items-center
-                input.w-80.bg-transparent.outline-none.border-none.text-lg.text-left.text-black(type="text" placeholder="Item Name (Limit 20 Characters)" v-model="itemName" @input="validateInput")
-                div.bg-cupboardv2-dg.w-80.rounded-xl.-mt-1(class="h-[2px]")
-    Listbox(v-model="selectedCategory" v-slot="{ open }")
-        div.relative
-            ListboxButton.modal-button.flex.flex-row.w-72.bg-white.text-lg.text-cupboardv2-dg.px-4.items-center.text-left.font-normal.border-2.border-cupboardv2-lg
-                div.grow
-                    | {{ selectedCategory || "Category" }}
-                ChevronUpIcon(v-if="open").fill-cupboardv2-dg.stroke-cupboardv2-dg.h-7
-                ChevronDownIcon(v-else).fill-cupboardv2-dg.stroke-cupboardv2-dg.h-7
-            TransitionsDropDown
-                ListboxOptions.absolute.top-14.z-50.bg-white.drop-shadow-standard.rounded-xl.w-full.max-h-72.sm_max-h-36.divide-y.divide-cupboard-lg.overflow-y-auto.overscroll-contain
-                    ListboxOption(
-						v-for="category in categories"
-						:key="category.name"
-						:value="category.name"
-					).p-1.text-center.text-lg.text-cupboardv2-dg.cursor-pointer.text-wrap.hover_bg-cupboardv2-lg
-                        | {{ category.name }}  
-        div(v-if="open").min-h-3
-    // Footer Buttons
-    div.flex.flex-row.gap-x-10.mt-32
-        button(@click="goBack").bg-cupboardv2-dg.w-48.h-16.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
-            p.text-white.text-3xl.font-bold Cancel
-        button(@click="editItemSubmit").bg-utd-orange.w-48.h-16.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
-            p.text-white.text-3xl.font-bold Submit
-
+div
+	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
+		V2SharedHeaderSubheader(pageTitle="Edit")(class="md_max-w-[600px]").md_rounded-b-xl
+	div(v-if="item").flex.flex-col.items-center.justify-center.gap-y-8.mt-20
+		div.bg-white.w-80.h-80.rounded-xl.flex.flex-col.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
+			img(v-if="imageUrl" :src="imageUrl").absolute.inset-0.w-full.h-full.object-cover
+			label(
+				:class="{ 'bg-cupboardv2-lg bg-opacity-60': imageUrl }"
+				for="fileInput"
+			).z-10.flex.flex-row.items-center.justify-center.gap-x-3.bg-utd-green.w-40.h-16.rounded-xl.flex.gap-3.drop-shadow-standard.cursor-pointer
+				div.flex.flex-row.items-center.gap-x-3
+					CloudArrowUpIcon.w-12.h-12.text-white
+					p.text-xl.text-white.font-bold Upload
+			input#fileInput(accept=".jpg, .jpeg, .png" type="file" @change="handleFileUpload").hidden
+		div.flex.flex-col.items-center
+			input(
+				placeholder="Item Name (Limit 20 Characters)"
+				type="text"
+				v-model="itemName"
+				@input="validateInput"
+			).w-80.bg-transparent.outline-none.border-none.text-lg.text-left.text-black
+			div(class="h-[2px]").bg-cupboardv2-dg.w-80.rounded-xl.-mt-1
+		Listbox(v-model="selectedCategory" v-slot="{ open }")
+			div.relative
+				ListboxButton.modal-button.flex.flex-row.w-72.bg-white.text-lg.px-4.items-center.text-left.font-normal.border-2.border-cupboardv2-lg
+					div.grow
+						| {{ selectedCategory || "Category" }}
+					ChevronUpIcon(v-if="open").fill-cupboardv2-dg.stroke-cupboardv2-dg.h-7
+					ChevronDownIcon(v-else).fill-cupboardv2-dg.stroke-cupboardv2-dg.h-7
+				TransitionsDropDown
+					ListboxOptions.absolute.top-12.z-50.bg-white.drop-shadow-standard.rounded-xl.w-full.max-h-36.divide-y.divide-cupboard-lg.overflow-y-auto.overscroll-contain
+						ListboxOption(
+							v-for="category in categories"
+							:key="category.name"
+							:value="category.name"
+						).p-1.text-center.text-lg.cursor-pointer.text-wrap.hover_bg-cupboardv2-lg
+							| {{ category.name }}
+		// Footer Buttons
+		div.flex.flex-row.gap-x-4.mt-32
+			button(@click="goBack").bg-cupboardv2-dg.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
+				p.text-white.text-xl.font-bold Cancel
+			button(@click="editItemSubmit").bg-utd-orange.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
+				p.text-white.text-xl.font-bold Submit
 </template>
 
 <script lang="ts" setup>
-import { CloudArrowUpIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/vue/24/solid'
+import { CloudArrowUpIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/vue"
-import { useRoute, navigateTo } from '#imports' 
+import { useRoute, navigateTo } from "#imports"
 
 const route = useRoute()
 const categoryName = route.params.categoryName as string
@@ -49,7 +55,7 @@ const itemID = route.params.itemID as string
 
 // Fetch item data based on route
 const { data: item } = await useFetch(`/api/inventory/item`, {
-    params: { itemID }
+	params: { itemID },
 })
 
 const { data: categories } = await useFetch("/api/controls/categories")
@@ -60,12 +66,11 @@ const imageUrl = ref("")
 const selectedCategory = ref<string | null>(null)
 
 watchEffect(() => {
-    if(item.value) {
-        itemName.value = item.value.name || ""
-        selectedCategory.value = item.value.categoryName || null 
-        imageUrl.value = item.value.imgName ? `/api/image/${item.value.imgName}` : ""
-    }
-
+	if (item.value) {
+		itemName.value = item.value.name || ""
+		selectedCategory.value = item.value.categoryName || null
+		imageUrl.value = item.value.imgName ? `/api/image/${item.value.imgName}` : ""
+	}
 })
 
 watch(imageFile, (newFile) => {
@@ -74,8 +79,8 @@ watch(imageFile, (newFile) => {
 	} else if (item.value?.imgName) {
 		imageUrl.value = `api/image/${item.value.imgName}`
 	} else {
-        imageUrl.value = ""
-    }
+		imageUrl.value = ""
+	}
 })
 
 const handleFileUpload = (event: Event) => {
@@ -118,26 +123,26 @@ const editItemSubmit = async () => {
 // --Page navigations for each button--
 // Goes back to the inventory page for the current category
 const goBack = () => {
-    navigateTo(`/v2/inventory/${categoryName}`)
+	navigateTo(`/v2/inventory/${categoryName}`)
 }
 
 // Input validation so input is only letters/symbols, and is limited to 20 characters
 function validateInput(e: Event) {
-    const inputElement = e.target as HTMLInputElement
-    const input = inputElement.value
-    
-    let filtered = '';
-    for(const char of input) {
-        if(char < '0' || char > '9') {
-            filtered += char;
-        }
-    }   
+	const inputElement = e.target as HTMLInputElement
+	const input = inputElement.value
 
-    if(filtered.length > 20) {
-        filtered = filtered.slice(0, 20);
-    }
+	let filtered = ""
+	for (const char of input) {
+		if (char < "0" || char > "9") {
+			filtered += char
+		}
+	}
 
-    inputElement.value = filtered;
-    itemName.value = filtered;
+	if (filtered.length > 20) {
+		filtered = filtered.slice(0, 20)
+	}
+
+	inputElement.value = filtered
+	itemName.value = filtered
 }
 </script>

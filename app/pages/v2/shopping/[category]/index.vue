@@ -1,7 +1,7 @@
 <template lang="pug">
 div
-    p Put stuff here
-    p {{ $route.params.category }}
+	p Put stuff here
+	p {{ $route.params.category }}
 </template>
 
 <script lang="ts" setup>
