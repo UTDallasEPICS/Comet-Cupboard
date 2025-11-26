@@ -1,5 +1,5 @@
 <template lang="pug">
-div.flex.flex-col.items-center.justify-center.gap-y-8 
+div.flex.flex-col.items-center.justify-center.gap-y-8.pt-10 
     div.bg-white.w-80.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
         img(v-if="imageUrl" :src="imageUrl").absolute.inset-0.w-full.h-full.object-cover
         label(
@@ -11,24 +11,8 @@ div.flex.flex-col.items-center.justify-center.gap-y-8
                 p.text-2xl.text-white.font-bold Upload
         input#fileInput(type="file" accept=".jpg, .jpeg, .png" @change="handleFileUpload").hidden
     div.flex.flex-col.items-center
-                input.w-80.bg-transparent.outline-none.border-none.text-lg.text-left.text-black(type="text" placeholder="Item Name (Limit 20 Characters)" v-model="itemName" @input="validateInput")
-                div.bg-cupboardv2-dg.w-80.rounded-xl.-mt-1(class="h-[2px]")
-    Listbox(v-model="selectedCategory" v-slot="{ open }")
-        div.relative
-            ListboxButton.modal-button.flex.flex-row.w-72.bg-white.text-lg.text-cupboardv2-dg.px-4.items-center.text-left.font-normal.border-2.border-cupboardv2-lg
-                div.grow
-                    | {{ selectedCategory || "Category" }}
-                ChevronUpIcon(v-if="open").fill-cupboardv2-dg.stroke-cupboardv2-dg.h-7
-                ChevronDownIcon(v-else).fill-cupboardv2-dg.stroke-cupboardv2-dg.h-7
-            TransitionsDropDown
-                ListboxOptions.absolute.top-14.z-50.bg-white.drop-shadow-standard.rounded-xl.w-full.max-h-72.sm_max-h-36.divide-y.divide-cupboard-lg.overflow-y-auto.overscroll-contain
-                    ListboxOption(
-						v-for="category in categories"
-						:key="category.name"
-						:value="category.name"
-					).p-1.text-center.text-lg.text-cupboardv2-dg.cursor-pointer.text-wrap.hover_bg-cupboardv2-lg
-                        | {{ category.name }}  
-        div(v-if="open").min-h-72.sm_hidden
+        input.w-80.bg-transparent.outline-none.border-none.text-lg.text-left.text-black(type="text" placeholder="Item Name (Limit 20 Characters)" v-model="itemName" @input="validateInput")
+        div.bg-cupboardv2-dg.w-80.rounded-xl.-mt-1(class="h-[2px]")
     // Footer Buttons
     div.flex.flex-row.gap-x-10.mt-32
         button(@click="goBack").bg-cupboardv2-dg.w-48.h-16.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
@@ -69,7 +53,7 @@ const handleFileUpload = (event: Event) => {
 }
 
 const addItemSubmit = async () => {
-	if (!itemName.value || !selectedCategory.value || !imageFile.value) {
+	if (!itemName.value || !imageFile.value) {
 		alert("Please fill out all required fields")
 		return
 	}
@@ -84,7 +68,7 @@ const addItemSubmit = async () => {
 
 			await $fetch("/api/inventory/item", {
 				method: "PUT",
-				body: { itemID: "", name: itemName.value, categoryName: selectedCategory.value, imgName: imageName },
+				body: { itemID: "", name: itemName.value, categoryName: currentCategory, imgName: imageName },
 			})
 			navigateTo(`/v2/inventory/${currentCategory}`)
 		}

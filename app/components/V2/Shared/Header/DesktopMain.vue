@@ -1,6 +1,6 @@
 <template lang="pug">
-div.sticky.top-0.z-50
-	div.h-20.bg-utd-green.flex.flex-row.flex-nowrap.items-center.px-4.gap-x-4
+div.sticky.top-0
+	div.h-20.bg-utd-green.flex.flex-row.flex-nowrap.items-center.px-4.gap-x-4.drop-shadow-nav.z-50.relative
 		Menu(as="div" v-slot="{ close }").h-full.relative.flex
 			MenuButton.my-auto.remove-button-effects
 				Bars3Icon.size-11.fill-white.stroke-white.cursor-pointer.hover_fill-utd-orange.hover_stroke-utd-orange
@@ -41,6 +41,10 @@ div.sticky.top-0.z-50
 			// for now this is a link to the sign in page (test + nowhere else yet)
 			button(@click="logout").remove-button-effects.ml-4
 				ArrowRightStartOnRectangleIcon.size-10.min-w-10.fill-white.hover_fill-utd-orange
+
+	// Title
+	div.bg-utd-orange.h-14.flex.items-center.justify-center.rounded-b-3xl.w-full.mx-auto.z-10(class="max-w-[600px]")(v-if="onPage != 1")
+		p.text-3xl.font-bold.text-white {{ pageTitle }}
 </template>
 
 <script lang="ts" setup>
@@ -67,6 +71,38 @@ const dataPath = "/data"
 const adminDashboardPath = "/admin-dashboard"
 //Path to the queue page
 const queuePath = "/queue"
+
+// Check to see if the user is on a page that needs to display the title (title doesnt display on login page)
+const onPage = computed(() => {
+	if(route.path === ("/")) return 1
+
+	return 0
+})
+
+const pageTitle = computed(() => {
+    // Check for specific page the user is on
+	const currentCategory = route.params.categoryName as string
+
+    if(route.path.includes("add")) return "Add Item"
+    if(route.path.includes("edit")) return "Edit Item"
+    if(route.path.includes("delete")) return "Delete Item"
+    if(route.path.includes("deal")) return "Item Deal"
+    if(route.path.includes("review-changes")) return "Review Changes"
+	if(route.path.includes("category-select")) return "Categories"
+
+	// Category page handler, also accounts for refreshes on titles with multiple words so the title doesn't disappear
+	if(currentCategory) {
+		const normalizedPath = route.path.replace(/\/$/, "")
+		const expectedPath = `/v2/inventory/${encodeURIComponent(currentCategory)}`
+
+		if(normalizedPath === expectedPath) {
+			return currentCategory
+		}
+		return currentCategory
+	}
+	// Default fallback
+    return ""
+})
 
 // get the route to check if the user is on the shopping page
 watch(route, () => {

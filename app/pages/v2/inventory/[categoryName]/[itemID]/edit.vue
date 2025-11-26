@@ -1,6 +1,6 @@
 <template lang="pug">
 div.flex.flex-col.items-center.justify-center.gap-y-8(v-if="item")
-    div.bg-white.w-80.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
+    div.bg-white.w-80.h-80.rounded-xl.flex.flex-col.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
         img(v-if="imageUrl" :src="imageUrl").absolute.inset-0.w-full.h-full.object-cover
         label(
             for="fileInput"
@@ -28,7 +28,7 @@ div.flex.flex-col.items-center.justify-center.gap-y-8(v-if="item")
 						:value="category.name"
 					).p-1.text-center.text-lg.text-cupboardv2-dg.cursor-pointer.text-wrap.hover_bg-cupboardv2-lg
                         | {{ category.name }}  
-        div(v-if="open").min-h-72.sm_hidden
+        div(v-if="open").min-h-3
     // Footer Buttons
     div.flex.flex-row.gap-x-10.mt-32
         button(@click="goBack").bg-cupboardv2-dg.w-48.h-16.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
@@ -121,23 +121,23 @@ const goBack = () => {
     navigateTo(`/v2/inventory/${categoryName}`)
 }
 
-// Input validation so input is only letters, and is limited to 20 characters
+// Input validation so input is only letters/symbols, and is limited to 20 characters
 function validateInput(e: Event) {
     const inputElement = e.target as HTMLInputElement
     const input = inputElement.value
     
-    let lettersOnly = '';
+    let filtered = '';
     for(const char of input) {
-        if((char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z')) {
-            lettersOnly += char;
+        if(char < '0' || char > '9') {
+            filtered += char;
         }
     }   
 
-    if(lettersOnly.length > 20) {
-        lettersOnly = lettersOnly.slice(0, 20);
+    if(filtered.length > 20) {
+        filtered = filtered.slice(0, 20);
     }
 
-    inputElement.value = lettersOnly;
-    itemName.value = lettersOnly;
+    inputElement.value = filtered;
+    itemName.value = filtered;
 }
 </script>

@@ -1,5 +1,5 @@
 <template lang="pug">
-div.relative.w-64
+div.relative.w-full.max-w-xl.flex-grow
     // Search bar container
     div.bg-white.w-full.h-8.rounded-xl.flex.items-center.border.border-gray-300.transition-all.duration-50(
         class="focus-within_border-blue-400 focus-within_drop-shadow-standard"

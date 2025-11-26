@@ -5,16 +5,23 @@ div
             div
                 SkeletonDummyTimer
                 div.relative.z-0.px-4
-                    div.flex.justify-center
-                        // page control components
-                        div.flex.flex-col.items-start.gap-y-2
+                    div.w-full.max-w-xl.mx-auto(v-if="displayRectangleCards")
+                        // page control components (mobile alignment)
+                        div.flex.flex-col.items-start.gap-y-2.w-full.mt-6
                             V2SharedNavigateBackButton(backTo="Categories" @click="goToCategoriesPage")
-                            div.flex.flex-row.gap-x-2.items-center
+                            div.flex.gap-x-2.items-center.w-full
                                 V2SharedSearchBar(v-model="searchTerm" :category-items="categoryItems")
                                 V2SharedAddButton(@click="goToAddPage")
+                    div.w-full.max-w-xl(v-if="displaySquareCards")
+                        // page control components (desktop alignment)
+                        div.flex.flex-col.items-start.gap-y-2.w-full.mt-6(v-if="displaySquareCards")
+                            V2SharedNavigateBackButton(backTo="Categories" @click="goToCategoriesPage")
+                            div.flex.w-full.justify-between
+                                V2SharedSearchBar(v-model="searchTerm" :category-items="categoryItems" class="w-full max-w-sm")
+                                V2SharedAddButton(@click="goToAddPage" class="ml-2")
 
                     // Small Screens (Rectangle Cards), width scales and keeps a single column format
-                    div.flex.flex-col.gap-y-3.my-4.items-center.block.lg_hidden.w-full.max-w-lg
+                    div.flex.flex-col.gap-y-3.my-4.items-stretch.block.w-full.max-w-xl.mx-auto(v-if="displayRectangleCards")
                         V2InventoryItemCardRectangle(
 							v-for="item in filteredCategoryItems"
                             :key="item.itemID"
@@ -28,9 +35,13 @@ div
 							:itemDeal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
 							:itemID="item.itemID"
 							:itemName="item.name"
+                            class="w-full"
 						)
-                    // Large Screens (Square Cards), 5 column format
-                    div.grid.gap-4.my-4.width-full.hidden.lg_grid.lg_grid-cols-5
+                    // Large Screens (Square Cards)
+                    div.my-4.w-full.mx-auto(
+                        :style='{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 250px))", gap: "1rem"}'
+                        v-if="displaySquareCards"
+                    )
                         V2InventoryItemCardSquare(
 							v-for="item in filteredCategoryItems"
                             :key="item.itemID"
@@ -47,9 +58,9 @@ div
 						)
 
                     // submit button
-                    div.sticky.bottom-8.right-4.z-20.flex.justify-end.space-x-2.sm_ml-auto.h-12
-                        button(v-if="JSON.stringify(inventoryCountChanges) === '{}'" disabled).bg-cupboard-dg.text-white.min-w-48.md_w-64.rounded-xl No Changes
-                        button(v-else @click="goToReviewPage").bg-utd-orange.text-white.min-w-48.md_w-64.rounded-xl Review Changes
+                    div.sticky.bottom-8.right-4.z-20.flex.justify-end.space-x-2.sm_ml-auto
+                        button(v-if="JSON.stringify(inventoryCountChanges) === '{}'" disabled).bg-cupboard-dg.text-white.min-w-48.md_w-64.rounded-xl.p-2 No Changes
+                        button(v-else @click="goToReviewPage").bg-utd-orange.text-white.min-w-48.md_w-64.rounded-xl.p-2 Review Changes
         //- Skeleton (Edit later)
         template(#fallback)
             div.flex.flex-row
@@ -90,6 +101,7 @@ const inventoryCountChanges = ref({})
 const route = useRoute()
 const currentCategory = computed(() => route.params.categoryName)
 const inventoryStore = useInventoryStore()
+const windowWidth = ref(0)
 
 const { data: items, refresh } = await useFetch("/api/inventory/items", {
 	query: { getCounts: true },
@@ -125,6 +137,19 @@ const goToReviewPage = () => {
     })
     navigateTo(`/v2/inventory/${currentCategory}/review-changes`)
 }
+
+// Determining when to display rectangle cards and square cards
+onMounted(() => {
+    windowWidth.value = window.innerWidth 
+    window.addEventListener("resize", () => {
+        windowWidth.value = window.innerWidth
+    })
+})
+
+// For rectangle cards
+const displayRectangleCards = computed(() => windowWidth.value < 1024) // Width is less than 1024
+// For square cards
+const displaySquareCards = computed(() => windowWidth.value >= 1024) // Width is greater than or equal to 1024
 
 const categoryItems = computed(() => {
 	if(!items.value) return []

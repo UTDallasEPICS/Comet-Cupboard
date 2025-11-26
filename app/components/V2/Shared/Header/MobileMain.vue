@@ -13,7 +13,7 @@ div.relative.z-40
                     TransitionsDropDown 
                         MenuItems(
                             class="h-[calc(100vh-80px)]"
-				        ).z-50.-left-4.flex.flex-col.items-center.text-center.absolute.top-20.w-screen.sm_w-80.text-2xl.bg-white.gap-4.p-4
+				        ).z-50.-left-4.flex.flex-col.items-center.text-center.absolute.w-screen.text-2xl.bg-white.gap-4.p-4
                             MenuItem(as="div").w-full
                                 NuxtLink(@click.native="close" :to="shoppingPath").cursor-pointer.hover_underline.text-cupboardv2-dg
                                     | Shopping

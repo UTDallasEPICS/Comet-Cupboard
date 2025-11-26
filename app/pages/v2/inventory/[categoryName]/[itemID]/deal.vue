@@ -1,5 +1,5 @@
 <template lang="pug">
-div.flex.flex-col.items-center.justify-center.gap-y-8
+div.flex.flex-col.items-center.justify-center.gap-y-8.pt-10
     div.bg-white.w-80.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
         // Deal Tag 
         div(

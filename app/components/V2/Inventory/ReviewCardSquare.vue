@@ -1,15 +1,15 @@
 <template lang="pug">
-div.bg-white.w-96.h-96.rounded-xl.flex.flex-col.items-center.gap-3.justify-top.drop-shadow-standard.relative
+div.bg-white.h-64.rounded-xl.flex.flex-col.items-center.gap-3.justify-top.drop-shadow-standard.relative
     // Image container
-    div.relative.w-52.h-52.flex-shrink-0.overflow-hidden.mt-8
-        img.w-full.h-full.object-cover(v-if="imageSrc" :src="imageSrc" :alt="itemName")
+    div.relative.w-32.h-32.flex-shrink-0.overflow-hidden.mt-4
+        img.w-full.h-full.object-cover(v-if="imgName" :src="`/api/image/${imgName}`" :alt="itemName")
         PhotoIcon.w-full.h-full.txt-cupboardv2-dg(v-else)
     // Text container (flex vertical)
     div.flex.flex-col.items-center.gap-4
         // Item name and in stock
-        p.text-3xl.text-cupboardv2-dg.font-semibold {{ itemName }}
-    p.text-2xl.text-cupboardv2-dg.absolute.bottom-6.left-7 Count: {{ itemCount }}
-    p.text-2xl.text-cupboardv2-dg.font-bold.absolute.bottom-6.right-7 {{ adjustedCount }}
+        p.text-2xl.text-cupboardv2-dg.font-semibold {{ itemName }}
+    p.text-xl.text-cupboardv2-dg.absolute.left-8.bottom-6 Count: {{ adjustedCount }}
+    p.text-xl.text-cupboardv2-dg.font-bold.absolute.right-8.bottom-6 {{ changeInCount }}
 </template>
 
 <script lang="ts" setup>
@@ -21,16 +21,21 @@ const props = defineProps({
         default: "Item name",
     },
     itemCount: {
-        type: String,
+        type: Number,
         default: "#",
     },
     adjustedCount: {
-        type: String,
+        type: Number,
         default: "+??",
     },
-    imageSrc: {
+    imgName: {
         type: String,
         default: '',
     },
+})
+
+const changeInCount = computed(() => {
+    const dif = props.adjustedCount - props.itemCount 
+    return dif > 0 ? `+${dif}` : `${dif}`
 })
 </script>

@@ -1,5 +1,5 @@
 <template lang="pug">
-div.bg-white.w-80.h-24.rounded-xl.flex.items-center.drop-shadow-standard.px-4
+div.bg-white.w-full.h-24.rounded-xl.flex.items-center.drop-shadow-standard.px-4
     // Image container
     div.relative.w-16.h-16.flex-shrink-0.overflow-hidden
         img.w-full.h-full.object-cover(v-if="imgName" :src="`/api/image/${imgName}`" :alt="itemName")

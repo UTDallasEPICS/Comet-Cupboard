@@ -1,7 +1,7 @@
 <template lang="pug">
 div.p-6
     // FIX MIN WIDTH!
-    div.grid.w-full.mx-auto.gap-x-6.gap-y-3.grid-cols-1.sm_grid-cols-2.lg_grid-cols-3(class="max-w-[1750px] sm_min-w-[525px]")
+    div.grid.w-full.mx-auto.gap-x-6.gap-y-3.grid-cols-1.sm_grid-cols-2.lg_grid-cols-3(class="max-w-[1750px]")
         V2SharedCategoryCard(
             v-for="(category, i) in categories"
             :key="i"

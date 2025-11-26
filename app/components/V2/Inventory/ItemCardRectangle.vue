@@ -1,6 +1,6 @@
 <template lang="pug">
-Menu(v-slot="{ open }")
-    div.bg-white.h-24.rounded-xl.drop-shadow-standard.relative(class="w-[328px]" :class="{ 'mb-12': open}")
+Menu
+    div.bg-white.h-24.rounded-xl.drop-shadow-standard.relative.w-full.max-w-xl
         // Deal tag on bottom right of card
         div.absolute.bottom-0.right-0.bg-utd-orange.text-white.text-xs.font-bold.px-2.rounded-br-md.rounded-tl-md(
             v-if="dealExists"

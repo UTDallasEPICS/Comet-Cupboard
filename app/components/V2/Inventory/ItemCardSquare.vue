@@ -1,8 +1,8 @@
 <template lang="pug">
-Menu(v-slot="{ open }")
-    div.bg-white.w-80.h-80.rounded-xl.flex.flex-col.items-center.gap-3.justify-top.drop-shadow-standard.relative
+Menu
+    div.bg-white.h-64.rounded-xl.flex.flex-col.items-center.gap-2.justify-top.drop-shadow-standard.relative
         // Deal tag on bottom right of card
-        div.absolute.bottom-0.right-0.bg-utd-orange.text-white.text-s.font-bold.px-5.rounded-br-md.rounded-tl-md(
+        div.absolute.bottom-0.right-0.bg-utd-orange.text-white.text-xs.font-bold.px-5.rounded-br-md.rounded-tl-md(
             v-if="dealExists"
         ) {{ dealText }}
 
@@ -23,7 +23,7 @@ Menu(v-slot="{ open }")
                 MenuItem
                      div(@click="deleteItem").flex.justify-center.items-center.px-1.py-1.cursor-pointer.text-lg.font-normal.hover_underline Delete
         // Image container
-        div.relative.w-24.h-24.flex-shrink-0.overflow-hidden.mt-8
+        div.relative.w-20.h-20.flex-shrink-0.overflow-hidden.mt-4
             img.w-full.h-full.object-cover(v-if="imgName" :src="`/api/image/${imgName}`" :alt="itemName")
             PhotoIcon.w-full.h-full.txt-cupboardv2-dg(v-else)
 
@@ -33,20 +33,20 @@ Menu(v-slot="{ open }")
             p.text-2xl.text-cupboardv2-dg.font-semibold {{ itemName }}
             div.flex.gap-3
                 p.text-base.text-cupboardv2-dg In Stock:
-                div.bg-white.h-8.border-2.border-cupboardv2-dg.rounded-2xl.flex.justify-end.box-border.relative(class="w-[150px]")
+                div.bg-white.h-7.border-2.border-cupboardv2-dg.rounded-2xl.flex.justify-end.box-border.relative(class="w-[125px]")
                     div.flex.items-center.justify-center
-                        span.text-base.text-black.mr-4 {{ props.currentCount }}
-                    div.bg-cupboardv2-elg.rounded-r-2xl.flex.items-center.justify-center(:style="clipStyle")(class="w-[88px]")
+                        span.text-base.text-black.mr-2 {{ props.currentCount }}
+                    div.bg-cupboardv2-elg.rounded-r-2xl.flex.items-center.justify-center(:style="clipStyle")(class="w-[75px]")
                         span.text-base.text-black {{ displayChange }}
             // Inventory adjustment buttons (flex horizontal)
-            div.flex.gap-6.mt-2
-                button(@click="decrement").w-10.h-10.bg-cupboardv2-dg.rounded-full.flex.items-center.justify-center
-                    MinusIcon.w-8.h-8.text-white(class="stroke-[3px]")
-                div.relative.flex.flex-col.items-center.mt-3
+            div.flex.gap-6
+                button(@click="decrement").w-9.h-9.bg-cupboardv2-dg.rounded-full.flex.items-center.justify-center
+                    MinusIcon.w-7.h-7.text-white(class="stroke-[3px]")
+                div.relative.flex.flex-col.items-center.mt-1
                     input.bg-transparent.w-12.-mb-1.outline-none.border-none.text-2xl.text-center.text-black(type="text" placeholder="#" v-model="adjustAmount" @input="validateInput")
                     div.bg-cupboardv2-dg.w-12.h-1.rounded-xl
-                button(@click="increment").w-10.h-10.bg-cupboardv2-dg.rounded-full.flex.items-center.justify-center
-                    PlusIcon.w-8.h-8.text-white(class="stroke-[3px]")
+                button(@click="increment").w-9.h-9.bg-cupboardv2-dg.rounded-full.flex.items-center.justify-center
+                    PlusIcon.w-7.h-7.text-white(class="stroke-[3px]")
 </template>
 
 <script lang="ts" setup>
