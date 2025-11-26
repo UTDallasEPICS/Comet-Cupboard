@@ -1,8 +1,7 @@
 <template lang="pug">
 div
-    p stuff here
-    ItemCardRectangle
+	p stuff here
+	ItemCardRectangle
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
