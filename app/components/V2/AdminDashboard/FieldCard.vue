@@ -1,21 +1,16 @@
 <template lang="pug">
-div(class="min-w-screen h-[96px] bg-[#d9d9d9]" v-if="gray").flex.flex-row
-  div(class="w-[499px] h-[93px] ml-[41px]").flex.items-center.text-3xl.font-regular.font-montserrat
+div(class="w-11/12").flex.flex-row.rounded-xl.mx-auto.drop-shadow-standard.h-12.lg_h-20.bg-white.mt-2
+  div(class="w-7/12").flex.items-center.font-bold.font-montserrat.h-full.ml-4.text-sm.lg_text-3xl
     p {{fieldName}}
-  div(class="w-[77px] h-[77px] mr-[25px] mt-[9.11px]").flex.items-center.ml-auto
-    XMarkIcon(class="w-[38.68px] h-[38.5px]")
-div(class="min-w-screen h-[96px]" v-else).flex.flex-row
-  div(class="w-[499px] h-[93px] ml-[41px]").flex.items-center.text-3xl.font-regular.font-montserrat
-    p {{fieldName}}
-  div(class="w-[77px] h-[77px] mr-[25px] mt-[9.11px]").flex.items-center.ml-auto
-    XMarkIcon(class="w-[38.68px] h-[38.5px]")
+  div.flex.items-center.justify-center.ml-auto.h-full.aspect-square
+    button(class="size-1/2")
+      XMarkIcon
 </template>
 
 <script lang="ts" setup>
-import {XMarkIcon} from '@heroicons/vue/24/outline';
+import {XMarkIcon} from '@heroicons/vue/24/solid';
 defineProps({
     fieldName: String,
-    gray: Boolean
 });
 
 </script>
