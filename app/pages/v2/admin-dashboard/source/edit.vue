@@ -1,19 +1,34 @@
 <template lang="pug">
 div
-    V2AdminDashboardEditSourceDisplay()
-    div.min-w-screen.lg_flex.lg_flex-row.mt-3.lg_mt-8
-        button(class="bg-[#d20b0b]" @click="navigateToDeletePage").flex.items-center.justify-center.text-base.lg_text-4xl.font-semibold.font-montserrat.text-white.rounded-xl.w-full.lg_w-auto.p-2.h-9.lg_h-16
+    <!--Displays the list of fields for the specified source.-->
+    V2AdminDashboardEditSourceDisplay(:sourceName="state.sourceName")
+    
+    <!--Buttons for either deleting the specified volunteer or moving back to the sources page.-->
+    div.min-w-screen.flex.flex-row.mt-3.lg_mt-8.mx-auto.h-11.lg_h-20
+
+        <!--Delete button: if this button is pressed, then move to the page for deleting the specified source.-->
+        button(class="bg-[#d20b0b]" @click="deleteSource").flex.items-center.justify-center.text-base.lg_text-4xl.font-semibold.font-montserrat.text-white.rounded-xl.mr-auto.w-28.lg_w-56.p-2.h-full
             p Delete Source
-        div.h-2
-        button(class="bg-[#154734]" @click="navigateBackToSourcePage").flex.items-center.justify-center.text-base.lg_text-4xl.font-semibold.font-montserrat.text-white.rounded-xl.ml-auto.w-full.lg_w-auto.p-2.h-9.lg_h-16
+        
+        <!--Submit button: if this button is pressed, then move back to the source page-->
+        button(class="bg-[#154734]" @click="submit").flex.items-center.justify-center.text-base.lg_text-4xl.font-semibold.font-montserrat.text-white.rounded-xl.ml-auto.w-28.lg_w-56.p-2.h-full
             p Submit
 </template>
 
 <script lang="ts" setup>
-function navigateBackToSourcePage(){
-    navigateTo("/v2/admin-dashboard/source")
+//Router used for navigating to either the source page of the page for deleting the selected source:
+import { useRouter } from 'vue-router';
+const router = useRouter()
+
+const state=history.state//The name of the specified volunteer is stored in this state (the state at the top of the history stack). This is used to make sure no accidental edits to the undefined source take place.
+
+//Execute this function if the submit button is pressed:
+function submit(){
+    router.replace("/v2/admin-dashboard/source")//Navigate back to the source page.
 }
-function navigateToDeletePage(){
-    navigateTo("/v2/admin-dashboard/source/delete")
+
+//Execute this function if the delete button is pressed:
+function deleteSource(){
+    router.replace({path: "/v2/admin-dashboard/source/delete", state:{deleteSourceName: state.sourceName}})//Navigate to the page for deleting the specified source.
 }
 </script>
