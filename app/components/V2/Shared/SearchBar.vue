@@ -1,8 +1,8 @@
 <template lang="pug">
 div.relative.w-full.max-w-xl.flex-grow
 	// Search bar container
-	div
-		MagnifyingGlassIcon.bg-white.w-full.h-8.rounded-xl.flex.items-center.border.border-gray-300.transition-all.duration-50.focus-within_border-blue-400.focus-within_drop-shadow-standard.w-6.h-6.stroke-2.pl-2
+	div.bg-white.focus-within_border-blue-400.focus-within_drop-shadow-standard.w-full.h-8.rounded-xl.flex.items-center.border.border-gray-300.transition-all.duration-50
+		MagnifyingGlassIcon.w-6.h-6.stroke-2.pl-2
 		input(
 			placeholder="Search Item"
 			type="text"

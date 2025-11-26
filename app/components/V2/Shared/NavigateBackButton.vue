@@ -1,7 +1,7 @@
 <template lang="pug">
-div.flex.items-center.gap-x-2
+button.flex.items-center.gap-x-2
 	ArrowLeftIcon.w-4.h-4.stroke-2
-	button.text-base.text-cupboardv2-dg {{ backTo }}
+	p.text-base.text-cupboardv2-dg {{ backTo }}
 </template>
 
 <script lang="ts" setup>

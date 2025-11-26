@@ -123,7 +123,7 @@ const scrollToTop = (): void => {
 
 // get items with count greater than 0
 const { data: items } = await useFetch("/api/inventory/items", {
-	query: { checkAvailability: true },
+	query: { checkAvailability: "true" },
 })
 
 const filteredCategoryItems = computed(() => {
