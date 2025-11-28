@@ -12,7 +12,7 @@ div(class="w-11/12").flex.flex-row.rounded-xl.mx-auto.drop-shadow-standard.h-12.
         //- **************WILL CONTAIN THE TIMER FUNCTION***************
     
     //- Displays the confirm and remove buttons at the right of the card
-    div(class="gap-1").flex.flex-row.items-center.ml-auto.mr-2
+    div.flex.flex-row.items-center.ml-auto.mr-2.gap-1
         
         //- Confirm button: if pressed, then the student is moved to the cupboard.
         button(class="size-1/2" @click="intoCupboard").remove-button-effects.aspect-square

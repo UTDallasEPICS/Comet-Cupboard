@@ -2,7 +2,7 @@
 //- Page for deleting the specified volunteer.
 
 //- Warning message
-div(class="bg-[#ffd580] lg_w-5/12 lg_rounded-2xl lg_mt-2").flex.flex-row.mx-auto.h-16.flex-grow.sm_h-24
+div(class="bg-[#ffd580] lg_w-5/12").flex.flex-row.mx-auto.h-16.flex-grow.sm_h-24.lg_rounded-2xl.lg_mt-2
     //- Warning Triangle Icon
     div.flex.items-center.justify-center.h-full.aspect-square
         ExclamationTriangleIcon(class="size-2/4")
