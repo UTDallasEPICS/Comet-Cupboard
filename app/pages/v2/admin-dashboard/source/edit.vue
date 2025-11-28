@@ -1,17 +1,18 @@
 <template lang="pug">
+//- Page for editing fields of the specified source or deleting the soecified source
 div
-    <!--Displays the list of fields for the specified source.-->
+    //- Displays the list of fields for the specified source.
     V2AdminDashboardEditSourceDisplay(:sourceName="state.sourceName")
     
-    <!--Buttons for either deleting the specified volunteer or moving back to the sources page.-->
-    div.min-w-screen.flex.flex-row.mt-3.lg_mt-8.mx-auto.h-11.lg_h-20
+    //- Buttons for either deleting the specified volunteer or moving back to the sources page.
+    div.min-w-72.flex.flex-row.mt-3.lg_mt-8.mx-auto.h-11.lg_h-20
 
-        <!--Delete button: if this button is pressed, then move to the page for deleting the specified source.-->
-        button(class="bg-[#d20b0b]" @click="deleteSource").flex.items-center.justify-center.text-base.lg_text-4xl.font-semibold.font-montserrat.text-white.rounded-xl.mr-auto.w-28.lg_w-56.p-2.h-full
+        //- Delete button: if this button is pressed, then move to the page for deleting the specified source.
+        button(class="bg-[#d20b0b]" @click="deleteSource").flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-full
             p Delete Source
         
-        <!--Submit button: if this button is pressed, then move back to the source page-->
-        button(class="bg-[#154734]" @click="submit").flex.items-center.justify-center.text-base.lg_text-4xl.font-semibold.font-montserrat.text-white.rounded-xl.ml-auto.w-28.lg_w-56.p-2.h-full
+        //- Submit button: if this button is pressed, then move back to the source page
+        button(class="bg-[#154734]" @click="submit").flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-full.ml-auto
             p Submit
 </template>
 

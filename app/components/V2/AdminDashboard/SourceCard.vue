@@ -1,15 +1,15 @@
 <template lang="pug">
 
-<!--Card representing the specified source.-->
+//- Card representing the specified source.
 div(class="w-11/12").flex.flex-row.rounded-xl.mx-auto.drop-shadow-standard.h-12.lg_h-20.bg-white.mt-2
   
-  <!--Displays the name of the specified source on the left of the card.-->
+  //- Displays the name of the specified source on the left of the card.
   div(class="w-7/12").flex.items-center.font-bold.font-montserrat.h-full.ml-4.text-sm.lg_text-3xl
     p {{sourceName}}
   
-  <!--Edit button: if this button is pressed, move to the page for editing fields fo the specified source.-->
+  //- Edit button: if this button is pressed, move to the page for editing fields fo the specified source.
   div.flex.items-center.justify-center.ml-auto.h-full.aspect-square
-    button(class="size-1/2" @click="editSource(sourceName)").p-1
+    button(class="size-1/2" @click="editSource(sourceName)").p-1.remove-button-effects
       PencilIcon
 
 </template>
