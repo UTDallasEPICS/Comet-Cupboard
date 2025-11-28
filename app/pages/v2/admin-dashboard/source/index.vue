@@ -5,6 +5,4 @@ div
     V2AdminDashboardSourceListDisplay()
 </template>
 
-<script lang="ts" setup>
-
-</script>
+<script lang="ts" setup></script>

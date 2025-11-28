@@ -60,7 +60,7 @@ const shoppingPath = "/shopping"
 // path to the verify carts page
 const verifyPath = "/verify-cart"
 // path to the inventory management page
-const inventoryPath = "/inventory-management"
+const inventoryPath = "/v2/inventory/category-select"
 // path to the data analyzation page
 const dataPath = "/data"
 // path to the admin dashboard page
