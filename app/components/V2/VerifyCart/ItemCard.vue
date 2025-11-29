@@ -72,4 +72,3 @@ const dealText = computed(() => {
 	return `${props.itemDeal.actualCount} for ${props.itemDeal.adjustedCount}`
 })
 </script>
-

@@ -1,8 +1,15 @@
-/* google fonts inport */
-@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* google fonts import */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Defaults the site's font to sans (montserrat) */
+@layer base {
+    html {
+        font-family: theme('fontFamily.sans');
+    }
+}
 
 @layer components {
     /* Hide scrollbar for Chrome, Safari and Opera */
@@ -18,15 +25,11 @@
     /* button styling */
     button {
         text-align: center;
-        font-family: theme('fontFamily.utd');
+        font-family: theme('fontFamily.sans');
         font-size: x-large;
         font-weight: 700;
         border-radius: 15px;
         /* horizontal, vertical, blur, grow, color */
-    }
-
-    button:hover {
-        box-shadow: 0px 4px 5px 1px rgba(25,25,25,.4); 
     }
 
     button:active {
@@ -68,7 +71,7 @@
     .input {
         height: 50px;
         text-align: left;
-        font-family: theme('fontFamily.utd');
+        font-family: theme('fontFamily.sans');
         font-size: x-large;
         font-weight: 400;
         background-color: transparent;
@@ -80,7 +83,7 @@
     .modal-input {
         height: 40px;
         text-align: left;
-        font-family: theme('fontFamily.utd');
+        font-family: theme('fontFamily.sans');
         font-size: x-large;
         font-weight: 400;
         background-color: transparent;
@@ -114,5 +117,4 @@
             background-color: hsl(200, 20%, 95%);
         }
     }
-
 }

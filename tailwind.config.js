@@ -18,7 +18,12 @@ export default {
 				"filter-gray-v2": "#4a4a4a",
 				"cart-red-v2": "#ffbaba",
 				"cart-green-v2": "#d2faca",
-				"yellow-warning-v2": "#ffd580"
+				"yellow-warning-v2": "#ffd580",
+				"cupboardv2-dg": "#4A4A4A",
+				"cupboardv2-lg": "#B9B9B9",
+				"cupboardv2-elg": "#D9D9D9",
+				"yellow-warningv2": "#FFD580",
+				"red-negativev2": "#D20B0B",
 			},
 			fontFamily: {
 				utd: ["FF Din Pro", "Barlow"],
