@@ -1,5 +1,5 @@
 <template lang="pug">
-div.w-full.h-min.min-h-12.bg-white.drop-shadow-standard.flex.flex-col.rounded-lg.w-72.pt-2.px-4.sm_px-16
+div.w-full.h-min.min-h-12.bg-white.border.border-outlining-gray-v2.flex.flex-col.rounded-lg.w-72.pt-2.px-4.sm_px-16
 	p.px-2.text-lg.text-center.font-semibold {{ cartID }}
 	div(v-if="cartID != 'There are no carts currently selected'").h-full.rounded-xl.flex.flex-col.gap-y-4
 		div.flex.flex-col.items-center.gap-x-4.gap-y-4
@@ -24,7 +24,7 @@ div.w-full.h-min.min-h-12.bg-white.drop-shadow-standard.flex.flex-col.rounded-lg
 				p.text-nowrap.text-right Total Count {{ cartTotalCount }}
 				p.text-nowrap.text-right Adjusted Total {{ cartAdjustedCount }}
 			div.max-w-96.h-32.border.border-2.border-outlining-gray-v2.w-full
-				textarea(placeholder="Add a reason" v-model="reason").w-full.h-full
+				textarea(placeholder="Add a reason" v-model="reason").w-full.h-full.resize-none
 		div.flex.flex-row.gap-x-4.justify-center.sm_justify-end.h-12
 			button(@click="rejectCart").w-32.h-10.bg-decline-red-v2.text-white.rounded-xl.font-sans.font-bold.text-base Decline
 			button(@click="acceptCart").w-32.h-10.bg-utd-green.text-white.rounded-xl.font-sans.font-bold.text-base Accept
@@ -107,7 +107,7 @@ const cartTotalCount = computed(() => {
 const rejectCart = async () => {
 	await $fetch("/api/verification/cartVerificationAction", {
 		method: "POST",
-		body: { cartID: props.cartID, action: "REJECT" },
+		body: { cartID: props.cartID, action: "REJECT", reason: reason.value },
 	})
 	emit("update:verified-cart")
 	emit("cart-declined", props.cartID)
@@ -116,7 +116,7 @@ const rejectCart = async () => {
 const acceptCart = async () => {
 	await $fetch("/api/verification/cartVerificationAction", {
 		method: "POST",
-		body: { cartID: props.cartID, action: "ACCEPT" },
+		body: { cartID: props.cartID, action: "ACCEPT", reason: reason.value },
 	})
 	emit("update:verified-cart")
 	emit("cart-accepted", props.cartID)
