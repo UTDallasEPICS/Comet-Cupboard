@@ -14,11 +14,11 @@ div.min-w-72.rounded-2xl.bg-white
             p + Add
     
     //- If at least 1 volunteer is assigned, display the list of volunteers. Each volunteer is represented as a card.
-    div(v-if="volunteers?.length > 0" class="w-11/12 bg-[#eeeeee]").overflow-auto.ml-auto.mr-auto.rounded-xl.h-80.lg_h-96.mt-4
+    div(v-if="volunteers?.length > 0" class="w-11/12").bg-cupboardv2-2elg.overflow-auto.ml-auto.mr-auto.rounded-xl.h-80.lg_h-96.mt-4
         V2AdminDashboardVolunteerCard(v-for="volunteer in volunteers" :volunteerID="volunteer.netID")
     
     //- Displays a message if no volunteer is assigned.
-    div(v-else class="w-11/12 bg-[#eeeeee]").font-semibold.font-montserrat.flex.items-center.justify-center.ml-auto.mr-auto.rounded-xl.text-center.text-base.md_text-3xl.h-80.lg_h-96.mt-4
+    div(v-else class="w-11/12").bg-cupboardv2-2elg.font-semibold.font-montserrat.flex.items-center.justify-center.ml-auto.mr-auto.rounded-xl.text-center.text-base.md_text-3xl.h-80.lg_h-96.mt-4
         p No volunteers have currently been assigned yet.
     
     //- Applies some spacing between the list of volunteers and the end of the display box

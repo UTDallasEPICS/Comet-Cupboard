@@ -11,7 +11,7 @@ div
 			p You have been denied access to the Comet Cupboard.
 
 		//- Sign Out button: if this button is pressed, then the student will be moved back to the login page
-		button(class="bg-[#e87500]" @click="logout").flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-11.sm_h-16.mx-auto.remove-button-effects.mb-2.mt-3.lg_mt-8
+		button(@click="logout").bg-utd-orange.flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-11.sm_h-16.mx-auto.remove-button-effects.mb-2.mt-3.lg_mt-8
 			p Sign Out
 </template>
 

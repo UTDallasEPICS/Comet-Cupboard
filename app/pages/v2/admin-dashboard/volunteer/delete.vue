@@ -6,7 +6,7 @@ div
 		V2SharedHeaderSubheader(pageTitle="Delete Volunteer")(class="md_max-w-[600px]").md_rounded-b-xl
 	
 	//- Warning message
-	div(class="bg-[#ffd580] md_max-w-[600px]").flex.flex-row.mx-auto.h-16.flex-grow.sm_h-24.md_rounded-2xl.mt-16.md_mt-20.w-full
+	div(class="md_max-w-[600px]").bg-yellow-warningv2.flex.flex-row.mx-auto.h-16.flex-grow.sm_h-24.md_rounded-2xl.mt-16.md_mt-20.w-full
 		//- Warning Triangle Icon
 		div.flex.items-center.justify-center.h-full.aspect-square
 			ExclamationTriangleIcon(class="size-2/4")
@@ -23,11 +23,11 @@ div
 		//- Buttons for canceling or confirming the deletion of the specified volunteer
 		div.w-full.flex.flex-row.mt-3.lg_mt-8.mx-auto.h-11.sm_h-16.mb-2
 			//- Cancel button: if this button is pressed, then the deletion of the specified volunteer will be canceled.
-			button(class="bg-[#4a4a4a]" @click="cancel").flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-full.remove-button-effects
+			button(@click="cancel").bg-cupboardv2-dg.flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-full.remove-button-effects
 				p Cancel
 
 			//- Delete button: if this button is pressed, then the specified volunteer will be deleted.
-			button(class="bg-[#e87500]" @click="removeVolunteer").flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-full.ml-auto.remove-button-effects
+			button(@click="removeVolunteer").bg-utd-orange.flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-full.ml-auto.remove-button-effects
 				p Yes, Delete
 </template>
 

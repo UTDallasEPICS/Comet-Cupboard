@@ -15,6 +15,7 @@ export default {
 				"cupboardv2-dg": "#4A4A4A",
 				"cupboardv2-lg": "#B9B9B9",
 				"cupboardv2-elg": "#D9D9D9",
+				"cupboardv2-2elg": "#EEEEEE",
 				"yellow-warningv2": "#FFD580",
 				"red-negativev2": "#D20B0B",
 			},

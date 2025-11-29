@@ -11,11 +11,11 @@ div
 	//- Buttons for either deleting the specified volunteer or moving back to the sources page.
 	div.min-w-72.flex.flex-row.mt-3.lg_mt-8.mx-auto.h-11.lg_h-20
 		//- Delete button: if this button is pressed, then move to the page for deleting the specified source.
-		button(class="bg-[#d20b0b]" @click="deleteSource").flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-full.remove-button-effects
+		button(@click="deleteSource").bg-red-negativev2.flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-full.remove-button-effects
 			p Delete Source
 
 		//- Submit button: if this button is pressed, then move back to the source page
-		button(class="bg-[#154734]" @click="submit").flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-full.ml-auto.remove-button-effects
+		button(@click="submit").bg-utd-green.flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-full.ml-auto.remove-button-effects
 			p Submit
 </template>
 

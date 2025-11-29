@@ -3,7 +3,7 @@
 div.min-w-72.bg-white.overflow-auto.rounded-2xl
 
     //- Displays the name of the specified source at the top.
-    div(class="text-[#154734]").flex.items-center.justify-center.text-xl.lg_text-5xl.font-semibold.font-montserrat.w-full.h-10.lg_h-20
+    div.text-utd-green.flex.items-center.justify-center.text-xl.lg_text-5xl.font-semibold.font-montserrat.w-full.h-10.lg_h-20
         p {{sourceName}}
     
     //- Input form for entering the name of the field to be added for the specified source.
@@ -20,7 +20,7 @@ div.min-w-72.bg-white.overflow-auto.rounded-2xl
         div(v-if="source.name == sourceName")
 
             //- If the specified source has at least 1 field:
-            div(v-if="source.Fields?.length > 0" class="w-10/12 bg-[#eeeeee]").overflow-auto.ml-auto.mr-auto.rounded-xl.h-80.lg_h-96.mt-4
+            div(v-if="source.Fields?.length > 0" class="w-10/12").bg-cupboardv2-2elg.overflow-auto.ml-auto.mr-auto.rounded-xl.h-80.lg_h-96.mt-4
                 
                 //- Displays a list of fields for the specified source. Each field is represented as a card.
                 div(v-for="field in source.Fields" class="w-11/12").flex.flex-row.rounded-xl.mx-auto.drop-shadow-standard.h-12.lg_h-20.bg-white.mt-2
@@ -35,7 +35,7 @@ div.min-w-72.bg-white.overflow-auto.rounded-2xl
                             XMarkIcon
             
             //- Displays a message if the specified source has no fields.
-            div(v-else class="w-10/12 bg-[#eeeeee]").font-semibold.font-montserrat.flex.items-center.justify-center.ml-auto.mr-auto.rounded-xl.text-center.text-base.md_text-3xl.h-80.lg_h-96.mt-4
+            div(v-else class="w-10/12").bg-cupboardv2-2elg.font-semibold.font-montserrat.flex.items-center.justify-center.ml-auto.mr-auto.rounded-xl.text-center.text-base.md_text-3xl.h-80.lg_h-96.mt-4
                 p No fields have currently been added for this source yet.
     
     //- Applies some spacing between the list of fields and the end of the display box.
