@@ -46,3 +46,5 @@ const acceptCart = async () => await navigateTo({ path: "" })
 	font-family: "Montserrat", sans-serif;
 }
 </style>
+
+

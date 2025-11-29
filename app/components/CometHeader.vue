@@ -55,6 +55,8 @@ const permissions = ref(accessCookie.value && typeof accessCookie.value === "obj
 // Routing
 const route = useRoute()
 const page = ref(route.fullPath)
+
+// get the route to check if the user is on the shopping page
 watch(route, () => {
 	page.value = route.fullPath
 })
@@ -62,7 +64,7 @@ watch(route, () => {
 // Paths
 const shoppingPath = "/shopping"
 const verifyPath = "/verify-cart"
-const inventoryPath = "/inventory-management"
+const inventoryPath = "/v2/inventory/category-select"
 const dataPath = "/data"
 const adminDashboardPath = "/admin-dashboard"
 const queuePath = "/queue"
