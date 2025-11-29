@@ -78,8 +78,10 @@ const turnOnGreenPopUp = (cartID) => {
 	showAcceptedPopUp.value = true
 
 	setTimeout(() => {
-		showRejectedPopUp.value = false
+		showAcceptedPopUp.value = false
 	}, 3000)
+
+
 }
 
 </script>
