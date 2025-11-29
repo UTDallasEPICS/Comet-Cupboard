@@ -1,9 +1,5 @@
 <template lang="pug">
 div.p-4
-	// CART ICON - top right
-	div.fixed.top-0.right-0.z-50
-		V2ShoppingCartIconAnimate(ref="cart")
-
 	// HEADER - centered
 	h1.text-2xl.font-bold.text-center.mb-2 Category
 

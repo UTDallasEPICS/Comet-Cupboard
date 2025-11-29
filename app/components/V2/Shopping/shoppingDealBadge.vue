@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-if="badge === 'free'"
-		class="absolute top-2 right-2 bg-green-500 text-white font-bold rounded-lg shadow"
+		class="bg-green-500 text-white font-bold rounded-lg shadow"
 		:style="{ fontSize: fontSize + 'px', padding: paddingY + 'px ' + paddingX + 'px' }"
 	>
 		Free
@@ -9,7 +9,7 @@
 
 	<div
 		v-else-if="badge === 'deal'"
-		class="absolute top-2 right-2 bg-orange-500 text-white font-bold rounded-lg shadow"
+		class="bg-orange-500 text-white font-bold rounded-lg shadow"
 		:style="{ fontSize: fontSize + 'px', padding: paddingY + 'px ' + paddingX + 'px' }"
 	>
 		{{ quantity }} for {{ countsAs }}

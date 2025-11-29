@@ -1,24 +1,21 @@
-<template>
-	<div class="relative w-[279px] h-[88px] bg-white rounded-[15px] shadow px-3 font-montserrat">
-		<!-- BADGE (free / deal) -->
-		<ItemBadge v-if="badge" :badge="badge" :quantity="quantity" :countsAs="countsAs" />
+<template lang="pug">
+div(class="w-[300px] h-[88px]").flex.bg-white.rounded-xl.px-2.py-2.relative.items-center
+	// photo icon
+	PhotoIcon(class="w-[60px] h-[60px]").text-gray-400.border.border-gray-300.rounded.p-2
 
-		<!-- photo icon  -->
-		<PhotoIcon class="absolute left-[13px] top-[14px] w-[60px] h-[60px] text-gray-400 border border-gray-300 rounded p-2" />
+	// product name
+	div.h-full.flex.items-center.text-black.break-words.text-left.grow
+		| {{ name }}
 
-		<!-- product name -->
-		<div class="absolute left-[100px] top-0 right-[90px] h-full flex items-center text-black text-[15px] leading-[17px] font-medium break-words text-left">
-			{{ name }}
-		</div>
-
-		<!-- add button -->
-		<button
-			class="absolute right-1 bottom-1 w-[70px] h-7 bg-[#154734] text-white text-[18px] font-medium rounded-[10px] hover:bg-green-900"
+	div.flex.flex-col.h-full
+		// BADGE (free / deal)
+		ItemBadge(v-if="badge" :badge="badge" :countsAs="countsAs" :quantity="quantity").mb-auto.self-end
+		// add button
+		button(
+			class="w-[70px] bg-[#154734] text-[18px] rounded-[10px] hover:bg-green-900"
 			@click="$emit('add-to-cart', { name, badge, quantity, countsAs })"
-		>
-			+ Add
-		</button>
-	</div>
+		).h-7.text-white.mt-auto
+			| + Add
 </template>
 
 <script setup>

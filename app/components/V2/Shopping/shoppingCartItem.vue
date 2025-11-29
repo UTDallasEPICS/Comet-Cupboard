@@ -7,9 +7,7 @@
 				fill="none"
 				viewBox="0 0 24 24"
 				stroke-width="1.5"
-				:class="['w-6 h-6 transition-colors', hoverX ? 'stroke-red-600' : 'stroke-black']"
-				@mouseenter="hoverX = true"
-				@mouseleave="hoverX = false"
+				:class="['w-6 h-6 transition-colors', 'stroke-black', 'hover_stroke-red-600 cursor-pointer']"
 			>
 				<path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
 			</svg>

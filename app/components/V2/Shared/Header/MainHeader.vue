@@ -36,10 +36,10 @@ div.relative.z-40
 		// Comet Cupboard Logo
 		div.relative.overflow-hidden.ml-4
 			img(src="/CometCupboardLogo1.png").h-10
-		div.ml-auto
-			button(v-if="page === shoppingPath" style="text-decoration-color: white" @click="toggleCartView").relative.remove-button-effects
-				ShoppingCartIcon.size-11.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
-				span(v-if="cartTotalCount != 0").px-2.text-xl.absolute.font-bold.-top-2.rounded-full.-right-2.text-xl.text-white.bg-utd-orange {{ cartTotalCount }}
+		div.ml-auto.flex.flex-row.h-full
+			div(v-if="page.includes('shopping')").relative
+				V2ShoppingCartIconAnimate.size-11.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
+				//- span(v-if="cartTotalCount != 0").px-2.text-xl.absolute.font-bold.-top-2.rounded-full.-right-2.text-xl.text-white.bg-utd-orange {{ cartTotalCount }}
 
 			// for now this is a link to the sign in page (test + nowhere else yet)
 			button(@click="logout").remove-button-effects.ml-4
@@ -54,7 +54,7 @@ import { useCartStore } from "~/stores/cart"
 const { toggleCartView } = useCartStore()
 
 // Path to the shopping page
-const shoppingPath = "/shopping"
+const shoppingPath = "/v2/shopping"
 // Path to the verify carts page
 const verifyPath = "/verify-cart"
 // Path to the inventory management page

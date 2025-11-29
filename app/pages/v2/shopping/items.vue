@@ -1,8 +1,5 @@
 <template>
 	<div class="flex flex-col bg-gray-100 min-h-screen relative items-center">
-		<!-- CART ICON + SLIDE-OUT CART -->
-		<V2ShoppingCartIconAnimate ref="cart" />
-
 		<!-- BACK BUTTON -->
 		<div class="w-full max-w-[320px] px-1 mt-1 mb--1">
 			<V2ShoppingBackButton backTo="Back to Categories" @click="goBack" />

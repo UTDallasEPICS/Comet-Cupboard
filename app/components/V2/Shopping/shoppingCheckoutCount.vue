@@ -44,8 +44,6 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from "vue"
-
 const props = defineProps({
 	totalQty: { type: Number, default: 0 },
 	adjustedQty: { type: Number, default: 0 },
