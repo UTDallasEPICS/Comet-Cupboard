@@ -1,14 +1,14 @@
 <template lang="pug">
-div.w-full.h-full.bg-white.drop-shadow-standard.flex.flex-col.p-8.rounded-lg
-    span.px-4.text-lg.text-center.mt-2.font-bold {{ cartID }}
-    div(v-if="cartID != 'There are no carts currently selected'").md_border-white.md_border-2.h-full.rounded-xl.p-12.align-middle
-        div.flex.flex-col.items-center.md_items-start.gap-x-4.gap-y-4.mb-4
-            div(v-for="warning in warnings").bg-yellow-warning-v2.w-80.md_w-full.h-20.flex.flex-row.items-center.gap-x-5.rounded-lg.p-2
-                ExclamationTriangleIcon.size-12
-                p.text-base.font-medium {{ warning }}
-        div(style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))").grid.gap-4.justify-items-center
-            CategoryItemsGrid(v-for="category in Object.keys(categoryCartItems)" :headingName="category").w-80.my-2
-                V2VerifyCartItemCard(
+div.w-full.h-min.min-h-12.bg-white.drop-shadow-standard.flex.flex-col.rounded-lg.w-72.pt-2.px-4.sm_px-16
+	p.px-2.text-lg.text-center.font-semibold {{ cartID }}
+	div(v-if="cartID != 'There are no carts currently selected'").h-full.rounded-xl.flex.flex-col.gap-y-4
+		div.flex.flex-col.items-center.gap-x-4.gap-y-4
+			div(v-for="warning in warnings").bg-yellow-warning-v2.w-full.flex.flex-row.items-center.rounded-lg.p-2
+				ExclamationTriangleIcon.min-w-8.max-w-8.aspect-square
+				p.text-base.font-medium {{ warning }}
+		div(style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))").grid.gap-4.justify-items-center
+			CategoryItemsGrid(v-for="category in Object.keys(categoryCartItems)" :headingName="category").my-2
+				V2VerifyCartItemCard(
 					v-for="cartItem in categoryCartItems[category]"
 					:adjustedQTY="cartItem.adjustedQTY"
 					:dealCount="cartItem.dealCount"
@@ -19,18 +19,15 @@ div.w-full.h-full.bg-white.drop-shadow-standard.flex.flex-col.p-8.rounded-lg
 					:name="cartItem.name"
 					:totalQTY="cartItem.totalQTY"
 				).w-full.mb-2
-        div.flex.flex-col.justify-between.lg_flex-row.mx-8
-            div.text-right.lg_text-left.flex.flex-col.justify-end
-                div.flex.flex-col.font-sans.font-bold.lg_text-xl
-                    span Total Count {{ cartTotalCount }}
-                    span Adjusted Total {{ cartAdjustedCount }}
-            div.flex.flex-col.lg_w-96
-                div.flex.justify-center.lg_justify-end.max-w-md.h-28.lg_h-36.my-4.border.border-2.border-outlining-gray-v2.p-1
-                    textarea.w-full(v-model="reason" placeholder="Add a reason") 
-                div.flex.flex-row.gap-x-8.justify-end.h-12
-                    button(@click="rejectCart").w-36.h-10.bg-decline-red-v2.text-white.rounded-xl.font-sans.font-bold.text-base Decline
-                    button(@click="acceptCart").w-36.h-10.bg-utd-green.text-white.rounded-xl.font-sans.font-bold.text-base Accept
-
+		div.flex.flex-col.md_flex-row.gap-4.items-center.sm_items-end
+			div.flex.flex-col.font-sans.font-bold.md_mr-auto.w-min
+				p.text-nowrap.text-right Total Count {{ cartTotalCount }}
+				p.text-nowrap.text-right Adjusted Total {{ cartAdjustedCount }}
+			div.max-w-96.h-32.border.border-2.border-outlining-gray-v2.w-full
+				textarea(placeholder="Add a reason" v-model="reason").w-full.h-full
+		div.flex.flex-row.gap-x-4.justify-center.sm_justify-end.h-12
+			button(@click="rejectCart").w-32.h-10.bg-decline-red-v2.text-white.rounded-xl.font-sans.font-bold.text-base Decline
+			button(@click="acceptCart").w-32.h-10.bg-utd-green.text-white.rounded-xl.font-sans.font-bold.text-base Accept
 </template>
 
 <script lang="ts" setup>
@@ -44,7 +41,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(["update:verified-cart , cart-declined , cart-accepted"])
-
 
 const { cartID } = toRefs(props)
 
@@ -126,6 +122,5 @@ const acceptCart = async () => {
 	emit("cart-accepted", props.cartID)
 }
 
-const reason = ref('')
+const reason = ref("")
 </script>
-

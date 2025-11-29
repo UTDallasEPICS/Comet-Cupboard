@@ -7,10 +7,10 @@ div
 				div.flex.flex-row.my-4.md_my-8.flex-wrap.md_flex-nowrap.justify-center.md_justify-normal.grow
 					div(:class="(currentCartIDPreview === 'There are no carts currently selected' ? 'visible' : 'invisible hidden') + ' md_visible md_block'").md_mr-6.lg_mr-12
 						TransitionsFadeIn
-							div(v-if="showRejectedPopUp").flex.w-full.max-w-xs.h-10.my-2.bg-cart-red-v2.rounded-lg.font-medium.items-center.justify-center
+							div(v-if="showRejectedPopUp").flex.w-full(class="max-w-[300px]").h-10.bg-cart-red-v2.rounded-lg.font-medium.items-center.justify-center
 								span Declined {{ oldCartID }}
 						TransitionsFadeIn
-							div(v-if="showAcceptedPopUp").flex.w-full.max-w-xs.h-10.my-2.bg-cart-green-v2.rounded-lg.font-medium.items-center.justify-center
+							div(v-if="showAcceptedPopUp").flex.w-full(class="max-w-[300px]").h-10.bg-cart-green-v2.rounded-lg.font-medium.items-center.justify-center
 								span Accepted {{ oldCartID }}
 						V2VerifyCartPendingList(@update:select-cart="setCartIDPreview" :selectedCart="currentCartIDPreview")
 					button(

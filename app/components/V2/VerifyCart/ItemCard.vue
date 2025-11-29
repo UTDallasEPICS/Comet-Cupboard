@@ -1,6 +1,6 @@
 <template lang="pug">
-div.bg-utd-gray-v2.w-2xs.h-36.drop-shadow-standard.px-2.py-1.rounded-lg.flex.justify-between.items-center
-    img( :src="`api/image/${imgName}`").min-w-24.max-w-24.aspect-square
+div.bg-utd-gray-v2.h-36.drop-shadow-standard.px-2.py-1.rounded-lg.flex.justify-between.items-center
+    img(:src="`/api/image/${imgName}`").min-w-24.max-w-24.aspect-square
     div.mx-1.flex.flex-col.gap-y-0.w-full.leading-none.font-sans.mx-0
         span.text-left.ml-1 {{ name }}
         div.border-black.border-t
