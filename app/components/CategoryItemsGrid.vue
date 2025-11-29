@@ -2,7 +2,7 @@
 div
 	div(
 		@click="show = !show"
-	).bg-cupboard-mg.text-white.text-xl.font-semibold.flex.flex-row.justify-between.items-center.rounded-2xl.px-4.py-2.cursor-pointer.hover_drop-shadow-standard
+	).bg-utd-orange.text-white.text-xl.font-semibold.flex.flex-row.justify-between.items-center.rounded-2xl.px-4.py-2.cursor-pointer.hover_drop-shadow-standard
 		p {{ headingName }}
 		ChevronDownIcon(v-if="!show").size-8.fill-white.stroke-white
 		ChevronUpIcon(v-if="show").size-8.fill-white.stroke-white

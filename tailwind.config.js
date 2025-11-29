@@ -12,9 +12,17 @@ export default {
 				"cupboard-lg": "#D9D9D9",
 				"red-negative": "#E22222",
 				"yellow-warning": "#ffc247",
+				"outlining-gray-v2": "#b9b9b9",
+				"utd-gray-v2": "#f9f9f9",
+				"decline-red-v2": "#d20b0b",
+				"filter-gray-v2": "#4a4a4a",
+				"cart-red-v2": "#ffbaba",
+				"cart-green-v2": "#d2faca",
+				"yellow-warning-v2": "#ffd580"
 			},
 			fontFamily: {
 				utd: ["FF Din Pro", "Barlow"],
+				sans: ["Montserrat", "sans-serif"],
 			},
 			screens: {
 				tn: "400px",
