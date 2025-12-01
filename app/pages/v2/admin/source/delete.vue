@@ -42,7 +42,7 @@ const state = history.state //The name of the specified source is stored in this
 
 //Execute this function if the cancel button is pressed:
 function cancel() {
-	router.replace("/v2/admin-dashboard/source") //Moves back to the source page
+	router.replace("/v2/admin/source") //Moves back to the source page
 }
 
 //Function for deleting the specified source:
@@ -56,6 +56,6 @@ const removeSource = async () => {
 	} catch (error) {
 		//Shouldn't happen when operating the website normally.
 	}
-	router.replace("/v2/admin-dashboard/source") //Moves back to the source page
+	router.replace("/v2/admin/source") //Moves back to the source page
 }
 </script>

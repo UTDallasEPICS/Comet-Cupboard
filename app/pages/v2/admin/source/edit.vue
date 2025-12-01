@@ -5,6 +5,7 @@ div
 	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
 		V2SharedHeaderSubheader(pageTitle="Edit Source")(class="md_max-w-[600px]").md_rounded-b-xl
 	
+
 	//- Displays the list of fields for the specified source.
 	V2AdminDashboardEditSourceDisplay(:sourceName="state.sourceName").mt-20
 
@@ -28,11 +29,11 @@ const state = history.state //The name of the specified volunteer is stored in t
 
 //Execute this function if the submit button is pressed:
 function submit() {
-	router.replace("/v2/admin-dashboard/source") //Navigate back to the source page.
+	router.replace("/v2/admin/source") //Navigate back to the source page.
 }
 
 //Execute this function if the delete button is pressed:
 function deleteSource() {
-	router.replace({ path: "/v2/admin-dashboard/source/delete", state: { deleteSourceName: state.sourceName } }) //Navigate to the page for deleting the specified source.
+	router.replace({ path: "/v2/admin/source/delete", state: { deleteSourceName: state.sourceName } }) //Navigate to the page for deleting the specified source.
 }
 </script>

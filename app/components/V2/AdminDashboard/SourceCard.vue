@@ -28,7 +28,7 @@ defineProps({
 //Execute this function if the edit button is pressed.
 function editSource(nameOfSource: string|undefined)
 {
-  router.push({path: "/v2/admin-dashboard/source/edit", state: {sourceName: nameOfSource}});//Navigates to the page for editing fields fo the specified source.
+  router.push({path: "/v2/admin/source/edit", state: {sourceName: nameOfSource}});//Navigates to the page for editing fields fo the specified source.
 }
 
 </script>

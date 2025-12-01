@@ -30,8 +30,12 @@ div.relative.z-40
 								| Data
 							hr(class="border-[1.3px]").w-full.mt-4
 						MenuItem(as="div").w-full
-							NuxtLink(@click.native="close" :to="adminDashboardPath").cursor-pointer.hover_underline
-								| Admin Dashboard
+							NuxtLink(@click.native="close" :to="sourcePath").cursor-pointer.hover_underline
+								| Source Management
+							hr(class="border-[1.3px]").w-full.mt-4
+						MenuItem(as="div").w-full
+							NuxtLink(@click.native="close" :to="volunteerPath").cursor-pointer.hover_underline
+								| Volunteer Management
 							hr(class="border-[1.3px]").w-full.mt-4
 		// Comet Cupboard Logo
 		div.relative.overflow-hidden.ml-4
@@ -61,10 +65,12 @@ const verifyPath = "/verify-cart"
 const inventoryPath = "/v2/inventory/category-select"
 // Path to the data analyzation page
 const dataPath = "/data"
-// Path to the admin dashboard page
-const adminDashboardPath = "/admin-dashboard"
+// Path to the admin dashboard source page
+const sourcePath = "/v2/admin/source"
+// Path to the admin dashboard volunteer page
+const volunteerPath = "/v2/admin/volunteer"
 // Path to the queue page
-const queuePath = "/queue"
+const queuePath = "/v2/queue"
 
 // Auto title based on the route
 const accessCookie = ref(useCookie("AccessPermission"))

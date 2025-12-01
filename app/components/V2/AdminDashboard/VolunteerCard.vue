@@ -31,6 +31,6 @@ defineProps({
 //Execute this function if the X button is pressed:
 function deleteVolunteer(netID: string|undefined)
 {
-  router.push({path: "/v2/admin-dashboard/volunteer/delete", state: {deleteNetID: netID}});//Navigates to the page for deleting the specified volunteer.
+  router.push({path: "/v2/admin/volunteer/delete", state: {deleteNetID: netID}});//Navigates to the page for deleting the specified volunteer.
 }
 </script>

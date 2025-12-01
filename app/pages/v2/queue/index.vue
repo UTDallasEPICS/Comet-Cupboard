@@ -5,9 +5,9 @@ div
 	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
 		V2SharedHeaderSubheader(pageTitle="Queue")(class="md_max-w-[600px]").md_rounded-b-xl
 	
-	div.flex.flex-col.items-start.justify-center.gap-5.m-3.mt-20
+	div.flex.flex-col.items-start.justify-center.gap-y-5.mt-20
 		//- Displays the estimated wait time at the top of the page for the student in the queue: the time will be empty for now since the function to implement the timer is not present. 
-		div(v-if="!permissions['VERIFY_CART']").flex.items-center.justify-center.flex-grow.w-full.text-xl.lg_text-5xl.font-montserrat.font-bold.text-center
+		div(v-if="!permissions['VERIFY_CART']").flex.items-center.justify-center.flex-grow.w-full
 			V2QueueEstimatedWaitTimeDisplay(time="00:00:00")
 
 		//- Displays the # of students in the cupboard at the middle of the page:
@@ -20,10 +20,6 @@ div
 </template>
 
 <script lang="ts" setup>
-//Router used for navigating to the access denied page:
-import { useRouter } from "vue-router"
-const router = useRouter()
-
 //User permissions:
 const accessCookie = ref(useCookie("AccessPermission"))
 const permissions = ref(accessCookie.value && typeof accessCookie.value === "object" ? accessCookie.value : {}) //Dirty
@@ -85,10 +81,10 @@ if (import.meta.client) {
 			// 	await navigateTo("/queue")
 			// }
 			if (type === "QUEUE_DELETE") {
-				await router.replace("/v2/queue/deniedAccess")
+				await navigateTo("/v2/queue/removed-from-queue")
 			} else if (type === "QUEUE_MOVE_INSIDE") {
 				await navigateTo("/shopping")
-				await reloadNuxtApp()
+				reloadNuxtApp()
 			}
 		}
 	}

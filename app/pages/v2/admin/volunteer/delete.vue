@@ -42,7 +42,7 @@ const state = history.state //The netID of the specified volunteer is stored in 
 
 //Execute this function if the cancel button is pressed:
 function cancel() {
-	router.replace("/v2/admin-dashboard/volunteer") //Moves back to the volunteer page
+	router.replace("/v2/admin/volunteer") //Moves back to the volunteer page
 }
 
 //Function for deleting the specified volunteer:
@@ -56,6 +56,6 @@ const removeVolunteer = async () => {
 	} catch (error) {
 		//Shouldn't happen when operating the website normally.
 	}
-	router.replace("/v2/admin-dashboard/volunteer") //Moves back to the volunteer page
+	router.replace("/v2/admin/volunteer") //Moves back to the volunteer page
 }
 </script>
