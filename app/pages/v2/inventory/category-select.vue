@@ -1,7 +1,7 @@
 <template lang="pug">
 div
 	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Category Select")(class="md_max-w-[600px]").md_rounded-b-xl
+		V2SharedHeaderSubheader(pageTitle="Category Select")(class="md_max-w-[600px]").md_rounded-b-3xl
 	div.p-6.mt-20
 		div(style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))").grid.w-full.mx-auto.gap-x-6.gap-y-3
 			V2SharedCategoryCard(v-for="(category, i) in categories" :key="i" :categoryName="category.name" :imageSrc="category.img")

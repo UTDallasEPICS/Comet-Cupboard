@@ -24,6 +24,7 @@ export default {
 			},
 			screens: {
 				tn: "400px",
+				xs: {'max': '500px'},
 				md: "825px",
 			},
 		},

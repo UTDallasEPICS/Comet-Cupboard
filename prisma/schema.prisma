@@ -59,6 +59,10 @@ model Item {
     CartItems        CartItem[]
     OrderItems       OrderItem[]
 
+    createdAt        DateTime          @default(now()) @map("created_at")
+    recentPopularity Json? @map("recent_popularity")
+    popularityCounts Json? @map("popularity_counts")
+
     @@map("item")
 }
 

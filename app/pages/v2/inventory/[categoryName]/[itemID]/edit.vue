@@ -1,8 +1,8 @@
 <template lang="pug">
 div
 	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Edit")(class="md_max-w-[600px]").md_rounded-b-xl
-	div(v-if="item").flex.flex-col.items-center.justify-center.gap-y-8.mt-20
+		V2SharedHeaderSubheader(pageTitle="Edit")(class="md_max-w-[600px]").md_rounded-b-3xl
+	div(v-if="item").flex.flex-col.items-center.justify-center.gap-y-8.pt-10.mt-20
 		div.bg-white.w-80.h-80.rounded-xl.flex.flex-col.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
 			img(v-if="imageUrl" :src="imageUrl").absolute.inset-0.w-full.h-full.object-cover
 			label(

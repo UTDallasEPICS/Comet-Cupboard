@@ -1,9 +1,9 @@
 <template lang="pug">
 div
 	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Deal")(class="md_max-w-[600px]").md_rounded-b-xl
+		V2SharedHeaderSubheader(pageTitle="Deal")(class="md_max-w-[600px]").md_rounded-b-3xl
 	div.flex.flex-col.items-center.justify-center.gap-y-8.pt-10.mt-20
-		div.bg-white.w-80.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
+		div.bg-white.w-full.max-w-80.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
 			// Deal Tag 
 			div(v-if="dealExists").absolute.bg-utd-orange.rounded-tl-md.w-32.px-4.py-1.rounded-br-md.top-0.left-0.z-20
 				p.text-white.text-center.font-semibold {{ dealText }}
@@ -109,20 +109,10 @@ const deleteDeal = async () => {
 	navigateTo(`/v2/inventory/${currentCategory}`)
 }
 
-const markAsFree = async () => {
-	if (!item.value) return
+const markAsFree = () => {
+	if(!item.value) return 
 	actualCount.value = 1
 	adjustedCount.value = 0
-
-	await $fetch("/api/inventory/deal", {
-		method: "PUT",
-		body: {
-			itemID: item.value.itemID,
-			actualCount: 1,
-			adjustedCount: 0,
-		},
-	})
-	toggleDeal()
 }
 
 // --Page navigations for each button--
