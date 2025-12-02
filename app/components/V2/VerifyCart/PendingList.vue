@@ -2,11 +2,11 @@
 div.flex.flex-col.gap-y-4.min-w-72.min-h-12
 	div(v-if="pendingCartIDsAndAdjQTY.length === 0").flex.flex-row.p-1.grow.text-center.text-xl.text-black.justify-center.items-center.font-sans.font-semibold
 		p There are no carts
-	div(v-else)
+	div(v-else).gap-4
 		button(
 			v-for="pendingCart in pendingCartIDsAndAdjQTY"
 			@click="emit('update:select-cart', pendingCart.cartID)"
-		).w-72.h-12.rounded-lg.border.border-outlining-gray-v2.bg-white.border
+		).w-72.h-12.rounded-lg.border.border-outlining-gray-v2.bg-white.border.mb-3
 			div.flex.justify-center.items-center.mx-4
 				p.p-1.text-xl.text-center.font-sans.font-semibold {{ pendingCart.cartID }}
 </template>

@@ -1,12 +1,12 @@
 <template lang="pug">
 div.w-full.h-min.min-h-12.bg-white.border.border-outlining-gray-v2.flex.flex-col.rounded-lg.w-72.pt-2.px-4.sm_px-16
-	p.px-2.text-lg.text-center.font-semibold {{ cartID }}
+	p.px-2.text-lg.text-center.font-semibold.mb-3 {{ cartID }}
 	div(v-if="cartID != 'There are no carts currently selected'").h-full.rounded-xl.flex.flex-col.gap-y-4
 		div.flex.flex-col.items-center.gap-x-4.gap-y-4
-			div(v-for="warning in warnings").bg-yellow-warning-v2.w-full.flex.flex-row.items-center.rounded-lg.p-2
+			div(v-for="warning in warnings").bg-yellow-warning-v2.w-full.flex.flex-row.items-center.rounded-lg.p-2.gap-2
 				ExclamationTriangleIcon.min-w-8.max-w-8.aspect-square
 				p.text-base.font-medium {{ warning }}
-		div(style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))").grid.gap-4.justify-items-center
+		div(style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))").grid.gap-2.justify-items-center
 			CategoryItemsGrid(v-for="category in Object.keys(categoryCartItems)" :headingName="category").my-2
 				V2VerifyCartItemCard(
 					v-for="cartItem in categoryCartItems[category]"

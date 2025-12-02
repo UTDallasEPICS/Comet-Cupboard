@@ -7,17 +7,19 @@ div
 				div.flex.flex-row.my-4.md_my-8.flex-wrap.md_flex-nowrap.justify-center.md_justify-normal.grow
 					div(:class="(currentCartIDPreview === 'There are no carts currently selected' ? 'visible' : 'invisible hidden') + ' md_visible md_block'").md_mr-6.lg_mr-12
 						TransitionsFadeIn
-							div(v-if="showRejectedPopUp").flex.w-full(class="max-w-[300px]").h-10.bg-cart-red-v2.rounded-lg.font-medium.items-center.justify-center
+							div(v-if="showRejectedPopUp").flex.w-full(class="max-w-[300px]").h-10.bg-cart-red-v2.rounded-lg.font-medium.items-center.justify-center.mb-3
 								span Declined {{ oldCartID }}
 						TransitionsFadeIn
-							div(v-if="showAcceptedPopUp").flex.w-full(class="max-w-[300px]").h-10.bg-cart-green-v2.rounded-lg.font-medium.items-center.justify-center
+							div(v-if="showAcceptedPopUp").flex.w-full(class="max-w-[300px]").h-10.bg-cart-green-v2.rounded-lg.font-medium.items-center.justify-center.mb-3
 								span Accepted {{ oldCartID }}
 						V2VerifyCartPendingList(@update:select-cart="setCartIDPreview" :selectedCart="currentCartIDPreview")
 					button(
 						:class="(currentCartIDPreview === 'There are no carts currently selected' ? 'invisible hidden' : 'visible') + ' md_invisible md_hidden'"
 						@click="resetCartIDPreview"
-					).remove-button-effects.mr-auto.mb-2
-						XMarkIcon.size-10.stroke-black.hover_fill-utd-orange.hover_stroke-utd-orange
+					).remove-button-effects.mr-auto.mb-0
+						button.flex.items-center.gap-x-2
+							ArrowLeftIcon.w-4.h-4.stroke-2
+							p.text-base.text-cupboardv2-dg Back to carts
 					V2VerifyCartPreview(
 						:class="(currentCartIDPreview === 'There are no carts currently selected' ? 'invisible hidden' : 'visible') + ' md_visible md_flex'"
 						@update:verified-cart="resetCartIDPreview"
@@ -44,7 +46,7 @@ div
 </template>
 
 <script lang="ts" setup>
-import { XMarkIcon } from "@heroicons/vue/24/solid"
+import { ArrowLeftIcon } from "@heroicons/vue/24/solid"
 
 const currentCartIDPreview = ref<string>("There are no carts currently selected")
 const showRejectedPopUp = ref(false)

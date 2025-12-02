@@ -15,7 +15,6 @@ export default {
 				"outlining-gray-v2": "#b9b9b9",
 				"utd-gray-v2": "#f9f9f9",
 				"decline-red-v2": "#d20b0b",
-				"filter-gray-v2": "#4a4a4a",
 				"cart-red-v2": "#ffbaba",
 				"cart-green-v2": "#d2faca",
 				"yellow-warning-v2": "#ffd580",
