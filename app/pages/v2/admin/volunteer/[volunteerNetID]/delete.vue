@@ -6,28 +6,28 @@ div
 		V2SharedHeaderSubheader(pageTitle="Delete Volunteer")(class="md_max-w-[600px]").md_rounded-b-xl
 	
 	//- Warning message
-	div(class="md_max-w-[600px]").bg-yellow-warningv2.flex.flex-row.mx-auto.h-16.flex-grow.sm_h-24.md_rounded-2xl.mt-16.md_mt-20.w-full
+	div(class="md_max-w-[600px]").bg-yellow-warningv2.flex.flex-row.mx-auto.mt-16.md_mt-20.p-2
 		//- Warning Triangle Icon
-		div.flex.items-center.justify-center.h-full.aspect-square
-			ExclamationTriangleIcon(class="size-2/4")
+		div.flex.items-center.justify-center.h-8.aspect-square.my-auto
+			ExclamationTriangleIcon
 
 		//- Displays the message warning the admin about deleting the volunteer.
-		div(class="w-9/12").flex.items-center.font-medium.font-montserrat.h-full.text-sm.sm_text-xl
+		div.flex.items-center.text-center.p-2.font-medium
 			p Volunteer will lose all access to the Comet Cupboard!
 
-	div(class="w-11/12 lg_w-6/12").mx-auto
+	div(class="md_max-w-[600px]").mx-auto.mt-4
 		//- Prompt for deleting the specified volunteer
-		div.w-full.rounded-lg.bg-white.font-montserrat.flex.items-center.justify-center.mx-auto.rounded-xl.text-center.text-md.sm_text-3xl.h-80.lg_h-96.mt-4.drop-shadow-standard.p-2
-			p Are you sure you want to delete<br><span class="font-semibold">{{ state.deleteNetID }}</span> ?
+		div.w-full.bg-white.flex.items-center.rounded-xl.text-center.h-80.drop-shadow-standard.font-semibold.justify-center
+			p Are you sure you want to delete<br><span class="font-bold">{{ volunteerToBeDeleted }}</span> ?
 
 		//- Buttons for canceling or confirming the deletion of the specified volunteer
-		div.w-full.flex.flex-row.mt-3.lg_mt-8.mx-auto.h-11.sm_h-16.mb-2
+		div.w-full.flex.flex-row.mt-3
 			//- Cancel button: if this button is pressed, then the deletion of the specified volunteer will be canceled.
-			button(@click="cancel").bg-cupboardv2-dg.flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-full.remove-button-effects
+			button(@click="cancel").bg-cupboardv2-dg.block.text-white.rounded-xl.w-32.h-12.p-2.mx-auto.text-sm
 				p Cancel
 
 			//- Delete button: if this button is pressed, then the specified volunteer will be deleted.
-			button(@click="removeVolunteer").bg-utd-orange.flex.items-center.justify-center.text-base.sm_text-xl.font-semibold.font-montserrat.text-white.rounded-xl.w-32.sm_w-52.p-2.h-full.ml-auto.remove-button-effects
+			button(@click="removeVolunteer(volunteerToBeDeleted)").bg-utd-orange.block.text-white.rounded-xl.w-32.h-12.p-2.mx-auto.text-sm
 				p Yes, Delete
 </template>
 
@@ -38,7 +38,8 @@ import { ExclamationTriangleIcon } from "@heroicons/vue/24/solid" //Icon used fo
 import { useRouter } from "vue-router"
 const router = useRouter()
 
-const state = history.state //The netID of the specified volunteer is stored in this state (the state at the top of the history stack). This is used to make sure no accidental deletions take place.
+const route = useRoute()
+const volunteerToBeDeleted = computed(() => route.params.volunteerNetID)//NetID of the volunteer to be deleted
 
 //Execute this function if the cancel button is pressed:
 function cancel() {
@@ -46,12 +47,12 @@ function cancel() {
 }
 
 //Function for deleting the specified volunteer:
-const removeVolunteer = async () => {
+const removeVolunteer = async (volunteerNetID: string | string[] | undefined) => {
 	try {
 		//Deletes the specified volunteer from the list of volunteers based on the given netID:
 		await $fetch("/api/users/volunteer", {
 			method: "DELETE",
-			body: JSON.stringify({ netID: state.deleteNetID }),
+			body: JSON.stringify({ netID: volunteerNetID }),
 		})
 	} catch (error) {
 		//Shouldn't happen when operating the website normally.

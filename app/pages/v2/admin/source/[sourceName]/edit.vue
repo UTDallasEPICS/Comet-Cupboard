@@ -8,10 +8,6 @@ div
 
 	//- Displays the list of fields for the specified source.
 	V2AdminDashboardEditSourceDisplay(:sourceName="currentSource").mt-20
-
-	//- Buttons for either deleting the specified volunteer or moving back to the sources page.
-	div.min-w-72.flex.flex-row.mt-3.lg_mt-8.mx-auto.h-11.lg_h-20
-		//- Delete button: if this button is pressed, then move to the page for deleting the specified source.
 </template>
 
 <script lang="ts" setup>

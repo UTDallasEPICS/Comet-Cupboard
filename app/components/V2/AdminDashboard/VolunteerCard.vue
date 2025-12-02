@@ -1,20 +1,20 @@
 <template lang="pug">
 
 //- Card representing the specified volunteer
-div(class="w-11/12").flex.flex-row.rounded-xl.mx-auto.drop-shadow-standard.h-12.lg_h-20.bg-white.mt-2
+div.w-full.flex.rounded-xl.drop-shadow-standard.bg-white.p-2
   
   //- Volunteer icon
-  div.flex.items-center.justify-center.h-full.aspect-square
-    UserIcon(class="size-1/2")
+  div.aspect-square
+    UserIcon
   
   //- Displays the net ID of the specified volunteer on the left of the card.
-  div(class="w-7/12").flex.items-center.font-bold.font-montserrat.h-full.text-sm.lg_text-3xl
+  div.font-bold.h-full.flex.items-center.ml-2
     p {{volunteerID}}
   
   //- X button: if pressed, then move to the page for deleting the specified volunteer.
-  div.flex.items-center.justify-center.ml-auto.h-full.aspect-square
-    button(class="size-1/2" @click="deleteVolunteer(volunteerID)").remove-button-effects
-      XMarkIcon
+  button(@click="deleteVolunteer(volunteerID)").remove-button-effects.aspect-square.w-8.ml-auto
+    XMarkIcon
+
 </template>
 
 <script lang="ts" setup>
@@ -31,6 +31,6 @@ defineProps({
 //Execute this function if the X button is pressed:
 function deleteVolunteer(netID: string|undefined)
 {
-  router.push({path: "/v2/admin/volunteer/delete", state: {deleteNetID: netID}});//Navigates to the page for deleting the specified volunteer.
+  navigateTo({path: `/v2/admin/volunteer/${netID}/delete`});//Navigates to the page for deleting the specified volunteer.
 }
 </script>

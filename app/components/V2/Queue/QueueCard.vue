@@ -1,6 +1,6 @@
 <template lang="pug">
 //- Card representing the student in the queue
-div.w-full.flex.flex-row.flex-wrap.gap-x-4.items-center.rounded-xl.mx-auto.drop-shadow-standard.bg-white.p-2
+div.w-full.flex.flex-row.flex-wrap.gap-x-4.items-center.rounded-xl.drop-shadow-standard.bg-white.p-2
     
     //- Displays the student's net ID at the left of the card
     div.font-bold.h-full.text-nowrap.min-w-28

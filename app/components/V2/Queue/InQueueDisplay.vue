@@ -7,7 +7,7 @@ div.min-w-72.flex.flex-col.flex-grow.border-2.border-utd-green.rounded-xl.overfl
         p In Queue
     
     //- No matter what if the queue is empty, display a message that it is empty
-    div(v-if="queue.length == 0").w-full.p-4.bg-cupboardv2-2elg.flex.items-center.justify-center.ml-auto.mr-auto.rounded-xl.text-center.h-72
+    div(v-if="queue.length == 0").w-full.p-4.bg-cupboardv2-2elg.flex.items-center.justify-center.rounded-xl.text-center.h-72
         p No students waiting in the queue at this time
     
     //- For volunteers, display the first 5 people in the queue with control elements
@@ -16,7 +16,7 @@ div.min-w-72.flex.flex-col.flex-grow.border-2.border-utd-green.rounded-xl.overfl
             V2QueueCard(:identification="queueItem" :position="index + 1")
     
     //- For students, displays the number of students in the queue:
-    div(v-else).w-full.p-4.bg-cupboardv2-2elg.flex.flex-col.items-center.justify-center.h-9.rounded-xl.mx-auto
+    div(v-else).w-full.p-4.bg-cupboardv2-2elg.flex.items-center.justify-center.h-9.rounded-xl
         p # of students: {{queue.length}}
 </template>
 
