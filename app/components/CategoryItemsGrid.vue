@@ -1,13 +1,13 @@
 <template lang="pug">
 div
-	div(
+	button(
 		@click="show = !show"
-	).bg-utd-orange.text-white.text-lg.font-semibold.flex.flex-row.justify-between.items-center.rounded-xl.px-4.py-1.h-8.w-72
+	).bg-utd-orange.text-white.text-lg.font-semibold.flex.flex-row.justify-between.items-center.rounded-lg.px-4.py-1.h-8.w-72.cursor-pointer
 		p {{ headingName }}
-		ChevronDownIcon(v-if="!show").size-6.fill-white.stroke-white
-		ChevronUpIcon(v-if="show").size-6.fill-white.stroke-white
+		ChevronDownIcon(v-if="!show").size-8.fill-white.stroke-white
+		ChevronUpIcon(v-if="show").size-8.fill-white.stroke-white
 	TransitionsDropDown
-		div(v-if="show" style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))").my-2.grid.place-items-center
+		div(v-if="show" style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))").grid.gap-4.place-items-center.mt-1
 			slot
 </template>
 

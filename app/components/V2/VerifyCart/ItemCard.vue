@@ -1,7 +1,10 @@
 <template lang="pug">
 div.bg-utd-gray-v2.h-36.border.border-outlining-gray-v2.px-2.py-1.rounded-lg.flex.justify-between.items-center
-    img(:src="`/api/image/${imgName}`").min-w-24.max-w-24.aspect-square
-    div.mx-1.flex.flex-col.gap-y-0.w-full.leading-none.font-sans.mx-0
+    div.min-w-24.max-w-24.aspect-square.relative
+        img(:src="`/api/image/${imgName}`")
+        div(v-if="dealExists").absolute.bg-utd-orange.rounded-br-lg.w-16.px-1.top-0.left-0
+            p.text-white.text-center.text-sm {{ dealText }}
+    div.mx-1.flex.flex-col.gap-y-0.w-full.leading-none.mx-0
         p.text-left.ml-1 {{ name }}
         div.border-black.border-t
         div.flex.flex-row.justify-between
