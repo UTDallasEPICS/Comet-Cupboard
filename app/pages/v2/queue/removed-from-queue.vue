@@ -18,19 +18,6 @@ div
 <script lang="ts" setup>
 // Moves the student back to the login page.
 const logout = async () => {
-	try {
-		await $fetch("/api/cart/cart", {
-			method: "DELETE",
-		})
-	} catch (err) {
-		// We don't care about this error, we just don't want this to stop us though
-	}
-
-	const netIDCookie = useCookie("netID")
-	const accessCookie = useCookie("AccessPermission")
-	netIDCookie.value = null
-	accessCookie.value = null
-
 	reloadNuxtApp()
 
 	await navigateTo("/")

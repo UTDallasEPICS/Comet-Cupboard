@@ -81,7 +81,7 @@ if (import.meta.client) {
 			// 	await navigateTo("/queue")
 			// }
 			if (type === "QUEUE_DELETE") {
-				await navigateTo("/v2/queue/removed-from-queue")
+				await removeFromQueue()
 			} else if (type === "QUEUE_MOVE_INSIDE") {
 				await navigateTo("/shopping")
 				reloadNuxtApp()
@@ -96,7 +96,8 @@ onBeforeUnmount(() => {
 	}
 })
 
-const logout = async () => {
+//This function removes the student from the queue and sends them to the Removed From Queue page:
+const removeFromQueue = async () => {
 	try {
 		await $fetch("/api/cart/cart", {
 			method: "DELETE",
@@ -122,8 +123,7 @@ const logout = async () => {
 	netIDCookie.value = null
 	accessCookie.value = null
 
+	await navigateTo("/v2/queue/removed-from-queue")
 	await reloadNuxtApp()
-
-	await navigateTo("/")
 }
 </script>
