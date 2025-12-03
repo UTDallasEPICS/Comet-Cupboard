@@ -8,7 +8,7 @@ div.w-full.flex.rounded-xl.drop-shadow-standard.bg-white.p-2
     UserIcon
   
   //- Displays the net ID of the specified volunteer on the left of the card.
-  div.font-bold.h-full.flex.items-center.ml-2
+  div.font-bold.h-full.flex.items-center.ml-2.pr-1
     p {{volunteerID}}
   
   //- X button: if pressed, then move to the page for deleting the specified volunteer.

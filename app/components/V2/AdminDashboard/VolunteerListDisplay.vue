@@ -1,6 +1,6 @@
 <template lang="pug">
 //- Display box for displaying the list of volunteers and a prompt to assign a volunteer
-div.min-w-72.flex.flex-col.border-2.border-utd-green.rounded-xl.bg-white.p-4.gap-y-4
+div.flex.flex-col.border-2.border-utd-green.rounded-xl.bg-white.p-4.gap-y-4
 
     //- Input form for entering the net ID of the volunteer to be added.
     div(class="lg_w-[600px]").flex.flex-row.mx-auto.h-12.gap-x-3

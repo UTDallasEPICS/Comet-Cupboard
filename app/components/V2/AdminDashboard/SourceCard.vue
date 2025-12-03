@@ -4,7 +4,7 @@
 div.w-full.flex.rounded-xl.drop-shadow-standard.bg-white.p-2
   
   //- Displays the name of the specified source on the left of the card.
-  div.font-bold.h-full.flex.items-center
+  div.font-bold.h-full.flex.items-center.pr-1
     p {{sourceName}}
   
   //- Edit button: if this button is pressed, move to the page for editing fields fo the specified source.

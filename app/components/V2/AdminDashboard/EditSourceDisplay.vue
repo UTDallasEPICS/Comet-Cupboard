@@ -1,6 +1,6 @@
 <template lang="pug">
 //- Display box for displaying the list of fields for the specified source and a prompt to add a field
-div.min-w-72.flex.flex-col.border-2.border-utd-green.rounded-xl.bg-white.p-4.gap-y-4
+div.flex.flex-col.border-2.border-utd-green.rounded-xl.bg-white.p-4.gap-y-4
 
     //- Navigate Back Button: clicking or tapping this button will take you to back to the Sources page:
     V2SharedNavigateBackButton(backTo="Sources" @click="goToSourcesPage").remove-button-effects
