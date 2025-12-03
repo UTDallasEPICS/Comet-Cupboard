@@ -26,7 +26,7 @@ onMounted(async () => {
 			} catch (err) {
 				//We don't care about this error, we just don't want this to stop us though
 			}
-			await navigateTo("/queue")
+			await navigateTo("/v2/queue")
 		} else {
 			await navigateTo("/shopping")
 		}
