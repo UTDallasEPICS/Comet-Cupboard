@@ -80,7 +80,7 @@ const { data: sources } = await useFetch("/api/controls/sources")
 const fields = ref<string[]>([])
 const fieldInputs = ref<Record<string, string>>({})
 const inventoryStore = useInventoryStore()
-const changedItems = computed(() => inventoryStore.changedItems)
+const changedItems = computed(() => inventoryStore.changedList)
 const windowWidth = ref(0)
 
 // --Page navigations for each button--

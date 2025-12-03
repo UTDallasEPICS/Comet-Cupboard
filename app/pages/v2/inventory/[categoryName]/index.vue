@@ -63,7 +63,7 @@ div
 							@deleteItem="(item) => openDeleteForm(item)"
 							@editDeal="(item) => openDealForm(item, category)"
 							@editItem="(item) => openEditForm(item, category)"
-							:changeCount="inventoryCountChanges[item.itemID] ?? 0"
+							:changeCount="inventoryStore.changes[item.itemID]?.newCount - inventoryStore.changes[item.itemID]?.oldCount || 0"
 							:currentCount="item.quantity"
 							:imgName="item.imgName"
 							:itemDeal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
@@ -79,7 +79,7 @@ div
 							@deleteItem="(item) => openDeleteForm(item)"
 							@editDeal="(item) => openDealForm(item, category)"
 							@editItem="(item) => openEditForm(item, category)"
-							:changeCount="inventoryCountChanges[item.itemID] ?? 0"
+							:changeCount="getChangeCount(item.itemID)"
 							:currentCount="item.quantity"
 							:imgName="item.imgName"
 							:itemDeal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
@@ -90,7 +90,7 @@ div
 					// Submit button
 					div.sticky.bottom-8.right-4.z-20.flex.justify-end.space-x-2.sm_ml-auto
 						button(
-							v-if="JSON.stringify(inventoryCountChanges) === '{}'"
+							v-if="Object.keys(inventoryStore.changes || {}).length === 0"
 							disabled
 						).bg-cupboard-dg.w-60.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
 							p.text-white.text-xl.font-bold No Changes
@@ -140,7 +140,6 @@ import { useInventoryStore } from "~/stores/useInventoryStore"
 import Fuse from "fuse.js"
 
 const searchTerm = ref("")
-const inventoryCountChanges = ref({})
 const route = useRoute()
 const currentCategory = computed(() => route.params.categoryName)
 const inventoryStore = useInventoryStore()
@@ -167,34 +166,25 @@ watch(items, (val) => {
 // --Page navigations for each button--
 // Back Button
 const goToCategoriesPage = () => {
-	navigateTo(`/v2/inventory/category-select`)
+	if(inventoryStore.totalChanges > 0) {
+		navigateTo(`/v2/inventory/return-verify?category=${currentCategory.value}`)
+	}
+	else {
+		inventoryStore.resetChanges()
+		navigateTo(`/v2/inventory/category-select`)
+	}
 }
 // Add Button
 const goToAddPage = () => {
-	const currentCategory = route.params.categoryName
-	navigateTo(`/v2/inventory/${currentCategory}/add`)
+	// To avoid unexpected paths
+	const cat = currentCategory.value || route.params.categoryName
+	navigateTo(`/v2/inventory/${cat}/add`)
 }
 // Review Changes Button
 const goToReviewPage = () => {
-	const currentCategory = route.params.categoryName
-	const changesArray = Object.entries(inventoryCountChanges.value)
-		.map(([itemID, countChange]) => {
-			const original = items.value.find((i) => i.itemID === itemID)
-			return {
-				id: itemID,
-				oldCount: original.quantity,
-				newCount: original.quantity + countChange,
-				name: original.name,
-				imgName: original.imgName || "",
-			}
-		})
-		.filter(Boolean)
-
-	// Store changes into store
-	inventoryStore.$patch({
-		changedItems: changesArray,
-	})
-	navigateTo(`/v2/inventory/${currentCategory}/review-changes`)
+	// To avoid unexpected paths
+	const cat = currentCategory.value || route.params.categoryName
+	navigateTo(`/v2/inventory/${cat}/review-changes`)
 }
 
 // Determining when to display rectangle cards and square cards
@@ -242,9 +232,6 @@ const filteredCategoryItems = computed(() => {
 			const aScore = computeExponentialWeight(a.popularityCounts || {})
 			const bScore = computeExponentialWeight(b.popularityCounts || {})
 
-			console.log("Item A:", a.name, "Created:", a.createdAt, "Counts:", a.popularityCounts, "Score:", aScore)
-			console.log("Item B:", b.name, "Created:", b.createdAt, "Counts:", b.popularityCounts, "Score:", bScore)
-
 			return bScore - aScore // descending order
 		})
 	// Sort by newest items
@@ -279,16 +266,35 @@ function computeExponentialWeight(counts: any) {
 	return score
 }
 
-const updateItemChangeAmount = (itemID, amountChange) => {
-	if (!(itemID in inventoryCountChanges.value)) {
-		inventoryCountChanges.value[itemID] = 0
-	}
-	if (amountChange) {
-		inventoryCountChanges.value[itemID] += amountChange
+const updateItemChangeAmount = (itemID: string, amountChange: number) => {
+	const item = reactiveItems.value.find(i => i.itemID === itemID)
+	if(!item) return 
+
+	const existingChange = inventoryStore.changes[itemID]
+	const oldCount = item.quantity 
+	const currentNewCount = existingChange?.newCount ?? oldCount
+	const newCount = currentNewCount + amountChange 
+
+	if(newCount === oldCount) {
+		inventoryStore.removeItem(itemID)
+		return 
 	}
 
-	if (inventoryCountChanges.value[itemID] === 0) {
-		inventoryCountChanges.value = Object.fromEntries(Object.entries(inventoryCountChanges.value).filter(([key]) => key !== itemID))
-	}
+	inventoryStore.updateItemCount({
+		id: itemID,
+		oldCount,
+		newCount,
+		name: item.name,
+		imgName: item.imgName
+	})
+}
+
+// Helper to get per-item change count
+const getChangeCount = (itemID: string) => {
+	const entry = inventoryStore.changes?.[itemID]
+	if(!entry) return 0
+	const newCount = entry.newCount ?? 0 
+	const oldCount = entry.oldCount ?? 0 
+	return newCount - oldCount
 }
 </script>
