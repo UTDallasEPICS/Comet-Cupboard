@@ -4,7 +4,6 @@ div
 	//- Header for the Edit Source page.
 	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
 		V2SharedHeaderSubheader(pageTitle="Edit Source")(class="md_max-w-[600px]").md_rounded-b-xl
-	
 
 	//- Displays the list of fields for the specified source.
 	V2AdminDashboardEditSourceDisplay(:sourceName="currentSource").mt-20

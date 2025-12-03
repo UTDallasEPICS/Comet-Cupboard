@@ -1,14 +1,14 @@
 <template lang="pug">
 //- Display box for displaying the list of volunteers and a prompt to assign a volunteer
-div.flex.flex-col.border-2.border-utd-green.rounded-xl.bg-white.p-4.gap-y-4
+div(class="max-w-[800px]").flex.flex-col.mx-auto.rounded-xl.bg-white.p-4.gap-y-4
 
     //- Input form for entering the net ID of the volunteer to be added.
-    div(class="lg_w-[600px]").flex.flex-row.mx-auto.h-12.gap-x-3
-        input(placeholder="Volunteer NetID" type="text" v-model="newVolunteerNetID" @keydown.enter="assignVolunteer").w-full.outline.outline-black.pl-2.bg-white.rounded-xl
+    div.max-w-96.flex.flex-row.mx-auto.h-8.gap-x-3
+        div.bg-white.h-full.rounded-md.flex.items-center.w-full.border.border-gray-300.transition-all.duration-50(class="focus-within_border-blue-400 focus-within_drop-shadow-standard")
+            input(placeholder="Volunteer NetID" type="text" v-model="newVolunteerNetID" @keydown.enter="assignVolunteer").w-full.border-none.outline-none.pl-2
         
         //- Add button: if either this button is pressed or the Enter key is pressed, then the volunteer with the inputted net ID will be added.
-        button(@click="assignVolunteer").bg-utd-green.text-white.rounded-xl.w-32.p-2.text-sm
-            p + Add
+        V2SharedAddButton(@click="assignVolunteer").h-full
     
     //- If at least 1 volunteer is assigned, display the list of volunteers. Each volunteer is represented as a card.
     div(v-if="volunteers?.length > 0").w-full.p-4.bg-cupboardv2-2elg.overflow-auto.rounded-xl.h-72.flex.flex-col.gap-y-4

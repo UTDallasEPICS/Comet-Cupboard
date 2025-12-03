@@ -14,8 +14,8 @@ div
 		div.bg-white.w-full.max-w-96.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative
 			// Delete confirmation text
 			div.flex.flex-col.items-center.justify-center.text-center.px-8.w-full
-				p.text-3xl.text-black.font-normal.break-words Are you sure you want to delete
-				p.text-4xl.text-black.font-bold.break-words {{ sourceToBeDeleted + "?" }}
+				p.text-2xl.text-black.font-normal.break-words Are you sure you want to delete
+				p.text-3xl.text-black.font-bold.break-words {{ sourceToBeDeleted + "?" }}
 	
 		//- Buttons for canceling or confirming the deletion of the specified source
 		div.flex.flex-row.gap-x-4.mt-20
