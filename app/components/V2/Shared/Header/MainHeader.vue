@@ -21,7 +21,7 @@ div.relative.z-40
 							NuxtLink(@click.native="close" :to="inventoryPath").cursor-pointer.hover_underline
 								| Inventory Management
 							hr(class="border-[1.3px]").w-full.mt-4
-						MenuItem(v-if="permissions['PUBLIC']" as="div").w-full
+						MenuItem(as="div").w-full
 							NuxtLink(@click.native="close" :to="queuePath").cursor-pointer.hover_underline
 								| Queue
 							hr(class="border-[1.3px]").w-full.mt-4
