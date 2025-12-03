@@ -8,7 +8,7 @@ div.relative.z-40
 				MenuButton.my-auto.remove-button-effects
 					Bars3Icon.size-11.fill-white.stroke-white.cursor-pointer.hover_fill-utd-orange.hover_stroke-utd-orange
 				TransitionsDropDown
-					MenuItems(class="h-[calc(100vh-80px)]").z-50.-left-4.flex.flex-col.items-center.text-center.absolute.top-20.w-screen.sm_w-80.text-2xl.bg-white.gap-4.p-4
+					MenuItems(class="h-[calc(100vh-80px)]").z-50.-left-4.flex.flex-col.items-center.text-center.absolute.top-20.w-screen.sm_w-80.text-2xl.bg-white.gap-4.p-4.-mt-5
 						MenuItem(v-if="permissions['SHOPPING']" as="div").w-full
 							NuxtLink(@click.native="close" :to="shoppingPath").cursor-pointer.hover_underline
 								| Shopping
