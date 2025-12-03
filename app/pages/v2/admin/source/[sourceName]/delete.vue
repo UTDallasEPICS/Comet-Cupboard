@@ -1,39 +1,33 @@
+
 <template lang="pug">
 //- Delete Source Page: Page for deleting the specified source.
 div
 	//- Header for the Delete Source page.
 	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Delete Source")(class="md_max-w-[600px]").md_rounded-b-xl
-	
-	//- Warning message
-	div(class="md_max-w-[600px]").bg-yellow-warningv2.flex.flex-row.mx-auto.mt-16.md_mt-20.p-2
-		//- Warning Triangle Icon
-		div.flex.items-center.justify-center.h-8.aspect-square.my-auto
-			ExclamationTriangleIcon
-
-		//- Displays the message warning the admin about deleting the volunteer.
-		div.flex.items-center.text-center.p-2.font-medium
-			p By removing this source, you won’t be able to access it anymore!
-
-	div(class="md_max-w-[600px]").mx-auto.mt-4
+		V2SharedHeaderSubheader(pageTitle="Delete Source")(class="md_max-w-[600px]").md_rounded-b-3xl
+    
+	div.flex.flex-col.items-center.justify-center.gap-y-8.pt-10.mt-10
+		//- Warning message: Displays the message warning the admin about deleting the source.
+		V2SharedStatusMessageWarning(warningMessage="By removing this source, you won’t be able to access it anymore!")
+        
 		//- Prompt for deleting the specified source
-		div.w-full.bg-white.flex.items-center.rounded-xl.text-center.h-80.drop-shadow-standard.font-semibold.justify-center
-			p Are you sure you want to delete<br><span class="font-bold">{{ sourceToBeDeleted }}</span> ?
-
+		div.bg-white.w-full.max-w-96.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative
+			// Delete confirmation text
+			div.flex.flex-col.items-center.justify-center.text-center.px-8.w-full
+				p.text-3xl.text-black.font-normal.break-words Are you sure you want to delete
+				p.text-4xl.text-black.font-bold.break-words {{ sourceToBeDeleted + "?" }}
+	
 		//- Buttons for canceling or confirming the deletion of the specified source
-		div.w-full.flex.flex-row.mt-3
+		div.flex.flex-row.gap-x-4.mt-20
 			//- Cancel button: if this button is pressed, then the deletion of the specified source will be canceled.
-			button(@click="cancel(sourceToBeDeleted)").bg-cupboardv2-dg.block.text-white.rounded-xl.w-32.h-12.p-2.mx-auto.text-sm
-				p Cancel
-
+			button(@click="cancel(sourceToBeDeleted)").bg-cupboardv2-dg.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
+				p.text-white.text-xl.font-bold Cancel
 			//- Delete button: if this button is pressed, then the specified source will be deleted.
-			button(@click="removeSource(sourceToBeDeleted)").bg-utd-orange.block.text-white.rounded-xl.w-32.h-12.p-2.mx-auto.text-sm
-				p Yes, Delete
+			button(@click="removeSource(sourceToBeDeleted)").bg-utd-orange.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
+				p.text-white.text-xl.font-bold Yes, Delete
 </template>
 
 <script lang="ts" setup>
-import { ExclamationTriangleIcon } from "@heroicons/vue/24/solid" //Icon used for warning message
-
 //Router used for navigating back to the page where you edit the specified source or the Sources page:
 const router = useRouter()
 
