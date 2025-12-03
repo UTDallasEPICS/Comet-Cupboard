@@ -7,7 +7,7 @@ div
 	
 	div.flex.flex-col.items-start.justify-center.gap-y-5.mt-20
 		//- Displays the estimated wait time at the top of the page for the student in the queue: the time will be empty for now since the function to implement the timer is not present. 
-		div(v-if="!permissions['VERIFY_CART']").flex.items-center.justify-center.flex-grow.w-full
+		div(v-if="!permissions['VERIFY_CART'] && !permissions['SHOPPING']").flex.items-center.justify-center.flex-grow.w-full
 			V2QueueEstimatedWaitTimeDisplay(time="00:00:00")
 
 		//- Displays the # of students in the cupboard at the middle of the page:
