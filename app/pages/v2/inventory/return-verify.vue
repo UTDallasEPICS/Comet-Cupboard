@@ -21,7 +21,6 @@ import { useRoute, navigateTo } from "#imports"
 
 const emit = defineEmits(["submit"])
 const route = useRoute()
-const rawCategory = route.query.categoryName ?? route.query.category ?? ""
 const currentCategory = computed(() => {
 	const cat = route.query.categoryName ?? route.query.category ?? ""
 	return Array.isArray(cat) ? cat[0] : String(cat)

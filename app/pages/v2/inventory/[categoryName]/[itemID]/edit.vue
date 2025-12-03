@@ -3,7 +3,7 @@ div
 	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
 		V2SharedHeaderSubheader(pageTitle="Edit")(class="md_max-w-[600px]").md_rounded-b-3xl
 	div(v-if="item").flex.flex-col.items-center.justify-center.gap-y-8.pt-10.mt-20
-		div.bg-white.w-80.h-80.rounded-xl.flex.flex-col.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
+		div.bg-white.w-full.max-w-80.h-80.rounded-xl.flex.flex-col.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
 			img(v-if="imageUrl" :src="imageUrl").absolute.inset-0.w-full.h-full.object-cover
 			label(
 				:class="{ 'bg-cupboardv2-lg bg-opacity-60': imageUrl }"
@@ -19,8 +19,8 @@ div
 				type="text"
 				v-model="itemName"
 				@input="validateInput"
-			).w-80.bg-transparent.outline-none.border-none.text-lg.text-left.text-black
-			div(class="h-[2px]").bg-cupboardv2-dg.w-80.rounded-xl.-mt-1
+			).w-full.w-80.bg-transparent.outline-none.border-none.text-lg.text-left.text-black
+			div(class="h-[2px]").bg-cupboardv2-dg.w-72.rounded-xl.-mt-1
 		Listbox(v-model="selectedCategory" v-slot="{ open }")
 			div.relative
 				ListboxButton.modal-button.flex.flex-row.w-72.bg-white.text-lg.px-4.items-center.text-left.font-normal.border-2.border-cupboardv2-lg
