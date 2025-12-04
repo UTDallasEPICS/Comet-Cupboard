@@ -46,7 +46,7 @@ div.relative.z-40
 				span(v-if="cartTotalCount != 0").px-2.text-xl.absolute.font-bold.-top-2.rounded-full.-right-2.text-xl.text-white.bg-utd-orange {{ cartTotalCount }}
 
 			// for now this is a link to the sign in page (test + nowhere else yet)
-			button(@click="logout").remove-button-effects.ml-4
+			button(v-if="permissions['PUBLIC']" @click="logout").remove-button-effects.ml-4
 				ArrowRightStartOnRectangleIcon.size-10.min-w-10.fill-white.hover_fill-utd-orange
 </template>
 
