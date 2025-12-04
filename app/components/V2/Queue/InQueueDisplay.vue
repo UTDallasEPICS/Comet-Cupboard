@@ -1,6 +1,6 @@
 <template lang="pug">
 //- Queue display:
-div.min-w-72.flex.flex-col.flex-grow.border-2.border-utd-green.rounded-xl.overflow-auto.bg-white.px-4.pb-4
+div.min-w-72.flex.flex-col.flex-grow.rounded-xl.overflow-auto.bg-white.px-4.pb-4
     
     //- Displays the heading for the queue display:
     div.text-utd-green.flex.items-center.justify-center.text-xl.font-bold.w-full.h-10

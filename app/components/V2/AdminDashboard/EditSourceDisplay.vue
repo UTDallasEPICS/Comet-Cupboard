@@ -16,7 +16,7 @@ div(class="max-w-[800px]").flex.flex-col.mx-auto.rounded-xl.bg-white.p-4.gap-y-4
     //- Input form for entering the name of the field to be added for the specified source.
     div.max-w-96.flex.flex-row.mx-auto.h-8.gap-x-3
         div.bg-white.h-full.rounded-md.flex.items-center.w-full.border.border-gray-300.transition-all.duration-50(class="focus-within_border-blue-400 focus-within_drop-shadow-standard")
-            input(placeholder="Field Name" type="text" v-model="fieldLabel" @keydown.enter="addFieldToSource(sourceName)").w-full.border-none.outline-none.pl-2
+            input(placeholder="Field Name" type="text" v-model="fieldLabel" @keydown.enter="addFieldToSource(sourceName)").w-full.outline-none.pl-2
         
         //- Add button: if either this button is pressed or the Enter key is pressed, then the field with the inputted name will be added to the specified source.
         V2SharedAddButton(@click="addFieldToSource(sourceName)").h-full

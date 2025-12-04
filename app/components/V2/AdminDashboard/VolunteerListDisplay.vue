@@ -5,7 +5,7 @@ div(class="max-w-[800px]").flex.flex-col.mx-auto.rounded-xl.bg-white.p-4.gap-y-4
     //- Input form for entering the net ID of the volunteer to be added.
     div.max-w-96.flex.flex-row.mx-auto.h-8.gap-x-3
         div.bg-white.h-full.rounded-md.flex.items-center.w-full.border.border-gray-300.transition-all.duration-50(class="focus-within_border-blue-400 focus-within_drop-shadow-standard")
-            input(placeholder="Volunteer NetID" type="text" v-model="newVolunteerNetID" @keydown.enter="assignVolunteer").w-full.border-none.outline-none.pl-2
+            input(placeholder="Volunteer NetID" type="text" v-model="newVolunteerNetID" @keydown.enter="assignVolunteer").w-full.outline-none.pl-2
         
         //- Add button: if either this button is pressed or the Enter key is pressed, then the volunteer with the inputted net ID will be added.
         V2SharedAddButton(@click="assignVolunteer").h-full
