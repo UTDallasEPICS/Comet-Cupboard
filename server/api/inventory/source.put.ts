@@ -14,12 +14,15 @@ export default defineEventHandler(async (event) => {
 
 	const { source } = result.data
 
+	//Check for an archived source with the same name as the source being added:
 	const archivedSource = await event.context.prisma.source.findUnique({
 		where: {
 			name: source,
 			archived: true,
 		},
 	})
+
+	//If there is an archived source that has the same name as the source being added, unarchive that source:
 	if (archivedSource) {
 		const newSource = await event.context.prisma.source.update({
 			where: {
@@ -33,6 +36,7 @@ export default defineEventHandler(async (event) => {
 		return newSource
 	}
 	
+	//Else, create a new source:
 	try {
 		const newSource = await event.context.prisma.source.create({
 			data: {

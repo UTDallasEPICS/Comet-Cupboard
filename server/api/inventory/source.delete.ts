@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
 
     const { source } = result.data
 
+    //Delete (archive) an existing source with the given name:
     const sourceToBeDeleted = await event.context.prisma.source.findUnique({
         where: {
             name: source,
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
     if (!sourceToBeDeleted) {
 		throw createError({ statusCode: 500, statusMessage: "Failed to find source" })
 	}
-    const newSource = await event.context.prisma.source.update({
+    const deletedSource = await event.context.prisma.source.update({
         where: {
             name: source,
             archived: false,
@@ -32,5 +33,5 @@ export default defineEventHandler(async (event) => {
             archived: true,
         },
     })
-    return newSource
+    return deletedSource
 })

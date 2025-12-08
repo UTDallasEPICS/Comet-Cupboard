@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 		throw createError({ statusCode: 403, statusMessage: `User ${event.context.user.netID} is unauthorized to view archived sources` })
 	}
 
-	// retrieve the list of sources from the db
+	// retrieve the list of sources (including archived sources if allowed by includeArchived variable) from the db
 	const sources = await event.context.prisma.source.findMany({
 		where: {
 			...((includeArchived === "false") ? { archived: false } : {}),
