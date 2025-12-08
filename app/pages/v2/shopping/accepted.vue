@@ -1,52 +1,79 @@
-<template>
-	<div class="min-h-screen bg-gray-100 font-montserrat flex justify-center pt-12 pb-12 px-4">
-		<div class="w-full max-w-[320px] relative">
-			<!-- orange banner -->
-			<V2ShoppingOrangeBanner title="Pending Cart" :topOffset="80" />
+<template lang="pug">
+//- banner
+V2ShoppingOrangeBanner(
+  title="Accepted"
+  :topOffset="80"
+)
 
-			<!-- checkout flow  -->
-			<div ref="checkoutRef" class="w-full flex justify-center mt--100" :style="{ height: checkoutHeight + 'px' }">
-				<V2ShoppingCheckoutFlow class="w-full" :ellipseColors="ellipseColors" />
-			</div>
-
-			<!-- Status Text -->
-			<div class="mt-[20px] flex flex-col items-center">
-				<h2 class="font-bold text-[25px] text-black">Status</h2>
-				<p class="font-bold text-[25px] text-[#154734] mt-2">Accepted</p>
-			</div>
-
-			<!-- Full-Width Accepted Banner with Countdown -->
-			<div class="mt-[40px]">
-				<V2ShoppingAcceptedMessage :countdown="countdown" />
-			</div>
-		</div>
-	</div>
+//- checkoutflow status
+div.min-h-screen.bg-gray-100.font-montserrat.flex.justify-center.relative
+  div.w-full.relative(style="max-width: 320px")
+    
+    div(
+      ref="checkoutRef"
+      class="w-full flex justify-center mt-7"
+      :style="{ height: checkoutHeight + 'px' }"
+    )
+      V2ShoppingCheckoutFlow.w-full(:ellipseColors="ellipseColors")
+    
+    //- status accepted mesage
+    div.flex.flex-col.items-center(style="margin-top: 20px")
+      h2.font-bold.text-black(style="font-size: 25px") Status
+      p.font-bold.mt-2(style="font-size: 25px; color: #154734") Accepted
+    
+    //- countdown comp
+    div(style="margin-top: 40px")
+      V2ShoppingAcceptedMessage(:countdown="countdown")
 </template>
 
-<script setup>
-import { ref, onMounted } from "vue"
+<script setup lang="ts">
+import { useCartStore } from "~/stores/cart"
 
 const countdown = ref(5)
+const store = useCartStore()
+const { getCart } = store
 
 // checkout flow colors
 const checkoutHeight = 50
 const ellipseColors = ["#154734", "#154734", "#154734"]
 
 onMounted(() => {
-	const timer = setInterval(async () => {
+	const timer = setInterval(() => {
 		if (countdown.value > 1) {
 			countdown.value--
 		} else {
 			clearInterval(timer)
-			await navigateTo("/v2/shopping")
+			getCart()
+      logout()
 		}
 	}, 1000)
 })
-</script>
 
-<style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap");
-.font-montserrat {
-	font-family: "Montserrat", sans-serif;
+const logout = async () => {
+	try {
+		await $fetch("/api/cart/cart", {
+			method: "DELETE",
+		})
+	} catch (err) {
+		//We don't care about this error, we just don't want this to stop us though
+	}
+
+	// If the user is in the queue, remove them from the queue
+	try {
+		await $fetch("/api/queue", {
+			method: "DELETE",
+			body: {
+				netID: useCookie("netID").value,
+			},
+		})
+	} catch (err) {
+		//We don't care about this error, we just don't want this to stop us though
+	}
+
+	const netIDCookie = useCookie("netID")
+	const accessCookie = useCookie("AccessPermission")
+	netIDCookie.value = null
+	accessCookie.value = null
+	await navigateTo("/")
 }
-</style>
+</script>

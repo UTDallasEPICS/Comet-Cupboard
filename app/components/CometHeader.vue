@@ -34,7 +34,7 @@ div.sticky.top-0.z-50.bg-utd-green
 		// Header right
 		div.ml-auto.flex.items-center.gap-4
 			// Unified cart icon
-			V2ShoppingCartIconAnimate ref="cartIcon"
+			CartIconAnimate ref="cartIcon"
 
 			// Logout button
 			//button(@click="logout").remove-button-effects

@@ -1,63 +1,52 @@
-// stores/cart.ts
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { defineStore } from "pinia"
 
-export const useCartStore = defineStore('cart', () => {
-  const cart = ref({
-    CartItems: [] as Array<{
-      Item: {
-        name: string
-        categoryName?: string
-        Deal?: { actualCount: number; adjustedCount: number }
-      }
-      count: number
-      expiredCount: number
-    }>
-  })
+export const useCartStore = defineStore("cart", () => {
+	const cart = ref({})
+	const cartView = ref(false)
 
-  const cartView = ref(false)
+	const resetCartView = () => {
+		cartView.value = false
+	}
 
-  const cartTotalCount = computed(() =>
-    cart.value.CartItems.reduce((sum, item) => sum + item.count, 0)
-  )
+	const toggleCartView = () => {
+		cartView.value = !cartView.value
+	}
 
-  const cartAdjustedCount = computed(() => cartTotalCount.value)
+	const getCart = async () => {
+		try {
+			cart.value = await $fetch("/api/cart/cart")
+		} catch (e) {
+			cart.value = {}
+		}
+	}
+	getCart()
 
-  // ✅ Add item to cart
-  function addToCart(item: { name: string; categoryName?: string }) {
-    const existing = cart.value.CartItems.find(
-      c => c.Item.name === item.name
-    )
+	const cartItems = computed(() => {
+		if ("CartItems" in cart.value === false) {
+			return []
+		}
+		return cart.value.CartItems
+	})
 
-    if (existing) {
-      existing.count++
-    } else {
-      cart.value.CartItems.push({
-        Item: { ...item },
-        count: 1,
-        expiredCount: 0
-      })
-    }
-  }
+	const cartTotalCount = computed(() => {
+		if ("CartItems" in cart.value === false) {
+			return 0
+		}
+		return cart.value.CartItems.map((cartItem) => {
+			return cartItem.count
+		}).reduce((a, b) => a + b, 0)
+	})
 
-  // optional but useful
-  function removeFromCart(name: string) {
-    cart.value.CartItems = cart.value.CartItems.filter(
-      c => c.Item.name !== name
-    )
-  }
+	const cartAdjustedCount = computed(() => {
+		return cartCountAdjustment(cart.value)
+	})
 
-  function toggleCartView() {
-    cartView.value = !cartView.value
-  }
+	const pending = computed(() => {
+		if ("pending" in cart.value) {
+			return cart.value.pending
+		}
+		return false
+	})
 
-  return {
-    cart,
-    cartView,
-    cartTotalCount,
-    cartAdjustedCount,
-    addToCart,
-    removeFromCart,
-    toggleCartView
-  }
+	return { cart, cartView, cartItems, cartTotalCount, cartAdjustedCount, pending, getCart, toggleCartView, resetCartView }
 })

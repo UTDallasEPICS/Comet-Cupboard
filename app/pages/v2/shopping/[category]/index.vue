@@ -1,160 +1,117 @@
-<template>
-	<div class="flex flex-col bg-gray-100 min-h-screen relative items-center p-4">
+<template lang="pug">
+  //-main continer
+  div.flex.flex-col.bg-gray-100.min-h-screen.relative.items-center.p-4
+  
+    //- nav back to category (use shared comp)
+    div.w-full.max-w-320px.mt-2.mb-1.flex.justify-start
+      V2SharedNavigateBackButton(backTo="Categories" @click="goBack")
+    
+    //- category title
+    h1.text-2xl.font-bold.text-center.mt-1.mb-2 {{ categoryTitle || "Category" }}
 
-		<!-- CART ICON -->
-		<div class="fixed top-0 right-0 z-50">
-			<V2ShoppingCartIconAnimate />
-		</div>
+    //- sortby
+    div.w-full.flex.justify-center.mb-3
+      div.flex.gap-2.items-center
+        Listbox(v-model="sortOption" v-slot="{ open }")
+          div.relative
+            ListboxButton.modal-button.flex.flex-row.w-72.bg-white.text-lg.px-4.items-center.text-left.font-normal.border-2.border-cupboardv2-lg
+              div.grow
+                | {{ sortOption }}
+              ChevronUpIcon(v-if="open").fill-cupboardv2-dg.stroke-cupboardv2-dg.h-5
+              ChevronDownIcon(v-else).fill-cupboardv2-dg.stroke-cupboardv2-dg.h-5
+            TransitionsDropDown
+              ListboxOptions.absolute.top-12.z-50.bg-white.drop-shadow-standard.rounded-xl.w-full.max-h-36.divide-y.divide-cupboard-lg.overflow-y-auto.overscroll-contain
+                ListboxOption(
+                  v-for="option in sortOptions"
+                  :key="option"
+                  :value="option"
+                ).p-1.text-center.text-lg.cursor-pointer.text-wrap.hover_bg-cupboardv2-lg
+                  | {{ option }}
+    
+    //- seach bar
+    div.w-full.flex.justify-center.mb-6
+      V2SharedSearchBar(style="width: 320px" v-model="searchQuery" :category-items="filteredItems")
 
-		<!-- BACK BUTTON -->
-		<div class="w-full max-w-[320px] px-1 mt-1 mb-1">
-			<V2ShoppingBackButton backTo="Back to Categories" @click="goBack" />
-		</div>
-
-		<!-- TITLE -->
-		<h1 class="text-2xl font-bold text-center mb-2">
-			{{ categoryTitle || "Category" }}
-		</h1>
-
-		<!-- SEARCH BAR (matching your categories page style) -->
-		<div class="w-full flex justify-center mb-6">
-			<V2ShoppingSearchBar
-				class="max-w-[320px] w-full"
-				v-model="searchQuery"
-				:category-items="items"
-			/>
-		</div>
-
-		<!-- ITEMS GRID - centered exactly like categories -->
-<!-- ITEMS GRID (perfectly aligned under the search bar) -->
-<div class="w-full flex justify-center">
-  <div class="w-full max-w-[275px]">
-    <div class="grid grid-cols-1 gap-y-4">
-      <V2ShoppingItemCard
-        v-for="item in filteredItems"
-        :key="item.name"
-        v-bind="item"
-        @add-to-cart="addItem"
-      />
-    </div>
-  </div>
-</div>
-</div>
-
+    //- display items
+    div.w-full.flex.justify-center
+      div.max-w-275px.flex.flex-col.items-center
+        div.grid.grid-cols-1.gap-y-4
+          V2ShoppingItemCard(
+            v-for="item in filteredItems"
+            :key="item.itemID"
+            typeOfCard="SHOPPING"
+            :imgName="item.imgName"
+            :itemDeal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
+            :itemID="item.itemID"
+            :name="item.name"
+          )
 </template>
 
-<script setup>
-import { ref, computed } from "vue"
-import { useRouter, useRoute } from "vue-router"
-import { useCartStore } from "@/stores/cart"
+<script setup lang="ts">
+import { useRoute } from "vue-router"
+import { useCartStore } from "~/stores/cart"
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/vue"
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
 
-const router = useRouter()
+const sortOption = ref("Frequently Selected") // default
+const sortOptions = ["Frequently Selected", "Newest Items","Deals", "Expired"]
+
 const route = useRoute()
 const store = useCartStore()
 
-const categoryTitle = route.params.category
+const { resetCartView, getCart } = store
+
+const categoryTitle = route.params.category as string
 const searchQuery = ref("")
+const currentModal = ref("")
+const verificationUpdate = ref<EventSource>()
 
-// Items per category map
-const categoryItemsMap = {
-	"Breakfast Grains": [
-		{ name: "Oatmeal", badge: "free" },
-		{ name: "Cereal", badge: "deal", quantity: 3, countsAs: 2 },
-		{ name: "Pancake Mix", badge: null },
-		{ name: "Granola", badge: "deal", quantity: 2, countsAs: 1 },
-		{ name: "Waffles", badge: null },
-	],
-	"Fridge Items": [
-		{ name: "Milk", badge: "deal" },
-		{ name: "Eggs", badge: null },
-		{ name: "Cheese", badge: null },
-		{ name: "Yogurt", badge: "free" },
-		{ name: "Butter", badge: null },
-	],
-	"Frozen Items": [
-		{ name: "Pizza", badge: "deal" },
-		{ name: "Frozen Veggies", badge: null },
-		{ name: "Ice Cream", badge: "deal" },
-		{ name: "Frozen Berries", badge: null },
-	],
-	Fruits: [
-		{ name: "Apple", badge: null },
-		{ name: "Orange", badge: "free" },
-		{ name: "Banana", badge: null },
-		{ name: "Grapes", badge: null },
-		{ name: "Strawberries", badge: "deal" },
-	],
-	"Household Items": [
-		{ name: "Tide", badge: null },
-		{ name: "Toilet Paper", badge: "deal" },
-		{ name: "Soap", badge: "free" },
-		{ name: "Dishwasher Tabs", badge: null },
-	],
-	Miscellaneous: [
-		{ name: "Pen", badge: null },
-		{ name: "Notebook", badge: null },
-		{ name: "Cup", badge: "free" },
-		{ name: "Scissors", badge: null },
-	],
-	"Pantry Staples": [
-		{ name: "Peanut Butter", badge: "deal" },
-		{ name: "Rice", badge: null },
-		{ name: "Pasta", badge: null },
-		{ name: "Flour", badge: null },
-	],
-	"Personal Care": [
-		{ name: "Mask", badge: "free" },
-		{ name: "Toothpaste", badge: null },
-		{ name: "Shampoo", badge: null },
-		{ name: "Conditioner", badge: "deal" },
-	],
-	Proteins: [
-		{ name: "Chicken", badge: null },
-		{ name: "Beef", badge: "deal" },
-		{ name: "Tofu", badge: "free" },
-		{ name: "Salmon", badge: null },
-	],
-	Snacks: [
-		{ name: "Chips", badge: "deal" },
-		{ name: "Crackers", badge: null },
-		{ name: "Cookies", badge: "free" },
-		{ name: "Popcorn", badge: null },
-	],
-	Soup: [
-		{ name: "Tomato Soup", badge: "deal" },
-		{ name: "Chicken Noodle", badge: null },
-		{ name: "Lentil Soup", badge: "free" },
-		{ name: "Minestrone", badge: null },
-	],
-	Vegetables: [
-		{ name: "Carrot", badge: null },
-		{ name: "Spinach", badge: "deal" },
-		{ name: "Broccoli", badge: null },
-		{ name: "Cauliflower", badge: "free" },
-	],
-}
+const ModalType = Object.freeze({
+	PENDING: "PENDING",
+	ACCEPTING: "ACCEPTING",
+	ACCEPTED: "ACCEPTED",
+	REJECTED: "REJECTED",
+})
 
-const items = ref(categoryItemsMap[categoryTitle] || [])
+const { data: allItems } = await useFetch("/api/inventory/items", {
+	query: { checkAvailability: "true" },
+})
 
-// FILTERED ITEMS (search)
-const filteredItems = computed(() => {
-	if (!searchQuery.value.trim()) return items.value
-	return items.value.filter((item) =>
-		item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+const items = computed(() => {
+	return (
+		allItems.value?.filter((item) => {
+			const itemCategory = item.categoryName?.trim().toLowerCase() || ""
+			const currentCategory = categoryTitle?.trim().toLowerCase() || ""
+			return itemCategory.includes(currentCategory)
+		}) || []
 	)
 })
 
-// Add item to cart
-function addItem(item) {
-	store.addToCart({
-		name: item.name,
-		categoryName: categoryTitle,
-		badge: item.badge,
-		quantity: item.quantity || 3,
-		countsAs: item.countsAs || 1,
-	})
+const filteredItems = computed(() => {
+	const query = searchQuery.value.trim().toLowerCase()
+	if (!query) return items.value
+	return items.value.filter((item) => item.name.toLowerCase().includes(query))
+})
+
+const config = useRuntimeConfig()
+
+if (import.meta.client) {
+	verificationUpdate.value = new EventSource(`${config.public.LOCAL_URL}api/verification/cartRequestVerificationResponseWaiting`)
+
+	verificationUpdate.value.onmessage = async (event) => {
+		const { type } = JSON.parse(event.data)
+		if (type === "REJECT CART") currentModal.value = ModalType.REJECTED
+		if (type === "ACCEPT CART") currentModal.value = ModalType.ACCEPTED
+
+		await getCart()
+		resetCartView()
+	}
 }
 
-// Go back
+onBeforeUnmount(() => {
+	if (verificationUpdate.value) verificationUpdate.value.close()
+	resetCartView()
+})
+
 const goBack = async () => await navigateTo("/v2/shopping")
 </script>

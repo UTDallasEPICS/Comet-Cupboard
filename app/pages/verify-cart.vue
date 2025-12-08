@@ -52,4 +52,5 @@ const setCartIDPreview = (cartID: string) => {
 const resetCartIDPreview = () => {
 	currentCartIDPreview.value = "No cart chosen"
 }
+
 </script>
