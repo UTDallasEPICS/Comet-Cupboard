@@ -43,7 +43,7 @@ function cancel(sourceName: string | string[] | undefined) {
 const removeSource = async (sourceName: string | string[] | undefined) => {
 	try {
 		//Deletes the specified source from the list of sources based on the given name:
-		await $fetch("/api/inventory/sources", {
+		await $fetch("/api/inventory/source", {
 			method: "DELETE",
 			body: JSON.stringify({ source: sourceName }),
 		})
