@@ -14,6 +14,25 @@ export default defineEventHandler(async (event) => {
 
 	const { source } = result.data
 
+	const archivedSource = await event.context.prisma.source.findUnique({
+		where: {
+			name: source,
+			archived: true,
+		},
+	})
+	if (archivedSource) {
+		const newSource = await event.context.prisma.source.update({
+			where: {
+				name: source,
+				archived: true,
+			},
+			data: {
+				archived: false,
+			},
+		})
+		return newSource
+	}
+	
 	try {
 		const newSource = await event.context.prisma.source.create({
 			data: {
