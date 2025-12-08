@@ -86,9 +86,10 @@ model Field {
 
 model Source {
     sourceID         String             @id @default(cuid()) @map("source_id")
-    name             String             @map("name")
+    name             String             @map("name") @unique
     ItemCountChanges ItemCountChange[]
     Fields           Field[]
+    archived         Boolean            @default(false) @map("archived")
 
     @@map("source")
 }
