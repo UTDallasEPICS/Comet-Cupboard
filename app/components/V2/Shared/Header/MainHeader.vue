@@ -38,7 +38,7 @@ div
 			img(src="/CometCupboardLogo1.png").h-10
 		div.ml-auto.flex.flex-row.h-full
 			div(v-if="page.includes('shopping')").relative
-				CartIconAnimate.size-11.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
+				V2ShoppingCartIconAnimate.size-11.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
 				//- span(v-if="cartTotalCount != 0").px-2.text-xl.absolute.font-bold.-top-2.rounded-full.-right-2.text-xl.text-white.bg-utd-orange {{ cartTotalCount }}
 
 			// for now this is a link to the sign in page (test + nowhere else yet)
@@ -50,7 +50,6 @@ div
 import { Bars3Icon, ShoppingCartIcon, ArrowRightStartOnRectangleIcon } from "@heroicons/vue/24/solid"
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue"
 import { useCartStore } from "~/stores/cart"
-import CartIconAnimate from "../../Shopping/CartIconAnimate.vue"
 
 const { toggleCartView } = useCartStore()
 
