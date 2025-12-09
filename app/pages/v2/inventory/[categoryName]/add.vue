@@ -22,7 +22,7 @@ div
 			).w-full.w-80.bg-transparent.outline-none.border-none.text-lg.text-left.text-black
 			div(class="h-[2px]").bg-cupboardv2-dg.w-72.rounded-xl.-mt-1
 		// Footer Buttons
-		div.flex.flex-row.gap-x-4.mt-32
+		div.flex.flex-row.gap-x-4.mt-20
 			button(@click="goBack").bg-cupboardv2-dg.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
 				p.text-white.text-xl.font-bold Cancel
 			button(@click="addItemSubmit").bg-utd-orange.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard

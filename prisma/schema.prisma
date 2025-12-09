@@ -58,6 +58,7 @@ model Item {
     ItemCountChanges ItemCountChange[]
     CartItems        CartItem[]
     OrderItems       OrderItem[]
+    archived         Boolean           @default(false)
 
     createdAt        DateTime          @default(now()) @map("created_at")
     recentPopularity Json? @map("recent_popularity")

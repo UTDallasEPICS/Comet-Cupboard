@@ -14,7 +14,7 @@ const categories = [
 	{ name: "Frozen Items", img: "/category_banners/frozen.jpg" },
 	{ name: "Fruits", img: "/category_banners/fruits.jpg" },
 	{ name: "Household Items", img: "/category_banners/household.jpg" },
-	{ name: "Misc", img: "/category_banners/misc.jpg" },
+	{ name: "Miscellaneous", img: "/category_banners/misc.jpg" },
 	{ name: "Pantry Staples", img: "/category_banners/pantry_staples.jpg" },
 	{ name: "Personal Care", img: "/category_banners/personal_care.png" },
 	{ name: "Proteins", img: "/category_banners/proteins.jpg" },

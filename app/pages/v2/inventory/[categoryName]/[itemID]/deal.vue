@@ -41,7 +41,7 @@ div
 			p.text-white.text-xl.font-bold Remove Deals
 
 		// Footer Buttons
-		div.flex.flex-row.gap-x-4.mt-32
+		div.flex.flex-row.gap-x-4.mt-20
 			button(@click="goBack").bg-cupboardv2-dg.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
 				p.text-white.text-xl.font-bold Cancel
 			button(@click="editDeal").bg-utd-orange.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard

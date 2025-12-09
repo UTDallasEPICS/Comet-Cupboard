@@ -68,7 +68,7 @@ div
 </template>
 
 <script lang="ts" setup>
-import { CloudArrowUpIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/vue"
 import { useRoute, navigateTo } from "#imports"
 import { useInventoryStore } from "~/stores/useInventoryStore"
@@ -137,6 +137,7 @@ const submit = async () => {
 				inventoryCountChanges,
 			},
 		})
+		inventoryStore.resetChanges()
 		navigateTo(`/v2/inventory/${categoryName}`)
 	} catch (error) {
 		console.error("Error submitting item count changes:", error)

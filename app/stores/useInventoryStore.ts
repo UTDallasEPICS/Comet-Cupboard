@@ -31,9 +31,7 @@ export const useInventoryStore = defineStore("inventory", () => {
 
 	const removeItem = (id: string) => {
 		if(!changes.value[id]) return 
-		const copy = { ...changes.value }
-		delete copy[id]
-		changes.value = copy
+		delete changes.value[id]
 	}
 
 	const resetChanges = () => {
@@ -49,12 +47,5 @@ export const useInventoryStore = defineStore("inventory", () => {
 
 	const totalChanges = computed(() => changedList.value.length)
 
-	return {
-		changes,
-		updateItemCount,
-		removeItem,
-		resetChanges,
-		changedList,
-		totalChanges,
-	}
+	return {changes, updateItemCount, removeItem, resetChanges, changedList, totalChanges }
 })

@@ -15,9 +15,12 @@ export default defineEventHandler(async (event) => {
 	const { itemID } = result.data
 
 	// delete item
-	const item = await event.context.prisma.item.delete({
+	const item = await event.context.prisma.item.update({
 		where: {
 			itemID: itemID,
+		},
+		data: {
+			archived: true,
 		},
 	})
 

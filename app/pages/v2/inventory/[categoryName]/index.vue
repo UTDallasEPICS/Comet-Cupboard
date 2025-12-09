@@ -11,7 +11,7 @@ div
 						// page control components (mobile alignment)
 						div.flex.flex-col.items-start.w-full.mt-6
 							V2SharedNavigateBackButton(backTo="Categories" @click="goToCategoriesPage")
-							div.flex.xs_flex-col.gap-2.items-center.w-full
+							div.flex.flex-col.md_flex-row.gap-2.items-center.w-full
 								V2SharedSearchBar(v-model="searchTerm" :category-items="categoryItems")
 								// Sort dropdown
 								div.flex.gap-2.items-center
@@ -244,10 +244,11 @@ const filteredCategoryItems = computed(() => {
 })
 
 // Function for computing exponential weight in frequency sorting
-function computeExponentialWeight(counts: any) {
-	// Store current day
+function computeExponentialWeight(counts: Record<string, number> = {}) {
+	const DECAY_RATE = 0.7; // decay constant of a 3-day half-life, makes recent days matter most
+	const MAX_DAYS = 3;
+
 	const today = new Date()
-	// Each day in counts contributes to this score, accumulating the weight
 	let score = 0
 
 	// Iterate over each count
@@ -258,8 +259,8 @@ function computeExponentialWeight(counts: any) {
 		const diff = (today.getTime() - day.getTime()) / (1000 * 60 * 60 * 24)
 
 		// Remove anything older than 3 days (last 3 days accounted for)
-		if(diff <= 3) {
-			const decay = Math.exp(-0.7 * diff) // Decay amount based on difference time (days)
+		if(diff <= MAX_DAYS) {
+			const decay = Math.exp(-DECAY_RATE * diff) // Decay amount based on difference time (days)
 			score += count * decay
 		}
 	}
