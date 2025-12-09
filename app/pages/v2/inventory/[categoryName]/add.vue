@@ -31,19 +31,15 @@ div
 
 <script lang="ts" setup>
 import { CloudArrowUpIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/vue"
 import { useRoute, navigateTo } from "#imports"
-import Subheader from "~/components/V2/Shared/Header/Subheader.vue"
 
 const emit = defineEmits(["submit"])
 const route = useRoute()
 const itemName = ref<string | null>(null)
 const imageFile = ref<File | null>(null)
 const imageUrl = ref<string | null>(null)
-const selectedCategory = ref(null)
 const currentCategory = route.params.categoryName as string
 
-const { data: categories } = await useFetch("/api/controls/categories")
 
 watch(imageFile, (newFile) => {
 	if (newFile) {
