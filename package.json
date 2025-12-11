@@ -27,6 +27,7 @@
 		"@vuepic/vue-datepicker": "^11.0.2",
 		"exceljs": "^4.4.0",
 		"formidable": "^3.5.2",
+		"fuse.js": "^7.1.0",
 		"nanoid": "^5.0.7",
 		"nuxt": "^4.1.0",
 		"pinia": "^3.0.2",

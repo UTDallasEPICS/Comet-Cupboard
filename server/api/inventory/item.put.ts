@@ -58,30 +58,48 @@ export default defineEventHandler(async (event) => {
 		}
 	}
 
+	let resolvedItemID = itemID;
+
+	// handle if an item with the same name and category already exists
+	if(!itemID) {
+		const sameItem = await event.context.prisma.item.findFirst({
+			where: {
+				name: name,
+				categoryName: categoryName,
+			},
+		});
+
+		if(sameItem) {
+			resolvedItemID = sameItem.itemID;
+			oldItemName = sameItem.imgName;
+			const imagePath = `${process.env.IMAGE_UPLOAD_DIRECTORY}/${imgName}`;
+			try {
+				await readFile(imagePath);
+			} catch(err) {
+				if (err.code === "ENOENT") {
+					throw createError({ statusCode: 404, statusMessage: `New file not found: ${imgName}` })
+				} else {
+					throw createError({ statusCode: 500, statusMessage: "Internal server error" })
+				}
+			}
+		}
+	}
+
 	const item = await event.context.prisma.item.upsert({
-		where: {
-			itemID: itemID,
-		},
-		update: {
-			name: name,
-			imgName: imgName,
-			categoryName: categoryName,
-		},
-		create: {
-			name: name,
-			imgName: imgName,
-			categoryName: categoryName,
-		},
-	})
+			where: { itemID: resolvedItemID },
+			update: { name, imgName, categoryName, archived: false },
+			create: { name, imgName, categoryName, archived: false },
+		});
+	
 
 	if (!item) {
 		throw createError({ statusCode: 500, statusMessage: `Failed to edit item` })
 	}
 
-	if (itemID && imgName && oldItemName !== imgName) {
+	if (oldItemName && oldItemName !== imgName) {
 		// delete old image, if this fails we're not in that much trouble hopefully
 		// kind of lazy to put the item back in the db if this fails
-		await unlink(`${process.env.IMAGE_UPLOAD_DIRECTORY}/${oldItemName}`)
+		await unlink(`${process.env.IMAGE_UPLOAD_DIRECTORY}/${oldItemName}`).catch(() => {}); // catch here to stop image error in frontend
 	}
 
 	return `Successfully ${itemID ? "edited" : "created"} item: ${JSON.stringify(item)}`
