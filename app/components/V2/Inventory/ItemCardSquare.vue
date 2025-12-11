@@ -33,9 +33,7 @@ Menu
 				div(class="border-[1px]").bg-white(class="w-[125px]").h-7.border-cupboardv2-dg.rounded-2xl.flex.justify-end.box-border.relative
 					div.flex.items-center.justify-center
 						span.text-base.text-black.mr-2 {{ props.currentCount }}
-					div(:style="clipStyle").bg-cupboardv2-elg(
-						class="w-[75px]"
-					).rounded-r-2xl.flex.items-center.justify-center
+					div(:style="clipStyle").bg-cupboardv2-elg(class="w-[75px]").rounded-r-2xl.flex.items-center.justify-center
 						span.text-base.text-black {{ displayChange }}
 			// Inventory adjustment buttons (flex horizontal)
 			div.flex.gap-6

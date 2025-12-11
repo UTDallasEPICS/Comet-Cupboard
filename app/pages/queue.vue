@@ -67,7 +67,7 @@ if (import.meta.client) {
 			if (type === "QUEUE_DELETE") {
 				await logout()
 			} else if (type === "QUEUE_MOVE_INSIDE") {
-				await navigateTo("/shopping")
+				await navigateTo("/v2/shopping")
 				await reloadNuxtApp()
 			}
 		}
