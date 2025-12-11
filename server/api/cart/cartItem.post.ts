@@ -12,6 +12,24 @@ const validateSchema = schema.strict().partial().required({
 	incrementChange: true,
 })
 
+// Function for computing exponential weight in frequency sorting
+function computeExponentialWeight(counts: any) {
+	const today = new Date()
+	let score = 0
+
+	for(const [dateStr, count] of Object.entries(counts || {})) {
+		const day = new Date(dateStr)
+		const diff = (today.getTime() - day.getTime()) / (1000 * 60 * 60 * 24)
+
+		const countNum = Number(count)
+		if(diff <= 3) {
+			const decay = Math.exp(-0.7 * diff) // Decay amount
+			score += countNum * decay
+		}
+	}
+	return score
+}
+
 /*
 	Two ways to use POST cartItem: Incremental or Edit
 	For incremental:
@@ -107,7 +125,42 @@ export default defineEventHandler(async (event) => {
 				},
 			})
 		}
-		return cartItemFinal ? cartItemFinal : cartItem
+		const finalItem = cartItemFinal || cartItem 
+
+		// Popularity Tracking
+
+		// If the change is an increase (item is selected) because we only want to count popularity when someone
+		// processes an item through their cart
+		if(incrementChange > 0) {
+			// Generate the date for today
+			const todayKey = new Date().toISOString().split("T")[0] // YYYY-MM-DD format
+
+			// Load counts that exist
+			const item = await tx.item.findUnique({
+				where: { itemID },
+				select: { popularityCounts: true }
+			})
+
+			const counts = (item?.popularityCounts ?? {}) as Record<string, number>
+
+			// Increment the count for today
+			counts[todayKey] = (counts[todayKey] ?? 0) + 1
+
+			// Compute the new exponential score (loop each date, check how many days ago it was, apply exponential decay, 
+			// sum a score for past 3 days)
+			const newScore = computeExponentialWeight(counts)
+
+			// Update the database
+			await tx.item.update({
+				where: { itemID },
+				data: {
+					popularityCounts: counts,
+					recentPopularity: newScore,
+				},
+			})
+		}
+
+		return finalItem
 	})
 	if (!transactionResult) {
 		throw createError({ statusCode: 500, statusMessage: `Failed to edit item with id ${itemID} from cart` })

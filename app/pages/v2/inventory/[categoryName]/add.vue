@@ -1,9 +1,9 @@
 <template lang="pug">
 div
 	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Add Item")(class="md_max-w-[600px]").md_rounded-b-xl
+		V2SharedHeaderSubheader(pageTitle="Add Item")(class="md_max-w-[600px]").md_rounded-b-3xl
 	div.flex.flex-col.items-center.justify-center.gap-y-8.pt-10.mt-20
-		div.bg-white.w-80.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
+		div.bg-white.w-full.max-w-80.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
 			img(v-if="imageUrl" :src="imageUrl").absolute.inset-0.w-full.h-full.object-cover
 			label(
 				:class="{ 'bg-cupboardv2-lg bg-opacity-60': imageUrl }"
@@ -15,14 +15,14 @@ div
 			input#fileInput(accept=".jpg, .jpeg, .png" type="file" @change="handleFileUpload").hidden
 		div.flex.flex-col.items-center
 			input(
-				placeholder="Item Name (Limit 20 Characters)"
+				placeholder="Item Name"
 				type="text"
 				v-model="itemName"
 				@input="validateInput"
-			).w-80.bg-transparent.outline-none.border-none.text-lg.text-left.text-black
-			div(class="h-[2px]").bg-cupboardv2-dg.w-80.rounded-xl.-mt-1
+			).w-full.w-80.bg-transparent.outline-none.border-none.text-lg.text-left.text-black
+			div(class="h-[2px]").bg-cupboardv2-dg.w-72.rounded-xl.-mt-1
 		// Footer Buttons
-		div.flex.flex-row.gap-x-4.mt-32
+		div.flex.flex-row.gap-x-4.mt-20
 			button(@click="goBack").bg-cupboardv2-dg.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
 				p.text-white.text-xl.font-bold Cancel
 			button(@click="addItemSubmit").bg-utd-orange.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
@@ -31,19 +31,15 @@ div
 
 <script lang="ts" setup>
 import { CloudArrowUpIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/vue"
 import { useRoute, navigateTo } from "#imports"
-import Subheader from "~/components/V2/Shared/Header/Subheader.vue"
 
 const emit = defineEmits(["submit"])
 const route = useRoute()
 const itemName = ref<string | null>(null)
 const imageFile = ref<File | null>(null)
 const imageUrl = ref<string | null>(null)
-const selectedCategory = ref(null)
 const currentCategory = route.params.categoryName as string
 
-const { data: categories } = await useFetch("/api/controls/categories")
 
 watch(imageFile, (newFile) => {
 	if (newFile) {
