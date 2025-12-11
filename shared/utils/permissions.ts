@@ -20,7 +20,8 @@ const pageAccessMap: { [route: string]: AccessPermission } = {
 	"/inventory-management": AccessPermission.INVENTORY_MANAGEMENT,
 	"/verify-cart": AccessPermission.VERIFY_CART,
 	"/data": AccessPermission.ADMIN,
-	"/admin-dashboard": AccessPermission.ADMIN,
+	"/v2/admin/source": AccessPermission.ADMIN,
+	"/v2/admin/volunteer": AccessPermission.ADMIN,
 	"/queue": AccessPermission.PUBLIC,
 }
 const apiAccessMap: { [route: string]: { [method: string]: AccessPermission } } = {
