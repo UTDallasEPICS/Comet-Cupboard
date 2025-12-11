@@ -30,8 +30,7 @@ div.min-h-screen.bg-gray-100.font-montserrat.flex.justify-center
       V2ShoppingCheckoutCount(
         :cartTotalCount="cartTotalCount"
         :cartAdjustedCount="cartAdjustedCount"
-        :markExpiredItems="markExpiredItems"
-        @toggleExpired="toggleMarkExpiredItems"
+        :markExpiredItems="false"
       )
     
     //- cancel button
@@ -70,7 +69,7 @@ import { storeToRefs } from "pinia"
 import { useCartStore } from "@/stores/cart"
 
 const store = useCartStore()
-const { cartTotalCount, cartAdjustedCount, toggleMarkExpiredItems, markExpiredItems } = storeToRefs(store)
+const { cartTotalCount, cartAdjustedCount } = storeToRefs(store)
 
 const cart = ref([])
 const checkoutHeight = 50
@@ -85,6 +84,7 @@ watch(showCancelConfirm, (val) => {
 
 // Cancel - go back
 const confirmCancel = async () => {
+  await $fetch("/api/verification/retractCart", { method: "PUT" })
   await navigateTo("/v2/shopping")
 }
 

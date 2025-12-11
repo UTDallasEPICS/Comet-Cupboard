@@ -23,7 +23,7 @@ div.min-h-screen.bg-gray-100.font-montserrat.flex.justify-center.relative
     
     //- rejection message comp
     div.flex.justify-center.mt-6
-      V2ShoppingRejectionMessage(:message="rejectionReason")
+      V2ShoppingRejectionMessage(:message="cartVerificationReason")
     
     //- back to shop button
     div.absolute(style="top: 360px; left: 70px; transform: translateX(50%)")
@@ -36,12 +36,12 @@ div.min-h-screen.bg-gray-100.font-montserrat.flex.justify-center.relative
 </template>
 
 <script setup lang="ts">
-
 const ellipseColors = ['#154734', '#154734', '#E87500']
 const checkoutHeight = 57
-const props = defineProps({
-  reason: { type: String, default: '' }
-})
+
+const store = useCartStore()
+const { cartVerificationReason } = storeToRefs(store)
+
 const goBackToShop = async () => {
   await navigateTo('/v2/shopping')
 }

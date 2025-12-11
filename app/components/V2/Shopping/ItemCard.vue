@@ -1,5 +1,5 @@
 <template lang="pug">
-div.relative.bg-white.shadow.px-3.font-montserrat(style="width: 279px; height: 88px; border-radius: 15px")
+div.relative.bg-white.drop-shadow-standard.px-3.font-montserrat(style="min-width: 279px; height: 88px").rounded-xl
   //- dealbadge
   V2ShoppingDealBadge(
     v-if="dealExists"

@@ -97,7 +97,7 @@ import { useCartStore } from "~/stores/cart"
 
 
 const store = useCartStore()
-const { toggleCartView, resetCartView, getCart } = store
+const { toggleCartView, resetCartView, getCart, setCartVerificationReason } = store
 const { cartView, cartItems, cartTotalCount, cartAdjustedCount, pending } = storeToRefs(store)
 const router = useRouter()
 
@@ -145,9 +145,15 @@ onMounted(async () => {
 			return
 		}
 
-		const { type } = parsed
-		if (type === "REJECT CART") await router.push("/v2/shopping/rejected")
-		else if (type === "ACCEPT CART") await router.push("/v2/shopping/accepted")
+		const { type, payload } = parsed
+		if (type === "REJECT CART") {
+      setCartVerificationReason(payload || "No reason provided.")
+      await router.push("/v2/shopping/rejected")
+    }
+		else if (type === "ACCEPT CART") {
+      setCartVerificationReason(payload || "No reason provided.")
+      await router.push("/v2/shopping/accepted")
+    }
 
 		resetCartView()
 	}
