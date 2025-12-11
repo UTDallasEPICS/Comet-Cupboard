@@ -60,19 +60,18 @@ export default defineEventHandler(async (event) => {
 
 	let resolvedItemID = itemID;
 
-	// Handles adding an item when the item already previously existed (it's archived)
+	// handle if an item with the same name and category already exists
 	if(!itemID) {
-		const archivedItem = await event.context.prisma.item.findFirst({
+		const sameItem = await event.context.prisma.item.findFirst({
 			where: {
 				name: name,
 				categoryName: categoryName,
-				archived: true,
 			},
 		});
 
-		if(archivedItem) {
-			resolvedItemID = archivedItem.itemID;
-			oldItemName = archivedItem.imgName;
+		if(sameItem) {
+			resolvedItemID = sameItem.itemID;
+			oldItemName = sameItem.imgName;
 			const imagePath = `${process.env.IMAGE_UPLOAD_DIRECTORY}/${imgName}`;
 			try {
 				await readFile(imagePath);
@@ -86,18 +85,12 @@ export default defineEventHandler(async (event) => {
 		}
 	}
 
-	let item;
-	if(resolvedItemID) {
-		item = await event.context.prisma.item.upsert({
+	const item = await event.context.prisma.item.upsert({
 			where: { itemID: resolvedItemID },
 			update: { name, imgName, categoryName, archived: false },
 			create: { name, imgName, categoryName, archived: false },
 		});
-	} else {
-		item = await event.context.prisma.item.create({
-			data: { name, imgName, categoryName, archived: false },
-		});
-	}
+	
 
 	if (!item) {
 		throw createError({ statusCode: 500, statusMessage: `Failed to edit item` })
