@@ -60,7 +60,7 @@ const { toggleCartView } = useCartStore()
 // Path to the shopping page
 const shoppingPath = "/shopping"
 // Path to the verify carts page
-const verifyPath = "/verify-cart"
+const verifyPath = "/v2/verify-cart"
 // Path to the inventory management page
 const inventoryPath = "/v2/inventory/category-select"
 // Path to the data analyzation page
