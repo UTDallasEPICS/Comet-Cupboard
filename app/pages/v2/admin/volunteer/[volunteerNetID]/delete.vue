@@ -3,11 +3,11 @@
 div
 	//- Header for the Delete Volunteer page.
 	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Delete Source")(class="md_max-w-[600px]").md_rounded-b-3xl
+		V2SharedHeaderSubheader(pageTitle="Delete Volunteer")(class="md_max-w-[600px]").md_rounded-b-3xl
     
 	div.flex.flex-col.items-center.justify-center.gap-y-8.pt-10.mt-10
 		//- Warning message: Displays the message warning the admin about deleting the volunteer.
-		V2SharedStatusMessageWarning(warningMessage="Volunteer will lose all access to the Comet Cupboard!")
+		V2SharedStatusMessageWarning(:warningMessage="`User with netID ${volunteerToBeDeleted} will lose volunteer permissions`")
         
 		//- Prompt for deleting the specified volunteer
 		div.bg-white.w-full.max-w-96.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative

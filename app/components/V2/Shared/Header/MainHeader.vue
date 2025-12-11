@@ -31,11 +31,11 @@ div.relative.z-40
 							hr(class="border-[1.3px]").w-full.mt-4
 						MenuItem(v-if="permissions['ADMIN']" as="div").w-full
 							NuxtLink(@click.native="close" :to="sourcePath").cursor-pointer.hover_underline
-								| Source Management
+								| Manage Sources
 							hr(class="border-[1.3px]").w-full.mt-4
 						MenuItem(v-if="permissions['ADMIN']" as="div").w-full
 							NuxtLink(@click.native="close" :to="volunteerPath").cursor-pointer.hover_underline
-								| Volunteer Management
+								| Manage Volunteers
 							hr(class="border-[1.3px]").w-full.mt-4
 		// Comet Cupboard Logo
 		div.relative.overflow-hidden.ml-4
