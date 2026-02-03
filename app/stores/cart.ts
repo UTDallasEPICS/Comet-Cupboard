@@ -3,6 +3,11 @@ import { defineStore } from "pinia"
 export const useCartStore = defineStore("cart", () => {
 	const cart = ref({})
 	const cartView = ref(false)
+	const cartVerificationReason = ref("") // reason for cart verification acceptance/rejection
+
+	const setCartVerificationReason = (reason: string) => {
+		cartVerificationReason.value = reason
+	}
 
 	const resetCartView = () => {
 		cartView.value = false
@@ -48,5 +53,5 @@ export const useCartStore = defineStore("cart", () => {
 		return false
 	})
 
-	return { cart, cartView, cartItems, cartTotalCount, cartAdjustedCount, pending, getCart, toggleCartView, resetCartView }
+	return { cart, cartView, cartItems, cartTotalCount, cartAdjustedCount, pending, cartVerificationReason, getCart, toggleCartView, resetCartView, setCartVerificationReason }
 })

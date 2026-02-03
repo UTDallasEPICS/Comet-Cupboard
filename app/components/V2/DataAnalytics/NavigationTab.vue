@@ -1,7 +1,6 @@
 <template lang="pug">
 div
-    p stuff here
+	p stuff here
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>

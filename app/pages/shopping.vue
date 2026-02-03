@@ -123,27 +123,27 @@ const scrollToTop = (): void => {
 
 // get items with count greater than 0
 const { data: items } = await useFetch("/api/inventory/items", {
-	query: { checkAvailability: true },
+	query: { checkAvailability: "true" },
 })
 
 const filteredCategoryItems = computed(() => {
-	const categoryFilters = filters.value.filter((filter) => filter !== "Deals")
-	const dealFilter = filters.value.includes("Deals")
-	const searchFilter = new RegExp(searchTerm.value.trim(), "i")
-	// show all items if no filters are selected
-	return Object.groupBy(
-		items.value.filter((item) => {
-			return (
-				(searchTerm.value == "" || searchFilter.test(item.name)) &&
-				(categoryFilters.length == 0 || categoryFilters.includes(item.categoryName)) &&
-				(!dealFilter || item.Deal)
-			)
-		}),
-		(item) => {
-			return item.categoryName
-		}
-	)
+  const categoryFilters = filters.value.filter(f => f !== "Deals").map(f => f.trim().toLowerCase())
+  const dealFilter = filters.value.includes("Deals")
+  const searchFilter = new RegExp(searchTerm.value.trim(), "i")
+
+  return Object.groupBy(
+    items.value.filter(item => {
+      const categoryName = item.categoryName?.trim().toLowerCase() || ""
+      return (
+        (searchTerm.value === "" || searchFilter.test(item.name)) &&
+        (categoryFilters.length === 0 || categoryFilters.includes(categoryName)) &&
+        (!dealFilter || !!item.Deal)
+      )
+    }),
+    item => item.categoryName
+  )
 })
+
 
 const closeModal = () => {
 	currentModal.value = ""

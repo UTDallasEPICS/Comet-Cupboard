@@ -3,6 +3,7 @@ import { z } from "zod"
 const schema = z.object({
 	cartID: z.string(),
 	action: z.string(),
+	reason: z.string().optional(),
 })
 
 const validateSchema = schema.strict().required()
@@ -12,7 +13,7 @@ export default defineEventHandler(async (event) => {
 	if (!result.success) {
 		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
 	}
-	const { cartID, action } = result.data
+	const { cartID, action, reason } = result.data
 	if (action != "ACCEPT" && action != "REJECT") {
 		throw createError({ statusCode: 400, statusMessage: "Invalid action: Expected ACCEPT or REJECT" })
 	}
@@ -75,7 +76,7 @@ export default defineEventHandler(async (event) => {
 			cartID,
 			JSON.stringify({
 				type: "ACCEPT CART",
-				payload: "Accepted cart",
+				payload: `Accepted cart. Note: ${reason}`,
 			})
 		)
 
@@ -113,7 +114,7 @@ export default defineEventHandler(async (event) => {
 			cartID,
 			JSON.stringify({
 				type: "REJECT CART",
-				payload: "Rejected cart",
+				payload: `Rejected cart. Note: ${reason}`,
 			})
 		)
 		return `Successfully rejected cart ${cartID}`

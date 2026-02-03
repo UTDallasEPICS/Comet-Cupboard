@@ -28,18 +28,25 @@ export const pendingCartWarnings = (cart) => {
 		warnings.push("Cart exceeds 6 item limit")
 	}
 	if (cart.CartItems.filter((cartItem) => cartItem.expiredCount > 0).length > 0) {
-		warnings.push("Cart has expired items")
+		const expiredItems = cart.CartItems.filter((cartItem) => cartItem.expiredCount > 0)
+		const expiredItemsnames = expiredItems.map(item => item.Item.name).join(", ")
+		warnings.push("Cart has expired items: " + expiredItemsnames)
 	}
 	const categories: { [key: string]: number } = {}
+	const warningCategories: Set<string> = new Set()
 	for (let i = 0; i < cart.CartItems.length; i++) {
 		if (!categories[cart.CartItems[i].Item.categoryName]) {
 			categories[cart.CartItems[i].Item.categoryName] = 0
 		}
 		categories[cart.CartItems[i].Item.categoryName] += cartItemCountAdjustment(cart.CartItems[i]).count
 		if (categories[cart.CartItems[i].Item.categoryName] > 1) {
-			warnings.push("Cart exceeds 1 item per category")
-			break
+			warningCategories.add(cart.CartItems[i].Item.categoryName)
 		}
+	}
+	if (warningCategories.size > 0){
+		const warningCategoriesArray = Array.from(warningCategories)
+		const categoryNames = warningCategoriesArray.map(category => category).join(", ")
+		warnings.push("Cart exceeds 1 item per category: " + categoryNames)
 	}
 	return warnings
 }
