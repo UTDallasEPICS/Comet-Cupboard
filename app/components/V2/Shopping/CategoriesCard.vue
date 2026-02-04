@@ -1,11 +1,15 @@
-<template lang="pug">
-NuxtLink(
-    :to="`/v2/shopping/${categoryName}`"
-).w-full.bg-white.h-20.rounded-xl.flex.items-stretch.justify-between.overflow-hidden.pl-2.drop-shadow-standard
-    div.flex.items-center.flex-1.px-4.w-full.min-w-32
-        p.text-base {{ categoryName }}
-    div.w-48.h-full.flex-shrink-0.overflow-hidden.min-w-20
-        img(:alt="categoryName" :src="imageSrc" :style="clipStyle").w-full.h-full.object-cover
+<template>
+	<NuxtLink
+		:to="`/v2/shopping/${categoryName}`"
+		class="drop-shadow-standard flex h-20 w-full items-stretch justify-between overflow-hidden rounded-xl bg-white pl-2"
+	>
+		<div class="flex w-full min-w-32 flex-1 items-center px-4">
+			<p class="text-base">{{ categoryName }}</p>
+		</div>
+		<div class="h-full w-48 min-w-20 flex-shrink-0 overflow-hidden">
+			<img :alt="categoryName" :src="imageSrc" :style="clipStyle" class="h-full w-full object-cover" />
+		</div>
+	</NuxtLink>
 </template>
 
 <script lang="ts" setup>

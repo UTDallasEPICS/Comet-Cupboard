@@ -1,49 +1,65 @@
-<template lang="pug">
-  //-main continer
-  div.flex.flex-col.min-h-screen.relative.items-center.p-4
-  
-    //- nav back to category (use shared comp)
-    div.w-full.max-w-320px.mt-2.mb-1.flex.justify-start
-      V2SharedNavigateBackButton(backTo="Categories" @click="goBack")
-    
-    //- category title
-    h1.text-2xl.font-bold.text-center.mt-1.mb-2 {{ categoryTitle || "Category" }}
-    div.max-w-xl.w-full
-      //- sortby
-      div.w-full.flex.justify-center.mb-3
-        Listbox(v-model="sortOption" v-slot="{ open }")
-            div.relative.grow
-                ListboxButton.modal-button.flex.flex-row.w-full.bg-white.text-sm.px-3.items-center.text-left.font-normal.border.border-cupboardv2-lg.h-8
-                    div.grow
-                        | {{ sortOption }}
-                    ChevronUpIcon(v-if="open").fill-cupboardv2-dg.stroke-cupboardv2-dg.h-5
-                    ChevronDownIcon(v-else).fill-cupboardv2-dg.stroke-cupboardv2-dg.h-5
-                TransitionsDropDown
-                    ListboxOptions.absolute.top-10.z-50.bg-white.drop-shadow-standard.rounded-xl.w-full.max-h-48.divide-y.divide-cupboard-lg.overflow-y-auto.overscroll-contain
-                        ListboxOption(
-                            v-for="option in sortOptions"
-                            :key="option"
-                            :value="option"
-                        ).p-1.text-center.text-sm.cursor-pointer.text-wrap.hover_bg-cupboardv2-lg
-                            | {{ option }}
-      
-      //- seach bar
-      div.w-full.flex.justify-center.mb-6
-        V2SharedSearchBar(style="width: 320px" v-model="searchQuery" :category-items="filteredItems")
+<template>
+	<div class="p-4">
+		<!-- nav back to category (use shared comp) -->
+		<div class="mt-2 mb-1 flex w-full max-w-[320px] justify-start">
+			<V2SharedNavigateBackButton backTo="Categories" @click="goBack" />
+		</div>
 
-      //- display items
-      div.w-full.flex.justify-center
-        div.max-w-275px.flex.flex-col.items-center
-          div.grid.grid-cols-1.gap-y-4
-            V2ShoppingItemCard(
-              v-for="item in filteredItems"
-              :key="item.itemID"
-              typeOfCard="SHOPPING"
-              :imgName="item.imgName"
-              :itemDeal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
-              :itemID="item.itemID"
-              :name="item.name"
-            )
+		<!-- category title -->
+		<h1 class="mt-1 mb-2 text-center text-2xl font-bold">{{ categoryTitle || "Category" }}</h1>
+		<div class="mx-auto mb-6 flex w-full max-w-xl flex-col items-center">
+			<!-- sortby -->
+			<div class="mb-3 flex w-full justify-center">
+				<Listbox v-model="sortOption" v-slot="{ open }">
+					<div class="relative grow">
+						<ListboxButton
+							class="modal-button border-cupboardv2-lg flex h-8 w-full flex-row items-center rounded border bg-white px-3 text-left text-sm font-normal"
+						>
+							<div class="grow">{{ sortOption }}</div>
+							<ChevronUpIcon v-if="open" class="fill-cupboardv2-dg stroke-cupboardv2-dg h-5" />
+							<ChevronDownIcon v-else class="fill-cupboardv2-dg stroke-cupboardv2-dg h-5" />
+						</ListboxButton>
+						<TransitionsDropDown>
+							<ListboxOptions
+								class="divide-cupboard-lg drop-shadow-standard absolute top-10 z-50 max-h-48 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
+							>
+								<ListboxOption
+									v-for="option in sortOptions"
+									:key="option"
+									:value="option"
+									class="hover:bg-cupboardv2-lg cursor-pointer p-1 text-center text-sm text-wrap"
+								>
+									{{ option }}
+								</ListboxOption>
+							</ListboxOptions>
+						</TransitionsDropDown>
+					</div>
+				</Listbox>
+			</div>
+
+			<!-- seach bar -->
+			<div class="mb-6 flex w-full justify-center">
+				<V2SharedSearchBar style="width: 320px" v-model="searchQuery" :category-items="filteredItems" />
+			</div>
+		</div>
+
+		<!-- display items -->
+		<div class="flex w-full justify-center">
+			<div class="max-w-275px flex flex-col items-center">
+				<div class="grid grid-cols-1 gap-y-4">
+					<V2ShoppingItemCard
+						v-for="item in filteredItems"
+						:key="item.itemID"
+						typeOfCard="SHOPPING"
+						:imgName="item.imgName"
+						:itemDeal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
+						:itemID="item.itemID"
+						:name="item.name"
+					/>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

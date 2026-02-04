@@ -1,70 +1,100 @@
-<template lang="pug">
-div
-	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Review Changes")(class="md_max-w-[600px]").md_rounded-b-3xl
-	div.flex.flex-col.items-center.p-6.gap-3.lg_items-start.pt-10.mt-20
-		// Source Dropdown
-		Listbox(v-model="selectedSource" v-slot="{ open }")
-			div.relative
-				ListboxButton.modal-button.flex.flex-row.w-72.bg-white.text-lg.px-4.items-center.text-left.font-normal.border-2.border-cupboardv2-lg
-					div.grow
-						| {{ selectedSource || "Source" }}
-					ChevronUpIcon(v-if="open").fill-cupboardv2-dg.stroke-cupboardv2-dg.h-7
-					ChevronDownIcon(v-else).fill-cupboardv2-dg.stroke-cupboardv2-dg.h-7
-				TransitionsDropDown
-					ListboxOptions.absolute.top-14.bg-white.drop-shadow-standard.rounded-xl.w-full.max-h-36.divide-y.divide-cupboard-lg.overflow-y-auto.overscroll-contain.z-50
-						ListboxOption(
-							v-for="source in sources"
-							:key="source.name"
-							:value="source.name"
-						).p-1.text-center.text-lg.cursor-pointer.text-wrap.hover_bg-cupboardv2-lg
-							| {{ source.name }}
-		// Metadata input field
-		div(v-if="fields.length > 0").flex.flex-col.lg_flex-row.gap-3
-			div(v-for="fieldName in fields" :key="fieldName").flex.flex-col.gap-1.w-72
-				label(:for="fieldName").text-lg.font-semibold {{ fieldName }}
+<template>
+	<div>
+		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
+			<V2SharedHeaderSubheader pageTitle="Review Changes" class="md:max-w-[600px] md:rounded-b-3xl"></V2SharedHeaderSubheader>
+		</div>
+		<div class="mt-20 flex flex-col items-center gap-3 p-6 pt-10 lg:items-start">
+			<!-- Source Dropdown -->
+			<Listbox v-model="selectedSource" v-slot="{ open }">
+				<div class="relative">
+					<ListboxButton
+						class="modal-button border-cupboardv2-lg flex w-72 flex-row items-center border-2 bg-white px-4 text-left text-lg font-normal"
+					>
+						<div class="grow">
+							{{ selectedSource || "Source" }}
+						</div>
+						<ChevronUpIcon v-if="open" class="fill-cupboardv2-dg stroke-cupboardv2-dg h-7" />
+						<ChevronDownIcon v-else class="fill-cupboardv2-dg stroke-cupboardv2-dg h-7" />
+					</ListboxButton>
+					<TransitionsDropDown>
+						<ListboxOptions
+							class="drop-shadow-standard divide-cupboard-lg absolute top-14 z-50 max-h-36 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
+						>
+							<ListboxOption
+								v-for="source in sources"
+								:key="source.name"
+								:value="source.name"
+								class="hover:bg-cupboardv2-lg cursor-pointer p-1 text-center text-lg text-wrap"
+							>
+								{{ source.name }}
+							</ListboxOption>
+						</ListboxOptions>
+					</TransitionsDropDown>
+				</div>
+			</Listbox>
+			<!-- Metadata input field -->
+			<div v-if="fields.length > 0" class="flex flex-col gap-3 lg:flex-row">
+				<div v-for="fieldName in fields" :key="fieldName" class="flex w-72 flex-col gap-1">
+					<label :for="fieldName" class="text-lg font-semibold">{{ fieldName }}</label>
 
-				div.bg-white.h-12.rounded-md.flex.items-center.border.border-gray-300.transition-all.duration-50(
-					class="focus-within_border-blue-400 focus-within_drop-shadow-standard"
-				)
-					input.w-full.bg-transparent.outline-none.border-none.text-base.pl-2(
-						type="text"
-						placeholder="Enter data"
-						:id="fieldName"
-						v-model="fieldInputs[fieldName]"
-					)
+					<div
+						class="flex h-12 items-center rounded-md border border-gray-300 bg-white transition-all duration-50"
+						:class="{ 'focus-within:drop-shadow-standard focus-within:border-blue-400': true }"
+					>
+						<input
+							v-model="fieldInputs[fieldName]"
+							type="text"
+							placeholder="Enter data"
+							:id="fieldName"
+							class="w-full border-none bg-transparent pl-2 text-base outline-none"
+						/>
+					</div>
+				</div>
+			</div>
 
-		// Small Screens (Rectangle Cards), width scales and keeps a single column format
-		div(v-if="displayRectangleCards").flex.flex-col.gap-y-3.my-4.items-stretch.block.w-full.max-w-xl.mx-auto
-			V2InventoryReviewCardRectangle(
-				v-for="item in changedItems"
-				:key="item.id"
-				:adjustedCount="item.newCount"
-				:imgName="item.imgName"
-				:itemCount="item.oldCount"
-				:itemName="item.name"
-			).w-full
-		// Large Screens (Square Cards)
-		div(v-if="displaySquareCards" :style="{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 250px))', gap: '1rem' }").my-4.w-full.mx-auto
-			V2InventoryReviewCardSquare(
-				v-for="item in changedItems"
-				:key="item.id"
-				:adjustedCount="item.newCount"
-				:imgName="item.imgName"
-				:itemCount="item.oldCount"
-				:itemName="item.name"
-			)
+			<!-- Small Screens (Rectangle Cards), width scales and keeps a single column format -->
+			<div v-if="displayRectangleCards" class="mx-auto my-4 block flex w-full max-w-xl flex-col items-stretch gap-y-3">
+				<V2InventoryReviewCardRectangle
+					v-for="item in changedItems"
+					:key="item.id"
+					:adjustedCount="item.newCount"
+					:imgName="item.imgName"
+					:itemCount="item.oldCount"
+					:itemName="item.name"
+				></V2InventoryReviewCardRectangle>
+			</div>
+			<!-- Large Screens (Square Cards) -->
+			<div
+				v-if="displaySquareCards"
+				:style="{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 250px))', gap: '1rem' }"
+				class="mx-auto my-4 w-full"
+			>
+				<V2InventoryReviewCardSquare
+					v-for="item in changedItems"
+					:key="item.id"
+					:adjustedCount="item.newCount"
+					:imgName="item.imgName"
+					:itemCount="item.oldCount"
+					:itemName="item.name"
+				></V2InventoryReviewCardSquare>
+			</div>
 
-		// Footer Buttons
-		div.flex.flex-row.gap-x-4.mt-32.lg_mt-0.lg_justify-end.lg_self-end
-			button(@click="goBack").bg-cupboardv2-dg.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
-				p.text-white.text-xl.font-bold Cancel
-			button(
-				:class="selectedSource ? 'bg-utd-orange' : 'bg-utd-orange/40 cursor-not-allowed'"
-				@click="submit"
-				:disabled="!selectedSource"
-			).w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
-				p.text-white.text-xl.font-bold Submit
+			<!-- Footer Buttons -->
+			<div class="lg_mt-0 lg_justify-end lg_self-end mt-32 flex flex-row gap-x-4">
+				<button @click="goBack" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+					<p class="text-xl font-bold text-white">Cancel</p>
+				</button>
+				<button
+					:class="selectedSource ? 'bg-utd-orange' : 'bg-utd-orange/40 cursor-not-allowed'"
+					@click="submit"
+					:disabled="!selectedSource"
+					class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl"
+				>
+					<p class="text-xl font-bold text-white">Submit</p>
+				</button>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>

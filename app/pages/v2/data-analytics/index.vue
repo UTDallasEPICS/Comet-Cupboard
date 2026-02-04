@@ -1,8 +1,7 @@
-<template lang="pug">
-div
-    p Put stuff here
-    V2DataAnalyticsIncomingItemsChart(title="Test", timeLevel="Week")
+<template>
+	<div>
+		<V2DataAnalyticsIncomingItemsChart title="Test" timeLevel="Week" />
+	</div>
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>

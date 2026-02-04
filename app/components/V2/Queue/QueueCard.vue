@@ -1,27 +1,28 @@
-<template lang="pug">
-//- Card representing the student in the queue
-div.w-full.flex.flex-row.flex-wrap.gap-x-4.items-center.rounded-xl.drop-shadow-standard.bg-white.p-2
-    
-    //- Displays the student's net ID at the left of the card
-    div.font-bold.h-full.text-nowrap.min-w-28
-        p {{ position }}. {{ identification }}
-    
-    //- Displays the timer at the center of the card - the timer is empty for now.
-    div.ml-auto
-        p 00:00:00
-        //- **************WILL CONTAIN THE TIMER FUNCTION***************
-    
-    //- Displays the confirm and remove buttons at the right of the card
-    div.flex.flex-row.items-center.ml-auto.gap-1
-        
-        //- Remove button: if pressed, then the student is removed from the queue
-        button(@click="removeFromQueue").remove-button-effects.aspect-square.w-8
-            XMarkIcon
-
-        //- Confirm button: if pressed, then the student is moved to the cupboard.
-        button(@click="intoCupboard").remove-button-effects.aspect-square.w-8
-            CheckIcon
+<template>
+	<div class="drop-shadow-standard flex w-full flex-row flex-wrap items-center gap-x-4 rounded-xl bg-white p-2">
+		<!-- Displays the student's net ID at the left of the card -->
+		<div class="h-full min-w-28 font-bold text-nowrap">
+			<p>{{ position }}. {{ identification }}</p>
+		</div>
+		<!-- Displays the timer at the center of the card - the timer is empty for now. -->
+		<div class="ml-auto">
+			<p>00:00:00</p>
+			<!-- **************WILL CONTAIN THE TIMER FUNCTION*************** -->
+		</div>
+		<!-- Displays the confirm and remove buttons at the right of the card -->
+		<div class="ml-auto flex flex-row items-center gap-1">
+			<!-- Remove button: if pressed, then the student is removed from the queue -->
+			<button @click="removeFromQueue" class="remove-button-effects aspect-square w-8">
+				<XMarkIcon />
+			</button>
+			<!-- Confirm button: if pressed, then the student is moved to the cupboard. -->
+			<button @click="intoCupboard" class="remove-button-effects aspect-square w-8">
+				<CheckIcon />
+			</button>
+		</div>
+	</div>
 </template>
+
 <script lang="ts" setup>
 import { CheckIcon, XMarkIcon } from "@heroicons/vue/24/solid"
 

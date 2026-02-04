@@ -1,20 +1,19 @@
-<template lang="pug">
-
-//- Card representing the specified volunteer
-div.w-full.flex.rounded-xl.drop-shadow-standard.bg-white.p-2
-  
-  //- Volunteer icon
-  div.aspect-square
-    UserIcon
-  
-  //- Displays the net ID of the specified volunteer on the left of the card.
-  div.font-bold.h-full.flex.items-center.ml-2.pr-1
-    p {{volunteerID}}
-  
-  //- X button: if pressed, then move to the page for deleting the specified volunteer.
-  button(@click="deleteVolunteer(volunteerID)").remove-button-effects.aspect-square.w-8.ml-auto
-    XMarkIcon
-
+<template>
+	<!-- Card representing the specified volunteer -->
+	<div class="drop-shadow-standard flex w-full rounded-xl bg-white p-2">
+		<!-- Volunteer icon -->
+		<div class="aspect-square">
+			<UserIcon />
+		</div>
+		<!-- Displays the net ID of the specified volunteer on the left of the card. -->
+		<div class="ml-2 flex h-full items-center pr-1 font-bold">
+			<p>{{ volunteerID }}</p>
+		</div>
+		<!-- X button: if pressed, then move to the page for deleting the specified volunteer. -->
+		<button @click="deleteVolunteer(volunteerID)" class="remove-button-effects ml-auto aspect-square w-8">
+			<XMarkIcon />
+		</button>
+	</div>
 </template>
 
 <script lang="ts" setup>

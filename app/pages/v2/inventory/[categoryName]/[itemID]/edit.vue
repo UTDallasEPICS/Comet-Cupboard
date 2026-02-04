@@ -1,47 +1,69 @@
-<template lang="pug">
-div
-	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Edit")(class="md_max-w-[600px]").md_rounded-b-3xl
-	div(v-if="item").flex.flex-col.items-center.justify-center.gap-y-8.pt-10.mt-20
-		div.bg-white.w-full.max-w-80.h-80.rounded-xl.flex.flex-col.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
-			img(v-if="imageUrl" :src="imageUrl").absolute.inset-0.w-full.h-full.object-cover
-			label(
-				:class="{ 'bg-cupboardv2-lg bg-opacity-60': imageUrl }"
-				for="fileInput"
-			).z-10.flex.flex-row.items-center.justify-center.gap-x-3.bg-utd-green.w-40.h-16.rounded-xl.flex.gap-3.drop-shadow-standard.cursor-pointer
-				div.flex.flex-row.items-center.gap-x-3
-					CloudArrowUpIcon.w-12.h-12.text-white
-					p.text-xl.text-white.font-bold Upload
-			input#fileInput(accept=".jpg, .jpeg, .png" type="file" @change="handleFileUpload").hidden
-		div.flex.flex-col.items-center
-			input(
-				placeholder="Item Name (Limit 20 Characters)"
-				type="text"
-				v-model="itemName"
-				@input="validateInput"
-			).w-full.w-80.bg-transparent.outline-none.border-none.text-lg.text-left.text-black
-			div(class="h-[2px]").bg-cupboardv2-dg.w-72.rounded-xl.-mt-1
-		Listbox(v-model="selectedCategory" v-slot="{ open }")
-			div.relative
-				ListboxButton.modal-button.flex.flex-row.w-72.bg-white.text-lg.px-4.items-center.text-left.font-normal.border-2.border-cupboardv2-lg
-					div.grow
-						| {{ selectedCategory || "Category" }}
-					ChevronUpIcon(v-if="open").fill-cupboardv2-dg.stroke-cupboardv2-dg.h-5
-					ChevronDownIcon(v-else).fill-cupboardv2-dg.stroke-cupboardv2-dg.h-5
-				TransitionsDropDown
-					ListboxOptions.absolute.top-12.z-50.bg-white.drop-shadow-standard.rounded-xl.w-full.max-h-36.divide-y.divide-cupboard-lg.overflow-y-auto.overscroll-contain
-						ListboxOption(
+<template>
+	<div>
+		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
+			<V2SharedHeaderSubheader pageTitle="Edit" class="md:max-w-[600px] md:rounded-b-3xl"></V2SharedHeaderSubheader>
+		</div>
+		<div v-if="item" class="mt-20 flex flex-col items-center justify-center gap-y-8 pt-10">
+			<div class="drop-shadow-standard relative flex h-80 w-full max-w-80 flex-col items-center justify-center gap-3 overflow-hidden rounded-xl bg-white">
+				<img v-if="imageUrl" :src="imageUrl" class="absolute inset-0 h-full w-full object-cover" />
+				<label
+					:class="{ 'bg-cupboardv2-lg bg-opacity-60': imageUrl }"
+					for="fileInput"
+					class="bg-utd-green drop-shadow-standard z-10 flex h-16 w-40 cursor-pointer flex-row items-center justify-center gap-3 gap-x-3 rounded-xl"
+				>
+					<div class="flex flex-row items-center gap-x-3">
+						<CloudArrowUpIcon class="h-12 w-12 text-white" />
+						<p class="text-xl font-bold text-white">Upload</p>
+					</div>
+				</label>
+				<input id="fileInput" accept=".jpg, .jpeg, .png" type="file" @change="handleFileUpload" class="hidden" />
+			</div>
+			<div class="flex flex-col items-center">
+				<input
+					placeholder="Item Name (Limit 20 Characters)"
+					type="text"
+					v-model="itemName"
+					@input="validateInput"
+					class="w-80 w-full border-none bg-transparent text-left text-lg text-black outline-none"
+				/>
+				<div class="bg-cupboardv2-dg -mt-1 h-[2px] w-72 rounded-xl"></div>
+			</div>
+			<Listbox v-model="selectedCategory" v-slot="{ open }">
+				<div class="relative">
+					<ListboxButton
+						class="modal-button border-cupboardv2-lg flex w-72 flex-row items-center border-2 bg-white px-4 text-left text-lg font-normal"
+					>
+						<div class="grow">
+							{{ selectedCategory || "Category" }}
+						</div>
+						<ChevronUpIcon v-if="open" class="fill-cupboardv2-dg stroke-cupboardv2-dg h-5" />
+						<ChevronDownIcon v-else class="fill-cupboardv2-dg stroke-cupboardv2-dg h-5" />
+					</ListboxButton>
+					<ListboxOptions
+						class="drop-shadow-standard divide-cupboard-lg absolute top-12 z-50 max-h-36 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
+					>
+						<ListboxOption
 							v-for="category in categories"
 							:key="category.name"
 							:value="category.name"
-						).p-1.text-center.text-lg.cursor-pointer.text-wrap.hover_bg-cupboardv2-lg
-							| {{ category.name }}
-		// Footer Buttons
-		div.flex.flex-row.gap-x-4.mt-20
-			button(@click="goBack").bg-cupboardv2-dg.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
-				p.text-white.text-xl.font-bold Cancel
-			button(@click="editItemSubmit").bg-utd-orange.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
-				p.text-white.text-xl.font-bold Submit
+							class="hover:bg-cupboardv2-lg cursor-pointer p-1 text-center text-lg text-wrap"
+						>
+							{{ category.name }}
+						</ListboxOption>
+					</ListboxOptions>
+				</div>
+			</Listbox>
+			<!-- Footer Buttons -->
+			<div class="mt-20 flex flex-row gap-x-4">
+				<button @click="goBack" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+					<p class="text-xl font-bold text-white">Cancel</p>
+				</button>
+				<button @click="editItemSubmit" class="bg-utd-orange drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+					<p class="text-xl font-bold text-white">Submit</p>
+				</button>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>

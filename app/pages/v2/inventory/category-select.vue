@@ -1,10 +1,14 @@
-<template lang="pug">
-div
-	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Category Select")(class="md_max-w-[600px]").md_rounded-b-3xl
-	div.p-6.mt-20
-		div(style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))").grid.w-full.mx-auto.gap-x-6.gap-y-3
-			V2SharedCategoryCard(v-for="(category, i) in categories" :key="i" :categoryName="category.name" :imageSrc="category.img")
+<template>
+	<div>
+		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
+			<V2SharedHeaderSubheader pageTitle="Category Select" class="md:max-w-[600px] md:rounded-b-3xl"></V2SharedHeaderSubheader>
+		</div>
+		<div class="mt-20 p-6">
+			<div class="mx-auto grid w-full gap-x-6 gap-y-3" style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))">
+				<V2SharedCategoryCard v-for="(category, i) in categories" :key="i" :categoryName="category.name" :imageSrc="category.img" />
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>

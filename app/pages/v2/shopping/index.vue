@@ -1,11 +1,13 @@
-<template lang="pug">
-div.p-4
-	// HEADER - centered
-	h1.text-2xl.font-bold.text-center.mb-2 Category
+<template>
+	<div class="p-4">
+		<!-- HEADER - centered -->
+		<h1 class="mb-2 text-center text-2xl font-bold">Category</h1>
 
-	// CATEGORY GRID
-	div(class="max-w-[1750px]").grid.w-full.mx-auto.gap-x-6.gap-y-3.grid-cols-1.sm_grid-cols-2.lg_grid-cols-3
-		V2ShoppingCategoriesCard(v-for="(category, i) in categories" :key="i" :categoryName="category.name" :imageSrc="category.img")
+		<!-- CATEGORY GRID -->
+		<div class="mx-auto grid w-full max-w-[1750px] grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+			<V2ShoppingCategoriesCard v-for="(category, i) in categories" :key="i" :categoryName="category.name" :imageSrc="category.img" />
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -30,6 +32,4 @@ onMounted(async () => {
     await $fetch("/api/cart/cart", { method: "PUT" })
   } catch {}
 })
-
 </script>
-

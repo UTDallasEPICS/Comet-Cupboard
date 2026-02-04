@@ -1,14 +1,24 @@
-<template lang="pug">
-div.flex.flex-col.gap-y-4.min-w-72.min-h-12
-	div(v-if="pendingCartIDsAndAdjQTY.length === 0").flex.flex-row.grow.justify-center.items-center
-		p.p-1.text-center.text-xl.text-black.font-semibold There are no carts
-	div(v-else).flex.flex-col.gap-4
-		button(
-			v-for="pendingCart in pendingCartIDsAndAdjQTY"
-			@click="emit('update:select-cart', pendingCart.cartID)"
-		).w-72.h-12.rounded-lg.border.border-outlining-gray-v2.bg-white.border
-			div.flex.justify-center.items-center
-				p.p-1.text-xl.text-center.font-semibold {{ pendingCart.cartID }}
+<template>
+	<div class="flex min-h-12 min-w-72 flex-col gap-y-4">
+		<div v-if="pendingCartIDsAndAdjQTY.length === 0" class="flex grow flex-row items-center justify-center">
+			<p class="p-1 text-center text-xl font-semibold text-black">There are no carts</p>
+		</div>
+		<div v-else class="flex flex-col gap-4">
+			<button
+				v-for="pendingCart in pendingCartIDsAndAdjQTY"
+				@click="emit('update:select-cart', pendingCart.cartID)"
+				class="border-outlining-gray-v2 h-12 w-72 rounded-lg border bg-white"
+				:key="pendingCart.cartID"
+			>
+				<div class="flex items-center justify-center">
+					<p class="p-1 text-center text-xl font-semibold">
+						{{ pendingCart.cartID }}
+						<span v-if="pendingCart.adjQTY !== 0"> ({{ pendingCart.adjQTY >= 0 ? "+" : "" }}{{ pendingCart.adjQTY }})</span>
+					</p>
+				</div>
+			</button>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>

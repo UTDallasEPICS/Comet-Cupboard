@@ -1,16 +1,15 @@
-<template lang="pug">
-
-//- Card representing the specified source.
-div.w-full.flex.rounded-xl.drop-shadow-standard.bg-white.p-2
-  
-  //- Displays the name of the specified source on the left of the card.
-  div.font-bold.h-full.flex.items-center.pr-1
-    p {{sourceName}}
-  
-  //- Edit button: if this button is pressed, move to the page for editing fields fo the specified source.
-  button(@click="editSource(sourceName)").remove-button-effects.aspect-square.w-8.ml-auto
-    PencilIcon
-
+<template>
+	<!-- Card representing the specified source -->
+	<div class="drop-shadow-standard flex w-full rounded-xl bg-white p-2">
+		<!-- Displays the name of the specified source on the left of the card. -->
+		<div class="ml-2 flex h-full items-center pr-1 font-bold">
+			<p>{{ sourceName }}</p>
+		</div>
+		<!-- Edit button: if this button is pressed, move to the page for editing fields fo the specified source. -->
+		<button @click="editSource(sourceName)" class="remove-button-effects ml-auto aspect-square w-8">
+			<PencilIcon />
+		</button>
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -25,5 +24,4 @@ function editSource(nameOfSource: string|undefined)
 {
   navigateTo({path: `/v2/admin/source/${nameOfSource}/edit`});//Navigates to the page for editing fields fo the specified source.
 }
-
 </script>

@@ -1,16 +1,17 @@
-<template lang="pug">
-  //-accepted message + countdown
-  div.relative.flex.items-center.justify-center.px-4(class="w-full h-[97px] bg-[#8ABF65]")
-    p.font-montserrat.font-medium.text-black.text-center(class="text-[20px] leading-[24px]")
-      | Your cart has been accepted. Automatically signing out in {{ countdown }}...
+<template>
+	<!-- accepted message + countdown -->
+	<div class="relative flex w-full items-center justify-center px-4" style="height: 97px; background-color: #8abf65">
+		<p class="font-montserrat text-center font-medium text-black" style="font-size: 20px; line-height: 24px">
+			Your cart has been accepted. Automatically signing out in {{ countdown }}...
+		</p>
+	</div>
 </template>
 
 <script setup lang="ts">
 defineProps({
-  countdown: {
-    type: Number,
-    required: true,
-  },
+	countdown: {
+		type: Number,
+		required: true,
+	},
 })
 </script>
-

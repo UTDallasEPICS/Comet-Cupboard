@@ -1,15 +1,18 @@
-<template lang="pug">
-div.bg-white.h-64.rounded-xl.flex.flex-col.items-center.gap-3.justify-top.drop-shadow-standard.relative
-	// Image container
-	div.relative.w-32.h-32.flex-shrink-0.overflow-hidden.mt-4
-		img(:alt="itemName" :src="`/api/image/${imgName}`").w-full.h-full.object-cover
-		PhotoIcon.w-full.h-full.txt-cupboardv2-dg
-	// Text container (flex vertical)
-	div.flex.flex-col.items-center.gap-4
-		// Item name and in stock
-		p.text-2xl.font-semibold {{ itemName }}
-	p.text-xl.absolute.left-8.bottom-6 Count: {{ adjustedCount }}
-	p.text-xl.font-bold.absolute.right-8.bottom-6 {{ changeInCount }}
+<template>
+	<div class="drop-shadow-standard relative flex h-64 w-full max-w-sm flex-col items-center rounded-xl bg-white">
+		<!-- Image container -->
+		<div class="relative mt-4 h-20 w-20 flex-shrink-0 overflow-hidden">
+			<img :alt="itemName" :src="`/api/image/${imgName}`" class="h-full w-full object-cover" />
+			<PhotoIcon class="text-cupboardv2-dg h-full w-full" />
+		</div>
+		<!-- Text container (flex vertical) -->
+		<div class="flex flex-col items-center gap-4">
+			<!-- Item name and in stock -->
+			<p class="text-2xl font-semibold">{{ itemName }}</p>
+			<p class="text-xl">Count: {{ adjustedCount }}</p>
+			<p class="text-xl font-bold">{{ changeInCount }}</p>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>

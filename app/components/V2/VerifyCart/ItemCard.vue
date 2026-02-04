@@ -1,25 +1,33 @@
-<template lang="pug">
-div.bg-utd-gray-v2.h-36.border.border-outlining-gray-v2.px-2.py-1.rounded-lg.flex.justify-between.items-center
-    div.min-w-24.max-w-24.aspect-square.relative
-        img(:src="`/api/image/${imgName}`")
-        div(v-if="dealExists").absolute.bg-utd-orange.rounded-br-lg.w-16.px-1.top-0.left-0
-            p.text-white.text-center.text-sm {{ dealText }}
-    div.mx-1.flex.flex-col.gap-y-0.w-full.leading-none.mx-0
-        p.text-left.ml-1 {{ name }}
-        div.border-black.border-t
-        div.flex.flex-row.justify-between
-            p.text-left.ml-1 Total QTY
-            p.text-right.h-full.mr-1 {{ totalQTY }}
-        div.flex.flex-row.justify-between 
-            p.text-left.ml-1 Deals
-            p(v-if="dealCount != 0").text-right.h-full.mr-1 {{ -dealCount }}  
-        div.flex.flex-row.justify-between
-            p.text-left.ml-1 Expired
-            p(v-if="expiredCount != 0").text-right.h-full.mr-1 {{ -expiredCount }}
-        div.border-black.border-t
-        div.flex.flex-row.justify-between
-            p.text-left.ml-1 Adjusted QTY
-            p.text-right.h-full.mr-1 {{ adjustedQTY }}
+<template>
+	<div class="bg-utd-gray-v2 border-outlining-gray-v2 flex h-36 items-center justify-between rounded-lg border px-2 py-1">
+		<div class="relative aspect-square max-w-24 min-w-24">
+			<img :src="`/api/image/${imgName}`" />
+			<div v-if="dealExists" class="bg-utd-orange absolute top-0 left-0 w-16 rounded-br-lg px-1">
+				<p class="text-center text-sm text-white">{{ dealText }}</p>
+			</div>
+		</div>
+		<div class="mx-0 mx-1 flex w-full flex-col gap-y-0 leading-none">
+			<p class="ml-1 text-left">{{ name }}</p>
+			<div class="border-t border-black"></div>
+			<div class="flex flex-row justify-between">
+				<p class="ml-1 text-left">Total QTY</p>
+				<p class="mr-1 h-full text-right">{{ totalQTY }}</p>
+			</div>
+			<div class="flex flex-row justify-between">
+				<p class="ml-1 text-left">Deals</p>
+				<p v-if="dealCount != 0" class="mr-1 h-full text-right">{{ -dealCount }}</p>
+			</div>
+			<div class="flex flex-row justify-between">
+				<p class="ml-1 text-left">Expired</p>
+				<p v-if="expiredCount != 0" class="mr-1 h-full text-right">{{ -expiredCount }}</p>
+			</div>
+			<div class="border-t border-black"></div>
+			<div class="flex flex-row justify-between">
+				<p class="ml-1 text-left">Adjusted QTY</p>
+				<p class="mr-1 h-full text-right">{{ adjustedQTY }}</p>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>

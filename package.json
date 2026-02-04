@@ -28,7 +28,6 @@
 		"nuxt": "^4.1.0",
 		"pinia": "^3.0.2",
 		"plotly.js-dist-min": "^3.0.1",
-		"pug": "^3.0.3",
 		"tailwindcss": "^4.1.18",
 		"vue": "^3.4.29",
 		"vue-router": "^4.3.3",

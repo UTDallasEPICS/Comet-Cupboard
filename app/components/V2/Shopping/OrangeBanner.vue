@@ -1,8 +1,11 @@
-<template lang="pug">
-//- orange banner
-div.w-full.text-white.font-bold.font-montserrat.text-center.flex.items-center.justify-center(
-  :style="{ height: height + 'px', fontSize: '25px', lineHeight: '30px', backgroundColor: '#E4701E' }"
-) {{ title }}
+<template>
+	<!-- orange banner -->
+	<div
+		class="font-montserrat flex w-full items-center justify-center text-center font-bold text-white"
+		:style="{ height: height + 'px', fontSize: '25px', lineHeight: '30px', backgroundColor: '#E4701E' }"
+	>
+		{{ title }}
+	</div>
 </template>
 
 <script setup lang="ts">

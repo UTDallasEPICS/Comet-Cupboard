@@ -1,19 +1,27 @@
-<template lang="pug">
-div
-	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Return to Categories")(class="md_max-w-[600px]").md_rounded-b-3xl
-	div.flex.flex-col.items-center.justify-center.gap-y-8.pt-10.mt-10
-		V2SharedStatusMessageWarning(warningMessage="This will remove all in progress changes!")
-		div.bg-white.w-full.max-w-96.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative
-			// Delete confirmation text
-			div.flex.flex-col.items-center.justify-center.text-center.px-8.w-full
-				p.text-3xl.text-black.font-normal.break-words Are you sure you want to return?
-		// Footer Buttons
-		div.flex.flex-row.gap-x-4.mt-20
-			button(@click="goBack").bg-cupboardv2-dg.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
-				p.text-white.text-xl.font-bold Cancel
-			button(@click="categoryReturn").bg-utd-orange.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
-				p.text-white.text-xl.font-bold Yes
+<template>
+	<div>
+		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
+			<V2SharedHeaderSubheader pageTitle="Return to Categories" class="md:max-w-[600px]"></V2SharedHeaderSubheader>
+		</div>
+		<div class="mt-10 flex flex-col items-center justify-center gap-y-8 pt-10">
+			<V2SharedStatusMessageWarning warningMessage="This will remove all in progress changes!"></V2SharedStatusMessageWarning>
+			<div class="drop-shadow-standard relative flex h-80 w-full max-w-96 flex-col items-center justify-center gap-3 rounded-xl bg-white">
+				<!-- Delete confirmation text -->
+				<div class="flex w-full flex-col items-center justify-center px-8 text-center">
+					<p class="text-3xl font-normal break-words text-black">Are you sure you want to return?</p>
+				</div>
+			</div>
+			<!-- Footer Buttons -->
+			<div class="mt-20 flex flex-row gap-x-4">
+				<button @click="goBack" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+					<p class="text-xl font-bold text-white">Cancel</p>
+				</button>
+				<button @click="categoryReturn" class="bg-utd-orange drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+					<p class="text-xl font-bold text-white">Yes</p>
+				</button>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>

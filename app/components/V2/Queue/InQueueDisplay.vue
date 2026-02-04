@@ -1,23 +1,24 @@
-<template lang="pug">
-//- Queue display:
-div.min-w-72.flex.flex-col.flex-grow.rounded-xl.overflow-auto.bg-white.px-4.pb-4
-    
-    //- Displays the heading for the queue display:
-    div.text-utd-green.flex.items-center.justify-center.text-xl.font-bold.w-full.h-10
-        p In Queue
-    
-    //- No matter what if the queue is empty, display a message that it is empty
-    div(v-if="queue.length == 0").w-full.p-4.bg-cupboardv2-2elg.flex.items-center.justify-center.rounded-xl.text-center.h-72
-        p No students waiting in the queue at this time
-    
-    //- For volunteers, display the first 5 people in the queue with control elements
-    div(v-else-if="permissions['VERIFY_CART']").w-full.p-4.bg-cupboardv2-2elg.overflow-auto.mx-auto.rounded-xl.h-72.flex.flex-col.gap-y-4
-        div(v-for="(queueItem, index) in queue.slice(0, 5)" :key="index")
-            V2QueueCard(:identification="queueItem" :position="index + 1")
-    
-    //- For students, displays the number of students in the queue:
-    div(v-else).w-full.p-4.bg-cupboardv2-2elg.flex.items-center.justify-center.h-9.rounded-xl
-        p # of students: {{queue.length}}
+<template>
+	<div class="flex w-full min-w-72 flex-col overflow-auto rounded-xl bg-white px-4 pb-4">
+		<!-- Displays the heading for the queue display: -->
+		<div class="text-utd-green flex h-10 w-full items-center justify-center text-xl font-bold">
+			<p>In Queue</p>
+		</div>
+		<!-- No matter what if the queue is empty, display a message that it is empty -->
+		<div v-if="queue.length == 0" class="bg-cupboardv2-2elg flex h-72 w-full items-center justify-center rounded-xl p-4 text-center">
+			<p>No students waiting in the queue at this time</p>
+		</div>
+		<!-- For volunteers, display the first 5 people in the queue with control elements -->
+		<div v-else-if="permissions['VERIFY_CART']" class="bg-cupboardv2-2elg mx-auto flex h-72 w-full flex-col gap-y-4 overflow-auto rounded-xl p-4">
+			<div v-for="(queueItem, index) in queue.slice(0, 5)" :key="index">
+				<V2QueueCard :identification="queueItem" :position="index + 1" />
+			</div>
+		</div>
+		<!-- For students, displays the number of students in the queue: -->
+		<div v-else class="bg-cupboardv2-2elg flex h-9 w-full items-center justify-center rounded-xl p-4">
+			<p># of students: {{ queue.length }}</p>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>

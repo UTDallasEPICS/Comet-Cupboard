@@ -1,11 +1,19 @@
-<template lang="pug">
-div.h-full.w-full
-	ClientOnly
-		DataPlotlyChart(
-			:config="{ scrollZoom: true, responsive: true, displaylogo: false, modeBarButtonsToRemove: ['lasso2d', 'zoom2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d', 'pan2d', 'select2d'], displayModeBar: true }"
-			:data="processedData"
-			:layout="layout"
-		).h-full.w-full
+<template>
+	<div class="h-full w-full">
+		<ClientOnly>
+			<V2DataAnalyticsPlotlyChart
+				:config="{
+					scrollZoom: true,
+					responsive: true,
+					displaylogo: false,
+					modeBarButtonsToRemove: ['lasso2d', 'zoom2d', 'zoomIn2d', 'zoomOut2d', 'resetScale2d', 'pan2d', 'select2d'],
+					displayModeBar: true,
+				}"
+				:data="processedData"
+				:layout="layout"
+			/>
+		</ClientOnly>
+	</div>
 </template>
 
 <script lang="ts" setup>

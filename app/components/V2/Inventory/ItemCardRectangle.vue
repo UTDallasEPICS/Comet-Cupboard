@@ -1,54 +1,73 @@
-<template lang="pug">
-Menu
-	div.bg-white.rounded-xl.drop-shadow-standard.relative.w-full.max-w-xl.h-28
-		// Deal tag on bottom right of card
-		div(v-if="dealExists").absolute.bottom-0.right-0.bg-utd-orange.text-white.text-sm.font-bold.px-2.rounded-br-md.rounded-tl-md {{ dealText }}
+<template>
+	<Menu>
+		<div class="drop-shadow-standard relative h-28 w-full max-w-xl rounded-xl bg-white">
+			<!-- Deal tag on bottom right of card -->
+			<div v-if="dealExists" class="bg-utd-orange absolute right-0 bottom-0 rounded-tl-md rounded-br-md px-2 text-sm font-bold text-white">
+				{{ dealText }}
+			</div>
 
-		// Settings/options button
-		MenuButton.absolute.top-1.right-1.w-8.h-4.content-center.rounded-full
-			div.flex.flex-row.space-x-1.justify-center
-				div.w-1.h-1.bg-black.rounded-full
-				div.w-1.h-1.bg-black.rounded-full
-				div.w-1.h-1.bg-black.rounded-full
+			<!-- Settings/options button -->
+			<MenuButton class="absolute top-1 right-1 h-4 w-8 content-center rounded-full">
+				<div class="flex flex-row justify-center space-x-1">
+					<div class="h-1 w-1 rounded-full bg-black"></div>
+					<div class="h-1 w-1 rounded-full bg-black"></div>
+					<div class="h-1 w-1 rounded-full bg-black"></div>
+				</div>
+			</MenuButton>
 
-		// Wrap MenuItems in TransitionsPopUp, but forward slot content
-		TransitionsPopUp
-			MenuItems.absolute.top-5.right-2.bg-white.bg-opacity-90.drop-shadow-standard.rounded-md.py-2.px-6.z-50
-				MenuItem
-					div(@click="editItem").flex.justify-center.items-center.px-1.py-1.cursor-pointer.border-b.border-cupboardv2-lg.text-lg.font-normal.hover_underline Edit
-				MenuItem
-					div(@click="editDeal").flex.justify-center.items-center.px-1.py-1.cursor-pointer.border-b.border-cupboardv2-lg.text-lg.font-normal.hover_underline Item Deal
-				MenuItem
-					div(@click="deleteItem").flex.justify-center.items-center.px-1.py-1.cursor-pointer.text-lg.font-normal.hover_underline Delete
-		div.flex.items-center.justify-between.h-full
-			// Text container (flex vertical)
-			div.flex.flex-col.ml-5.gap-y-1
-				// Item name and in stock
-				p.text-base.font-semibold {{ itemName }}
-				div.flex.gap-x-3.-translate-y-1
-					p.text-sm.center Qty:
-					div(class="border-[1px]").bg-white.w-24.h-5.border-cupboardv2-dg.rounded-xl.flex.justify-end.box-border.relative
-						div.flex.items-center.justify-center
-							span.text-sm.text-black.mr-2 {{ props.currentCount }}
-						div(:style="clipStyle").bg-cupboardv2-elg.w-14.rounded-r-xl.flex.items-center.justify-center
-							span.text-sm.text-black {{ displayChange }}
-				// Inventory adjustment buttons (flex horizontal)
-				div.flex.gap-x-3
-					button(@click="decrement").w-5.h-5.bg-cupboardv2-dg.rounded-full.flex.items-center.justify-center
-						MinusIcon(class="stroke-[3px]").w-4.h-4.text-white
-					div.relative.flex.flex-col.items-center
-						input(
-							placeholder="#"
-							type="text"
-							v-model="adjustAmount"
-							@input="validateInput"
-						).w-6.bg-transparent.outline-none.border-none.text-base.text-center.text-black
-						div(class="h-[2px]").bg-cupboardv2-dg.w-7.rounded-xl.-mt-1
-					button(@click="increment").w-5.h-5.bg-cupboardv2-dg.rounded-full.flex.items-center.justify-center
-						PlusIcon(class="stroke-[3px]").w-4.h-4.text-white
-			// Image container
-			div.relative.aspect-square.h-14.flex-shrink-0.overflow-hidden.mr-8
-				img(:alt="itemName" :src="`/api/image/${imgName}`").w-full.h-full.object-cover
+			<!-- Wrap MenuItems in TransitionsPopUp, but forward slot content -->
+			<TransitionsPopUp>
+				<MenuItems class="bg-opacity-90 drop-shadow-standard absolute top-5 right-2 z-50 rounded-md bg-white px-6 py-2">
+					<MenuItem>
+						<div
+							@click="editItem"
+							class="border-cupboardv2-lg hover:underline flex cursor-pointer items-center justify-center border-b px-1 py-1 text-lg font-normal"
+						>
+							Edit
+						</div>
+					</MenuItem>
+					<MenuItem>
+						<div
+							@click="editDeal"
+							class="border-cupboardv2-lg hover:underline flex cursor-pointer items-center justify-center border-b px-1 py-1 text-lg font-normal"
+						>
+							Item Deal
+						</div>
+					</MenuItem>
+					<MenuItem>
+						<div @click="deleteItem" class="hover:underline flex cursor-pointer items-center justify-center px-1 py-1 text-lg font-normal">
+							Delete
+						</div>
+					</MenuItem>
+				</MenuItems>
+			</TransitionsPopUp>
+
+			<div class="flex h-full items-center justify-between">
+				<!-- Text container (flex vertical) -->
+				<div class="ml-5 flex flex-col gap-y-1">
+					<!-- Item name and in stock -->
+					<p class="text-base font-semibold">{{ itemName }}</p>
+					<div class="flex -translate-y-1 gap-x-3">
+						<p class="center text-sm">Qty:</p>
+						<div class="border-cupboardv2-dg relative box-border flex h-5 w-24 justify-end rounded-xl border-[1px] bg-white">
+							<div class="flex items-center justify-center">
+								<span class="mr-2 text-sm text-black">{{ props.currentCount }}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Increment and decrement buttons -->
+				<div class="mr-5 flex flex-col items-center justify-center gap-y-2">
+					<button @click="increment" class="bg-cupboardv2-dg flex h-5 w-5 items-center justify-center rounded-full">
+						<PlusIcon class="h-4 w-4 stroke-[3px] text-white" />
+					</button>
+					<button @click="decrement" class="bg-cupboardv2-dg flex h-5 w-5 items-center justify-center rounded-full">
+						<MinusIcon class="h-4 w-4 stroke-[3px] text-white" />
+					</button>
+				</div>
+			</div>
+		</div>
+	</Menu>
 </template>
 
 <script lang="ts" setup>

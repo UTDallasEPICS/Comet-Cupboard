@@ -1,144 +1,28 @@
 /* google fonts import */
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import "tailwindcss";
 @import "@nuxt/ui";
 
 @theme {
-    --color-utd-green: #154734;
-    --color-utd-orange: #E4701E; /* slightly off from utd's orange, but matches comet cupboard colors */
-    --color-cupboard-dg: #626262;
-    --color-cupboard-mg: #B1B1B1;
-    --color-cupboard-lg: #D9D9D9;
-    --color-red-negative: #E22222;
-    --color-yellow-warning: #ffc247;
-    --color-outlining-gray-v2: #b9b9b9;
-    --color-utd-gray-v2: #f9f9f9;
-    --color-decline-red-v2: #d20b0b;
-    --color-cart-red-v2: #ffbaba;
-    --color-cart-green-v2: #d2faca;
-    --color-yellow-warning-v2: #ffd580;
-    --color-cupboardv2-dg: #4A4A4A;
-    --color-cupboardv2-lg: #B9B9B9;
-    --color-cupboardv2-elg: #D9D9D9;
-    --color-cupboardv2-2elg: #EEEEEE;
-    --color-yellow-warningv2: #FFD580;
-    --color-red-negativev2: #D20B0B;
+	--color-utd-green: #154734;
+	--color-utd-orange: #e4701e; /* slightly off from utd's orange, but matches comet cupboard colors */
+	--color-cupboard-dg: #626262;
+	--color-cupboard-mg: #b1b1b1;
+	--color-cupboard-lg: #d9d9d9;
+	--color-red-negative: #e22222;
+	--color-yellow-warning: #ffc247;
+	--color-outlining-gray-v2: #b9b9b9;
+	--color-utd-gray-v2: #f9f9f9;
+	--color-decline-red-v2: #d20b0b;
+	--color-cart-red-v2: #ffbaba;
+	--color-cart-green-v2: #d2faca;
+	--color-yellow-warning-v2: #ffd580;
+	--color-cupboardv2-dg: #4a4a4a;
+	--color-cupboardv2-lg: #b9b9b9;
+	--color-cupboardv2-elg: #d9d9d9;
+	--color-cupboardv2-2elg: #eeeeee;
+	--color-yellow-warningv2: #ffd580;
+	--color-red-negativev2: #d20b0b;
 
-    --breakpoint-tn: 400px;
-    --breakpoint-md: 825px;
-}
-
-/* Defaults the site's font to sans (montserrat) */
-@layer base {
-    html {
-        font-family: theme('fontFamily.sans');
-    }
-}
-
-@layer components {
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-    /* Hide scrollbar for IE, Edge and Firefox */
-    .no-scrollbar {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
-    }
-
-    /* button styling */
-    button {
-        text-align: center;
-        font-family: theme('fontFamily.sans');
-        font-size: x-large;
-        font-weight: 700;
-        border-radius: 15px;
-        /* horizontal, vertical, blur, grow, color */
-    }
-
-    button:active {
-        transform: scale(0.97);
-    }
-
-    button:disabled {
-        cursor: not-allowed;
-    }
-
-    button:disabled:hover {
-        box-shadow: none;
-    }
-
-    button:disabled:active {
-        transform: none;
-    }
-
-    .remove-button-effects:hover {
-        box-shadow: none;
-    }
-
-    .remove-button-effects:active {
-        transform: none;
-    }
-
-    .modal-button {
-        height: 40px;
-        font-weight: 600;
-        border-radius: 8px;
-        /* horizontal, vertical, blur, grow, color */
-    }
-
-    .drop-shadow-standard {
-        box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    /* text input styling */
-    .input {
-        height: 50px;
-        text-align: left;
-        font-family: theme('fontFamily.sans');
-        font-size: x-large;
-        font-weight: 400;
-        background-color: transparent;
-        outline: none;
-        border-bottom-style: solid;
-        border-bottom-width: 1px;
-        border-bottom-color: rgb(100,100,100);
-    }
-    .modal-input {
-        height: 40px;
-        text-align: left;
-        font-family: theme('fontFamily.sans');
-        font-size: x-large;
-        font-weight: 400;
-        background-color: transparent;
-        outline: none;
-        border-bottom-style: solid;
-        border-bottom-width: 1px;
-        border-bottom-color: rgb(100,100,100);
-    }
-
-    /* Chrome, Safari, Edge, Opera */
-    .no-spinner::-webkit-outer-spin-button,
-    .no-spinner::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    /* Firefox */
-    .no-spinner {
-        appearance: textfield;
-        -moz-appearance: textfield;
-    }
-
-    .skeleton {
-        animation: skeleton-loading 0.5s linear infinite alternate;
-    }
-
-    @keyframes skeleton-loading {
-        0% {
-            background-color: hsl(200, 20%, 80%);
-        }
-        100% {
-            background-color: hsl(200, 20%, 95%);
-        }
-    }
+	--breakpoint-tn: 400px;
+	--breakpoint-md: 825px;
 }

@@ -1,53 +1,63 @@
-<template lang="pug">
-div
-	// Top nav bar rectangle
-	div(class="min-w-[300px]").bg-utd-green.w-full.h-20.flex.items-center.px-4
-		// Hamburger button and comet cupboard image
-		div(v-if="permissions['PUBLIC']").flex.items-center.justify-start.pt-2
-			Menu(as="div" v-slot="{ close }").relative
-				MenuButton.my-auto.remove-button-effects
-					Bars3Icon.size-11.fill-white.stroke-white.cursor-pointer.hover_fill-utd-orange.hover_stroke-utd-orange
-				TransitionsDropDown
-					MenuItems(class="h-[calc(100vh-80px)]").z-50.-left-4.flex.flex-col.items-center.text-center.absolute.top-20.w-screen.sm_w-80.text-2xl.bg-white.gap-4.p-4.-mt-5
-						MenuItem(v-if="permissions['SHOPPING']" as="div").w-full
-							NuxtLink(@click.native="close" :to="shoppingPath").cursor-pointer.hover_underline
-								| Shopping
-							hr(class="border-[1.3px]").w-full.mt-4
-						MenuItem(v-if="permissions['VERIFY_CART']" as="div").w-full
-							NuxtLink(@click.native="close" :to="verifyPath").cursor-pointer.hover_underline
-								| Verify Carts
-							hr(class="border-[1.3px]").w-full.mt-4
-						MenuItem(v-if="permissions['INVENTORY_MANAGEMENT']" as="div").w-full
-							NuxtLink(@click.native="close" :to="inventoryPath").cursor-pointer.hover_underline
-								| Inventory Management
-							hr(class="border-[1.3px]").w-full.mt-4
-						MenuItem(as="div").w-full
-							NuxtLink(@click.native="close" :to="queuePath").cursor-pointer.hover_underline
-								| Queue
-							hr(class="border-[1.3px]").w-full.mt-4
-						MenuItem(v-if="permissions['ADMIN']" as="div").w-full
-							NuxtLink(@click.native="close" :to="dataPath").cursor-pointer.hover_underline
-								| Data
-							hr(class="border-[1.3px]").w-full.mt-4
-						MenuItem(v-if="permissions['ADMIN']" as="div").w-full
-							NuxtLink(@click.native="close" :to="sourcePath").cursor-pointer.hover_underline
-								| Manage Sources
-							hr(class="border-[1.3px]").w-full.mt-4
-						MenuItem(v-if="permissions['ADMIN']" as="div").w-full
-							NuxtLink(@click.native="close" :to="volunteerPath").cursor-pointer.hover_underline
-								| Manage Volunteers
-							hr(class="border-[1.3px]").w-full.mt-4
-		// Comet Cupboard Logo
-		div.relative.overflow-hidden.ml-4
-			img(src="/CometCupboardLogo1.png").h-10
-		div.ml-auto.flex.flex-row.h-full
-			div(v-if="page.includes('shopping')").relative
-				V2ShoppingCartIconAnimate.size-11.min-w-10.fill-white.justify-self-right.hover_fill-utd-orange
-				//- span(v-if="cartTotalCount != 0").px-2.text-xl.absolute.font-bold.-top-2.rounded-full.-right-2.text-xl.text-white.bg-utd-orange {{ cartTotalCount }}
-
-			// for now this is a link to the sign in page (test + nowhere else yet)
-			button(v-if="permissions['PUBLIC']" @click="logout").remove-button-effects.ml-4
-				ArrowRightStartOnRectangleIcon.size-10.min-w-10.fill-white.hover_fill-utd-orange
+<template>
+	<!-- Top nav bar rectangle -->
+	<div class="bg-utd-green flex h-20 w-full min-w-[300px] items-center px-4">
+		<!-- Hamburger button and comet cupboard image -->
+		<div v-if="permissions['PUBLIC']" class="flex items-center justify-start pt-2">
+			<Menu as="div" class="relative" v-slot="{ close }">
+				<MenuButton class="remove-button-effects my-auto">
+					<Bars3Icon class="hover:fill-utd-orange hover:stroke-utd-orange size-11 cursor-pointer fill-white stroke-white" />
+				</MenuButton>
+				<TransitionsDropDown>
+					<MenuItems
+						class="sm:w-80 absolute top-20 -left-4 z-50 -mt-5 flex h-[calc(100vh-80px)] w-screen flex-col items-center gap-4 bg-white p-4 text-center text-2xl"
+					>
+						<MenuItem v-if="permissions['SHOPPING']" as="div" class="w-full">
+							<NuxtLink @click.native="close" :to="shoppingPath" class="hover:underline cursor-pointer">Shopping</NuxtLink>
+							<hr class="mt-4 w-full border-[1.3px]" />
+						</MenuItem>
+						<MenuItem v-if="permissions['VERIFY_CART']" as="div" class="w-full">
+							<NuxtLink @click.native="close" :to="verifyPath" class="hover:underline cursor-pointer">Verify Carts</NuxtLink>
+							<hr class="mt-4 w-full border-[1.3px]" />
+						</MenuItem>
+						<MenuItem v-if="permissions['INVENTORY_MANAGEMENT']" as="div" class="w-full">
+							<NuxtLink @click.native="close" :to="inventoryPath" class="hover:underline cursor-pointer">Inventory Management</NuxtLink>
+							<hr class="mt-4 w-full border-[1.3px]" />
+						</MenuItem>
+						<MenuItem as="div" class="w-full">
+							<NuxtLink @click.native="close" :to="queuePath" class="hover:underline cursor-pointer">Queue</NuxtLink>
+							<hr class="mt-4 w-full border-[1.3px]" />
+						</MenuItem>
+						<MenuItem v-if="permissions['ADMIN']" as="div" class="w-full">
+							<NuxtLink @click.native="close" :to="dataPath" class="hover:underline cursor-pointer">Data</NuxtLink>
+							<hr class="mt-4 w-full border-[1.3px]" />
+						</MenuItem>
+						<MenuItem v-if="permissions['ADMIN']" as="div" class="w-full">
+							<NuxtLink @click.native="close" :to="sourcePath" class="hover:underline cursor-pointer">Manage Sources</NuxtLink>
+							<hr class="mt-4 w-full border-[1.3px]" />
+						</MenuItem>
+						<MenuItem v-if="permissions['ADMIN']" as="div" class="w-full">
+							<NuxtLink @click.native="close" :to="volunteerPath" class="hover:underline cursor-pointer">Manage Volunteers</NuxtLink>
+							<hr class="mt-4 w-full border-[1.3px]" />
+						</MenuItem>
+					</MenuItems>
+				</TransitionsDropDown>
+			</Menu>
+		</div>
+		<!-- Comet Cupboard Logo -->
+		<div class="relative ml-4 overflow-hidden">
+			<img src="/CometCupboardLogo1.png" class="h-10" />
+		</div>
+		<div class="ml-auto flex h-full flex-row">
+			<div v-if="page.includes('shopping')" class="relative">
+				<V2ShoppingCartIconAnimate class="justify-self-right hover:fill-utd-orange size-11 min-w-10 fill-white" />
+				<!-- <span v-if="cartTotalCount != 0" class="px-2 text-xl absolute font-bold -top-2 rounded-full -right-2 text-xl text-white bg-utd-orange">{{ cartTotalCount }}</span> -->
+			</div>
+			<!-- for now this is a link to the sign in page (test + nowhere else yet) -->
+			<button v-if="permissions['PUBLIC']" @click="logout" class="remove-button-effects ml-4">
+				<ArrowRightStartOnRectangleIcon class="hover:fill-utd-orange size-10 min-w-10 fill-white" />
+			</button>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -64,7 +74,7 @@ const verifyPath = "/v2/verify-cart"
 // Path to the inventory management page
 const inventoryPath = "/v2/inventory/category-select"
 // Path to the data analyzation page
-const dataPath = "/data"
+const dataPath = "/v2/data-analytics"
 // Path to the admin dashboard source page
 const sourcePath = "/v2/admin/source"
 // Path to the admin dashboard volunteer page

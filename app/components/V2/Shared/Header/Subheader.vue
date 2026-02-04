@@ -1,6 +1,7 @@
-<template lang="pug">
-div.bg-utd-orange.h-16.w-full.flex.items-center.justify-center
-	p.text-3xl.font-bold.text-white {{ pageTitle }}
+<template>
+	<div class="bg-utd-orange flex h-16 w-full items-center justify-center">
+		<p class="text-3xl font-bold text-white">{{ pageTitle }}</p>
+	</div>
 </template>
 
 <script lang="ts" setup>

@@ -1,23 +1,27 @@
-<template lang="pug">
-//- Display box for displaying the list of sources and a prompt to add a source
-div(class="max-w-[800px]").flex.flex-col.mx-auto.rounded-xl.bg-white.p-4.gap-y-4
+<template>
+	<div class="mx-auto flex max-w-[800px] flex-col gap-y-4 rounded-xl bg-white p-4">
+		<!-- Input form for entering the name of the source to be added. -->
+		<div class="mx-auto flex h-8 max-w-96 flex-row gap-x-3">
+			<div
+				class="focus-within:drop-shadow-standard flex h-full w-full items-center rounded-md border border-gray-300 bg-white transition-all duration-50 focus-within:border-blue-400"
+			>
+				<input placeholder="Source Name" type="text" v-model="newSource" @keydown.enter="addSource" class="w-full pl-2 outline-none" />
+			</div>
 
-    //- Input form for entering the name of the source to be added.
-    div.max-w-96.flex.flex-row.mx-auto.h-8.gap-x-3
-        div.bg-white.h-full.rounded-md.flex.items-center.w-full.border.border-gray-300.transition-all.duration-50(class="focus-within_border-blue-400 focus-within_drop-shadow-standard")
-            input(placeholder="Source Name" type="text" v-model="newSource" @keydown.enter="addSource").w-full.outline-none.pl-2
-        
-        //- Add button: if either this button is pressed or the Enter key is pressed, then the source with the inputted name will be added.
-        V2SharedAddButton(@click="addSource").h-full
-    
-    //- If at least 1 source exists, display the list of sources. Each source is represented as a card.
-    div(v-if="sources?.length > 0").w-full.p-4.bg-cupboardv2-2elg.overflow-auto.rounded-xl.h-72.flex.flex-col.gap-y-4
-        V2AdminDashboardSourceCard(v-for="source in sources" :sourceName="source.name")
-    
-    //- Displays a message if no source exists.
-    div(v-else).w-full.p-4.bg-cupboardv2-2elg.rounded-xl.h-72.flex.items-center.justify-center.text-center
-        p No sources have currently been added yet.
-    
+			<!-- Add button: if either this button is pressed or the Enter key is pressed, then the source with the inputted name will be added. -->
+			<V2SharedAddButton @click="addSource" class="h-full" />
+		</div>
+
+		<!-- If at least 1 source exists, display the list of sources. Each source is represented as a card. -->
+		<div v-if="sources?.length > 0" class="bg-cupboardv2-2elg flex h-72 w-full flex-col gap-y-4 overflow-auto rounded-xl p-4">
+			<V2AdminDashboardSourceCard v-for="source in sources" :key="source.name" :sourceName="source.name" />
+		</div>
+
+		<!-- Displays a message if no source exists. -->
+		<div v-else class="bg-cupboardv2-2elg flex h-72 w-full items-center justify-center rounded-xl p-4 text-center">
+			<p>No sources have currently been added yet.</p>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>

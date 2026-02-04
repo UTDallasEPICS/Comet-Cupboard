@@ -1,8 +1,10 @@
-<template lang="pug">
-div.flex.flex-row.items-center.justify-center
-	form(@submit.prevent="handleSubmit")
-		label NetID
-		input(required type="text" v-model="netID").border-black.border-2
+<template>
+	<div class="flex flex-row items-center justify-center">
+		<form @submit.prevent="handleSubmit">
+			<label>NetID</label>
+			<input v-model="netID" required type="text" class="border-2 border-black" />
+		</form>
+	</div>
 </template>
 
 <script lang="ts" setup>

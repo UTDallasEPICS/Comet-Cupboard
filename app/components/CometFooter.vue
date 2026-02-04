@@ -1,54 +1,60 @@
-<template lang="pug">
-div.bg-cupboard-dg
-	div.mx-7.my-5.flex.flex-col.sm_flex-row.place-content-evenly.max-sm_space-y-7.sm_space-x-7.text-white
-		div
-			img(src="/CometCupboardLogo2.png").h-14
-		div.space-y-1
-			h2.text-2xl.font-bold
-				| Contact
-			div
-				button(@click="handleRoom").space-x-1.text-left.remove-button-effects.text-base.font-normal
-					p.font-bold.inline-flex
-						| Location:
-					p.inline-flex
-						| {{ room }}
-					div(v-show="roomCopied").inline-flex
-						ClipboardDocumentCheckIcon.w-4.size4.fill-white
-			div
-				button(@click="handleEmail").space-x-1.text-left.remove-button-effects.text-base.font-normal
-					p.font-bold.inline-flex
-						| Email:
-					p.inline-flex
-						| {{ email }}
-					div(v-show="emailCopied").inline-flex
-						ClipboardDocumentCheckIcon.w-4.size4.fill-white
-			div
-				button(@click="handlePhone").space-x-1.text-left.remove-button-effects.text-base.font-normal
-					p.font-bold.inline-flex
-						| Phone
-					p.inline-flex
-						| {{ phone }}
-					div(v-show="phoneCopied").inline-flex
-						ClipboardDocumentCheckIcon.w-4.size4.fill-white
-		div.space-y-1
-			h2.text-2xl.font-bold
-				| Hours
-			div.space-y-3
-				div
-					p
-						| Monday, Wednesday, Friday:
-					p
-						| 10 AM - 4 PM
-				div
-					p
-						| Tuesday, Thursday:
-					p
-						| 11 AM - 5 PM
-		div.space-y-1
-			h2.text-2xl.font-bold
-				| Connect With Us
-			NuxtLink(:to="instagram")
-				img(src="/instagramIcon.svg").h-10
+<template>
+	<div class="bg-cupboard-dg">
+		<div class="mx-7 my-5 flex flex-col place-content-evenly text-white max-sm:space-y-7 sm:flex-row sm:space-x-7">
+			<div>
+				<img src="/CometCupboardLogo2.png" class="h-14" />
+			</div>
+			<div class="space-y-1">
+				<h2 class="text-2xl font-bold">Contact</h2>
+				<div>
+					<button @click="handleRoom" class="remove-button-effects space-x-1 text-left text-base font-normal">
+						<p class="inline-flex font-bold">Location:</p>
+						<p class="inline-flex">{{ room }}</p>
+						<div v-show="roomCopied" class="inline-flex">
+							<ClipboardDocumentCheckIcon class="size4 w-4 fill-white" />
+						</div>
+					</button>
+				</div>
+				<div>
+					<button @click="handleEmail" class="remove-button-effects space-x-1 text-left text-base font-normal">
+						<p class="inline-flex font-bold">Email:</p>
+						<p class="inline-flex">{{ email }}</p>
+						<div v-show="emailCopied" class="inline-flex">
+							<ClipboardDocumentCheckIcon class="size4 w-4 fill-white" />
+						</div>
+					</button>
+				</div>
+				<div>
+					<button @click="handlePhone" class="remove-button-effects space-x-1 text-left text-base font-normal">
+						<p class="inline-flex font-bold">Phone</p>
+						<p class="inline-flex">{{ phone }}</p>
+						<div v-show="phoneCopied" class="inline-flex">
+							<ClipboardDocumentCheckIcon class="size4 w-4 fill-white" />
+						</div>
+					</button>
+				</div>
+			</div>
+			<div class="space-y-1">
+				<h2 class="text-2xl font-bold">Hours</h2>
+				<div class="space-y-3">
+					<div>
+						<p>Monday, Wednesday, Friday:</p>
+						<p>10 AM - 4 PM</p>
+					</div>
+					<div>
+						<p>Tuesday, Thursday:</p>
+						<p>11 AM - 5 PM</p>
+					</div>
+				</div>
+			</div>
+			<div class="space-y-1">
+				<h2 class="text-2xl font-bold">Connect With Us</h2>
+				<NuxtLink :to="instagram">
+					<img src="/instagramIcon.svg" class="h-10" />
+				</NuxtLink>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

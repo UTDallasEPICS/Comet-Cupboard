@@ -1,18 +1,22 @@
-<template lang="pug">
-//- Removed From Queue Access Page: Page for if the student is removed from the queue
-div
-	//- Header for the Removed From Queue Access page.
-	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Removed From Queue")(class="md_max-w-[600px]").md_rounded-b-xl.text-center
-	
-	div(class="md_max-w-[600px]").mx-auto.mt-20
-		//- Message that will be displayed to the student who was removed from the queue:
-		div.w-full.bg-white.flex.items-center.justify-center.rounded-xl.text-center.h-80.mt-4.drop-shadow-standard.p-2.font-semibold
-			p You have been removed from the queue.<br>Please contact a volunteer if you believe this was a mistake.
+<template>
+	<div>
+		<!-- Header for the Removed From Queue Access page. -->
+		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
+			<V2SharedHeaderSubheader pageTitle="Removed From Queue" class="text-center md:max-w-[600px] md:rounded-b-xl" />
+		</div>
 
-		//- Sign Out button: if this button is pressed, then the student will be moved back to the login page
-		button(@click="logout").bg-utd-orange.block.font-semibold.text-white.rounded-xl.w-32.h-12.p-2.mx-auto.mt-3.text-sm
-			p Sign Out
+		<div class="mx-auto mt-20 md:max-w-[600px]">
+			<!-- Message that will be displayed to the student who was removed from the queue: -->
+			<div class="drop-shadow-standard mt-4 flex h-80 w-full items-center justify-center rounded-xl bg-white p-2 text-center font-semibold">
+				<p>You have been removed from the queue.<br />Please contact a volunteer if you believe this was a mistake.</p>
+			</div>
+
+			<!-- Sign Out button: if this button is pressed, then the student will be moved back to the login page -->
+			<button @click="logout" class="bg-utd-orange mx-auto mt-3 block h-12 w-32 rounded-xl p-2 text-sm font-semibold text-white">
+				<p>Sign Out</p>
+			</button>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>

@@ -1,17 +1,11 @@
-<template lang="pug">
+<template>
+	<!-- free deal -->
+	<div v-if="badge === 'free'" class="absolute top-2 right-2 rounded-lg bg-green-500 font-bold text-white shadow" :style="badgeStyle">Free</div>
 
-//-free deal
-div.absolute.top-2.right-2.bg-green-500.text-white.font-bold.rounded-lg.shadow(
-  v-if="badge === 'free'"
-  :style="badgeStyle"
-) Free
-
-//- deal badge
-div.absolute.top-2.right-2.bg-orange-500.text-white.font-bold.rounded-lg.shadow(
-  v-else-if="badge === 'deal'"
-  :style="badgeStyle"
-) {{ quantity }} for {{ countsAs }}
-
+	<!-- deal badge -->
+	<div v-else-if="badge === 'deal'" class="absolute top-2 right-2 rounded-lg bg-orange-500 font-bold text-white shadow" :style="badgeStyle">
+		{{ quantity }} for {{ countsAs }}
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -24,7 +18,6 @@ const props = defineProps({
   paddingY: { type: Number, default: 2 },
 })
 
-// computed style for Pug-safe binding
 const badgeStyle = computed(() => ({
   fontSize: props.fontSize + 'px',
   padding: props.paddingY + 'px ' + props.paddingX + 'px',

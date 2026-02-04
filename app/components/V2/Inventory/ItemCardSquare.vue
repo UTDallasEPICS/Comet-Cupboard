@@ -1,54 +1,88 @@
-<template lang="pug">
-Menu
-	div.bg-white.h-64.rounded-xl.flex.flex-col.items-center.gap-2.justify-top.drop-shadow-standard.relative
-		// Deal tag on bottom right of card
-		div(v-if="dealExists").absolute.bottom-0.right-0.bg-utd-orange.text-white.text-sm.font-bold.px-5.rounded-br-md.rounded-tl-md {{ dealText }}
+<template>
+	<Menu>
+		<div class="drop-shadow-standard relative flex h-64 w-full max-w-sm flex-col items-center rounded-xl bg-white">
+			<!-- Deal tag on bottom right of card -->
+			<div v-if="dealExists" class="bg-utd-orange absolute right-0 bottom-0 rounded-tl-md rounded-br-md px-5 text-sm font-bold text-white">
+				{{ dealText }}
+			</div>
 
-		// Settings/options button
-		MenuButton.absolute.top-2.right-2.w-8.h-4.content-center.rounded-full
-			div.flex.flex-row.space-x-1.justify-center
-				div(class="w-1.5 h-1.5").bg-black.rounded-full
-				div(class="w-1.5 h-1.5").bg-black.rounded-full
-				div(class="w-1.5 h-1.5").bg-black.rounded-full
+			<!-- Settings/options button -->
+			<MenuButton class="absolute top-2 right-2 h-4 w-8 content-center rounded-full">
+				<div class="flex flex-row justify-center space-x-1">
+					<div class="h-1.5 w-1.5 rounded-full bg-black"></div>
+					<div class="h-1.5 w-1.5 rounded-full bg-black"></div>
+					<div class="h-1.5 w-1.5 rounded-full bg-black"></div>
+				</div>
+			</MenuButton>
 
-		// Wrap MenuItems in TransitionsPopUp, but forward slot content
-		TransitionsPopUp
-			MenuItems.absolute.top-5.right-2.bg-white.bg-opacity-90.drop-shadow-standard.rounded-md.py-2.px-6.z-50
-				MenuItem
-					div(@click="editItem").flex.justify-center.items-center.px-1.py-1.cursor-pointer.border-b.border-cupboardv2-lg.text-lg.font-normal.hover_underline Edit
-				MenuItem
-					div(@click="editDeal").flex.justify-center.items-center.px-1.py-1.cursor-pointer.border-b.border-cupboardv2-lg.text-lg.font-normal.hover_underline Item Deal
-				MenuItem
-					div(@click="deleteItem").flex.justify-center.items-center.px-1.py-1.cursor-pointer.text-lg.font-normal.hover_underline Delete
-		// Image container
-		div.relative.w-20.h-20.flex-shrink-0.overflow-hidden.mt-4
-			img(:alt="itemName" :src="`/api/image/${imgName}`").w-full.h-full.object-cover
+			<!-- Wrap MenuItems in TransitionsPopUp, but forward slot content -->
+			<TransitionsPopUp>
+				<MenuItems class="bg-opacity-90 drop-shadow-standard absolute top-5 right-2 z-50 rounded-md bg-white px-6 py-2">
+					<MenuItem>
+						<div
+							@click="editItem"
+							class="hover:underline border-cupboardv2-lg flex cursor-pointer items-center justify-center border-b px-1 py-1 text-lg font-normal"
+						>
+							Edit
+						</div>
+					</MenuItem>
+					<MenuItem>
+						<div
+							@click="editDeal"
+							class="hover:underline border-cupboardv2-lg flex cursor-pointer items-center justify-center border-b px-1 py-1 text-lg font-normal"
+						>
+							Item Deal
+						</div>
+					</MenuItem>
+					<MenuItem>
+						<div @click="deleteItem" class="hover:underline flex cursor-pointer items-center justify-center px-1 py-1 text-lg font-normal">
+							Delete
+						</div>
+					</MenuItem>
+				</MenuItems>
+			</TransitionsPopUp>
 
-		// Text container (flex vertical)
-		div.flex.flex-col.items-center.gap-4
-			// Item name and in stock
-			p.text-2xl.font-semibold {{ itemName }}
-			div.flex.gap-3
-				p.text-base Qty:
-				div(class="border-[1px]").bg-white(class="w-[125px]").h-7.border-cupboardv2-dg.rounded-2xl.flex.justify-end.box-border.relative
-					div.flex.items-center.justify-center
-						span.text-base.text-black.mr-2 {{ props.currentCount }}
-					div(:style="clipStyle").bg-cupboardv2-elg(class="w-[75px]").rounded-r-2xl.flex.items-center.justify-center
-						span.text-base.text-black {{ displayChange }}
-			// Inventory adjustment buttons (flex horizontal)
-			div.flex.gap-6
-				button(@click="decrement").w-9.h-9.bg-cupboardv2-dg.rounded-full.flex.items-center.justify-center
-					MinusIcon(class="stroke-[3px]").w-7.h-7.text-white
-				div.relative.flex.flex-col.items-center.mt-1
-					input(
-						placeholder="#"
-						type="text"
-						v-model="adjustAmount"
-						@input="validateInput"
-					).bg-transparent.w-12.-mb-1.outline-none.border-none.text-2xl.text-center.text-black
-					div.bg-cupboardv2-dg.w-12.h-1.rounded-xl
-				button(@click="increment").w-9.h-9.bg-cupboardv2-dg.rounded-full.flex.items-center.justify-center
-					PlusIcon(class="stroke-[3px]").w-7.h-7.text-white
+			<!-- Image container -->
+			<div class="relative mt-4 h-20 w-20 flex-shrink-0 overflow-hidden">
+				<img :alt="itemName" :src="`/api/image/${imgName}`" class="h-full w-full object-cover" />
+			</div>
+			<!-- Text container (flex vertical) -->
+			<div class="flex flex-col items-center gap-4">
+				<!-- Item name and in stock -->
+				<p class="text-2xl font-semibold">{{ itemName }}</p>
+				<div class="flex gap-3">
+					<p class="text-base">Qty:</p>
+					<div class="border-cupboardv2-dg relative box-border flex h-7 w-[125px] justify-end rounded-2xl border-[1px] bg-white">
+						<div class="flex items-center justify-center">
+							<span class="mr-2 text-base text-black">{{ props.currentCount }}</span>
+						</div>
+						<div :style="clipStyle" class="bg-cupboardv2-elg flex w-[75px] items-center justify-center rounded-r-2xl">
+							<span class="text-base text-black">{{ displayChange }}</span>
+						</div>
+					</div>
+				</div>
+				<!-- Inventory adjustment buttons (flex horizontal) -->
+				<div class="flex gap-6">
+					<button @click="decrement" class="bg-cupboardv2-dg flex h-9 w-9 items-center justify-center rounded-full">
+						<MinusIcon class="h-7 w-7 stroke-[3px] text-white" />
+					</button>
+					<div class="relative mt-1 flex flex-col items-center">
+						<input
+							placeholder="#"
+							type="text"
+							v-model="adjustAmount"
+							@input="validateInput"
+							class="-mb-1 w-12 border-none bg-transparent text-center text-2xl text-black outline-none"
+						/>
+						<div class="bg-cupboardv2-dg h-1 w-12 rounded-xl"></div>
+					</div>
+					<button @click="increment" class="bg-cupboardv2-dg flex h-9 w-9 items-center justify-center rounded-full">
+						<PlusIcon class="h-7 w-7 stroke-[3px] text-white" />
+					</button>
+				</div>
+			</div>
+		</div>
+	</Menu>
 </template>
 
 <script lang="ts" setup>

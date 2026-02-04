@@ -1,32 +1,44 @@
-<template lang="pug">
-div
-	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Add Item")(class="md_max-w-[600px]").md_rounded-b-3xl
-	div.flex.flex-col.items-center.justify-center.gap-y-8.pt-10.mt-20
-		div.bg-white.w-full.max-w-80.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
-			img(v-if="imageUrl" :src="imageUrl").absolute.inset-0.w-full.h-full.object-cover
-			label(
-				:class="{ 'bg-cupboardv2-lg bg-opacity-60': imageUrl }"
-				for="fileInput"
-			).z-10.flex.flex-row.items-center.justify-center.gap-x-3.bg-utd-green.w-40.h-16.rounded-xl.flex.gap-3.drop-shadow-standard.cursor-pointer
-				div.flex.flex-row.items-center.gap-x-3
-					CloudArrowUpIcon.w-12.h-12.text-white
-					p.text-xl.text-white.font-bold Upload
-			input#fileInput(accept=".jpg, .jpeg, .png" type="file" @change="handleFileUpload").hidden
-		div.flex.flex-col.items-center
-			input(
-				placeholder="Item Name"
-				type="text"
-				v-model="itemName"
-				@input="validateInput"
-			).w-full.w-80.bg-transparent.outline-none.border-none.text-lg.text-left.text-black
-			div(class="h-[2px]").bg-cupboardv2-dg.w-72.rounded-xl.-mt-1
-		// Footer Buttons
-		div.flex.flex-row.gap-x-4.mt-20
-			button(@click="goBack").bg-cupboardv2-dg.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
-				p.text-white.text-xl.font-bold Cancel
-			button(@click="addItemSubmit").bg-utd-orange.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
-				p.text-white.text-xl.font-bold Submit
+<template>
+	<div>
+		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
+			<V2SharedHeaderSubheader pageTitle="Add Item" class="md:max-w-[600px] md:rounded-b-3xl"></V2SharedHeaderSubheader>
+		</div>
+		<div class="flex flex-col items-center justify-center gap-y-8 pt-10 mt-20">
+			<div class="bg-white w-full max-w-80 h-80 rounded-xl flex flex-col gap-3 drop-shadow-standard items-center justify-center relative overflow-hidden">
+				<img v-if="imageUrl" :src="imageUrl" class="absolute inset-0 w-full h-full object-cover" />
+				<label
+					:class="{ 'bg-cupboardv2-lg bg-opacity-60': imageUrl }"
+					for="fileInput"
+					class="z-10 flex flex-row items-center justify-center gap-x-3 bg-utd-green w-40 h-16 rounded-xl flex gap-3 drop-shadow-standard cursor-pointer"
+				>
+					<div class="flex flex-row items-center gap-x-3">
+						<CloudArrowUpIcon class="w-12 h-12 text-white" />
+						<p class="text-xl text-white font-bold">Upload</p>
+					</div>
+				</label>
+				<input id="fileInput" accept=".jpg, .jpeg, .png" type="file" @change="handleFileUpload" class="hidden" />
+			</div>
+			<div class="flex flex-col items-center">
+				<input
+					placeholder="Item Name"
+					type="text"
+					v-model="itemName"
+					@input="validateInput"
+					class="w-full w-80 bg-transparent outline-none border-none text-lg text-left text-black"
+				/>
+				<div class="h-[2px] bg-cupboardv2-dg w-72 rounded-xl -mt-1"></div>
+			</div>
+			<!-- Footer Buttons -->
+			<div class="flex flex-row gap-x-4 mt-20">
+				<button @click="goBack" class="bg-cupboardv2-dg w-32 h-12 rounded-xl flex items-center justify-center drop-shadow-standard">
+					<p class="text-white text-xl font-bold">Cancel</p>
+				</button>
+				<button @click="addItemSubmit" class="bg-utd-orange w-32 h-12 rounded-xl flex items-center justify-center drop-shadow-standard">
+					<p class="text-white text-xl font-bold">Submit</p>
+				</button>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>

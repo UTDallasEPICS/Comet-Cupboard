@@ -1,33 +1,43 @@
-<template lang="pug">
-div.w-full.h-min.min-h-12.bg-white.border.border-outlining-gray-v2.flex.flex-col.rounded-lg.w-72.pt-2.px-4.sm_px-16
-	p.px-2.text-lg.text-center.font-semibold {{ cartID }}
-	div(v-if="cartID != 'There are no carts currently selected'").h-full.rounded-xl.flex.flex-col.gap-y-4.mt-4
-		div.flex.flex-col.items-center.gap-x-4.gap-y-4
-			div(v-for="warning in warnings").bg-yellow-warning-v2.w-full.flex.flex-row.items-center.rounded-lg.p-2.gap-2
-				ExclamationTriangleIcon.min-w-8.max-w-8.aspect-square
-				p.text-base.font-medium {{ warning }}
-		div(style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))").grid.gap-4.justify-items-center
-			CategoryItemsGrid(v-for="category in Object.keys(categoryCartItems)" :headingName="category")
-				V2VerifyCartItemCard(
-					v-for="cartItem in categoryCartItems[category]"
-					:adjustedQTY="cartItem.adjustedQTY"
-					:dealCount="cartItem.dealCount"
-					:expiredCount="cartItem.expiredCount"
-					:imgName="cartItem.imgName"
-					:itemDeal="cartItem.itemDeal ? { actualCount: cartItem.itemDeal.actualCount, adjustedCount: cartItem.itemDeal.adjustedCount } : {}"
-					:itemID="cartItem.itemID"
-					:name="cartItem.name"
-					:totalQTY="cartItem.totalQTY"
-				).w-full
-		div.flex.flex-col.md_flex-row.gap-4.items-center.sm_items-end
-			div.flex.flex-col.font-bold.md_mr-auto.w-min
-				p.text-nowrap.text-right Total Count {{ cartTotalCount }}
-				p.text-nowrap.text-right Adjusted Count {{ cartAdjustedCount }}
-			div.max-w-96.h-32.border.border-2.border-outlining-gray-v2.w-full
-				textarea(placeholder="Add a reason" v-model="reason").w-full.h-full.resize-none
-		div.flex.flex-row.gap-x-4.justify-center.sm_justify-end.h-12
-			button(@click="rejectCart").w-32.h-10.bg-decline-red-v2.text-white.rounded-xl.font-bold.text-base Decline
-			button(@click="acceptCart").w-32.h-10.bg-utd-green.text-white.rounded-xl.font-bold.text-base Accept
+<template>
+	<div class="border-outlining-gray-v2 sm:px-16 flex h-min min-h-12 w-full flex-col rounded-lg border bg-white px-4 pt-2">
+		<p class="px-2 text-center text-lg font-semibold">{{ cartID }}</p>
+		<div v-if="cartID != 'There are no carts currently selected'" class="mt-4 flex h-full flex-col gap-y-4 rounded-xl">
+			<div class="flex flex-col items-center gap-x-4 gap-y-4">
+				<div v-for="warning in warnings" class="bg-yellow-warning-v2 flex w-full flex-row items-center gap-2 rounded-lg p-2">
+					<ExclamationTriangleIcon class="aspect-square max-w-8 min-w-8" />
+					<p class="text-base font-medium">{{ warning }}</p>
+				</div>
+			</div>
+			<div class="grid justify-items-center gap-4" :style="{ gridTemplateColumns: 'repeat(auto-fill, minmax(288px, 1fr))' }">
+				<CategoryItemsGrid v-for="category in Object.keys(categoryCartItems)" :headingName="category">
+					<V2VerifyCartItemCard
+						v-for="cartItem in categoryCartItems[category]"
+						:adjustedQTY="cartItem.adjustedQTY"
+						:dealCount="cartItem.dealCount"
+						:expiredCount="cartItem.expiredCount"
+						:imgName="cartItem.imgName"
+						:itemDeal="cartItem.itemDeal ? { actualCount: cartItem.itemDeal.actualCount, adjustedCount: cartItem.itemDeal.adjustedCount } : {}"
+						:itemID="cartItem.itemID"
+						:name="cartItem.name"
+						:totalQTY="cartItem.totalQTY"
+					/>
+				</CategoryItemsGrid>
+			</div>
+			<div class="md:flex-row sm:items-end flex flex-col items-center gap-4">
+				<div class="md:mr-auto flex w-min flex-col font-bold">
+					<p class="text-right text-nowrap">Total Count {{ cartTotalCount }}</p>
+					<p class="text-right text-nowrap">Adjusted Count {{ cartAdjustedCount }}</p>
+				</div>
+				<div class="border-outlining-gray-v2 h-32 w-full max-w-96 border border-2">
+					<textarea placeholder="Add a reason" v-model="reason" class="h-full w-full resize-none"></textarea>
+				</div>
+			</div>
+			<div class="sm:justify-end flex h-12 flex-row justify-center gap-x-4">
+				<button @click="rejectCart" class="bg-decline-red-v2 h-10 w-32 rounded-xl text-base font-bold text-white">Decline</button>
+				<button @click="acceptCart" class="bg-utd-green h-10 w-32 rounded-xl text-base font-bold text-white">Accept</button>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -44,7 +54,6 @@ const emit = defineEmits(["update:verified-cart , cart-declined , cart-accepted"
 
 const { cartID } = toRefs(props)
 const reason = ref("")
-
 
 const { data: cart } = await useFetch("/api/verification/pendingCart", {
 	query: { cartID: cartID },
@@ -125,5 +134,4 @@ const acceptCart = async () => {
 	emit("update:verified-cart")
 	emit("cart-accepted", props.cartID)
 }
-
 </script>

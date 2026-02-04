@@ -1,25 +1,32 @@
-<template lang="pug">
-div.relative.w-full.max-w-xl.flex-grow
-    // Search bar container
-    div.bg-white.w-full.h-8.rounded-xl.flex.items-center.border.border-gray-300.transition-all.duration-50(
-        class="focus-within_border-blue-400 focus-within_drop-shadow-standard"
-    )
-        MagnifyingGlassIcon.w-6.h-6.stroke-2.pl-2.text-cupboardv2-dg
-        input.w-full.bg-transparent.outline-none.border-none.text-base.pl-2(
-            type="text"
-            placeholder="Search Item"
-            v-model="searchTerm"
-            @focus="isFocused = true"
-            @blur="onBlur"
-        )
-    // Dropdown suggestions
-    div.absolute.bg-white.border.border-gray-300.rounded-xl.drop-shadow-standard.w-full.mt-1.max-h-64.overflow-y-auto.z-10(
-        v-if="isFocused && searchTerm"
-    )
-        div(v-if="filteredResults.length === 0")
-            p.p-2.text-center.text-cupboardv2-dg No Results
-        div(v-for="item in filteredResults" :key="item.id" class="p-2 cursor-pointer hover:bg-gray-100 rounded" @click="selectItem(item)")
-            | {{ item.name }}
+<template>
+	<div class="relative w-full max-w-xl flex-grow">
+		<!-- Search bar container -->
+		<div
+			class="focus-within:drop-shadow-standard flex h-8 w-full items-center rounded-xl border border-gray-300 bg-white transition-all duration-50 focus-within:border-blue-400"
+		>
+			<MagnifyingGlassIcon class="text-cupboardv2-dg h-6 w-6 stroke-2 pl-2" />
+			<input
+				type="text"
+				placeholder="Search Item"
+				v-model="searchTerm"
+				@focus="isFocused = true"
+				@blur="onBlur"
+				class="w-full border-none bg-transparent pl-2 text-base outline-none"
+			/>
+		</div>
+		<!-- Dropdown suggestions -->
+		<div
+			v-if="isFocused && searchTerm"
+			class="drop-shadow-standard absolute z-10 mt-1 max-h-64 w-full overflow-y-auto rounded-xl border border-gray-300 bg-white"
+		>
+			<div v-if="filteredResults.length === 0">
+				<p class="text-cupboardv2-dg p-2 text-center">No Results</p>
+			</div>
+			<div v-for="item in filteredResults" :key="item.id" class="cursor-pointer rounded p-2 hover:bg-gray-100" @click="selectItem(item)">
+				{{ item.name }}
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -57,7 +64,7 @@ watch(() => props.categoryItems, (newItems) => {
 
 // Function to navigate to a card when the dropdown item is clicked
 function selectItem(item) {
-    searchTerm.value = item.name 
+    searchTerm.value = item.name
     emit("update:modelValue", item.name)
     isFocused.value = false
 }

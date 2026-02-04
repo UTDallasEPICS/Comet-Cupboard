@@ -1,29 +1,28 @@
-<template lang="pug">
-//- banner
-V2ShoppingOrangeBanner(
-  title="Accepted"
-  :topOffset="80"
-)
+<template>
+	<div>
+		<!-- banner -->
+		<V2ShoppingOrangeBanner title="Accepted" :topOffset="80" />
 
-//- checkoutflow status
-div.min-h-screen.bg-gray-100.font-montserrat.flex.justify-center.relative
-  div.w-full.relative(style="max-width: 320px")
-    
-    div(
-      ref="checkoutRef"
-      class="w-full flex justify-center mt-7"
-      :style="{ height: checkoutHeight + 'px' }"
-    )
-      V2ShoppingCheckoutFlow.w-full(:ellipseColors="ellipseColors")
-    
-    //- status accepted mesage
-    div.flex.flex-col.items-center(style="margin-top: 20px")
-      h2.font-bold.text-black(style="font-size: 25px") Status
-      p.font-bold.mt-2(style="font-size: 25px; color: #154734") Accepted
-    
-    //- countdown comp
-    div(style="margin-top: 40px")
-      V2ShoppingAcceptedMessage(:countdown="countdown")
+		<!-- checkout Flow status -->
+		<div class="font-montserrat relative flex min-h-screen justify-center bg-gray-100">
+			<div class="relative w-full" style="max-width: 320px">
+				<div ref="checkoutRef" class="mt-7 flex w-full justify-center" :style="{ height: checkoutHeight + 'px' }">
+					<V2ShoppingCheckoutFlow class="w-full" :ellipseColors="ellipseColors" />
+				</div>
+
+				<!-- status accepted mesage -->
+				<div class="mt-5 flex flex-col items-center">
+					<h2 class="font-bold text-black" style="font-size: 25px">Status</h2>
+					<p class="mt-2 font-bold" style="font-size: 25px; color: #154734">Accepted</p>
+				</div>
+
+				<!-- countdown comp -->
+				<div class="mt-10">
+					<V2ShoppingAcceptedMessage :countdown="countdown" />
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">

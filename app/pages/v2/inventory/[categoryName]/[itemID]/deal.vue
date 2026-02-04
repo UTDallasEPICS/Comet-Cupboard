@@ -1,51 +1,70 @@
-<template lang="pug">
-div
-	div.flex.absolute.top-20.left-0.w-full.h-16.z-30.justify-center
-		V2SharedHeaderSubheader(pageTitle="Deal")(class="md_max-w-[600px]").md_rounded-b-3xl
-	div.flex.flex-col.items-center.justify-center.gap-y-8.pt-10.mt-20
-		div.bg-white.w-full.max-w-80.h-80.rounded-xl.flex.flex-col.gap-3.drop-shadow-standard.items-center.justify-center.relative.overflow-hidden
-			// Deal Tag 
-			div(v-if="dealExists").absolute.bg-utd-orange.rounded-tl-md.w-32.px-4.py-1.rounded-br-md.top-0.left-0.z-20
-				p.text-white.text-center.font-semibold {{ dealText }}
-			img(v-if="imageUrl" :src="imageUrl").absolute.inset-0.w-full.h-full.object-cover
-			div.flex.flex-row.items-center.gap-x-3
-		div.flex.flex-col.items-center.justify-center
-			div.flex.flex-row.items-center.gap-3
-				p.text-2xl.font-bold Deal is
-				div.flex.flex-col.items-center
-					input(
-						:class="invalidActualCount ? 'text-red-negative border-red-negative' : ''"
-						min="1"
-						type="number"
-						v-model.number="actualCount"
-						@change="checkInput"
-						:placeholder="originalActualCount"
-					).w-8.bg-transparent.outline-none.border-none.text-2xl.text-center.text-black.font-bold
-					div(class="h-[3px]").bg-cupboardv2-dg.w-8.rounded-xl.-mt-1
-				p.text-2xl.font-bold for
-				div.flex.flex-col.items-center
-					input(
-						:class="invalidAdjustedCount ? 'text-red-negative border-red-negative' : ''"
-						min="0"
-						type="number"
-						v-model.number="adjustedCount"
-						@change="checkInput"
-						:max="actualCount !== null ? actualCount - 1 : undefined"
-						:placeholder="originalAdjustedCount"
-					).w-8.bg-transparent.outline-none.border-none.text-2xl.text-center.text-black.font-bold
-					div(class="h-[3px]").bg-cupboardv2-dg.w-8.rounded-xl.-mt-1
-		// Mark free and remove deals buttons
-		button(@click="markAsFree").bg-utd-green.w-48.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard.relative
-			p.text-white.text-xl.font-bold Mark as Free
-		button(v-if="dealExists" @click="deleteDeal").bg-red-negativev2.w-48.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard.relative
-			p.text-white.text-xl.font-bold Remove Deals
-
-		// Footer Buttons
-		div.flex.flex-row.gap-x-4.mt-20
-			button(@click="goBack").bg-cupboardv2-dg.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
-				p.text-white.text-xl.font-bold Cancel
-			button(@click="editDeal").bg-utd-orange.w-32.h-12.rounded-xl.flex.items-center.justify-center.drop-shadow-standard
-				p.text-white.text-xl.font-bold Submit
+<template>
+	<div>
+		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
+			<V2SharedHeaderSubheader pageTitle="Deal" class="md:max-w-[600px] md:rounded-b-3xl"></V2SharedHeaderSubheader>
+		</div>
+		<div class="mt-20 flex flex-col items-center justify-center gap-y-8 pt-10">
+			<div class="drop-shadow-standard relative flex h-80 w-full max-w-80 flex-col items-center justify-center gap-3 overflow-hidden rounded-xl bg-white">
+				<!-- Deal Tag -->
+				<div v-if="dealExists" class="bg-utd-orange absolute top-0 left-0 z-20 w-32 rounded-tl-md rounded-br-md px-4 py-1">
+					<p class="text-center font-semibold text-white">{{ dealText }}</p>
+				</div>
+				<img v-if="imageUrl" :src="imageUrl" class="absolute inset-0 h-full w-full object-cover" />
+				<div class="flex flex-row items-center gap-x-3"></div>
+			</div>
+			<div class="flex flex-col items-center justify-center">
+				<div class="flex flex-row items-center gap-3">
+					<p class="text-2xl font-bold">Deal is</p>
+					<div class="flex flex-col items-center">
+						<input
+							:class="{ 'text-red-negative border-red-negative': invalidActualCount }"
+							min="1"
+							type="number"
+							v-model.number="actualCount"
+							@change="checkInput"
+							:placeholder="originalActualCount"
+							class="w-8 border-none bg-transparent text-center text-2xl font-bold text-black outline-none"
+						/>
+						<div class="bg-cupboardv2-dg -mt-1 h-[3px] w-8 rounded-xl"></div>
+					</div>
+					<p class="text-2xl font-bold">for</p>
+					<div class="flex flex-col items-center">
+						<input
+							:class="{ 'text-red-negative border-red-negative': invalidAdjustedCount }"
+							min="0"
+							type="number"
+							v-model.number="adjustedCount"
+							@change="checkInput"
+							:max="actualCount !== null ? actualCount - 1 : undefined"
+							:placeholder="originalAdjustedCount"
+							class="w-8 border-none bg-transparent text-center text-2xl font-bold text-black outline-none"
+						/>
+						<div class="bg-cupboardv2-dg -mt-1 h-[3px] w-8 rounded-xl"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Mark free and remove deals buttons -->
+		<button @click="markAsFree" class="bg-utd-green drop-shadow-standard relative mt-6 flex h-12 w-48 items-center justify-center rounded-xl">
+			<p class="text-xl font-bold text-white">Mark as Free</p>
+		</button>
+		<button
+			v-if="dealExists"
+			@click="deleteDeal"
+			class="bg-red-negativev2 drop-shadow-standard relative mt-6 flex h-12 w-48 items-center justify-center rounded-xl"
+		>
+			<p class="text-xl font-bold text-white">Remove Deals</p>
+		</button>
+		<!-- Footer Buttons -->
+		<div class="mt-20 flex flex-row gap-x-4">
+			<button @click="goBack" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<p class="text-xl font-bold text-white">Cancel</p>
+			</button>
+			<button @click="editDeal" class="bg-utd-orange drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<p class="text-xl font-bold text-white">Submit</p>
+			</button>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -110,7 +129,7 @@ const deleteDeal = async () => {
 }
 
 const markAsFree = () => {
-	if(!item.value) return 
+	if(!item.value) return
 	actualCount.value = 1
 	adjustedCount.value = 0
 }

@@ -1,5 +1,5 @@
-<template lang="pug">
-div(:id="plotElement")
+<template>
+	<div :id="plotElement"></div>
 </template>
 
 <script lang="ts" setup>
