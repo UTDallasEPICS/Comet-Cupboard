@@ -3,6 +3,13 @@
 @import "@nuxt/ui";
 
 @theme {
+	--color-primary: #e4701e;
+	--color-secondary: #154734;
+
+	--color-final-utd-green: #154734;
+	--color-final-utd-orange: #e4701e;
+	--color-final-page-bg: #eeeeee;
+
 	--color-utd-green: #154734;
 	--color-utd-orange: #e4701e; /* slightly off from utd's orange, but matches comet cupboard colors */
 	--color-cupboard-dg: #626262;
@@ -25,4 +32,10 @@
 
 	--breakpoint-tn: 400px;
 	--breakpoint-md: 825px;
+}
+
+@layer components {
+	.drop-shadow-standard {
+		box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.1);
+	}
 }

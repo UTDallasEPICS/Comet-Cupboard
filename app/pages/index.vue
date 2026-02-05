@@ -1,14 +1,17 @@
 <template>
 	<div class="flex flex-row items-center justify-center">
-		<form @submit.prevent="handleSubmit">
-			<label>NetID</label>
-			<input v-model="netID" required type="text" class="border-2 border-black" />
-		</form>
+		<UForm :state="state" @submit="onSubmit">
+			<UFormField label="Net ID" name="netID">
+				<UInput v-model="state.netID" required placeholder="Net ID" color="neutral" size="xl" />
+			</UFormField>
+		</UForm>
 	</div>
 </template>
 
 <script lang="ts" setup>
-const netID = ref("")
+const state = ref({
+	netID: "",
+})
 
 const accessCookie = useCookie("netID")
 
@@ -35,11 +38,11 @@ onMounted(async () => {
 	}
 })
 
-const handleSubmit = async () => {
+const onSubmit = async () => {
 	try {
 		await $fetch("/api/login", {
 			method: "POST",
-			body: { netID: netID.value },
+			body: { netID: state.value.netID },
 		})
 		await $fetch("/api/updatePermissions", {
 			method: "GET",
