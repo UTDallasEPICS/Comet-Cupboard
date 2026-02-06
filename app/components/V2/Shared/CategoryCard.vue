@@ -1,6 +1,6 @@
 <template>
 	<NuxtLink
-		:to="`/v2/inventory/${categoryName}`"
+		:to="`/inventory/${categoryName}`"
 		class="w-full bg-white h-20 rounded-xl flex items-stretch justify-between overflow-hidden pl-2 drop-shadow-standard"
 	>
 		<div class="flex items-center flex-1 px-4 w-full min-w-32">

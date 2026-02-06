@@ -145,15 +145,15 @@ function decrement() {
 
 // Menu Navigators
 function editItem() {
-	navigateTo(`/v2/inventory/${categoryName}/${props.itemID}/edit`)
+	navigateTo(`/inventory/${categoryName}/${props.itemID}/edit`)
 }
 
 function deleteItem() {
-	navigateTo(`/v2/inventory/${categoryName}/${props.itemID}/delete`)
+	navigateTo(`/inventory/${categoryName}/${props.itemID}/delete`)
 }
 
 function editDeal() {
-	navigateTo(`/v2/inventory/${categoryName}/${props.itemID}/deal`)
+	navigateTo(`/inventory/${categoryName}/${props.itemID}/deal`)
 }
 
 const displayChange = computed(() => {

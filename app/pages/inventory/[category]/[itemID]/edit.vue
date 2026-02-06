@@ -136,7 +136,7 @@ const editItemSubmit = async () => {
 			},
 		})
 
-		navigateTo(`/v2/inventory/${categoryName}`)
+		navigateTo(`/inventory/${categoryName}`)
 	} catch (error) {
 		console.error("Error editing item:", error)
 	}
@@ -145,7 +145,7 @@ const editItemSubmit = async () => {
 // --Page navigations for each button--
 // Goes back to the inventory page for the current category
 const goBack = () => {
-	navigateTo(`/v2/inventory/${categoryName}`)
+	navigateTo(`/inventory/${categoryName}`)
 }
 
 // Input validation so input is only letters/symbols, and is limited to 20 characters

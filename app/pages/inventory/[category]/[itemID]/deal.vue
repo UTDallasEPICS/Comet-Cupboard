@@ -125,7 +125,7 @@ const deleteDeal = async () => {
 		body: { itemID: item.value.itemID },
 	})
 	toggleDeal()
-	navigateTo(`/v2/inventory/${currentCategory}`)
+	navigateTo(`/inventory/${currentCategory}`)
 }
 
 const markAsFree = () => {
@@ -137,7 +137,7 @@ const markAsFree = () => {
 // --Page navigations for each button--
 // Goes back to the inventory page for the current category
 const goBack = () => {
-	navigateTo(`/v2/inventory/${currentCategory}`)
+	navigateTo(`/inventory/${currentCategory}`)
 }
 
 const checkInput = () => {
@@ -210,6 +210,6 @@ const editDeal = async () => {
 		body: { itemID: item.value.itemID, actualCount: actualCount.value, adjustedCount: adjustedCount.value },
 	})
 	toggleDeal()
-	navigateTo(`/v2/inventory/${currentCategory}`)
+	navigateTo(`/inventory/${currentCategory}`)
 }
 </script>

@@ -86,7 +86,7 @@ const addItemSubmit = async () => {
 				method: "PUT",
 				body: { itemID: "", name: itemName.value, categoryName: currentCategory, imgName: imageName },
 			})
-			navigateTo(`/v2/inventory/${currentCategory}`)
+			navigateTo(`/inventory/${currentCategory}`)
 		}
 	} catch (error) {
 		console.error("Failed to add item:", error)
@@ -97,7 +97,7 @@ const addItemSubmit = async () => {
 // --Page navigations for each button--
 // Goes back to the inventory page for the current category
 const goBack = () => {
-	navigateTo(`/v2/inventory/${currentCategory}`)
+	navigateTo(`/inventory/${currentCategory}`)
 }
 
 // Input validation so input is only letters, and is limited to 20 characters

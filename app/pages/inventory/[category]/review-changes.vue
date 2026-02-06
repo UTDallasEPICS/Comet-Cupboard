@@ -116,7 +116,7 @@ const windowWidth = ref(0)
 // --Page navigations for each button--
 // Goes back to the inventory page for the current category
 const goBack = () => {
-	navigateTo(`/v2/inventory/${categoryName}`)
+	navigateTo(`/inventory/${categoryName}`)
 }
 
 // Determining when to display rectangle cards and square cards
@@ -168,7 +168,7 @@ const submit = async () => {
 			},
 		})
 		inventoryStore.resetChanges()
-		navigateTo(`/v2/inventory/${categoryName}`)
+		navigateTo(`/inventory/${categoryName}`)
 	} catch (error) {
 		console.error("Error submitting item count changes:", error)
 	}

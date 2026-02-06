@@ -76,7 +76,7 @@ export default defineEventHandler(async (event) => {
 			cartID,
 			JSON.stringify({
 				type: "ACCEPT CART",
-				payload: `Accepted cart. Note: ${reason}`,
+				payload: `${reason}`,
 			})
 		)
 
@@ -114,7 +114,7 @@ export default defineEventHandler(async (event) => {
 			cartID,
 			JSON.stringify({
 				type: "REJECT CART",
-				payload: `Rejected cart. Note: ${reason}`,
+				payload: `${reason}`,
 			})
 		)
 		return `Successfully rejected cart ${cartID}`

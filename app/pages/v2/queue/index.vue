@@ -81,7 +81,7 @@ if (import.meta.client) {
 			if (type === "QUEUE_DELETE") {
 				await removeFromQueue()
 			} else if (type === "QUEUE_MOVE_INSIDE") {
-				await navigateTo("/v2/shopping")
+				await navigateTo("/shopping")
 				reloadNuxtApp()
 			}
 		}

@@ -5,6 +5,8 @@ export default defineNuxtConfig({
 	css: ["~/assets/css/main.css"],
 	runtimeConfig: { public: { LOCAL_URL: "" } },
 	features: { inlineStyles: false },
-
+	ui: {
+		colorMode: false,
+	},
 	compatibilityDate: "2025-03-07",
 })

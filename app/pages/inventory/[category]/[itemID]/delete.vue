@@ -53,11 +53,11 @@ const deleteItemSubmit = async () => {
 	})
 	toggleDeleteItem()
 
-	navigateTo(`/v2/inventory/${currentCategory}`)
+	navigateTo(`/inventory/${currentCategory}`)
 }
 
 // Goes back to the inventory page for the current category
 const goBack = () => {
-	navigateTo(`/v2/inventory/${currentCategory}`)
+	navigateTo(`/inventory/${currentCategory}`)
 }
 </script>

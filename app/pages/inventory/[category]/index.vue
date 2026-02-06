@@ -123,24 +123,24 @@ watch(items, (val) => {
 // Back Button
 const goToCategoriesPage = () => {
 	if(inventoryStore.totalChanges > 0) {
-		navigateTo(`/v2/inventory/return-verify?category=${currentCategory.value}`)
+		navigateTo(`/inventory/return-verify?category=${currentCategory.value}`)
 	}
 	else {
 		inventoryStore.resetChanges()
-		navigateTo(`/v2/inventory/category-select`)
+		navigateTo(`/inventory`)
 	}
 }
 // Add Button
 const goToAddPage = () => {
 	// To avoid unexpected paths
 	const cat = currentCategory.value || route.params.categoryName
-	navigateTo(`/v2/inventory/${cat}/add`)
+	navigateTo(`/inventory/${cat}/add`)
 }
 // Review Changes Button
 const goToReviewPage = () => {
 	// To avoid unexpected paths
 	const cat = currentCategory.value || route.params.categoryName
-	navigateTo(`/v2/inventory/${cat}/review-changes`)
+	navigateTo(`/inventory/${cat}/review-changes`)
 }
 
 // Determining when to display rectangle cards and square cards

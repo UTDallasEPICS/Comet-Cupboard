@@ -33,7 +33,7 @@ onMounted(async () => {
 			}
 			await navigateTo("/v2/queue")
 		} else {
-			await navigateTo("/v2/shopping")
+			await navigateTo("/shopping")
 		}
 	}
 })

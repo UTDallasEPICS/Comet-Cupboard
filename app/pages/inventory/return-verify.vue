@@ -35,14 +35,13 @@ const currentCategory = computed(() => {
 })
 const inventoryStore = useInventoryStore()
 
-
 const categoryReturn = () => {
 	inventoryStore.resetChanges()
-	navigateTo(`/v2/inventory/category-select`)
+	navigateTo(`/inventory`)
 }
 
 // Goes back to the inventory page for the current category
 const goBack = () => {
-	navigateTo(`/v2/inventory/${currentCategory.value}`)
+	navigateTo(`/inventory/${currentCategory.value}`)
 }
 </script>
