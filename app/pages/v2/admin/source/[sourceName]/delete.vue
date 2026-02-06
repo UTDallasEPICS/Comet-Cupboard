@@ -1,10 +1,5 @@
 <template>
 	<div>
-		<!-- Header for the Delete Source page. -->
-		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
-			<V2SharedHeaderSubheader pageTitle="Delete Source" class="md:max-w-[600px] md:rounded-b-3xl" />
-		</div>
-
 		<div class="mt-10 flex flex-col items-center justify-center gap-y-8 pt-10">
 			<!-- Warning message: Displays the message warning the admin about deleting the source. -->
 			<V2SharedStatusMessageWarning warningMessage="By removing this source, you won’t be able to access it anymore!" />

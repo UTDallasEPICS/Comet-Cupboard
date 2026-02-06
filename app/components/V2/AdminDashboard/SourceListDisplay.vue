@@ -9,7 +9,8 @@
 			</div>
 
 			<!-- Add button: if either this button is pressed or the Enter key is pressed, then the source with the inputted name will be added. -->
-			<V2SharedAddButton @click="addSource" class="h-full" />
+			<SharedButtonPositiveAction text="+ Add" @click="addSource"/>
+
 		</div>
 
 		<!-- If at least 1 source exists, display the list of sources. Each source is represented as a card. -->

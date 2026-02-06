@@ -1,8 +1,5 @@
 <template>
 	<div>
-		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
-			<V2SharedHeaderSubheader pageTitle="Return to Categories" class="md:max-w-[600px]"></V2SharedHeaderSubheader>
-		</div>
 		<div class="mt-10 flex flex-col items-center justify-center gap-y-8 pt-10">
 			<V2SharedStatusMessageWarning warningMessage="This will remove all in progress changes!"></V2SharedStatusMessageWarning>
 			<div class="drop-shadow-standard relative flex h-80 w-full max-w-96 flex-col items-center justify-center gap-3 rounded-xl bg-white">

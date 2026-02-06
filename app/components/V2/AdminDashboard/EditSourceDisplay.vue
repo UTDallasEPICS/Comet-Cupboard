@@ -1,13 +1,13 @@
 <template>
 	<div class="mx-auto flex max-w-[800px] flex-col gap-y-4 rounded-xl bg-white p-4">
 		<!-- Navigate Back Button: clicking or tapping this button will take you to back to the Sources page: -->
-		<V2SharedNavigateBackButton backTo="Sources" @click="goToSourcesPage" class="remove-button-effects" />
+		<SharedButtonNavigateBack text="Sources" @click="navigateTo('/v2/admin/source')" />
 		<div class="flex items-center justify-center gap-1 text-center">
 			<!-- Displays the name of the specified source: -->
 			<p class="text-utd-green">{{ sourceName }}</p>
 
 			<!-- Delete Source button: clicking or tapping this button will take you to a page that asks if you want to remove the source: -->
-			<button @click="deleteSource(sourceName)" class="remove-button-effects aspect-square h-8">
+			<button class="remove-button-effects aspect-square h-8" @click="deleteSource(sourceName)">
 				<TrashIcon />
 			</button>
 		</div>
@@ -18,16 +18,16 @@
 				class="focus-within:drop-shadow-standard flex h-full w-full items-center rounded-md border border-gray-300 bg-white transition-all duration-50 focus-within:border-blue-400"
 			>
 				<input
+					v-model="fieldLabel"
 					placeholder="Field Name"
 					type="text"
-					v-model="fieldLabel"
-					@keydown.enter="addFieldToSource(sourceName)"
 					class="w-full pl-2 outline-none"
+					@keydown.enter="addFieldToSource(sourceName)"
 				/>
 			</div>
 
 			<!-- Add button: if either this button is pressed or the Enter key is pressed, then the field with the inputted name will be added to the specified source. -->
-			<V2SharedAddButton @click="addFieldToSource(sourceName)" class="h-full" />
+			<SharedButtonPositiveAction text="+ Add" @click="addFieldToSource(sourceName)"/>
 		</div>
 
 		<template v-for="source in sources">
@@ -43,7 +43,7 @@
 						</div>
 
 						<!-- X button: if pressed, then the specified field will be deleted. -->
-						<button @click="removeField(field.fieldID)" class="remove-button-effects ml-auto aspect-square w-8">
+						<button class="remove-button-effects ml-auto aspect-square w-8" @click="removeField(field.fieldID)">
 							<XMarkIcon />
 						</button>
 					</div>
@@ -54,41 +54,39 @@
 </template>
 
 <script lang="ts" setup>
-const fieldLabel = ref("")//Used as an input field for the name of the field to be added
+//Used as an input field for the name of the field to be added
 
-import {XMarkIcon, TrashIcon} from '@heroicons/vue/24/solid';// Imports the X icon used as a button for deleting a field
+import { XMarkIcon, TrashIcon } from "@heroicons/vue/24/solid"
+const fieldLabel = ref("") // Imports the X icon used as a button for deleting a field
 
-const { data: sources, refresh: refreshSources } = await useFetch("/api/controls/sources");//List of sources that exists on the website
+const { data: sources, refresh: refreshSources } = await useFetch("/api/controls/sources") //List of sources that exists on the website
 
-const router = useRouter();//Router used for navigating to the page for deleting the specified source:
+const router = useRouter() //Router used for navigating to the page for deleting the specified source:
 
 defineProps({
-    sourceName: String //Name of the specified source
-});
+	sourceName: String, //Name of the specified source
+})
 
 //Function for adding a field to the specified source based on the given name:
 const addFieldToSource = async (nameOfSource: any) => {
-
-    //Adds the field with the given name to the list of fields of the specified source:
-    if (fieldLabel.value != "")
-    {
-        await $fetch("/api/inventory/field", {
-            method: "POST",
-            body: JSON.stringify({
-                source: nameOfSource,
-                fieldName: fieldLabel.value,
-            }),
-        })
-        fieldLabel.value = ""
-        await refreshSources()
-    }
+	//Adds the field with the given name to the list of fields of the specified source:
+	if (fieldLabel.value != "") {
+		await $fetch("/api/inventory/field", {
+			method: "POST",
+			body: JSON.stringify({
+				source: nameOfSource,
+				fieldName: fieldLabel.value,
+			}),
+		})
+		fieldLabel.value = ""
+		await refreshSources()
+	}
 }
 
 //Function for removing a field to the specified source based on the given ID
 const removeField = async (fieldID: any) => {
-
 	//Removes the field with the given ID from the list of fields of the specified source:
-    await $fetch("/api/inventory/field", {
+	await $fetch("/api/inventory/field", {
 		method: "DELETE",
 		body: JSON.stringify({ fieldID: fieldID }),
 	})
@@ -100,6 +98,6 @@ function goToSourcesPage() {
 }
 
 function deleteSource(sourceName: string | undefined) {
-    router.replace({path: `/v2/admin/source/${sourceName}/delete`})
+	router.replace({ path: `/v2/admin/source/${sourceName}/delete` })
 }
 </script>

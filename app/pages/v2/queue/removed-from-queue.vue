@@ -1,10 +1,5 @@
 <template>
 	<div>
-		<!-- Header for the Removed From Queue Access page. -->
-		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
-			<V2SharedHeaderSubheader pageTitle="Removed From Queue" class="text-center md:max-w-[600px] md:rounded-b-xl" />
-		</div>
-
 		<div class="mx-auto mt-20 md:max-w-[600px]">
 			<!-- Message that will be displayed to the student who was removed from the queue: -->
 			<div class="drop-shadow-standard mt-4 flex h-80 w-full items-center justify-center rounded-xl bg-white p-2 text-center">

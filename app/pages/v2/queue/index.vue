@@ -1,8 +1,5 @@
 <template>
 	<div>
-		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
-			<V2SharedHeaderSubheader page-title="Queue" class="md:max-w-[600px] md:rounded-b-xl" />
-		</div>
 		<div class="mx-auto mt-20 flex max-w-[800px] flex-col justify-center gap-y-5">
 			<div v-if="!permissions['VERIFY_CART'] && !permissions['SHOPPING']" class="flex w-full flex-grow items-center justify-center">
 				<V2QueueEstimatedWaitTimeDisplay time="00:00:00" />

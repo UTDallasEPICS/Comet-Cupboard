@@ -15,7 +15,7 @@
 			</div>
 
 			<!-- Add button: if either this button is pressed or the Enter key is pressed, then the volunteer with the inputted net ID will be added. -->
-			<V2SharedAddButton @click="assignVolunteer" class="h-full" />
+			<SharedButtonPositiveAction text="+ Add" @click="assignVolunteer"/>
 		</div>
 
 		<!-- If at least 1 volunteer is assigned, display the list of volunteers. Each volunteer is represented as a card. -->

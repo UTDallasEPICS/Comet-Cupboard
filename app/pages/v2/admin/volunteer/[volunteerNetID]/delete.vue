@@ -1,10 +1,5 @@
 <template>
 	<div>
-		<!-- Header for the Delete Volunteer page. -->
-		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
-			<V2SharedHeaderSubheader pageTitle="Delete Volunteer" class="md:max-w-[600px] md:rounded-b-3xl" />
-		</div>
-
 		<div class="mt-10 flex flex-col items-center justify-center gap-y-8 pt-10">
 			<!-- Warning message: Displays the message warning the admin about deleting the volunteer. -->
 			<V2SharedStatusMessageWarning :warningMessage="`User with netID ${volunteerToBeDeleted} will lose volunteer permissions`" />

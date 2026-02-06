@@ -1,8 +1,5 @@
 <template>
 	<div>
-		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
-			<V2SharedHeaderSubheader pageTitle="Review Changes" class="md:max-w-[600px] md:rounded-b-3xl"></V2SharedHeaderSubheader>
-		</div>
 		<div class="mt-20 flex flex-col items-center gap-3 p-6 pt-10 lg:items-start">
 			<!-- Source Dropdown -->
 			<Listbox v-model="selectedSource" v-slot="{ open }">

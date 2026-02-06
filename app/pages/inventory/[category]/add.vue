@@ -1,8 +1,5 @@
 <template>
 	<div>
-		<div class="absolute top-20 left-0 z-30 flex h-16 w-full justify-center">
-			<V2SharedHeaderSubheader pageTitle="Add Item" class="md:max-w-[600px] md:rounded-b-3xl"></V2SharedHeaderSubheader>
-		</div>
 		<div class="flex flex-col items-center justify-center gap-y-8 pt-10 mt-20">
 			<div class="bg-white w-full max-w-80 h-80 rounded-xl flex flex-col gap-3 drop-shadow-standard items-center justify-center relative overflow-hidden">
 				<img v-if="imageUrl" :src="imageUrl" class="absolute inset-0 w-full h-full object-cover" />
