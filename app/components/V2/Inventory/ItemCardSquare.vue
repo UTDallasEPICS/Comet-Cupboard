@@ -2,7 +2,7 @@
 	<Menu>
 		<div class="drop-shadow-standard relative flex h-64 w-full max-w-sm flex-col items-center rounded-xl bg-white">
 			<!-- Deal tag on bottom right of card -->
-			<div v-if="dealExists" class="bg-utd-orange absolute right-0 bottom-0 rounded-tl-md rounded-br-md px-5 text-white">
+			<div v-if="dealExists" class="absolute right-0 bottom-0 rounded-tl-md rounded-br-md px-5 text-white">
 				{{ dealText }}
 			</div>
 
@@ -21,7 +21,7 @@
 					<MenuItem>
 						<div
 							@click="editItem"
-							class="hover:underline border-cupboardv2-lg flex cursor-pointer items-center justify-center border-b px-1 py-1"
+							class="hover:underlineflex cursor-pointer items-center justify-center border-b px-1 py-1"
 						>
 							Edit
 						</div>
@@ -29,7 +29,7 @@
 					<MenuItem>
 						<div
 							@click="editDeal"
-							class="hover:underline border-cupboardv2-lg flex cursor-pointer items-center justify-center border-b px-1 py-1"
+							class="hover:underlineflex cursor-pointer items-center justify-center border-b px-1 py-1"
 						>
 							Item Deal
 						</div>
@@ -52,18 +52,18 @@
 				<p class="">{{ itemName }}</p>
 				<div class="flex gap-3">
 					<p class="">Qty:</p>
-					<div class="border-cupboardv2-dg relative box-border flex h-7 w-[125px] justify-end rounded-2xl border-[1px] bg-white">
+					<div class="relative box-border flex h-7 w-[125px] justify-end rounded-2xl border-[1px] bg-white">
 						<div class="flex items-center justify-center">
 							<span class="mr-2 text-black">{{ props.currentCount }}</span>
 						</div>
-						<div :style="clipStyle" class="bg-cupboardv2-elg flex w-[75px] items-center justify-center rounded-r-2xl">
+						<div :style="clipStyle" class="flex w-[75px] items-center justify-center rounded-r-2xl">
 							<span class="text-black">{{ displayChange }}</span>
 						</div>
 					</div>
 				</div>
 				<!-- Inventory adjustment buttons (flex horizontal) -->
 				<div class="flex gap-6">
-					<button @click="decrement" class="bg-cupboardv2-dg flex h-9 w-9 items-center justify-center rounded-full">
+					<button @click="decrement" class="flex h-9 w-9 items-center justify-center rounded-full">
 						<MinusIcon class="h-7 w-7 stroke-[3px] text-white" />
 					</button>
 					<div class="relative mt-1 flex flex-col items-center">
@@ -74,9 +74,9 @@
 							@input="validateInput"
 							class="-mb-1 w-12 border-none bg-transparent text-center text-black outline-none"
 						/>
-						<div class="bg-cupboardv2-dg h-1 w-12 rounded-xl"></div>
+						<div class="h-1 w-12 rounded-xl"></div>
 					</div>
-					<button @click="increment" class="bg-cupboardv2-dg flex h-9 w-9 items-center justify-center rounded-full">
+					<button @click="increment" class="flex h-9 w-9 items-center justify-center rounded-full">
 						<PlusIcon class="h-7 w-7 stroke-[3px] text-white" />
 					</button>
 				</div>

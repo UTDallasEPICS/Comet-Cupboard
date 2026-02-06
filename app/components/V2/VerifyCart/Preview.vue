@@ -1,9 +1,9 @@
 <template>
-	<div class="border-outlining-gray-v2 sm:px-16 flex h-min min-h-12 w-full flex-col rounded-lg border bg-white px-4 pt-2">
+	<div class="flex h-min min-h-12 w-full flex-col rounded-lg border bg-white px-4 pt-2 sm:px-16">
 		<p class="px-2 text-center">{{ cartID }}</p>
 		<div v-if="cartID != 'There are no carts currently selected'" class="mt-4 flex h-full flex-col gap-y-4 rounded-xl">
 			<div class="flex flex-col items-center gap-x-4 gap-y-4">
-				<div v-for="warning in warnings" class="bg-yellow-warning-v2 flex w-full flex-row items-center gap-2 rounded-lg p-2">
+				<div v-for="warning in warnings" class="bg-final-yellow-warning flex w-full flex-row items-center gap-2 rounded-lg p-2">
 					<ExclamationTriangleIcon class="aspect-square max-w-8 min-w-8" />
 					<p class="">{{ warning }}</p>
 				</div>
@@ -23,18 +23,18 @@
 					/>
 				</CategoryItemsGrid>
 			</div>
-			<div class="md:flex-row sm:items-end flex flex-col items-center gap-4">
-				<div class="md:mr-auto flex w-min flex-col">
+			<div class="flex flex-col items-center gap-4 sm:items-end md:flex-row">
+				<div class="flex w-min flex-col md:mr-auto">
 					<p class="text-right text-nowrap">Total Count {{ cartTotalCount }}</p>
 					<p class="text-right text-nowrap">Adjusted Count {{ cartAdjustedCount }}</p>
 				</div>
-				<div class="border-outlining-gray-v2 h-32 w-full max-w-96 border border-2">
+				<div class="h-32 w-full max-w-96 border border-2">
 					<textarea placeholder="Add a reason" v-model="reason" class="h-full w-full resize-none"></textarea>
 				</div>
 			</div>
-			<div class="sm:justify-end flex h-12 flex-row justify-center gap-x-4">
-				<button @click="rejectCart" class="bg-decline-red-v2 h-10 w-32 rounded-xl text-white">Decline</button>
-				<button @click="acceptCart" class="bg-utd-green h-10 w-32 rounded-xl text-white">Accept</button>
+			<div class="flex h-12 flex-row justify-center gap-x-4 sm:justify-end">
+				<button @click="rejectCart" class="h-10 w-32 rounded-xl text-white">Decline</button>
+				<button @click="acceptCart" class="h-10 w-32 rounded-xl text-white">Accept</button>
 			</div>
 		</div>
 	</div>

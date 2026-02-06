@@ -16,13 +16,13 @@
 			<!-- Buttons for canceling or confirming the deletion of the specified source -->
 			<div class="mt-20 flex flex-row gap-x-4">
 				<!-- Cancel button: if this button is pressed, then the deletion of the specified source will be canceled. -->
-				<button @click="cancel(sourceToBeDeleted)" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<button @click="cancel(sourceToBeDeleted)" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
 					<p class="text-white">Cancel</p>
 				</button>
 				<!-- Delete button: if this button is pressed, then the specified source will be deleted. -->
 				<button
 					@click="removeSource(sourceToBeDeleted)"
-					class="bg-utd-orange drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl"
+					class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl"
 				>
 					<p class="text-white">Yes, Delete</p>
 				</button>

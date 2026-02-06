@@ -10,10 +10,10 @@
 			</div>
 			<!-- Footer Buttons -->
 			<div class="mt-20 flex flex-row gap-x-4">
-				<button @click="goBack" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<button @click="goBack" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
 					<p class="text-white">Cancel</p>
 				</button>
-				<button @click="categoryReturn" class="bg-utd-orange drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<button @click="categoryReturn" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
 					<p class="text-white">Yes</p>
 				</button>
 			</div>

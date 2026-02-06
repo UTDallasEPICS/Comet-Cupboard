@@ -4,9 +4,9 @@
 			<div class="drop-shadow-standard relative flex h-80 w-full max-w-80 flex-col items-center justify-center gap-3 overflow-hidden rounded-xl bg-white">
 				<img v-if="imageUrl" :src="imageUrl" class="absolute inset-0 h-full w-full object-cover" />
 				<label
-					:class="{ 'bg-cupboardv2-lg bg-opacity-60': imageUrl }"
+					:class="{ 'bg-opacity-60': imageUrl }"
 					for="fileInput"
-					class="bg-utd-green drop-shadow-standard z-10 flex h-16 w-40 cursor-pointer flex-row items-center justify-center gap-3 gap-x-3 rounded-xl"
+					class="drop-shadow-standard z-10 flex h-16 w-40 cursor-pointer flex-row items-center justify-center gap-3 gap-x-3 rounded-xl"
 				>
 					<div class="flex flex-row items-center gap-x-3">
 						<CloudArrowUpIcon class="h-12 w-12 text-white" />
@@ -23,27 +23,27 @@
 					@input="validateInput"
 					class="w-80 w-full border-none bg-transparent text-left text-black outline-none"
 				/>
-				<div class="bg-cupboardv2-dg -mt-1 h-[2px] w-72 rounded-xl"></div>
+				<div class="-mt-1 h-[2px] w-72 rounded-xl"></div>
 			</div>
 			<Listbox v-model="selectedCategory" v-slot="{ open }">
 				<div class="relative">
 					<ListboxButton
-						class="modal-button border-cupboardv2-lg flex w-72 flex-row items-center border-2 bg-white px-4 text-left"
+						class="modal-buttonflex w-72 flex-row items-center border-2 bg-white px-4 text-left"
 					>
 						<div class="grow">
 							{{ selectedCategory || "Category" }}
 						</div>
-						<ChevronUpIcon v-if="open" class="fill-cupboardv2-dg stroke-cupboardv2-dg h-5" />
-						<ChevronDownIcon v-else class="fill-cupboardv2-dg stroke-cupboardv2-dg h-5" />
+						<ChevronUpIcon v-if="open" class="h-5" />
+						<ChevronDownIcon v-else class="h-5" />
 					</ListboxButton>
 					<ListboxOptions
-						class="drop-shadow-standard divide-cupboard-lg absolute top-12 z-50 max-h-36 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
+						class="drop-shadow-standard absolute top-12 z-50 max-h-36 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
 					>
 						<ListboxOption
 							v-for="category in categories"
 							:key="category.name"
 							:value="category.name"
-							class="hover:bg-cupboardv2-lg cursor-pointer p-1 text-center text-wrap"
+							class="hover:cursor-pointer p-1 text-center text-wrap"
 						>
 							{{ category.name }}
 						</ListboxOption>
@@ -52,10 +52,10 @@
 			</Listbox>
 			<!-- Footer Buttons -->
 			<div class="mt-20 flex flex-row gap-x-4">
-				<button @click="goBack" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<button @click="goBack" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
 					<p class="text-white">Cancel</p>
 				</button>
-				<button @click="editItemSubmit" class="bg-utd-orange drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<button @click="editItemSubmit" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
 					<p class="text-white">Submit</p>
 				</button>
 			</div>

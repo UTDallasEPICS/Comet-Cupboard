@@ -1,8 +1,8 @@
 <template>
-	<div class="bg-utd-gray-v2 border-outlining-gray-v2 flex h-36 items-center justify-between rounded-lg border px-2 py-1">
+	<div class="flex h-36 items-center justify-between rounded-lg border px-2 py-1">
 		<div class="relative aspect-square max-w-24 min-w-24">
 			<img :src="`/api/image/${imgName}`" />
-			<div v-if="dealExists" class="bg-utd-orange absolute top-0 left-0 w-16 rounded-br-lg px-1">
+			<div v-if="dealExists" class="absolute top-0 left-0 w-16 rounded-br-lg px-1">
 				<p class="text-center text-white">{{ dealText }}</p>
 			</div>
 		</div>

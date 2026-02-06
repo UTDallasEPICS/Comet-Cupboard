@@ -4,7 +4,7 @@
 		<SharedButtonNavigateBack text="Sources" @click="navigateTo('/v2/admin/source')" />
 		<div class="flex items-center justify-center gap-1 text-center">
 			<!-- Displays the name of the specified source: -->
-			<p class="text-utd-green">{{ sourceName }}</p>
+			<p>{{ sourceName }}</p>
 
 			<!-- Delete Source button: clicking or tapping this button will take you to a page that asks if you want to remove the source: -->
 			<button class="remove-button-effects aspect-square h-8" @click="deleteSource(sourceName)">
@@ -34,7 +34,7 @@
 			<!-- Finds the source with the specified name. That source will be the specified source. -->
 			<template v-if="source.name == sourceName">
 				<!-- If the specified source has at least 1 field: -->
-				<div v-if="source.Fields?.length > 0" class="bg-cupboardv2-2elg flex h-72 w-full flex-col gap-y-4 overflow-auto rounded-xl p-4">
+				<div v-if="source.Fields?.length > 0" class="flex h-72 w-full flex-col gap-y-4 overflow-auto rounded-xl p-4">
 					<!-- Displays a list of fields for the specified source. Each field is represented as a card. -->
 					<div v-for="field in source.Fields" class="drop-shadow-standard flex w-full rounded-xl bg-white p-2">
 						<!-- Displays the name of the specified field on the left of the card. -->

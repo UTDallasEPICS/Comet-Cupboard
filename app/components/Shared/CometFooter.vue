@@ -1,5 +1,5 @@
 <template>
-	<UFooter class="bg-cupboard-dg">
+	<UFooter class="bg-final-cancel-gray">
 		<template #default>
 			<div class="mx-7 my-5 flex flex-col place-content-evenly text-white max-sm:space-y-7 sm:flex-row sm:space-x-7">
 				<div>

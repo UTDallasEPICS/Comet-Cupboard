@@ -4,21 +4,21 @@
 			<!-- Source Dropdown -->
 			<Listbox v-model="selectedSource" v-slot="{ open }">
 				<div class="relative">
-					<ListboxButton class="modal-button border-cupboardv2-lg flex w-72 flex-row items-center border-2 bg-white px-4 text-left">
+					<ListboxButton class="modal-buttonflex w-72 flex-row items-center border-2 bg-white px-4 text-left">
 						<div class="grow">
 							{{ selectedSource || "Source" }}
 						</div>
-						<ChevronUpIcon v-if="open" class="fill-cupboardv2-dg stroke-cupboardv2-dg h-7" />
-						<ChevronDownIcon v-else class="fill-cupboardv2-dg stroke-cupboardv2-dg h-7" />
+						<ChevronUpIcon v-if="open" class="h-7" />
+						<ChevronDownIcon v-else class="h-7" />
 					</ListboxButton>
 					<ListboxOptions
-						class="drop-shadow-standard divide-cupboard-lg absolute top-14 z-50 max-h-36 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
+						class="drop-shadow-standard absolute top-14 z-50 max-h-36 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
 					>
 						<ListboxOption
 							v-for="source in sources"
 							:key="source.name"
 							:value="source.name"
-							class="hover:bg-cupboardv2-lg cursor-pointer p-1 text-center text-wrap"
+							class="hover:cursor-pointer p-1 text-center text-wrap"
 						>
 							{{ source.name }}
 						</ListboxOption>
@@ -74,11 +74,11 @@
 
 			<!-- Footer Buttons -->
 			<div class="lg_mt-0 lg_justify-end lg_self-end mt-32 flex flex-row gap-x-4">
-				<button @click="goBack" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<button @click="goBack" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
 					<p class="text-white">Cancel</p>
 				</button>
 				<button
-					:class="selectedSource ? 'bg-utd-orange' : 'bg-utd-orange/40 cursor-not-allowed'"
+					:class="selectedSource ? '' : '/40 cursor-not-allowed'"
 					@click="submit"
 					:disabled="!selectedSource"
 					class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl"

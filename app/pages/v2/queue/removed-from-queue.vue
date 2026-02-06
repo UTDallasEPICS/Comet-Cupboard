@@ -7,7 +7,7 @@
 			</div>
 
 			<!-- Sign Out button: if this button is pressed, then the student will be moved back to the login page -->
-			<button @click="logout" class="bg-utd-orange mx-auto mt-3 block h-12 w-32 rounded-xl p-2 text-white">
+			<button @click="logout" class="mx-auto mt-3 block h-12 w-32 rounded-xl p-2 text-white">
 				<p>Sign Out</p>
 			</button>
 		</div>

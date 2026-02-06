@@ -14,12 +14,12 @@
 		</div>
 
 		<!-- If at least 1 source exists, display the list of sources. Each source is represented as a card. -->
-		<div v-if="sources?.length > 0" class="bg-cupboardv2-2elg flex h-72 w-full flex-col gap-y-4 overflow-auto rounded-xl p-4">
+		<div v-if="sources?.length > 0" class="flex h-72 w-full flex-col gap-y-4 overflow-auto rounded-xl p-4">
 			<V2AdminDashboardSourceCard v-for="source in sources" :key="source.name" :sourceName="source.name" />
 		</div>
 
 		<!-- Displays a message if no source exists. -->
-		<div v-else class="bg-cupboardv2-2elg flex h-72 w-full items-center justify-center rounded-xl p-4 text-center">
+		<div v-else class="flex h-72 w-full items-center justify-center rounded-xl p-4 text-center">
 			<p>No sources have currently been added yet.</p>
 		</div>
 	</div>

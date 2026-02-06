@@ -1,4 +1,3 @@
-/* google fonts import */
 @import "tailwindcss";
 @import "@nuxt/ui";
 
@@ -7,33 +6,11 @@
 	--color-secondary: #154734;
 
 	--color-final-utd-green: #154734;
-	--color-final-utd-orange: #e4701e;
+	--color-final-utd-orange: #e4701e; /* slightly off from utd's orange, but matches comet cupboard colors */
 	--color-final-page-bg: #eeeeee;
 	--color-final-cancel-gray: #4a4a4a;
 	--color-final-negative-red: #d20b0b;
-
-	--color-utd-green: #154734;
-	--color-utd-orange: #e4701e; /* slightly off from utd's orange, but matches comet cupboard colors */
-	--color-cupboard-dg: #626262;
-	--color-cupboard-mg: #b1b1b1;
-	--color-cupboard-lg: #d9d9d9;
-	--color-red-negative: #e22222;
-	--color-yellow-warning: #ffc247;
-	--color-outlining-gray-v2: #b9b9b9;
-	--color-utd-gray-v2: #f9f9f9;
-	--color-decline-red-v2: #d20b0b;
-	--color-cart-red-v2: #ffbaba;
-	--color-cart-green-v2: #d2faca;
-	--color-yellow-warning-v2: #ffd580;
-	--color-cupboardv2-dg: #4a4a4a;
-	--color-cupboardv2-lg: #b9b9b9;
-	--color-cupboardv2-elg: #d9d9d9;
-	--color-cupboardv2-2elg: #eeeeee;
-	--color-yellow-warningv2: #ffd580;
-	--color-red-negativev2: #d20b0b;
-
-	--breakpoint-tn: 400px;
-	--breakpoint-md: 825px;
+	--color-final-yellow-warning: #ffc247;
 }
 
 @layer components {

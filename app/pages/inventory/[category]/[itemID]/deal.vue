@@ -3,7 +3,7 @@
 		<div class="mt-20 flex flex-col items-center justify-center gap-y-8 pt-10">
 			<div class="drop-shadow-standard relative flex h-80 w-full max-w-80 flex-col items-center justify-center gap-3 overflow-hidden rounded-xl bg-white">
 				<!-- Deal Tag -->
-				<div v-if="dealExists" class="bg-utd-orange absolute top-0 left-0 z-20 w-32 rounded-tl-md rounded-br-md px-4 py-1">
+				<div v-if="dealExists" class="absolute top-0 left-0 z-20 w-32 rounded-tl-md rounded-br-md px-4 py-1">
 					<p class="text-center text-white">{{ dealText }}</p>
 				</div>
 				<img v-if="imageUrl" :src="imageUrl" class="absolute inset-0 h-full w-full object-cover" />
@@ -14,7 +14,7 @@
 					<p class="">Deal is</p>
 					<div class="flex flex-col items-center">
 						<input
-							:class="{ 'text-red-negative border-red-negative': invalidActualCount }"
+							:class="{ 'border-red-negative': invalidActualCount }"
 							min="1"
 							type="number"
 							v-model.number="actualCount"
@@ -22,12 +22,12 @@
 							:placeholder="originalActualCount"
 							class="w-8 border-none bg-transparent text-center text-black outline-none"
 						/>
-						<div class="bg-cupboardv2-dg -mt-1 h-[3px] w-8 rounded-xl"></div>
+						<div class="-mt-1 h-[3px] w-8 rounded-xl"></div>
 					</div>
 					<p class="">for</p>
 					<div class="flex flex-col items-center">
 						<input
-							:class="{ 'text-red-negative border-red-negative': invalidAdjustedCount }"
+							:class="{ 'border-red-negative': invalidAdjustedCount }"
 							min="0"
 							type="number"
 							v-model.number="adjustedCount"
@@ -36,28 +36,28 @@
 							:placeholder="originalAdjustedCount"
 							class="w-8 border-none bg-transparent text-center text-black outline-none"
 						/>
-						<div class="bg-cupboardv2-dg -mt-1 h-[3px] w-8 rounded-xl"></div>
+						<div class="-mt-1 h-[3px] w-8 rounded-xl"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<!-- Mark free and remove deals buttons -->
-		<button @click="markAsFree" class="bg-utd-green drop-shadow-standard relative mt-6 flex h-12 w-48 items-center justify-center rounded-xl">
+		<button @click="markAsFree" class="drop-shadow-standard relative mt-6 flex h-12 w-48 items-center justify-center rounded-xl">
 			<p class="text-white">Mark as Free</p>
 		</button>
 		<button
 			v-if="dealExists"
 			@click="deleteDeal"
-			class="bg-red-negativev2 drop-shadow-standard relative mt-6 flex h-12 w-48 items-center justify-center rounded-xl"
+			class="drop-shadow-standard relative mt-6 flex h-12 w-48 items-center justify-center rounded-xl"
 		>
 			<p class="text-white">Remove Deals</p>
 		</button>
 		<!-- Footer Buttons -->
 		<div class="mt-20 flex flex-row gap-x-4">
-			<button @click="goBack" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+			<button @click="goBack" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
 				<p class="text-white">Cancel</p>
 			</button>
-			<button @click="editDeal" class="bg-utd-orange drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+			<button @click="editDeal" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
 				<p class="text-white">Submit</p>
 			</button>
 		</div>

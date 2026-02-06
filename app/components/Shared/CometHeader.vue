@@ -1,6 +1,6 @@
 <template>
 	<UHeader
-		class="bg-utd-green"
+		class="bg-final-utd-green"
 		:toggle="false"
 		:ui="{
 			container: 'mx-0 w-full max-w-none',

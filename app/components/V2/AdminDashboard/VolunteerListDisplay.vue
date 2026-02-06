@@ -19,12 +19,12 @@
 		</div>
 
 		<!-- If at least 1 volunteer is assigned, display the list of volunteers. Each volunteer is represented as a card. -->
-		<div v-if="volunteers?.length > 0" class="bg-cupboardv2-2elg flex h-72 w-full flex-col gap-y-4 overflow-auto rounded-xl p-4">
+		<div v-if="volunteers?.length > 0" class="flex h-72 w-full flex-col gap-y-4 overflow-auto rounded-xl p-4">
 			<V2AdminDashboardVolunteerCard v-for="volunteer in volunteers" :key="volunteer.netID" :volunteerID="volunteer.netID" />
 		</div>
 
 		<!-- Displays a message if no volunteer is assigned. -->
-		<div v-else class="bg-cupboardv2-2elg flex h-72 w-full items-center justify-center rounded-xl p-4 text-center">
+		<div v-else class="flex h-72 w-full items-center justify-center rounded-xl p-4 text-center">
 			<p>No volunteers have currently been assigned yet.</p>
 		</div>
 	</div>

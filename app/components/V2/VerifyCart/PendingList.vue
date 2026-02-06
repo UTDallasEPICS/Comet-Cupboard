@@ -7,7 +7,7 @@
 			<button
 				v-for="pendingCart in pendingCartIDsAndAdjQTY"
 				@click="emit('update:select-cart', pendingCart.cartID)"
-				class="border-outlining-gray-v2 h-12 w-72 rounded-lg border bg-white"
+				class="h-12 w-72 rounded-lg border bg-white"
 				:key="pendingCart.cartID"
 			>
 				<div class="flex items-center justify-center">

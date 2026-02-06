@@ -3,7 +3,7 @@
 		<!-- Image container -->
 		<div class="relative mt-4 h-20 w-20 flex-shrink-0 overflow-hidden">
 			<img :alt="itemName" :src="`/api/image/${imgName}`" class="h-full w-full object-cover" />
-			<PhotoIcon class="text-cupboardv2-dg h-full w-full" />
+			<PhotoIcon class="h-full w-full" />
 		</div>
 		<!-- Text container (flex vertical) -->
 		<div class="flex flex-col items-center gap-4">

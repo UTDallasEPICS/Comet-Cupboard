@@ -4,9 +4,9 @@
 			<div class="bg-white w-full max-w-80 h-80 rounded-xl flex flex-col gap-3 drop-shadow-standard items-center justify-center relative overflow-hidden">
 				<img v-if="imageUrl" :src="imageUrl" class="absolute inset-0 w-full h-full object-cover" />
 				<label
-					:class="{ 'bg-cupboardv2-lg bg-opacity-60': imageUrl }"
+					:class="{ 'bg-opacity-60': imageUrl }"
 					for="fileInput"
-					class="z-10 flex flex-row items-center justify-center gap-x-3 bg-utd-green w-40 h-16 rounded-xl flex gap-3 drop-shadow-standard cursor-pointer"
+					class="z-10 flex flex-row items-center justify-center gap-x-3 w-40 h-16 rounded-xl flex gap-3 drop-shadow-standard cursor-pointer"
 				>
 					<div class="flex flex-row items-center gap-x-3">
 						<CloudArrowUpIcon class="w-12 h-12 text-white" />
@@ -23,14 +23,14 @@
 					@input="validateInput"
 					class="w-full w-80 bg-transparent outline-none border-none text-left text-black"
 				/>
-				<div class="h-[2px] bg-cupboardv2-dg w-72 rounded-xl -mt-1"></div>
+				<div class="h-[2px] w-72 rounded-xl -mt-1"></div>
 			</div>
 			<!-- Footer Buttons -->
 			<div class="flex flex-row gap-x-4 mt-20">
-				<button @click="goBack" class="bg-cupboardv2-dg w-32 h-12 rounded-xl flex items-center justify-center drop-shadow-standard">
+				<button @click="goBack" class="w-32 h-12 rounded-xl flex items-center justify-center drop-shadow-standard">
 					<p class="text-white">Cancel</p>
 				</button>
-				<button @click="addItemSubmit" class="bg-utd-orange w-32 h-12 rounded-xl flex items-center justify-center drop-shadow-standard">
+				<button @click="addItemSubmit" class="w-32 h-12 rounded-xl flex items-center justify-center drop-shadow-standard">
 					<p class="text-white">Submit</p>
 				</button>
 			</div>

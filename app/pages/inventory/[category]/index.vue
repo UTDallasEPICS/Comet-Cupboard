@@ -79,13 +79,13 @@
 					<button
 						v-if="Object.keys(inventoryStore.changes || {}).length === 0"
 						disabled
-						class="bg-cupboard-dg drop-shadow-standard flex h-12 w-60 items-center justify-center rounded-xl"
+						class="drop-shadow-standard flex h-12 w-60 items-center justify-center rounded-xl"
 					>
 						<p class="text-white">No Changes</p>
 					</button>
 					<button
 						v-else
-						class="bg-utd-orange drop-shadow-standard flex h-12 w-60 items-center justify-center rounded-xl text-white"
+						class="drop-shadow-standard flex h-12 w-60 items-center justify-center rounded-xl text-white"
 						@click="goToReviewPage"
 					>
 						<p class="text-white">Review Changes</p>

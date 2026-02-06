@@ -16,13 +16,13 @@
 			<!-- Buttons for canceling or confirming the deletion of the specified volunteer -->
 			<div class="mt-20 flex flex-row gap-x-4">
 				<!-- Cancel button: if this button is pressed, then the deletion of the specified volunteer will be canceled. -->
-				<button @click="cancel" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<button @click="cancel" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
 					<p class="text-white">Cancel</p>
 				</button>
 				<!-- Delete button: if this button is pressed, then the specified volunteer will be deleted. -->
 				<button
 					@click="removeVolunteer(volunteerToBeDeleted)"
-					class="bg-utd-orange drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl"
+					class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl"
 				>
 					<p class="text-white">Yes, Delete</p>
 				</button>
