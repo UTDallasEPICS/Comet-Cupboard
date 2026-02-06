@@ -1,5 +1,5 @@
 <template>
-	<div class="font-montserrat relative flex w-full items-center overflow-hidden rounded-lg bg-white px-2 shadow" style="height: 80px">
+	<div class=" relative flex w-full items-center overflow-hidden rounded-lg bg-white px-2 shadow" style="height: 80px">
 		<!-- deal badge -->
 		<V2ShoppingDealBadge
 			v-if="dealExists"
@@ -56,7 +56,7 @@
 				style="height: 32px; background-color: rgba(229, 231, 235, 0.6)"
 			/>
 			<div class="flex items-center gap-2" v-if="showExpired">
-				<span class="text-xs font-bold text-red-600">Expired</span>
+				<span class="text-red-600">Expired</span>
 				<input
 					type="number"
 					min="0"
@@ -64,7 +64,7 @@
 					v-model.number="expiredCountValue"
 					@keydown.enter="checkZeroExpired(expiredCountValue)"
 					@blur="checkZeroExpired(expiredCountValue)"
-					class="rounded text-center text-sm outline-none"
+					class="rounded text-center outline-none"
 					style="width: 40px; height: 24px; background-color: rgba(229, 231, 235, 0.6)"
 				/>
 			</div>

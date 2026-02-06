@@ -28,7 +28,7 @@
 			<!-- orange bubble -->
 			<div
 				v-if="cartTotalCount > 0"
-				class="absolute right-0 flex items-center justify-center rounded-full text-sm font-bold text-white"
+				class="absolute right-0 flex items-center justify-center rounded-full text-white"
 				style="width: 20px; height: 20px; background-color: #e87500; top: 4px"
 			>
 				{{ cartTotalCount }}

@@ -13,7 +13,7 @@
 			<template #Disclosures>
 				<UCard variant="outline">
 					<template #header>
-						<p class="font-bold">Statement of Understanding</p>
+						<p class="">Statement of Understanding</p>
 					</template>
 					<p>
 						I assume any and all risks associated with consuming the items I have selected from the Comet Cupboard. I agree to release UT Dallas
@@ -24,27 +24,27 @@
 				</UCard>
 				<UCard variant="outline">
 					<template #header>
-						<p class="font-bold">Non-Discrimination Clause</p>
+						<p class="">Non-Discrimination Clause</p>
 					</template>
 					<p>
 						UTD Comet Cupboard does not and shall not discriminate on the basis of race, color, religion (creed), gender, gender expression, age,
 						national origin (ancestry), disability, marital status, sexual orientation, or military status, in any of its activities or operations.
 					</p>
 				</UCard>
-				<SharedButtonCancel @click="goToShopping" />
-				<SharedButtonConfirm @click="submitCart" />
+				<SharedButtonCancel text="Cancel" @click="goToShopping" />
+				<SharedButtonPositiveAction text="Confirm" @click="submitCart" />
 			</template>
 
 			<template #Verification>
 				<p>Pretend there is a shopping cart that is pending here</p>
-				<SharedButtonCancel @click="cancelCart" />
+				<SharedButtonCancel text="Cancel" @click="cancelCart" />
 			</template>
 
 			<template #Confirmation>
 				<template v-if="cartRejected">
 					<UCard variant="outline">
 						<template #header>
-							<p class="font-bold">Status: <span class="text-red-500">Rejected</span></p>
+							<p class="">Status: <span class="text-red-500">Rejected</span></p>
 						</template>
 						<p>Reason: {{ cartVerificationReason }}</p>
 					</UCard>
@@ -53,7 +53,7 @@
 				<template v-else>
 					<UCard variant="outline">
 						<template #header>
-							<p class="font-bold">Status: <span class="text-green-600">Accepted</span></p>
+							<p class="">Status: <span class="text-green-600">Accepted</span></p>
 						</template>
 						<p>Reason: {{ cartVerificationReason }}</p>
 						<p>Logging out in {{ countdownTimer }} seconds...</p>

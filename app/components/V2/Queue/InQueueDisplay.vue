@@ -1,7 +1,7 @@
 <template>
 	<div class="flex w-full min-w-72 flex-col overflow-auto rounded-xl bg-white px-4 pb-4">
 		<!-- Displays the heading for the queue display: -->
-		<div class="text-utd-green flex h-10 w-full items-center justify-center text-xl font-bold">
+		<div class="text-utd-green flex h-10 w-full items-center justify-center">
 			<p>In Queue</p>
 		</div>
 		<!-- No matter what if the queue is empty, display a message that it is empty -->

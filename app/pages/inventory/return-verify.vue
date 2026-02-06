@@ -8,16 +8,16 @@
 			<div class="drop-shadow-standard relative flex h-80 w-full max-w-96 flex-col items-center justify-center gap-3 rounded-xl bg-white">
 				<!-- Delete confirmation text -->
 				<div class="flex w-full flex-col items-center justify-center px-8 text-center">
-					<p class="text-3xl font-normal break-words text-black">Are you sure you want to return?</p>
+					<p class="break-words text-black">Are you sure you want to return?</p>
 				</div>
 			</div>
 			<!-- Footer Buttons -->
 			<div class="mt-20 flex flex-row gap-x-4">
 				<button @click="goBack" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
-					<p class="text-xl font-bold text-white">Cancel</p>
+					<p class="text-white">Cancel</p>
 				</button>
 				<button @click="categoryReturn" class="bg-utd-orange drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
-					<p class="text-xl font-bold text-white">Yes</p>
+					<p class="text-white">Yes</p>
 				</button>
 			</div>
 		</div>

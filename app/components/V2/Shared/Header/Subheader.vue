@@ -1,6 +1,6 @@
 <template>
 	<div class="bg-utd-orange flex h-16 w-full items-center justify-center">
-		<p class="text-3xl font-bold text-white">{{ pageTitle }}</p>
+		<p class="text-white">{{ pageTitle }}</p>
 	</div>
 </template>
 

@@ -13,7 +13,7 @@
 				>
 					<div class="flex flex-row items-center gap-x-3">
 						<CloudArrowUpIcon class="h-12 w-12 text-white" />
-						<p class="text-xl font-bold text-white">Upload</p>
+						<p class="text-white">Upload</p>
 					</div>
 				</label>
 				<input id="fileInput" accept=".jpg, .jpeg, .png" type="file" @change="handleFileUpload" class="hidden" />
@@ -24,14 +24,14 @@
 					type="text"
 					v-model="itemName"
 					@input="validateInput"
-					class="w-80 w-full border-none bg-transparent text-left text-lg text-black outline-none"
+					class="w-80 w-full border-none bg-transparent text-left text-black outline-none"
 				/>
 				<div class="bg-cupboardv2-dg -mt-1 h-[2px] w-72 rounded-xl"></div>
 			</div>
 			<Listbox v-model="selectedCategory" v-slot="{ open }">
 				<div class="relative">
 					<ListboxButton
-						class="modal-button border-cupboardv2-lg flex w-72 flex-row items-center border-2 bg-white px-4 text-left text-lg font-normal"
+						class="modal-button border-cupboardv2-lg flex w-72 flex-row items-center border-2 bg-white px-4 text-left"
 					>
 						<div class="grow">
 							{{ selectedCategory || "Category" }}
@@ -46,7 +46,7 @@
 							v-for="category in categories"
 							:key="category.name"
 							:value="category.name"
-							class="hover:bg-cupboardv2-lg cursor-pointer p-1 text-center text-lg text-wrap"
+							class="hover:bg-cupboardv2-lg cursor-pointer p-1 text-center text-wrap"
 						>
 							{{ category.name }}
 						</ListboxOption>
@@ -56,10 +56,10 @@
 			<!-- Footer Buttons -->
 			<div class="mt-20 flex flex-row gap-x-4">
 				<button @click="goBack" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
-					<p class="text-xl font-bold text-white">Cancel</p>
+					<p class="text-white">Cancel</p>
 				</button>
 				<button @click="editItemSubmit" class="bg-utd-orange drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
-					<p class="text-xl font-bold text-white">Submit</p>
+					<p class="text-white">Submit</p>
 				</button>
 			</div>
 		</div>

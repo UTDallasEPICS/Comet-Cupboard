@@ -2,7 +2,7 @@
 	<div class="flex flex-col rounded-2xl bg-white p-4 shadow-md" style="width: 320px">
 		<!-- mark expired -->
 		<div class="mb-4 flex items-center justify-between" style="gap: 12px">
-			<div class="flex-1 font-semibold text-black" style="font-size: 16px">Mark Expired Items</div>
+			<div class="flex-1 text-black" style="font-size: 16px">Mark Expired Items</div>
 			<div class="flex items-center">
 				<div
 					class="flex cursor-pointer items-center justify-center rounded-sm shadow-sm transition"
@@ -17,9 +17,9 @@
 		<!-- total qty -->
 		<div class="flex flex-col gap-3">
 			<div class="flex items-center justify-between">
-				<span class="font-medium text-black" style="font-size: 15px">Total QTY</span>
+				<span class="text-black" style="font-size: 15px">Total QTY</span>
 				<input
-					class="rounded-md border border-gray-300 text-center font-medium text-black outline-none focus:ring-1 focus:ring-[#154734]"
+					class="rounded-md border border-gray-300 text-center text-black outline-none focus:ring-1 focus:ring-[#154734]"
 					:value="cartTotalCount"
 					type="number"
 					readonly
@@ -29,9 +29,9 @@
 
 			<!-- adjusted qty -->
 			<div class="flex items-center justify-between">
-				<span class="font-medium text-black" style="font-size: 15px">Adjusted QTY</span>
+				<span class="text-black" style="font-size: 15px">Adjusted QTY</span>
 				<input
-					class="rounded-md border border-gray-300 text-center font-medium text-black outline-none focus:ring-1 focus:ring-[#154734]"
+					class="rounded-md border border-gray-300 text-center text-black outline-none focus:ring-1 focus:ring-[#154734]"
 					:value="cartAdjustedCount"
 					type="number"
 					readonly

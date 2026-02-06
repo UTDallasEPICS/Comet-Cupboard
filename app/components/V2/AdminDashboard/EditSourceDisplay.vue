@@ -2,7 +2,7 @@
 	<div class="mx-auto flex max-w-[800px] flex-col gap-y-4 rounded-xl bg-white p-4">
 		<!-- Navigate Back Button: clicking or tapping this button will take you to back to the Sources page: -->
 		<V2SharedNavigateBackButton backTo="Sources" @click="goToSourcesPage" class="remove-button-effects" />
-		<div class="flex items-center justify-center gap-1 text-center text-3xl font-bold">
+		<div class="flex items-center justify-center gap-1 text-center">
 			<!-- Displays the name of the specified source: -->
 			<p class="text-utd-green">{{ sourceName }}</p>
 
@@ -38,7 +38,7 @@
 					<!-- Displays a list of fields for the specified source. Each field is represented as a card. -->
 					<div v-for="field in source.Fields" class="drop-shadow-standard flex w-full rounded-xl bg-white p-2">
 						<!-- Displays the name of the specified field on the left of the card. -->
-						<div class="flex h-full items-center font-bold">
+						<div class="flex h-full items-center">
 							<p>{{ field.name }}</p>
 						</div>
 

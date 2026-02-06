@@ -6,7 +6,7 @@
 			<UserIcon />
 		</div>
 		<!-- Displays the net ID of the specified volunteer on the left of the card. -->
-		<div class="ml-2 flex h-full items-center pr-1 font-bold">
+		<div class="ml-2 flex h-full items-center pr-1">
 			<p>{{ volunteerID }}</p>
 		</div>
 		<!-- X button: if pressed, then move to the page for deleting the specified volunteer. -->

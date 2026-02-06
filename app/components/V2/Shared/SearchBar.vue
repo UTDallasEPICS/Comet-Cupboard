@@ -11,7 +11,7 @@
 				v-model="searchTerm"
 				@focus="isFocused = true"
 				@blur="onBlur"
-				class="w-full border-none bg-transparent pl-2 text-base outline-none"
+				class="w-full border-none bg-transparent pl-2 outline-none"
 			/>
 		</div>
 		<!-- Dropdown suggestions -->

@@ -1,7 +1,7 @@
 <template>
 	<div class="drop-shadow-standard flex w-full flex-row flex-wrap items-center gap-x-4 rounded-xl bg-white p-2">
 		<!-- Displays the student's net ID at the left of the card -->
-		<div class="h-full min-w-28 font-bold text-nowrap">
+		<div class="h-full min-w-28 text-nowrap">
 			<p>{{ position }}. {{ identification }}</p>
 		</div>
 		<!-- Displays the timer at the center of the card - the timer is empty for now. -->

@@ -75,14 +75,14 @@
 								disabled
 								class="bg-cupboard-dg drop-shadow-standard flex h-12 w-60 items-center justify-center rounded-xl"
 							>
-								<p class="text-xl font-bold text-white">No Changes</p>
+								<p class="text-white">No Changes</p>
 							</button>
 							<button
 								v-else
 								@click="goToReviewPage"
 								class="bg-utd-orange drop-shadow-standard flex h-12 w-60 items-center justify-center rounded-xl text-white"
 							>
-								<p class="text-xl font-bold text-white">Review Changes</p>
+								<p class="text-white">Review Changes</p>
 							</button>
 						</div>
 					</div>

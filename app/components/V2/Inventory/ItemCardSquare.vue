@@ -2,7 +2,7 @@
 	<Menu>
 		<div class="drop-shadow-standard relative flex h-64 w-full max-w-sm flex-col items-center rounded-xl bg-white">
 			<!-- Deal tag on bottom right of card -->
-			<div v-if="dealExists" class="bg-utd-orange absolute right-0 bottom-0 rounded-tl-md rounded-br-md px-5 text-sm font-bold text-white">
+			<div v-if="dealExists" class="bg-utd-orange absolute right-0 bottom-0 rounded-tl-md rounded-br-md px-5 text-white">
 				{{ dealText }}
 			</div>
 
@@ -21,7 +21,7 @@
 					<MenuItem>
 						<div
 							@click="editItem"
-							class="hover:underline border-cupboardv2-lg flex cursor-pointer items-center justify-center border-b px-1 py-1 text-lg font-normal"
+							class="hover:underline border-cupboardv2-lg flex cursor-pointer items-center justify-center border-b px-1 py-1"
 						>
 							Edit
 						</div>
@@ -29,13 +29,13 @@
 					<MenuItem>
 						<div
 							@click="editDeal"
-							class="hover:underline border-cupboardv2-lg flex cursor-pointer items-center justify-center border-b px-1 py-1 text-lg font-normal"
+							class="hover:underline border-cupboardv2-lg flex cursor-pointer items-center justify-center border-b px-1 py-1"
 						>
 							Item Deal
 						</div>
 					</MenuItem>
 					<MenuItem>
-						<div @click="deleteItem" class="hover:underline flex cursor-pointer items-center justify-center px-1 py-1 text-lg font-normal">
+						<div @click="deleteItem" class="hover:underline flex cursor-pointer items-center justify-center px-1 py-1">
 							Delete
 						</div>
 					</MenuItem>
@@ -49,15 +49,15 @@
 			<!-- Text container (flex vertical) -->
 			<div class="flex flex-col items-center gap-4">
 				<!-- Item name and in stock -->
-				<p class="text-2xl font-semibold">{{ itemName }}</p>
+				<p class="">{{ itemName }}</p>
 				<div class="flex gap-3">
-					<p class="text-base">Qty:</p>
+					<p class="">Qty:</p>
 					<div class="border-cupboardv2-dg relative box-border flex h-7 w-[125px] justify-end rounded-2xl border-[1px] bg-white">
 						<div class="flex items-center justify-center">
-							<span class="mr-2 text-base text-black">{{ props.currentCount }}</span>
+							<span class="mr-2 text-black">{{ props.currentCount }}</span>
 						</div>
 						<div :style="clipStyle" class="bg-cupboardv2-elg flex w-[75px] items-center justify-center rounded-r-2xl">
-							<span class="text-base text-black">{{ displayChange }}</span>
+							<span class="text-black">{{ displayChange }}</span>
 						</div>
 					</div>
 				</div>
@@ -72,7 +72,7 @@
 							type="text"
 							v-model="adjustAmount"
 							@input="validateInput"
-							class="-mb-1 w-12 border-none bg-transparent text-center text-2xl text-black outline-none"
+							class="-mb-1 w-12 border-none bg-transparent text-center text-black outline-none"
 						/>
 						<div class="bg-cupboardv2-dg h-1 w-12 rounded-xl"></div>
 					</div>

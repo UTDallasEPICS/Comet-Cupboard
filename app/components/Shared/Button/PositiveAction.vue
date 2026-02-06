@@ -2,7 +2,7 @@
 	<UButton
 		variant="solid"
 		:ui="{
-			base: 'bg-final-cancel-gray',
+			base: 'bg-final-utd-green',
 		}"
 	>
 		{{ props.text }}

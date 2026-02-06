@@ -6,10 +6,10 @@
 					<img src="/CometCupboardLogo2.png" class="h-14" />
 				</div>
 				<div class="space-y-1">
-					<h2 class="text-2xl font-bold">Contact</h2>
+					<h2 class="">Contact</h2>
 					<div>
-						<button @click="handleRoom" class="remove-button-effects space-x-1 text-left text-base font-normal">
-							<p class="inline-flex font-bold">Location:</p>
+						<button @click="handleRoom" class="remove-button-effects space-x-1 text-left">
+							<p class="inline-flex">Location:</p>
 							<p class="inline-flex">{{ room }}</p>
 							<div v-show="roomCopied" class="inline-flex">
 								<ClipboardDocumentCheckIcon class="size4 w-4 fill-white" />
@@ -17,8 +17,8 @@
 						</button>
 					</div>
 					<div>
-						<button @click="handleEmail" class="remove-button-effects space-x-1 text-left text-base font-normal">
-							<p class="inline-flex font-bold">Email:</p>
+						<button @click="handleEmail" class="remove-button-effects space-x-1 text-left">
+							<p class="inline-flex">Email:</p>
 							<p class="inline-flex">{{ email }}</p>
 							<div v-show="emailCopied" class="inline-flex">
 								<ClipboardDocumentCheckIcon class="size4 w-4 fill-white" />
@@ -26,8 +26,8 @@
 						</button>
 					</div>
 					<div>
-						<button @click="handlePhone" class="remove-button-effects space-x-1 text-left text-base font-normal">
-							<p class="inline-flex font-bold">Phone</p>
+						<button @click="handlePhone" class="remove-button-effects space-x-1 text-left">
+							<p class="inline-flex">Phone</p>
 							<p class="inline-flex">{{ phone }}</p>
 							<div v-show="phoneCopied" class="inline-flex">
 								<ClipboardDocumentCheckIcon class="size4 w-4 fill-white" />
@@ -36,7 +36,7 @@
 					</div>
 				</div>
 				<div class="space-y-1">
-					<h2 class="text-2xl font-bold">Hours</h2>
+					<h2 class="">Hours</h2>
 					<div class="space-y-3">
 						<div>
 							<p>Monday, Wednesday, Friday:</p>
@@ -49,7 +49,7 @@
 					</div>
 				</div>
 				<div class="space-y-1">
-					<h2 class="text-2xl font-bold">Connect With Us</h2>
+					<h2 class="">Connect With Us</h2>
 					<NuxtLink :to="instagram">
 						<img src="/instagramIcon.svg" class="h-10" />
 					</NuxtLink>

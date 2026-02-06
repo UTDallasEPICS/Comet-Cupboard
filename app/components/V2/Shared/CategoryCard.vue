@@ -4,7 +4,7 @@
 		class="w-full bg-white h-20 rounded-xl flex items-stretch justify-between overflow-hidden pl-2 drop-shadow-standard"
 	>
 		<div class="flex items-center flex-1 px-4 w-full min-w-32">
-			<p class="text-base">{{ categoryName }}</p>
+			<p class="">{{ categoryName }}</p>
 		</div>
 		<div class="w-48 h-full flex-shrink-0 overflow-hidden min-w-20">
 			<img

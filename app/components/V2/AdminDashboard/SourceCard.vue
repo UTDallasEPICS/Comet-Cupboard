@@ -2,7 +2,7 @@
 	<!-- Card representing the specified source -->
 	<div class="drop-shadow-standard flex w-full rounded-xl bg-white p-2">
 		<!-- Displays the name of the specified source on the left of the card. -->
-		<div class="ml-2 flex h-full items-center pr-1 font-bold">
+		<div class="ml-2 flex h-full items-center pr-1">
 			<p>{{ sourceName }}</p>
 		</div>
 		<!-- Edit button: if this button is pressed, move to the page for editing fields fo the specified source. -->

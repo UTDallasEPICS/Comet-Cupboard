@@ -8,9 +8,9 @@
 		<!-- Text container (flex vertical) -->
 		<div class="flex flex-col items-center gap-4">
 			<!-- Item name and in stock -->
-			<p class="text-2xl font-semibold">{{ itemName }}</p>
-			<p class="text-xl">Count: {{ adjustedCount }}</p>
-			<p class="text-xl font-bold">{{ changeInCount }}</p>
+			<p class="">{{ itemName }}</p>
+			<p class="">Count: {{ adjustedCount }}</p>
+			<p class="">{{ changeInCount }}</p>
 		</div>
 	</div>
 </template>

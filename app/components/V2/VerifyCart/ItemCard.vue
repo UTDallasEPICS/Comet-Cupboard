@@ -3,7 +3,7 @@
 		<div class="relative aspect-square max-w-24 min-w-24">
 			<img :src="`/api/image/${imgName}`" />
 			<div v-if="dealExists" class="bg-utd-orange absolute top-0 left-0 w-16 rounded-br-lg px-1">
-				<p class="text-center text-sm text-white">{{ dealText }}</p>
+				<p class="text-center text-white">{{ dealText }}</p>
 			</div>
 		</div>
 		<div class="mx-0 mx-1 flex w-full flex-col gap-y-0 leading-none">

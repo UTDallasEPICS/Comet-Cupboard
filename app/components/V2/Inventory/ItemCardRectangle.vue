@@ -2,7 +2,7 @@
 	<Menu>
 		<div class="drop-shadow-standard relative h-28 w-full max-w-xl rounded-xl bg-white">
 			<!-- Deal tag on bottom right of card -->
-			<div v-if="dealExists" class="bg-utd-orange absolute right-0 bottom-0 rounded-tl-md rounded-br-md px-2 text-sm font-bold text-white">
+			<div v-if="dealExists" class="bg-utd-orange absolute right-0 bottom-0 rounded-tl-md rounded-br-md px-2 text-white">
 				{{ dealText }}
 			</div>
 
@@ -21,7 +21,7 @@
 					<MenuItem>
 						<div
 							@click="editItem"
-							class="border-cupboardv2-lg hover:underline flex cursor-pointer items-center justify-center border-b px-1 py-1 text-lg font-normal"
+							class="border-cupboardv2-lg hover:underline flex cursor-pointer items-center justify-center border-b px-1 py-1"
 						>
 							Edit
 						</div>
@@ -29,13 +29,13 @@
 					<MenuItem>
 						<div
 							@click="editDeal"
-							class="border-cupboardv2-lg hover:underline flex cursor-pointer items-center justify-center border-b px-1 py-1 text-lg font-normal"
+							class="border-cupboardv2-lg hover:underline flex cursor-pointer items-center justify-center border-b px-1 py-1"
 						>
 							Item Deal
 						</div>
 					</MenuItem>
 					<MenuItem>
-						<div @click="deleteItem" class="hover:underline flex cursor-pointer items-center justify-center px-1 py-1 text-lg font-normal">
+						<div @click="deleteItem" class="hover:underline flex cursor-pointer items-center justify-center px-1 py-1">
 							Delete
 						</div>
 					</MenuItem>
@@ -46,12 +46,12 @@
 				<!-- Text container (flex vertical) -->
 				<div class="ml-5 flex flex-col gap-y-1">
 					<!-- Item name and in stock -->
-					<p class="text-base font-semibold">{{ itemName }}</p>
+					<p class="">{{ itemName }}</p>
 					<div class="flex -translate-y-1 gap-x-3">
-						<p class="center text-sm">Qty:</p>
+						<p class="center">Qty:</p>
 						<div class="border-cupboardv2-dg relative box-border flex h-5 w-24 justify-end rounded-xl border-[1px] bg-white">
 							<div class="flex items-center justify-center">
-								<span class="mr-2 text-sm text-black">{{ props.currentCount }}</span>
+								<span class="mr-2 text-black">{{ props.currentCount }}</span>
 							</div>
 						</div>
 					</div>

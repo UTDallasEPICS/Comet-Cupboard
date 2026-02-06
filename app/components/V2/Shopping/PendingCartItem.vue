@@ -1,5 +1,5 @@
 <template>
-	<div class="font-montserrat relative flex w-full items-center overflow-hidden rounded-lg bg-white px-2 shadow" style="height: 80px">
+	<div class=" relative flex w-full items-center overflow-hidden rounded-lg bg-white px-2 shadow" style="height: 80px">
 		<!-- deal badge -->
 		<V2ShoppingDealBadge
 			v-if="item.badge"
@@ -22,7 +22,7 @@
 
 		<!-- name -->
 		<div class="absolute flex h-full items-center" style="left: 100px; top: 0; right: 70px">
-			<span class="w-full font-medium text-black" style="font-size: 15px">{{ item.name }}</span>
+			<span class="w-full text-black" style="font-size: 15px">{{ item.name }}</span>
 		</div>
 		<div
 			class="absolute flex h-full flex-col items-end"
@@ -31,16 +31,16 @@
 		>
 			<!-- total qty -->
 			<div
-				class="flex w-full items-center justify-center rounded text-center font-medium text-black"
+				class="flex w-full items-center justify-center rounded text-center text-black"
 				style="height: 30px; background-color: rgba(229, 231, 235, 0.3); font-size: 18px"
 			>
 				{{ item.qty }}
 			</div>
 			<!-- adjusted qty (qty2) -->
 			<div class="flex items-center gap-2" v-if="item.qty2 > 0">
-				<span class="font-bold text-red-600" style="font-size: 12px; line-height: 14px">Expired</span>
+				<span class="text-red-600" style="font-size: 12px; line-height: 14px">Expired</span>
 				<div
-					class="flex items-center justify-center rounded text-center font-medium text-black"
+					class="flex items-center justify-center rounded text-center text-black"
 					style="width: 42px; height: 24px; background-color: rgba(229, 231, 235, 0.3); font-size: 16px"
 				>
 					{{ item.qty2 }}

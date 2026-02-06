@@ -1,7 +1,7 @@
 <template>
 	<button class="flex items-center gap-x-2">
 		<ArrowLeftIcon class="h-4 w-4 stroke-2" />
-		<p class="text-cupboardv2-dg text-base">{{ backTo }}</p>
+		<p class="text-cupboardv2-dg">{{ backTo }}</p>
 	</button>
 </template>
 

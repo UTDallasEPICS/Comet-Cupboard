@@ -14,7 +14,7 @@
 							<TransitionsFadeIn>
 								<div
 									v-if="showRejectedPopUp"
-									class="bg-cart-red-v2 mb-4 flex h-10 w-full max-w-[300px] items-center justify-center rounded-lg font-medium"
+									class="bg-cart-red-v2 mb-4 flex h-10 w-full max-w-[300px] items-center justify-center rounded-lg"
 								>
 									<p>Declined {{ oldCartID }}</p>
 								</div>
@@ -22,7 +22,7 @@
 							<TransitionsFadeIn>
 								<div
 									v-if="showAcceptedPopUp"
-									class="bg-cart-green-v2 mb-4 flex h-10 w-full max-w-[300px] items-center justify-center rounded-lg font-medium"
+									class="bg-cart-green-v2 mb-4 flex h-10 w-full max-w-[300px] items-center justify-center rounded-lg"
 								>
 									<p>Accepted {{ oldCartID }}</p>
 								</div>
@@ -38,7 +38,7 @@
 						>
 							<div class="flex items-center gap-x-2">
 								<ArrowLeftIcon class="h-4 w-4 stroke-2" />
-								<p class="text-cupboardv2-dg text-base">Back to carts</p>
+								<p class="text-cupboardv2-dg">Back to carts</p>
 							</div>
 						</button>
 						<V2VerifyCartPreview

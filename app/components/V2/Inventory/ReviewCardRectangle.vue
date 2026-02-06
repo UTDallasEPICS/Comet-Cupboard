@@ -9,11 +9,11 @@
 		<div class="ml-4 flex flex-1 items-center justify-between">
 			<!-- Item Name + Updated Count -->
 			<div class="flex flex-col">
-				<p class="text-lg font-semibold">{{ itemName }}</p>
-				<p class="text-sm">Count: {{ adjustedCount }}</p>
+				<p class="">{{ itemName }}</p>
+				<p class="">Count: {{ adjustedCount }}</p>
 			</div>
 			<!-- Change in Count -->
-			<p class="text-lg font-bold">{{ changeInCount }}</p>
+			<p class="">{{ changeInCount }}</p>
 		</div>
 	</div>
 </template>

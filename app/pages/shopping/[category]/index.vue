@@ -6,20 +6,19 @@
 		</div>
 
 		<!-- category title -->
-		<h1 class="mt-1 mb-2 text-center text-2xl font-bold">{{ categoryTitle || "Category" }}</h1>
+		<h1 class="mt-1 mb-2 text-center">{{ categoryTitle || "Category" }}</h1>
 		<div class="mx-auto mb-6 flex w-full max-w-xl flex-col items-center">
 			<!-- sortby -->
 			<div class="mb-3 flex w-full justify-center">
 				<Listbox v-model="sortOption" v-slot="{ open }">
 					<div class="relative grow">
 						<ListboxButton
-							class="modal-button border-cupboardv2-lg flex h-8 w-full flex-row items-center rounded border bg-white px-3 text-left text-sm font-normal"
+							class="modal-button border-cupboardv2-lg flex h-8 w-full flex-row items-center rounded border bg-white px-3 text-left"
 						>
 							<div class="grow">{{ sortOption }}</div>
 							<ChevronUpIcon v-if="open" class="fill-cupboardv2-dg stroke-cupboardv2-dg h-5" />
 							<ChevronDownIcon v-else class="fill-cupboardv2-dg stroke-cupboardv2-dg h-5" />
 						</ListboxButton>
-						<TransitionsDropDown>
 							<ListboxOptions
 								class="divide-cupboard-lg drop-shadow-standard absolute top-10 z-50 max-h-48 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
 							>
@@ -27,12 +26,11 @@
 									v-for="option in sortOptions"
 									:key="option"
 									:value="option"
-									class="hover:bg-cupboardv2-lg cursor-pointer p-1 text-center text-sm text-wrap"
+									class="hover:bg-cupboardv2-lg cursor-pointer p-1 text-center text-wrap"
 								>
 									{{ option }}
 								</ListboxOption>
 							</ListboxOptions>
-						</TransitionsDropDown>
 					</div>
 				</Listbox>
 			</div>

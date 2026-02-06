@@ -1,5 +1,5 @@
 <template>
-	<div class="drop-shadow-standard font-montserrat relative rounded-xl bg-white px-3" style="min-width: 279px; height: 88px">
+	<div class="drop-shadow-standard  relative rounded-xl bg-white px-3" style="min-width: 279px; height: 88px">
 		<!-- dealbadge -->
 		<V2ShoppingDealBadge
 			v-if="dealExists"
@@ -27,7 +27,7 @@
 
 		<!-- name -->
 		<div
-			class="absolute flex h-full items-center text-left font-medium break-words text-black"
+			class="absolute flex h-full items-center text-left break-words text-black"
 			style="left: 100px; top: 0; right: 90px; font-size: 15px; line-height: 17px"
 		>
 			{{ name }}
@@ -35,7 +35,7 @@
 
 		<!--add button -->
 		<button
-			class="hover:bg-green-900 absolute font-medium text-white"
+			class="hover:bg-green-900 absolute text-white"
 			@click="addToCart"
 			style="right: 4px; bottom: 4px; width: 70px; height: 28px; background-color: #154734; font-size: 18px; border-radius: 10px"
 		>

@@ -7,35 +7,31 @@
 			<!-- Source Dropdown -->
 			<Listbox v-model="selectedSource" v-slot="{ open }">
 				<div class="relative">
-					<ListboxButton
-						class="modal-button border-cupboardv2-lg flex w-72 flex-row items-center border-2 bg-white px-4 text-left text-lg font-normal"
-					>
+					<ListboxButton class="modal-button border-cupboardv2-lg flex w-72 flex-row items-center border-2 bg-white px-4 text-left">
 						<div class="grow">
 							{{ selectedSource || "Source" }}
 						</div>
 						<ChevronUpIcon v-if="open" class="fill-cupboardv2-dg stroke-cupboardv2-dg h-7" />
 						<ChevronDownIcon v-else class="fill-cupboardv2-dg stroke-cupboardv2-dg h-7" />
 					</ListboxButton>
-					<TransitionsDropDown>
-						<ListboxOptions
-							class="drop-shadow-standard divide-cupboard-lg absolute top-14 z-50 max-h-36 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
+					<ListboxOptions
+						class="drop-shadow-standard divide-cupboard-lg absolute top-14 z-50 max-h-36 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
+					>
+						<ListboxOption
+							v-for="source in sources"
+							:key="source.name"
+							:value="source.name"
+							class="hover:bg-cupboardv2-lg cursor-pointer p-1 text-center text-wrap"
 						>
-							<ListboxOption
-								v-for="source in sources"
-								:key="source.name"
-								:value="source.name"
-								class="hover:bg-cupboardv2-lg cursor-pointer p-1 text-center text-lg text-wrap"
-							>
-								{{ source.name }}
-							</ListboxOption>
-						</ListboxOptions>
-					</TransitionsDropDown>
+							{{ source.name }}
+						</ListboxOption>
+					</ListboxOptions>
 				</div>
 			</Listbox>
 			<!-- Metadata input field -->
 			<div v-if="fields.length > 0" class="flex flex-col gap-3 lg:flex-row">
 				<div v-for="fieldName in fields" :key="fieldName" class="flex w-72 flex-col gap-1">
-					<label :for="fieldName" class="text-lg font-semibold">{{ fieldName }}</label>
+					<label :for="fieldName" class="">{{ fieldName }}</label>
 
 					<div
 						class="flex h-12 items-center rounded-md border border-gray-300 bg-white transition-all duration-50"
@@ -46,7 +42,7 @@
 							type="text"
 							placeholder="Enter data"
 							:id="fieldName"
-							class="w-full border-none bg-transparent pl-2 text-base outline-none"
+							class="w-full border-none bg-transparent pl-2 outline-none"
 						/>
 					</div>
 				</div>
@@ -82,7 +78,7 @@
 			<!-- Footer Buttons -->
 			<div class="lg_mt-0 lg_justify-end lg_self-end mt-32 flex flex-row gap-x-4">
 				<button @click="goBack" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
-					<p class="text-xl font-bold text-white">Cancel</p>
+					<p class="text-white">Cancel</p>
 				</button>
 				<button
 					:class="selectedSource ? 'bg-utd-orange' : 'bg-utd-orange/40 cursor-not-allowed'"
@@ -90,7 +86,7 @@
 					:disabled="!selectedSource"
 					class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl"
 				>
-					<p class="text-xl font-bold text-white">Submit</p>
+					<p class="text-white">Submit</p>
 				</button>
 			</div>
 		</div>

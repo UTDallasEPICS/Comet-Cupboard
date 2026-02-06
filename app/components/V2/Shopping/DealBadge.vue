@@ -1,9 +1,9 @@
 <template>
 	<!-- free deal -->
-	<div v-if="badge === 'free'" class="absolute top-2 right-2 rounded-lg bg-green-500 font-bold text-white shadow" :style="badgeStyle">Free</div>
+	<div v-if="badge === 'free'" class="absolute top-2 right-2 rounded-lg bg-green-500 text-white shadow" :style="badgeStyle">Free</div>
 
 	<!-- deal badge -->
-	<div v-else-if="badge === 'deal'" class="absolute top-2 right-2 rounded-lg bg-orange-500 font-bold text-white shadow" :style="badgeStyle">
+	<div v-else-if="badge === 'deal'" class="absolute top-2 right-2 rounded-lg bg-orange-500 text-white shadow" :style="badgeStyle">
 		{{ quantity }} for {{ countsAs }}
 	</div>
 </template>

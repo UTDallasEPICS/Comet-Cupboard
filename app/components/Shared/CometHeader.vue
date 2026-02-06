@@ -32,37 +32,37 @@
 				/>
 				<template #body>
 					<div v-if="permissions['SHOPPING']">
-						<ULink :to="shoppingPath" class="text-2xl">Shopping</ULink>
+						<ULink :to="shoppingPath" class="">Shopping</ULink>
 						<USeparator :ui="{ border: 'border-black' }" />
 					</div>
 
 					<div v-if="permissions['VERIFY_CART']">
-						<ULink :to="verifyPath" class="text-2xl">Verify Carts</ULink>
+						<ULink :to="verifyPath" class="">Verify Carts</ULink>
 						<USeparator :ui="{ border: 'border-black' }" />
 					</div>
 
 					<div v-if="permissions['INVENTORY_MANAGEMENT']">
-						<ULink :to="inventoryPath" class="text-2xl">Inventory Management</ULink>
+						<ULink :to="inventoryPath" class="">Inventory Management</ULink>
 						<USeparator :ui="{ border: 'border-black' }" />
 					</div>
 
 					<div v-if="permissions['PUBLIC']">
-						<ULink :to="queuePath" class="text-2xl">Queue</ULink>
+						<ULink :to="queuePath" class="">Queue</ULink>
 						<USeparator :ui="{ border: 'border-black' }" />
 					</div>
 
 					<div v-if="permissions['ADMIN']">
-						<ULink :to="dataPath" class="text-2xl">Data</ULink>
+						<ULink :to="dataPath" class="">Data</ULink>
 						<USeparator :ui="{ border: 'border-black' }" />
 					</div>
 
 					<div v-if="permissions['ADMIN']">
-						<ULink :to="sourcePath" class="text-2xl">Manage Sources</ULink>
+						<ULink :to="sourcePath" class="">Manage Sources</ULink>
 						<USeparator :ui="{ border: 'border-black' }" />
 					</div>
 
 					<div v-if="permissions['ADMIN']">
-						<ULink :to="volunteerPath" class="text-2xl">Manage Volunteers</ULink>
+						<ULink :to="volunteerPath" class="">Manage Volunteers</ULink>
 						<USeparator :ui="{ border: 'border-black' }" />
 					</div>
 				</template>

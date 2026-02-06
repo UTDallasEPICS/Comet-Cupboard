@@ -1,7 +1,7 @@
 <template>
 	<div class="flex min-h-12 min-w-72 flex-col gap-y-4">
 		<div v-if="pendingCartIDsAndAdjQTY.length === 0" class="flex grow flex-row items-center justify-center">
-			<p class="p-1 text-center text-xl font-semibold text-black">There are no carts</p>
+			<p class="p-1 text-center text-black">There are no carts</p>
 		</div>
 		<div v-else class="flex flex-col gap-4">
 			<button
@@ -11,7 +11,7 @@
 				:key="pendingCart.cartID"
 			>
 				<div class="flex items-center justify-center">
-					<p class="p-1 text-center text-xl font-semibold">
+					<p class="p-1 text-center">
 						{{ pendingCart.cartID }}
 						<span v-if="pendingCart.adjQTY !== 0"> ({{ pendingCart.adjQTY >= 0 ? "+" : "" }}{{ pendingCart.adjQTY }})</span>
 					</p>

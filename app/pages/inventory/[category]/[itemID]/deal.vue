@@ -7,14 +7,14 @@
 			<div class="drop-shadow-standard relative flex h-80 w-full max-w-80 flex-col items-center justify-center gap-3 overflow-hidden rounded-xl bg-white">
 				<!-- Deal Tag -->
 				<div v-if="dealExists" class="bg-utd-orange absolute top-0 left-0 z-20 w-32 rounded-tl-md rounded-br-md px-4 py-1">
-					<p class="text-center font-semibold text-white">{{ dealText }}</p>
+					<p class="text-center text-white">{{ dealText }}</p>
 				</div>
 				<img v-if="imageUrl" :src="imageUrl" class="absolute inset-0 h-full w-full object-cover" />
 				<div class="flex flex-row items-center gap-x-3"></div>
 			</div>
 			<div class="flex flex-col items-center justify-center">
 				<div class="flex flex-row items-center gap-3">
-					<p class="text-2xl font-bold">Deal is</p>
+					<p class="">Deal is</p>
 					<div class="flex flex-col items-center">
 						<input
 							:class="{ 'text-red-negative border-red-negative': invalidActualCount }"
@@ -23,11 +23,11 @@
 							v-model.number="actualCount"
 							@change="checkInput"
 							:placeholder="originalActualCount"
-							class="w-8 border-none bg-transparent text-center text-2xl font-bold text-black outline-none"
+							class="w-8 border-none bg-transparent text-center text-black outline-none"
 						/>
 						<div class="bg-cupboardv2-dg -mt-1 h-[3px] w-8 rounded-xl"></div>
 					</div>
-					<p class="text-2xl font-bold">for</p>
+					<p class="">for</p>
 					<div class="flex flex-col items-center">
 						<input
 							:class="{ 'text-red-negative border-red-negative': invalidAdjustedCount }"
@@ -37,7 +37,7 @@
 							@change="checkInput"
 							:max="actualCount !== null ? actualCount - 1 : undefined"
 							:placeholder="originalAdjustedCount"
-							class="w-8 border-none bg-transparent text-center text-2xl font-bold text-black outline-none"
+							class="w-8 border-none bg-transparent text-center text-black outline-none"
 						/>
 						<div class="bg-cupboardv2-dg -mt-1 h-[3px] w-8 rounded-xl"></div>
 					</div>
@@ -46,22 +46,22 @@
 		</div>
 		<!-- Mark free and remove deals buttons -->
 		<button @click="markAsFree" class="bg-utd-green drop-shadow-standard relative mt-6 flex h-12 w-48 items-center justify-center rounded-xl">
-			<p class="text-xl font-bold text-white">Mark as Free</p>
+			<p class="text-white">Mark as Free</p>
 		</button>
 		<button
 			v-if="dealExists"
 			@click="deleteDeal"
 			class="bg-red-negativev2 drop-shadow-standard relative mt-6 flex h-12 w-48 items-center justify-center rounded-xl"
 		>
-			<p class="text-xl font-bold text-white">Remove Deals</p>
+			<p class="text-white">Remove Deals</p>
 		</button>
 		<!-- Footer Buttons -->
 		<div class="mt-20 flex flex-row gap-x-4">
 			<button @click="goBack" class="bg-cupboardv2-dg drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
-				<p class="text-xl font-bold text-white">Cancel</p>
+				<p class="text-white">Cancel</p>
 			</button>
 			<button @click="editDeal" class="bg-utd-orange drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
-				<p class="text-xl font-bold text-white">Submit</p>
+				<p class="text-white">Submit</p>
 			</button>
 		</div>
 	</div>
@@ -129,7 +129,7 @@ const deleteDeal = async () => {
 }
 
 const markAsFree = () => {
-	if(!item.value) return
+	if (!item.value) return
 	actualCount.value = 1
 	adjustedCount.value = 0
 }
