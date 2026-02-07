@@ -1,111 +1,101 @@
 <template>
-	<div>
-		<div class="mt-20">
-			<div class="relative z-0 px-4">
-				<div v-if="displayRectangleCards" class="mx-auto w-full max-w-xl">
-					<!-- page control components (mobile alignment) -->
-					<div class="mt-6 flex w-full flex-col items-start">
-						<SharedButtonNavigateBack text="Categories" @click="goToCategoriesPage" />
-						<div class="flex w-full flex-col items-center gap-2 md:flex-row">
-							<USelectMenu
-								v-model:search-term="searchTerm"
-								:items="categoryItems"
-								ignore-filter
-								icon="material-symbols:search"
-								placeholder="Search items"
-							/>
-							<div class="flex items-center gap-2">
-								<SharedButtonPositiveAction text="+ Add" @click="goToAddPage" />
-							</div>
-						</div>
-					</div>
-				</div>
-				<div v-if="displaySquareCards" class="w-full max-w-xl">
-					<!-- page control components (desktop alignment) -->
-					<div v-if="displaySquareCards" class="mt-6 flex w-full flex-col items-start gap-y-2">
-						<SharedButtonNavigateBack text="Categories" @click="goToCategoriesPage" />
-						<div class="flex w-full justify-between gap-x-2">
-							<USelectMenu
-								v-model:search-term="searchTerm"
-								:items="categoryItems"
-								ignore-filter
-								icon="material-symbols:search"
-								placeholder="Search items"
-							/>
-							<SharedButtonPositiveAction text="+ Add" @click="goToAddPage" />
-						</div>
-					</div>
-				</div>
-				<!-- Small Screens (Rectangle Cards), width scales and keeps a single column format -->
-				<div v-if="displayRectangleCards" class="mx-auto my-4 block flex w-full max-w-xl flex-col items-stretch gap-y-3">
-					<V2InventoryItemCardRectangle
-						v-for="item in filteredCategoryItems"
-						:key="item.itemID"
-						:change-count="inventoryStore.changes[item.itemID]?.newCount - inventoryStore.changes[item.itemID]?.oldCount || 0"
-						:current-count="item.quantity"
-						:img-name="item.imgName"
-						:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
-						:item-i-d="item.itemID"
-						:item-name="item.name"
-						@change-amount-update="updateItemChangeAmount"
-						@delete-item="(item) => openDeleteForm(item)"
-						@edit-deal="(item) => openDealForm(item, category)"
-						@edit-item="(item) => openEditForm(item, category)"
+	<div class="p-4">
+		<SharedButtonNavigateBack text="Back to Categories" @click="navigateTo('/inventory')" />
+		<h1 class="text-center">{{ currentCategory || "Category" }}</h1>
+		<div v-if="displayRectangleCards" class="mx-auto w-full max-w-xl">
+			<!-- page control components (mobile alignment) -->
+			<div class="mt-6 flex w-full flex-col items-start">
+				<div class="flex w-full flex-col items-center gap-2 md:flex-row">
+					<USelectMenu
+						v-model:search-term="searchTerm"
+						:items="categoryItems"
+						ignore-filter
+						icon="material-symbols:search"
+						placeholder="Search items"
 					/>
-				</div>
-				<!-- Large Screens (Square Cards) -->
-				<div
-					v-if="displaySquareCards"
-					class="mx-auto my-4 w-full"
-					:style="{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }"
-				>
-					<V2InventoryItemCardSquare
-						v-for="item in filteredCategoryItems"
-						:key="item.itemID"
-						:change-count="getChangeCount(item.itemID)"
-						:current-count="item.quantity"
-						:img-name="item.imgName"
-						:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
-						:item-i-d="item.itemID"
-						:item-name="item.name"
-						@change-amount-update="updateItemChangeAmount"
-						@delete-item="(item) => openDeleteForm(item)"
-						@edit-deal="(item) => openDealForm(item, category)"
-						@edit-item="(item) => openEditForm(item, category)"
-					/>
-				</div>
-				<!-- Submit button -->
-				<div class="sticky right-4 bottom-8 z-20 flex justify-end space-x-2 sm:ml-auto">
-					<button
-						v-if="Object.keys(inventoryStore.changes || {}).length === 0"
-						disabled
-						class="drop-shadow-standard flex h-12 w-60 items-center justify-center rounded-xl"
-					>
-						<p class="text-white">No Changes</p>
-					</button>
-					<button
-						v-else
-						class="drop-shadow-standard flex h-12 w-60 items-center justify-center rounded-xl text-white"
-						@click="goToReviewPage"
-					>
-						<p class="text-white">Review Changes</p>
-					</button>
+					<div class="flex items-center gap-2">
+						<SharedButtonPositiveAction text="+ Add" @click="goToAddPage" />
+					</div>
 				</div>
 			</div>
+		</div>
+		<div v-if="displaySquareCards" class="w-full max-w-xl">
+			<!-- page control components (desktop alignment) -->
+			<div v-if="displaySquareCards" class="mt-6 flex w-full flex-col items-start gap-y-2">
+				<SharedButtonNavigateBack text="Categories" @click="goToCategoriesPage" />
+				<div class="flex w-full justify-between gap-x-2">
+					<USelectMenu
+						v-model:search-term="searchTerm"
+						:items="categoryItems"
+						ignore-filter
+						icon="material-symbols:search"
+						placeholder="Search items"
+					/>
+					<SharedButtonPositiveAction text="+ Add" @click="goToAddPage" />
+				</div>
+			</div>
+		</div>
+		<!-- Small Screens (Rectangle Cards), width scales and keeps a single column format -->
+		<div v-if="displayRectangleCards" class="mx-auto my-4 block flex w-full max-w-xl flex-col items-stretch gap-y-3">
+			<V2InventoryItemCardRectangle
+				v-for="item in filteredCategoryItems"
+				:key="item.itemID"
+				:change-count="inventoryStore.changes[item.itemID]?.newCount - inventoryStore.changes[item.itemID]?.oldCount || 0"
+				:current-count="item.quantity"
+				:img-name="item.imgName"
+				:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
+				:item-i-d="item.itemID"
+				:item-name="item.name"
+				@change-amount-update="updateItemChangeAmount"
+				@delete-item="(item) => openDeleteForm(item)"
+				@edit-deal="(item) => openDealForm(item, category)"
+				@edit-item="(item) => openEditForm(item, category)"
+			/>
+		</div>
+		<!-- Large Screens (Square Cards) -->
+		<div
+			v-if="displaySquareCards"
+			class="mx-auto my-4 w-full"
+			:style="{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }"
+		>
+			<V2InventoryItemCardSquare
+				v-for="item in filteredCategoryItems"
+				:key="item.itemID"
+				:change-count="getChangeCount(item.itemID)"
+				:current-count="item.quantity"
+				:img-name="item.imgName"
+				:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
+				:item-i-d="item.itemID"
+				:item-name="item.name"
+				@change-amount-update="updateItemChangeAmount"
+				@delete-item="(item) => openDeleteForm(item)"
+				@edit-deal="(item) => openDealForm(item, category)"
+				@edit-item="(item) => openEditForm(item, category)"
+			/>
+		</div>
+		<!-- Submit button -->
+		<div class="sticky right-4 bottom-8 z-20 flex justify-end space-x-2 sm:ml-auto">
+			<button
+				v-if="Object.keys(inventoryStore.changes || {}).length === 0"
+				disabled
+				class="drop-shadow-standard flex h-12 w-60 items-center justify-center rounded-xl"
+			>
+				<p class="text-white">No Changes</p>
+			</button>
+			<button v-else class="drop-shadow-standard flex h-12 w-60 items-center justify-center rounded-xl text-white" @click="goToReviewPage">
+				<p class="text-white">Review Changes</p>
+			</button>
 		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/vue"
-import { useRoute, navigateTo } from "#imports"
 import { useInventoryStore } from "~/stores/useInventoryStore"
 import Fuse from "fuse.js"
 
 const searchTerm = ref("")
 const route = useRoute()
-const currentCategory = computed(() => route.params.categoryName)
+const currentCategory = computed(() => route.params.category)
 const inventoryStore = useInventoryStore()
 const windowWidth = ref(0)
 // Allow items to update based on sorting dropdown
