@@ -1,25 +1,17 @@
 <template>
-	<div>
-		<div class="mx-auto mt-20 flex max-w-[800px] flex-col justify-center gap-y-5">
-			<div v-if="!permissions['VERIFY_CART'] && !permissions['SHOPPING']" class="flex w-full flex-grow items-center justify-center">
-				<V2QueueEstimatedWaitTimeDisplay time="00:00:00" />
-			</div>
-			<div class="flex w-full flex-grow items-center justify-center">
-				<V2QueueInCupboardDisplay :queue="insideQueue" />
-			</div>
-			<div class="flex w-full flex-grow items-center justify-center">
-				<V2QueueInQueueDisplay :queue="waitingQueue" />
-			</div>
+	<div class="flex h-full w-full items-center justify-center p-4">
+		<div class="flex w-full max-w-200 flex-col items-center justify-center gap-y-4">
+			<QueueEstimatedWaitTimeDisplay v-if="!permissions['VERIFY_CART'] && !permissions['SHOPPING']" time="00:00:00" class="w-full" />
+			<QueueInCupboardDisplay :num-students="insideQueue.length" class="w-full" />
+			<QueueInQueueDisplay :queue="waitingQueue" class="w-full" />
 		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-//User permissions:
 const accessCookie = ref(useCookie("AccessPermission"))
 const permissions = ref(accessCookie.value && typeof accessCookie.value === "object" ? accessCookie.value : {}) //Dirty
 
-// Queues for children components
 const { data: waitingData, refresh: refreshWaitingQueue } = await useFetch("/api/queue", {
 	query: {
 		state: "WAITING",
@@ -45,7 +37,6 @@ const insideQueue = computed(() => {
 	return insideData.value.map((student: { netID: string }) => student.netID)
 })
 
-// Server Side Fetching
 const queueUpdates = ref<EventSource | null>(null)
 
 const netIDCookie = useCookie("netID")
@@ -118,7 +109,7 @@ const removeFromQueue = async () => {
 	netIDCookie.value = null
 	accessCookie.value = null
 
-	await navigateTo("/v2/queue/removed-from-queue")
+	await navigateTo("/queue/removed-from-queue")
 	await reloadNuxtApp()
 }
 </script>

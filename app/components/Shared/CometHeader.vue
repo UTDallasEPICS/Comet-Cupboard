@@ -120,7 +120,7 @@ const inventoryPath = "/inventory"
 const dataPath = "/v2/data-analytics"
 const sourcePath = "/v2/admin/source"
 const volunteerPath = "/v2/admin/volunteer"
-const queuePath = "/v2/queue"
+const queuePath = "/queue"
 
 const accessCookie = ref(useCookie("AccessPermission"))
 const permissions = ref<Permissions>(accessCookie.value && typeof accessCookie.value === "object" ? accessCookie.value : {})
