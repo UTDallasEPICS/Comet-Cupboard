@@ -1,5 +1,5 @@
 <template>
-	<div :id="plotElement"></div>
+	<div :id="plotElement" />
 </template>
 
 <script lang="ts" setup>

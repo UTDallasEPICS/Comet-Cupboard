@@ -1,7 +1,7 @@
 <template>
 	<div class="h-full w-full">
 		<ClientOnly>
-			<V2DataAnalyticsPlotlyChart
+			<DataAnalyticsPlotlyChart
 				:config="{
 					scrollZoom: true,
 					responsive: true,
