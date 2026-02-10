@@ -3,12 +3,12 @@
 		<template #default>
 			<div class="mx-7 my-5 flex flex-col place-content-evenly text-white max-sm:space-y-7 sm:flex-row sm:space-x-7">
 				<div>
-					<img src="/CometCupboardLogo2.png" class="h-14" />
+					<img src="/CometCupboardLogo2.png" class="h-14" >
 				</div>
 				<div class="space-y-1">
 					<h2 class="">Contact</h2>
 					<div>
-						<button @click="handleRoom" class="remove-button-effects space-x-1 text-left">
+						<button class="remove-button-effects space-x-1 text-left" @click="handleRoom">
 							<p class="inline-flex">Location:</p>
 							<p class="inline-flex">{{ room }}</p>
 							<div v-show="roomCopied" class="inline-flex">
@@ -17,7 +17,7 @@
 						</button>
 					</div>
 					<div>
-						<button @click="handleEmail" class="remove-button-effects space-x-1 text-left">
+						<button class="remove-button-effects space-x-1 text-left" @click="handleEmail">
 							<p class="inline-flex">Email:</p>
 							<p class="inline-flex">{{ email }}</p>
 							<div v-show="emailCopied" class="inline-flex">
@@ -26,7 +26,7 @@
 						</button>
 					</div>
 					<div>
-						<button @click="handlePhone" class="remove-button-effects space-x-1 text-left">
+						<button class="remove-button-effects space-x-1 text-left" @click="handlePhone">
 							<p class="inline-flex">Phone</p>
 							<p class="inline-flex">{{ phone }}</p>
 							<div v-show="phoneCopied" class="inline-flex">
@@ -51,7 +51,7 @@
 				<div class="space-y-1">
 					<h2 class="">Connect With Us</h2>
 					<NuxtLink :to="instagram">
-						<img src="/instagramIcon.svg" class="h-10" />
+						<img src="/instagramIcon.svg" class="h-10" >
 					</NuxtLink>
 				</div>
 			</div>

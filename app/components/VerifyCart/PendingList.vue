@@ -1,24 +1,25 @@
 <template>
-	<div class="flex min-h-12 min-w-72 flex-col gap-y-4">
-		<div v-if="pendingCartIDsAndAdjQTY.length === 0" class="flex grow flex-row items-center justify-center">
-			<p class="p-1 text-center text-black">There are no carts</p>
+	<UCard class="min-w-72">
+		<template #header>
+			<p>Pending Carts</p>
+		</template>
+		<div>
+			<div v-if="pendingCartIDsAndAdjQTY.length === 0" class="flex grow flex-row items-center justify-center">
+				<p class="text-center text-black">There are no carts</p>
+			</div>
+			<div v-else class="flex flex-col gap-4">
+				<UButton
+					v-for="pendingCart in pendingCartIDsAndAdjQTY"
+					:key="pendingCart.cartID"
+					variant="outline"
+					class="h-12 justify-between"
+					@click="emit('update:select-cart', pendingCart.cartID)"
+				>
+					<p>{{ pendingCart.cartID }}</p>
+				</UButton>
+			</div>
 		</div>
-		<div v-else class="flex flex-col gap-4">
-			<button
-				v-for="pendingCart in pendingCartIDsAndAdjQTY"
-				@click="emit('update:select-cart', pendingCart.cartID)"
-				class="h-12 w-72 rounded-lg border bg-white"
-				:key="pendingCart.cartID"
-			>
-				<div class="flex items-center justify-center">
-					<p class="p-1 text-center">
-						{{ pendingCart.cartID }}
-						<span v-if="pendingCart.adjQTY !== 0"> ({{ pendingCart.adjQTY >= 0 ? "+" : "" }}{{ pendingCart.adjQTY }})</span>
-					</p>
-				</div>
-			</button>
-		</div>
-	</div>
+	</UCard>
 </template>
 
 <script lang="ts" setup>

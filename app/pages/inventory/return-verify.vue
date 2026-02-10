@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="mt-10 flex flex-col items-center justify-center gap-y-8 pt-10">
-			<V2SharedStatusMessageWarning warningMessage="This will remove all in progress changes!"></V2SharedStatusMessageWarning>
+			<!-- <V2SharedStatusMessageWarning warningMessage="This will remove all in progress changes!"></V2SharedStatusMessageWarning> -->
 			<div class="drop-shadow-standard relative flex h-80 w-full max-w-96 flex-col items-center justify-center gap-3 rounded-xl bg-white">
 				<!-- Delete confirmation text -->
 				<div class="flex w-full flex-col items-center justify-center px-8 text-center">

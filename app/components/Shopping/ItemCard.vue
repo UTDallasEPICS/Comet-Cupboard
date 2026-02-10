@@ -16,7 +16,7 @@
 			{{ name }}
 		</div>
 
-		<SharedButtonPositiveAction text="+ Add" class="absolute right-2 bottom-2 rounded-lg" @click="addToCart" />
+		<SharedButtonPositiveAction text="+ Add" class="absolute right-2 bottom-2" @click="addToCart" />
 	</div>
 </template>
 
