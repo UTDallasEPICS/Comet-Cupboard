@@ -2,7 +2,8 @@
 	<div class="mt-4 w-full flex-1 overflow-y-auto pb-4">
 		<div class="flex flex-col items-center gap-4">
 			<div v-for="cartItem in cartItems" :key="cartItem.Item.name" class="relative" style="width: 320px">
-				<V2ShoppingCartItem
+				<ShoppingCartItemCard
+				class="w-full"
 					:key="cartItem.itemID"
 					:count="cartItem.count"
 					:expired-count="cartItem.expiredCount"
@@ -25,9 +26,8 @@
 
 		<div v-if="cartItems.length === 0" class="mt-4 text-center text-gray-500">Your cart is empty</div>
 
-		<!-- checkout count -->
 		<div class="mt-4 mb-2 flex w-full justify-center">
-			<V2ShoppingCheckoutCount
+			<ShoppingCheckoutCount
 				:cart-total-count="cartTotalCount"
 				:cart-adjusted-count="cartAdjustedCount"
 				:mark-expired-items="markExpiredItems"
@@ -35,9 +35,8 @@
 			/>
 		</div>
 
-		<!-- submit button -->
 		<div class="mt-2 mb-8 flex w-full justify-center">
-			<V2ShoppingSubmitCart @click="submitCart" />
+			<SharedButtonPositiveAction :text="'Next'" @click="submitCart" />
 		</div>
 	</div>
 </template>

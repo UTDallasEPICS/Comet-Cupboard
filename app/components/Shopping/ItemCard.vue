@@ -1,23 +1,31 @@
 <template>
-	<div class="drop-shadow-standard relative rounded-xl bg-white px-3" style="min-width: 279px; height: 88px">
-		<UBadge v-if="badgeType === 'free'" :label="'Free'" class="absolute top-2 right-2" />
-		<UBadge v-else-if="badgeType === 'deal'" :label="`${props.itemDeal.actualCount} for ${props.itemDeal.adjustedCount}`" class="absolute top-2 right-2" />
+	<UCard
+		class="relative w-72"
+		:ui="{
+			header: 'p-4 py-2 sm:p-4 sm:py-2',
+			body: 'p-4 py-2 sm:p-4 sm:py-2',
+		}"
+	>
+		<template #header>
+			<div class="flex flex-row justify-between">
+				<p class="truncate">
+					{{ name }}
+				</p>
 
-		<img
-			:src="`/api/image/${imgName}`"
-			:alt="name"
-			class="absolute rounded border border-gray-300 object-cover p-1"
-			style="left: 13px; top: 14px; width: 60px; height: 60px"
-		/>
-		<div
-			class="absolute flex h-full items-center text-left break-words text-black"
-			style="left: 100px; top: 0; right: 90px; font-size: 15px; line-height: 17px"
-		>
-			{{ name }}
+				<UBadge v-if="badgeType === 'free'" label="Free" class="" />
+				<UBadge
+					v-else-if="badgeType === 'deal'"
+					:label="`${props.itemDeal.actualCount} for ${props.itemDeal.adjustedCount}`"
+					class=""
+				/>
+			</div>
+		</template>
+
+		<div class="h-16">
+			<img :src="`/api/image/${imgName}`" :alt="name" class="aspect-square h-full border border-black object-cover" />
+			<SharedButtonPositiveAction text="+ Add" class="absolute right-2 bottom-2" @click="addToCart" />
 		</div>
-
-		<SharedButtonPositiveAction text="+ Add" class="absolute right-2 bottom-2" @click="addToCart" />
-	</div>
+	</UCard>
 </template>
 
 <script lang="ts" setup>
