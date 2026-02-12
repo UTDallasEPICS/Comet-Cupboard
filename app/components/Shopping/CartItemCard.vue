@@ -2,53 +2,33 @@
 	<UCard
 		class="relative w-72"
 		:ui="{
-			header: 'p-4 py-2 sm:p-4 sm:py-2',
-			body: 'p-4 py-2 sm:p-4 sm:py-2',
+			header: 'p-2 py-2 sm:p-2 sm:py-2',
+			body: 'p-2 py-2 sm:p-2 sm:py-2',
 		}"
 	>
 		<template #header>
-			<div class="flex flex-row items-center justify-between">
+			<div class="flex flex-row justify-between px-2">
 				<p class="truncate">
 					{{ name }}
 				</p>
 				<div class="flex items-center gap-2">
 					<UBadge v-if="badgeType === 'free'" label="Free" class="" />
 					<UBadge v-else-if="badgeType === 'deal'" :label="`${props.itemDeal.actualCount} for ${props.itemDeal.adjustedCount}`" class="" />
-					<UButton variant="ghost" icon="i-heroicons-x-mark" class="shrink-0" @click="removeCartItem" />
+					<UButton variant="ghost" icon="i-heroicons-x-mark" class="shrink-0" size="xs" @click="removeCartItem" />
 				</div>
 			</div>
 		</template>
 
-		<div class="flex h-16 flex-row items-center gap-4">
-			<img :src="`/api/image/${imgName}`" :alt="name" class="aspect-square h-full border border-black object-cover" />
-
-			<div class="flex w-full flex-col items-end gap-1" :class="showExpired ? 'justify-start pt-2' : 'justify-center'">
-				<div class="flex flex-row gap-2">
-					<p>QTY</p>
-					<div class="flex items-center gap-1">
-						<UButton icon="i-heroicons-minus" size="xs" variant="soft" :disabled="props.count <= 1 || isSaving" @click="decrement" />
-
-						<div class="flex h-7 w-8 items-center justify-center rounded bg-gray-100 text-sm font-medium text-black">
-							{{ props.count }}
-						</div>
-
-						<UButton icon="i-heroicons-plus" size="xs" variant="soft" :disabled="isSaving" @click="increment" />
+		<div class="flex h-16 flex-row justify-between">
+			<img :src="`/api/image/${imgName}`" :alt="name" class="ml-2 aspect-square h-full border border-black object-cover" />
+			<div class="mt-auto flex flex-row gap-2 items-center">
+				<p>QTY</p>
+				<div class="flex items-center gap-1">
+					<UButton icon="i-heroicons-minus" size="xs" variant="soft" :disabled="props.count <= 1 || isSaving" @click="decrement" />
+					<div class="flex items-center justify-center rounded w-8">
+						{{ props.count }}
 					</div>
-				</div>
-
-				<div v-if="showExpired" class="flex items-center gap-1">
-					<span class="text-xs text-red-600"> Expired </span>
-					<!-- 
-					<UInput
-						v-model.number="expiredCountValue"
-						type="number"
-						min="0"
-						:max="countValue"
-						size="xs"
-						class="w-10 text-center"
-						@keydown.enter="checkZeroExpired(expiredCountValue)"
-						@blur="checkZeroExpired(expiredCountValue)"
-					/> -->
+					<UButton icon="i-heroicons-plus" size="xs" variant="soft" :disabled="isSaving" @click="increment" />
 				</div>
 			</div>
 		</div>

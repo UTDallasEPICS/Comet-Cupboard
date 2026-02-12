@@ -2,28 +2,29 @@
 	<UCard
 		class="relative w-72"
 		:ui="{
-			header: 'p-4 py-2 sm:p-4 sm:py-2',
-			body: 'p-4 py-2 sm:p-4 sm:py-2',
+			header: 'p-2 py-2 sm:p-2 sm:py-2',
+			body: 'p-2 py-2 sm:p-2 sm:py-2',
 		}"
 	>
 		<template #header>
-			<div class="flex flex-row justify-between">
+			<div class="flex flex-row justify-between px-2">
 				<p class="truncate">
 					{{ name }}
 				</p>
 
-				<UBadge v-if="badgeType === 'free'" label="Free" class="" />
-				<UBadge
-					v-else-if="badgeType === 'deal'"
-					:label="`${props.itemDeal.actualCount} for ${props.itemDeal.adjustedCount}`"
-					class=""
-				/>
+				<UBadge v-if="badgeType === 'free'" label="Free" />
+				<UBadge v-else-if="badgeType === 'deal'" :label="`${props.itemDeal.actualCount} for ${props.itemDeal.adjustedCount}`" />
 			</div>
 		</template>
 
-		<div class="h-16">
-			<img :src="`/api/image/${imgName}`" :alt="name" class="aspect-square h-full border border-black object-cover" />
-			<SharedButtonPositiveAction text="+ Add" class="absolute right-2 bottom-2" @click="addToCart" />
+		<div class="flex h-16 flex-row justify-between">
+			<img :src="`/api/image/${imgName}`" :alt="name" class="ml-2 aspect-square h-full border border-black object-cover" />
+			<div class="mt-auto">
+				<div class="flex flex-row items-center gap-2">
+					<p>QTY: 99</p>
+					<SharedButtonPositiveAction text="+ Add" @click="addToCart" />
+				</div>
+			</div>
 		</div>
 	</UCard>
 </template>

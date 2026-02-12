@@ -14,12 +14,7 @@
 					<ListboxOptions
 						class="drop-shadow-standard absolute top-14 z-50 max-h-36 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
 					>
-						<ListboxOption
-							v-for="source in sources"
-							:key="source.name"
-							:value="source.name"
-							class="hover:cursor-pointer p-1 text-center text-wrap"
-						>
+						<ListboxOption v-for="source in sources" :key="source.name" :value="source.name" class="p-1 text-center text-wrap hover:cursor-pointer">
 							{{ source.name }}
 						</ListboxOption>
 					</ListboxOptions>
@@ -44,32 +39,19 @@
 					</div>
 				</div>
 			</div>
-
-			<!-- Small Screens (Rectangle Cards), width scales and keeps a single column format -->
-			<div v-if="displayRectangleCards" class="mx-auto my-4 block flex w-full max-w-xl flex-col items-stretch gap-y-3">
-				<V2InventoryReviewCardRectangle
-					v-for="item in changedItems"
-					:key="item.id"
-					:adjustedCount="item.newCount"
-					:imgName="item.imgName"
-					:itemCount="item.oldCount"
-					:itemName="item.name"
-				></V2InventoryReviewCardRectangle>
-			</div>
-			<!-- Large Screens (Square Cards) -->
 			<div
 				v-if="displaySquareCards"
 				:style="{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 250px))', gap: '1rem' }"
 				class="mx-auto my-4 w-full"
 			>
-				<V2InventoryReviewCardSquare
+				<InventoryReviewItemCard
 					v-for="item in changedItems"
 					:key="item.id"
-					:adjustedCount="item.newCount"
-					:imgName="item.imgName"
-					:itemCount="item.oldCount"
-					:itemName="item.name"
-				></V2InventoryReviewCardSquare>
+					:adjusted-count="item.newCount"
+					:img-name="item.imgName"
+					:item-count="item.oldCount"
+					:item-name="item.name"
+				/>
 			</div>
 
 			<!-- Footer Buttons -->
