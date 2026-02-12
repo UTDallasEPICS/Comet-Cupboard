@@ -1,23 +1,28 @@
 <template>
-	<div class="drop-shadow-standard relative flex h-64 w-full max-w-sm flex-col items-center rounded-xl bg-white">
-		<!-- Image container -->
-		<div class="relative mt-4 h-20 w-20 flex-shrink-0 overflow-hidden">
-			<img :alt="itemName" :src="`/api/image/${imgName}`" class="h-full w-full object-cover" />
-			<PhotoIcon class="h-full w-full" />
+	<UCard
+		class="relative w-72"
+		:ui="{
+			header: 'p-2 py-2 sm:p-2 sm:py-2',
+			body: 'p-2 py-2 sm:p-2 sm:py-2',
+		}"
+	>
+		<template #header>
+			<div class="flex flex-row items-center justify-between px-2">
+				<p class="truncate">{{ itemName }}</p>
+			</div>
+		</template>
+
+		<div class="flex h-16 flex-row justify-between">
+			<img :src="`/api/image/${imgName}`" :alt="itemName" class="ml-2 aspect-square h-full border border-black object-cover" />
+			<div class="mt-auto flex flex-col items-end gap-2">
+				<p class="">Current Qty: {{ adjustedCount }}</p>
+				<p class="">Change: {{ changeInCount }}</p>
+			</div>
 		</div>
-		<!-- Text container (flex vertical) -->
-		<div class="flex flex-col items-center gap-4">
-			<!-- Item name and in stock -->
-			<p class="">{{ itemName }}</p>
-			<p class="">Count: {{ adjustedCount }}</p>
-			<p class="">{{ changeInCount }}</p>
-		</div>
-	</div>
+	</UCard>
 </template>
 
 <script lang="ts" setup>
-import { PhotoIcon } from "@heroicons/vue/24/outline"
-
 const props = defineProps({
 	itemName: {
 		type: String,
