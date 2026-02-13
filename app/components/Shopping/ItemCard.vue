@@ -1,6 +1,6 @@
 <template>
 	<UCard
-		class="relative w-72"
+		class="relative min-w-72"
 		:ui="{
 			header: 'p-2 py-2 sm:p-2 sm:py-2',
 			body: 'p-2 py-2 sm:p-2 sm:py-2',
@@ -30,8 +30,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useCartStore } from "~/stores/cart"
-
 const store = useCartStore()
 const { getCart } = store
 
@@ -53,7 +51,7 @@ const badgeType = computed(() => {
 })
 
 const addToCart = async () => {
-	await $fetch("/api/cart/cartItem", {
+	await $fetch("/api/cart/cartItemCount", {
 		method: "POST",
 		body: { itemID: props.itemID, incrementChange: 1 },
 	})

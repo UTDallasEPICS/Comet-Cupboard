@@ -52,7 +52,7 @@ const props = defineProps({
 
 const { title, timeLevel, timeFilter, showLegend } = toRefs(props)
 
-const { data: incomingItemsData } = await useFetch("/api/v2/data/incomingItems", {
+const { data: incomingItemsData } = await useFetch("/api/data/incomingItems", {
 	method: "GET",
 	params: {
 		timeLevel: timeLevel.value,

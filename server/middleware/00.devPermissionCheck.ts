@@ -1,3 +1,3 @@
-checkMissingPermissions()
+// checkMissingPermissions()
 
 export default defineEventHandler(() => {})

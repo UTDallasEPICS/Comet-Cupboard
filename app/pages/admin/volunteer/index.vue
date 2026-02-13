@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<!-- Displays the list of volunteers that are assigned. -->
-		<V2AdminDashboardVolunteerListDisplay class="mt-20" />
+		<AdminDashboardVolunteerListDisplay class="mt-20" />
 	</div>
 </template>
 

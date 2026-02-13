@@ -41,7 +41,7 @@ const volunteerToBeDeleted = computed(() => route.params.volunteerNetID)//NetID 
 
 //Execute this function if the cancel button is pressed:
 function cancel() {
-	router.replace("/v2/admin/volunteer") //Moves back to the volunteer page
+	router.replace("/admin/volunteer") //Moves back to the volunteer page
 }
 
 //Function for deleting the specified volunteer:
@@ -55,6 +55,6 @@ const removeVolunteer = async (volunteerNetID: string | string[] | undefined) =>
 	} catch (error) {
 		//Shouldn't happen when operating the website normally.
 	}
-	router.replace("/v2/admin/volunteer") //Moves back to the volunteer page
+	router.replace("/admin/volunteer") //Moves back to the volunteer page
 }
 </script>

@@ -45,7 +45,8 @@ export default defineEventHandler(async (event) => {
 			},
 		})
 
-		let cartItemFinal
+
+		let cartItemFinal = cartItem
 
 		// delete item from cart if needed
 		if (cartItem.count <= 0) {

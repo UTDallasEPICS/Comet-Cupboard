@@ -4,11 +4,12 @@
 		:toggle="false"
 		:ui="{
 			container: 'mx-0 w-full max-w-none',
+			root: 'border-b-0',
 		}"
 	>
 		<template #left>
 			<USlideover
-				v-if="permissions['PUBLIC']"
+				v-if="true"
 				side="left"
 				title="Navigation Menu"
 				:overlay="false"
@@ -31,7 +32,8 @@
 					}"
 				/>
 				<template #body>
-					<div v-if="permissions['SHOPPING']">
+					<UNavigationMenu :items="items" orientation="vertical" class="w-full" />
+					<!-- <div v-if="permissions['SHOPPING']">
 						<ULink :to="shoppingPath" class="">Shopping</ULink>
 						<USeparator :ui="{ border: 'border-black' }" />
 					</div>
@@ -64,7 +66,7 @@
 					<div v-if="permissions['ADMIN']">
 						<ULink :to="volunteerPath" class="">Manage Volunteers</ULink>
 						<USeparator :ui="{ border: 'border-black' }" />
-					</div>
+					</div> -->
 				</template>
 			</USlideover>
 			<div class="relative ml-4 overflow-hidden">
@@ -102,6 +104,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { NavigationMenuItem } from "@nuxt/ui"
+
 interface Permissions {
 	SHOPPING?: boolean
 	VERIFY_CART?: boolean
@@ -114,14 +118,71 @@ const store = useCartStore()
 const { cartView, cartTotalCount } = storeToRefs(store)
 const { logout } = useLogout()
 
+const studentDashboardPath = "/landing/student"
+const volunteerDashboardPath = "/landing/volunteer"
+const adminDashboardPath = "/landing/admin"
 const shoppingPath = "/shopping"
 const verifyPath = "/verify-cart"
 const inventoryPath = "/inventory"
 const dataPath = "/data-analytics"
-const sourcePath = "/v2/admin/source"
-const volunteerPath = "/v2/admin/volunteer"
+const sourcePath = "/admin/source"
+const volunteerPath = "/admin/volunteer"
 const queuePath = "/queue"
 
 const accessCookie = ref(useCookie("AccessPermission"))
-const permissions = ref<Permissions>(accessCookie.value && typeof accessCookie.value === "object" ? accessCookie.value : {})
+
+const permissions = {
+	STUDENT: true,
+	VOLUNTEER: true,
+	ADMIN: true,
+}
+
+const items = ref<NavigationMenuItem[]>(
+	[
+		// Student Group
+		permissions.STUDENT && {
+			label: "Student",
+			icon: "i-lucide-user",
+			open: true,
+			children: [
+				{ label: "Dashboard", to: studentDashboardPath, icon: "i-lucide-home" },
+				{ label: "Shopping", to: shoppingPath, icon: "i-lucide-shopping-cart" },
+				{ label: "Queue", to: queuePath, icon: "i-lucide-clock" },
+			],
+		},
+
+		// Volunteer Group
+		permissions.VOLUNTEER && {
+			label: "Volunteer",
+			icon: "i-lucide-users",
+			open: true,
+			children: [
+				{ label: "Dashboard", to: volunteerDashboardPath, icon: "i-lucide-home" },
+				{ label: "Inventory Management", to: inventoryPath, icon: "i-lucide-box" },
+				{ label: "Verify Cart", to: verifyPath, icon: "i-lucide-check-circle" },
+				{ label: "Queue", to: queuePath, icon: "i-lucide-clock" },
+			],
+		},
+
+		// Admin Group
+		permissions.ADMIN && {
+			label: "Admin",
+			icon: "i-lucide-shield",
+			open: true,
+			children: [
+				{ label: "Dashboard", to: adminDashboardPath, icon: "i-lucide-home" },
+				{ label: "Data Page", to: dataPath, icon: "i-lucide-database" },
+				{
+					label: "Management",
+					icon: "i-lucide-settings",
+					open: true,
+					children: [
+						{ label: "Volunteers", to: volunteerPath, icon: "i-lucide-user" },
+						{ label: "Sources", to: sourcePath, icon: "i-lucide-box" },
+					],
+				},
+			],
+		},
+	].filter(Boolean) as NavigationMenuItem[]
+) // filter out nulls
 </script>

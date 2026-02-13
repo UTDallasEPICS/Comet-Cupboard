@@ -40,7 +40,7 @@ const sourceToBeDeleted = computed(() => route.params.sourceName)//Name of the s
 
 //Execute this function if the cancel button is pressed:
 function cancel(sourceName: string | string[] | undefined) {
-	router.replace(`/v2/admin/source/${sourceName}/edit`) //Moves you back to the page where you edit the specified source
+	router.replace(`/admin/source/${sourceName}/edit`) //Moves you back to the page where you edit the specified source
 }
 
 //Function for deleting the specified source:
@@ -54,6 +54,6 @@ const removeSource = async (sourceName: string | string[] | undefined) => {
 	} catch (error) {
 		//Shouldn't happen when operating the website normally.
 	}
-	router.replace("/v2/admin/source") //Moves back to the Sources page
+	router.replace("/admin/source") //Moves back to the Sources page
 }
 </script>

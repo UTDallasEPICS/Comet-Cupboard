@@ -13,21 +13,16 @@
 				placeholder="Search items"
 			/>
 		</div>
-
-		<div class="flex w-full justify-center">
-			<div class="max-w-275px flex flex-col items-center">
-				<div class="grid grid-cols-1 gap-y-4">
-					<ShoppingItemCard
-						v-for="item in filteredItems"
-						:key="item.itemID"
-						type-of-card="SHOPPING"
-						:img-name="item.imgName"
-						:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
-						:item-i-d="item.itemID"
-						:name="item.name"
-					/>
-				</div>
-			</div>
+		<div class="mx-auto grid w-full max-w-437.5 grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+			<ShoppingItemCard
+				v-for="item in filteredItems"
+				:key="item.itemID"
+				type-of-card="SHOPPING"
+				:img-name="item.imgName"
+				:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
+				:item-i-d="item.itemID"
+				:name="item.name"
+			/>
 		</div>
 	</div>
 </template>

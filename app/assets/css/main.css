@@ -7,10 +7,12 @@
 
 	--color-final-utd-green: #154734;
 	--color-final-utd-orange: #e4701e; /* slightly off from utd's orange, but matches comet cupboard colors */
-	--color-final-page-bg: #eeeeee;
+	--color-final-page-bg: #f9fafb;
 	--color-final-cancel-gray: #4a4a4a;
 	--color-final-negative-red: #d20b0b;
 	--color-final-yellow-warning: #ffc247;
+
+	--color-final-text-soft: oklch(0.372 0.044 257.287);
 }
 
 @layer components {

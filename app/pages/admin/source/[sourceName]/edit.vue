@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<!-- Displays the list of fields for the specified source. -->
-		<V2AdminDashboardEditSourceDisplay :sourceName="currentSource" class="mt-20" />
+		<AdminDashboardEditSourceDisplay :sourceName="currentSource" class="mt-20" />
 	</div>
 </template>
 

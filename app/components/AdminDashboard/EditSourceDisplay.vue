@@ -1,7 +1,7 @@
 <template>
 	<div class="mx-auto flex max-w-[800px] flex-col gap-y-4 rounded-xl bg-white p-4">
 		<!-- Navigate Back Button: clicking or tapping this button will take you to back to the Sources page: -->
-		<SharedButtonNavigateBack text="Sources" @click="navigateTo('/v2/admin/source')" />
+		<SharedButtonNavigateBack text="Sources" @click="navigateTo('/admin/source')" />
 		<div class="flex items-center justify-center gap-1 text-center">
 			<!-- Displays the name of the specified source: -->
 			<p>{{ sourceName }}</p>
@@ -94,10 +94,10 @@ const removeField = async (fieldID: any) => {
 }
 
 function goToSourcesPage() {
-	navigateTo(`/v2/admin/source`)
+	navigateTo(`/admin/source`)
 }
 
 function deleteSource(sourceName: string | undefined) {
-	router.replace({ path: `/v2/admin/source/${sourceName}/delete` })
+	router.replace({ path: `/admin/source/${sourceName}/delete` })
 }
 </script>

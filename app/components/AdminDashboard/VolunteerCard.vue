@@ -30,6 +30,6 @@ defineProps({
 //Execute this function if the X button is pressed:
 function deleteVolunteer(netID: string|undefined)
 {
-  navigateTo({path: `/v2/admin/volunteer/${netID}/delete`});//Navigates to the page for deleting the specified volunteer.
+  navigateTo({path: `/admin/volunteer/${netID}/delete`});//Navigates to the page for deleting the specified volunteer.
 }
 </script>

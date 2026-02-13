@@ -16,7 +16,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="mx-auto flex w-full max-w-[1750px] gap-x-6 gap-y-3">
+		<div class="mx-auto grid w-full max-w-437.5 grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
 			<InventoryItemCard
 				v-for="item in filteredCategoryItems"
 				:key="item.itemID"
@@ -27,12 +27,8 @@
 				:item-i-d="item.itemID"
 				:item-name="item.name"
 				@change-amount-update="updateItemChangeAmount"
-				@delete-item="(item) => openDeleteForm(item)"
-				@edit-deal="(item) => openDealForm(item, category)"
-				@edit-item="(item) => openEditForm(item, category)"
 			/>
 		</div>
-
 		<div class="sticky right-4 bottom-8 z-20 flex justify-end space-x-2 sm:ml-auto">
 			<SharedButtonPositiveAction v-if="Object.keys(inventoryStore.changes || {}).length === 0" text="No Changes" disabled />
 			<SharedButtonPositiveAction v-else text="Review Changes" @click="goToReviewPage" />

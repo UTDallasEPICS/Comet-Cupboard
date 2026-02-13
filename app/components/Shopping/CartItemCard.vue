@@ -1,6 +1,6 @@
 <template>
 	<UCard
-		class="relative w-72"
+		class="relative min-w-72"
 		:ui="{
 			header: 'p-2 py-2 sm:p-2 sm:py-2',
 			body: 'p-2 py-2 sm:p-2 sm:py-2',
@@ -48,12 +48,6 @@ const props = defineProps({
 
 const emit = defineEmits(["update:cart"])
 
-const config = useRuntimeConfig()
-const imgSrc = computed(() => {
-	if (!props.imgName) return null
-	return props.imgName.startsWith("http") ? props.imgName : `${config.public.API_BASE_URL || ""}/api/image/${props.imgName}`
-})
-
 const dealExists = computed(() => {
 	return props.itemDeal && "actualCount" in props.itemDeal && "adjustedCount" in props.itemDeal
 })
@@ -65,10 +59,9 @@ const badgeType = computed(() => {
 })
 
 const isSaving = ref(false)
-const expiredCountValue = ref(props.expiredCount)
 
 const increment = async () => {
-	await $fetch("/api/cart/cartItem", {
+	await $fetch("/api/cart/cartItemCount", {
 		method: "POST",
 		body: { itemID: props.itemID, incrementChange: 1 },
 	})
@@ -78,23 +71,11 @@ const increment = async () => {
 
 const decrement = async () => {
 	if (props.count <= 1) return
-	await $fetch("/api/cart/cartItem", {
+	await $fetch("/api/cart/cartItemCount", {
 		method: "POST",
 		body: { itemID: props.itemID, incrementChange: -1 },
 	})
 	isSaving.value = false
-	emit("update:cart")
-}
-
-const changeCartItemExpiredCount = async () => {
-	await $fetch("/api/cart/cartItem", {
-		method: "POST",
-		body: {
-			itemID: props.itemID,
-			incrementChange: 0,
-			expiredCount: expiredCountValue.value,
-		},
-	})
 	emit("update:cart")
 }
 
@@ -105,16 +86,4 @@ const removeCartItem = async () => {
 	})
 	emit("update:cart")
 }
-
-const checkZeroExpired = async (value: number) => {
-	if (typeof value !== "number" || value < 0) expiredCountValue.value = 0
-	await changeCartItemExpiredCount()
-}
-
-onMounted(() => {
-	if (imgSrc.value) {
-		const img = new Image()
-		img.src = imgSrc.value
-	}
-})
 </script>

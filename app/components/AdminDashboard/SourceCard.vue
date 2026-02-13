@@ -22,6 +22,6 @@ defineProps({
 //Execute this function if the edit button is pressed.
 function editSource(nameOfSource: string|undefined)
 {
-  navigateTo({path: `/v2/admin/source/${nameOfSource}/edit`});//Navigates to the page for editing fields fo the specified source.
+  navigateTo({path: `/admin/source/${nameOfSource}/edit`});//Navigates to the page for editing fields fo the specified source.
 }
 </script>
