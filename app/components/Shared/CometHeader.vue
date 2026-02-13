@@ -125,9 +125,10 @@ const shoppingPath = "/shopping"
 const verifyPath = "/verify-cart"
 const inventoryPath = "/inventory"
 const dataPath = "/data-analytics"
-const sourcePath = "/admin/source"
-const volunteerPath = "/admin/volunteer"
+const manageSourcePath = "/manage/source"
+const manageVolunteerPath = "/manage/volunteer"
 const queuePath = "/queue"
+const manageQueuePath = "/queue/manage"
 
 const accessCookie = ref(useCookie("AccessPermission"))
 
@@ -160,7 +161,7 @@ const items = ref<NavigationMenuItem[]>(
 				{ label: "Dashboard", to: volunteerDashboardPath, icon: "i-lucide-home" },
 				{ label: "Inventory Management", to: inventoryPath, icon: "i-lucide-box" },
 				{ label: "Verify Cart", to: verifyPath, icon: "i-lucide-check-circle" },
-				{ label: "Queue", to: queuePath, icon: "i-lucide-clock" },
+				{ label: "Queue Management", to: manageQueuePath, icon: "i-lucide-clock" },
 			],
 		},
 
@@ -171,14 +172,14 @@ const items = ref<NavigationMenuItem[]>(
 			open: true,
 			children: [
 				{ label: "Dashboard", to: adminDashboardPath, icon: "i-lucide-home" },
-				{ label: "Data Page", to: dataPath, icon: "i-lucide-database" },
+				{ label: "Data Page", to: dataPath, icon: "i-heroicons-chart-bar" },
 				{
 					label: "Management",
 					icon: "i-lucide-settings",
 					open: true,
 					children: [
-						{ label: "Volunteers", to: volunteerPath, icon: "i-lucide-user" },
-						{ label: "Sources", to: sourcePath, icon: "i-lucide-box" },
+						{ label: "Volunteers", to: manageVolunteerPath, icon: "i-lucide-users" },
+						{ label: "Sources", to: manageSourcePath, icon: "i-lucide-box" },
 					],
 				},
 			],

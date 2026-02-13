@@ -29,19 +29,19 @@ const studentLinks = [
 	{
 		label: "Shopping",
 		description: "Browse available items",
-		icon: "i-heroicons-shopping-cart",
+		icon: "i-lucide-shopping-cart",
 		to: "/shopping",
 	},
 	{
 		label: "Queue",
 		description: "Join or view your queue status",
-		icon: "i-heroicons-clock",
+		icon: "i-lucide-clock",
 		to: "/queue",
 	},
 	{
 		label: "Emergency Bags",
 		description: "View emergency bag options",
-		icon: "i-heroicons-archive-box",
+		icon: "i-heroicons-shopping-bag",
 		to: "/emergency-bags",
 	},
 ]

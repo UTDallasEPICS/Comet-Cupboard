@@ -1,3 +1,54 @@
 <template>
-	<div></div>
+	<UContainer class="py-8">
+		<header>
+			<SharedTextPageTitle>Volunteer Dashboard</SharedTextPageTitle>
+		</header>
+
+		<section class="mt-4">
+			<SharedTextSectionTitle>Volunteer Actions</SharedTextSectionTitle>
+
+			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				<li v-for="link in volunteerLinks" :key="link.label">
+					<UButton :to="link.to" class="border-final-border-soft w-full border bg-white p-4 shadow-md">
+						<div class="flex items-center gap-4">
+							<UIcon :name="link.icon" class="text-final-text-soft h-8 w-8" />
+							<div class="flex flex-col">
+								<SharedTextCardTitle>{{ link.label }}</SharedTextCardTitle>
+								<SharedTextBase class="text-nowrap">{{ link.description }}</SharedTextBase>
+							</div>
+						</div>
+					</UButton>
+				</li>
+			</ul>
+		</section>
+	</UContainer>
 </template>
+
+<script setup lang="ts">
+const volunteerLinks = [
+	{
+		label: "Inventory Management",
+		description: "Manage stock and items",
+		icon: "i-lucide-box",
+		to: "/inventory",
+	},
+	{
+		label: "Verify Cart",
+		description: "Check and confirm carts",
+		icon: "i-lucide-check-circle",
+		to: "/verify-cart",
+	},
+	{
+		label: "Manage Queue",
+		description: "Monitor and adjust the queue",
+		icon: "i-lucide-clock",
+		to: "/queue/manage",
+	},
+	{
+		label: "Manage Emergency Bags",
+		description: "Update emergency bag options",
+		icon: "i-heroicons-shopping-bag",
+		to: "/emergency-bags/manage",
+	},
+]
+</script>
