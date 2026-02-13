@@ -13,10 +13,5 @@
 	--color-final-yellow-warning: #ffc247;
 
 	--color-final-text-soft: oklch(0.372 0.044 257.287);
-}
-
-@layer components {
-	.drop-shadow-standard {
-		box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.1);
-	}
+	--color-final-border-soft: oklch(92.9% 0.013 255.508);
 }

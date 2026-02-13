@@ -8,7 +8,7 @@
 
 					<div
 						class="flex h-12 items-center rounded-md border border-gray-300 bg-white transition-all duration-50"
-						:class="{ 'focus-within:drop-shadow-standard focus-within:border-blue-400': true }"
+						:class="{ 'focus-within:shadow-md focus-within:border-blue-400': true }"
 					>
 						<input
 							v-model="fieldInputs[fieldName]"

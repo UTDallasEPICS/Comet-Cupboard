@@ -5,7 +5,7 @@
 			<V2SharedStatusMessageWarning :warningMessage="`User with netID ${volunteerToBeDeleted} will lose volunteer permissions`" />
 
 			<!-- Prompt for deleting the specified volunteer -->
-			<div class="drop-shadow-standard relative flex h-80 w-full max-w-96 flex-col items-center justify-center gap-3 rounded-xl bg-white">
+			<div class="shadow-md relative flex h-80 w-full max-w-96 flex-col items-center justify-center gap-3 rounded-xl bg-white">
 				<!-- Delete confirmation text -->
 				<div class="flex w-full flex-col items-center justify-center px-8 text-center">
 					<p class="break-words text-black">Are you sure you want to delete</p>
@@ -16,13 +16,13 @@
 			<!-- Buttons for canceling or confirming the deletion of the specified volunteer -->
 			<div class="mt-20 flex flex-row gap-x-4">
 				<!-- Cancel button: if this button is pressed, then the deletion of the specified volunteer will be canceled. -->
-				<button @click="cancel" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<button @click="cancel" class="shadow-md flex h-12 w-32 items-center justify-center rounded-xl">
 					<p class="text-white">Cancel</p>
 				</button>
 				<!-- Delete button: if this button is pressed, then the specified volunteer will be deleted. -->
 				<button
 					@click="removeVolunteer(volunteerToBeDeleted)"
-					class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl"
+					class="shadow-md flex h-12 w-32 items-center justify-center rounded-xl"
 				>
 					<p class="text-white">Yes, Delete</p>
 				</button>

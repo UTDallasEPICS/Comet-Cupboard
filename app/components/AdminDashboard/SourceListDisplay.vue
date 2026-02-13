@@ -3,7 +3,7 @@
 		<!-- Input form for entering the name of the source to be added. -->
 		<div class="mx-auto flex h-8 max-w-96 flex-row gap-x-3">
 			<div
-				class="focus-within:drop-shadow-standard flex h-full w-full items-center rounded-md border border-gray-300 bg-white transition-all duration-50 focus-within:border-blue-400"
+				class="focus-within:shadow-md flex h-full w-full items-center rounded-md border border-gray-300 bg-white transition-all duration-50 focus-within:border-blue-400"
 			>
 				<input placeholder="Source Name" type="text" v-model="newSource" @keydown.enter="addSource" class="w-full pl-2 outline-none" />
 			</div>

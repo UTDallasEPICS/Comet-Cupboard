@@ -1,6 +1,6 @@
 <template>
 	<!-- Card representing the specified source -->
-	<div class="drop-shadow-standard flex w-full rounded-xl bg-white p-2">
+	<div class="shadow-md flex w-full rounded-xl bg-white p-2">
 		<!-- Displays the name of the specified source on the left of the card. -->
 		<div class="ml-2 flex h-full items-center pr-1">
 			<p>{{ sourceName }}</p>

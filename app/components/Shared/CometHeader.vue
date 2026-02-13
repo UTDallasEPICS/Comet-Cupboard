@@ -76,7 +76,7 @@
 
 		<template #right>
 			<USlideover
-				v-if="permissions['PUBLIC']"
+				v-if="true"
 				v-model:open="cartView"
 				side="right"
 				title="Preview Cart"
@@ -98,7 +98,7 @@
 					<ShoppingCartDrawer />
 				</template>
 			</USlideover>
-			<UButton v-if="permissions['PUBLIC']" variant="outline" icon="ci:log-out" size="xl" @click="logout" />
+			<UButton v-if="true" variant="outline" icon="ci:log-out" size="xl" @click="logout" />
 		</template>
 	</UHeader>
 </template>

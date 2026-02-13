@@ -2,7 +2,7 @@
 	<div>
 		<div class="mt-10 flex flex-col items-center justify-center gap-y-8 pt-10">
 			<V2SharedStatusMessageWarning :warningMessage="`Item ${itemName}' will be archived`" />
-			<div class="drop-shadow-standard relative flex h-80 w-full max-w-96 flex-col items-center justify-center gap-3 rounded-xl bg-white">
+			<div class="shadow-md relative flex h-80 w-full max-w-96 flex-col items-center justify-center gap-3 rounded-xl bg-white">
 				<!-- Delete confirmation text -->
 				<div class="flex w-full flex-col items-center justify-center px-8 text-center">
 					<p class="break-words text-black">Are you sure you want to delete</p>
@@ -11,10 +11,10 @@
 			</div>
 			<!-- Footer Buttons -->
 			<div class="mt-20 flex flex-row gap-x-4">
-				<button @click="goBack" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<button @click="goBack" class="shadow-md flex h-12 w-32 items-center justify-center rounded-xl">
 					<p class="text-white">Cancel</p>
 				</button>
-				<button @click="deleteItemSubmit" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<button @click="deleteItemSubmit" class="shadow-md flex h-12 w-32 items-center justify-center rounded-xl">
 					<p class="text-white">Yes, Delete</p>
 				</button>
 			</div>

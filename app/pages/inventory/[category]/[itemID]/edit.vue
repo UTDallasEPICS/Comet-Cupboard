@@ -1,12 +1,12 @@
 <template>
 	<div>
 		<div v-if="item" class="mt-20 flex flex-col items-center justify-center gap-y-8 pt-10">
-			<div class="drop-shadow-standard relative flex h-80 w-full max-w-80 flex-col items-center justify-center gap-3 overflow-hidden rounded-xl bg-white">
+			<div class="shadow-md relative flex h-80 w-full max-w-80 flex-col items-center justify-center gap-3 overflow-hidden rounded-xl bg-white">
 				<img v-if="imageUrl" :src="imageUrl" class="absolute inset-0 h-full w-full object-cover" />
 				<label
 					:class="{ 'bg-opacity-60': imageUrl }"
 					for="fileInput"
-					class="drop-shadow-standard z-10 flex h-16 w-40 cursor-pointer flex-row items-center justify-center gap-3 gap-x-3 rounded-xl"
+					class="shadow-md z-10 flex h-16 w-40 cursor-pointer flex-row items-center justify-center gap-3 gap-x-3 rounded-xl"
 				>
 					<div class="flex flex-row items-center gap-x-3">
 						<CloudArrowUpIcon class="h-12 w-12 text-white" />
@@ -37,7 +37,7 @@
 						<ChevronDownIcon v-else class="h-5" />
 					</ListboxButton>
 					<ListboxOptions
-						class="drop-shadow-standard absolute top-12 z-50 max-h-36 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
+						class="shadow-md absolute top-12 z-50 max-h-36 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
 					>
 						<ListboxOption
 							v-for="category in categories"
@@ -52,10 +52,10 @@
 			</Listbox>
 			<!-- Footer Buttons -->
 			<div class="mt-20 flex flex-row gap-x-4">
-				<button @click="goBack" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<button @click="goBack" class="shadow-md flex h-12 w-32 items-center justify-center rounded-xl">
 					<p class="text-white">Cancel</p>
 				</button>
-				<button @click="editItemSubmit" class="drop-shadow-standard flex h-12 w-32 items-center justify-center rounded-xl">
+				<button @click="editItemSubmit" class="shadow-md flex h-12 w-32 items-center justify-center rounded-xl">
 					<p class="text-white">Submit</p>
 				</button>
 			</div>

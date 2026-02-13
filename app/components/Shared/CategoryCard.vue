@@ -1,6 +1,6 @@
 <template>
-	<UButton :to="`/${variant}/${categoryName}`" class="drop-shadow-standard h-20 w-full min-w-72 overflow-hidden rounded-xl bg-white p-0 pl-2 text-final-text-soft">
-		<div class="flex w-full min-w-32 flex-1 items-center px-4">
+	<UButton :to="`/${variant}/${categoryName}`" class="border-final-border-soft h-20 w-full min-w-72 overflow-hidden border bg-white p-0 pl-2 shadow-md">
+		<div class="text-final-text-soft flex w-full min-w-32 flex-1 items-center px-4">
 			<p>{{ categoryName }}</p>
 		</div>
 		<div class="h-full w-48 min-w-20 shrink-0">

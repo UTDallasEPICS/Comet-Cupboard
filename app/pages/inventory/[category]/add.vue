@@ -1,119 +1,135 @@
 <template>
-	<div>
-		<div class="flex flex-col items-center justify-center gap-y-8 pt-10 mt-20">
-			<div class="bg-white w-full max-w-80 h-80 rounded-xl flex flex-col gap-3 drop-shadow-standard items-center justify-center relative overflow-hidden">
-				<img v-if="imageUrl" :src="imageUrl" class="absolute inset-0 w-full h-full object-cover" />
-				<label
-					:class="{ 'bg-opacity-60': imageUrl }"
-					for="fileInput"
-					class="z-10 flex flex-row items-center justify-center gap-x-3 w-40 h-16 rounded-xl flex gap-3 drop-shadow-standard cursor-pointer"
-				>
-					<div class="flex flex-row items-center gap-x-3">
-						<CloudArrowUpIcon class="w-12 h-12 text-white" />
-						<p class="text-white">Upload</p>
-					</div>
-				</label>
-				<input id="fileInput" accept=".jpg, .jpeg, .png" type="file" @change="handleFileUpload" class="hidden" />
+	<UContainer class="py-8">
+		<header>
+			<SharedButtonNavigateBack :text="'Back to ' + currentCategory" :to="{ path: `/inventory/${currentCategory}` }" />
+			<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
+		</header>
+
+		<section class="mt-4">
+			<SharedTextSectionTitle>Add {{ currentCategory }} Item</SharedTextSectionTitle>
+			<div class="mx-auto w-min">
+				<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
+					<UFormField id="image" name="image" label="Item Image" description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels">
+						<div class="flex flex-col gap-2">
+							<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
+						</div>
+					</UFormField>
+					<UFormField
+						id="itemName"
+						name="itemName"
+						label="Item Name"
+						description="Item name must be at most 20 characters and only contain letters and spaces"
+					>
+						<UInput v-model="state.itemName" placeholder="Enter item name" />
+					</UFormField>
+					<SharedButtonPositiveAction type="submit" text="Submit" />
+				</UForm>
 			</div>
-			<div class="flex flex-col items-center">
-				<input
-					placeholder="Item Name"
-					type="text"
-					v-model="itemName"
-					@input="validateInput"
-					class="w-full w-80 bg-transparent outline-none border-none text-left text-black"
-				/>
-				<div class="h-[2px] w-72 rounded-xl -mt-1"></div>
-			</div>
-			<!-- Footer Buttons -->
-			<div class="flex flex-row gap-x-4 mt-20">
-				<button @click="goBack" class="w-32 h-12 rounded-xl flex items-center justify-center drop-shadow-standard">
-					<p class="text-white">Cancel</p>
-				</button>
-				<button @click="addItemSubmit" class="w-32 h-12 rounded-xl flex items-center justify-center drop-shadow-standard">
-					<p class="text-white">Submit</p>
-				</button>
-			</div>
-		</div>
-	</div>
+		</section>
+	</UContainer>
 </template>
 
 <script lang="ts" setup>
-import { CloudArrowUpIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
-import { useRoute, navigateTo } from "#imports"
+import * as z from "zod"
+import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui"
 
-const emit = defineEmits(["submit"])
 const route = useRoute()
-const itemName = ref<string | null>(null)
-const imageFile = ref<File | null>(null)
-const imageUrl = ref<string | null>(null)
-const currentCategory = route.params.categoryName as string
+const currentCategory = computed(() => route.params.category)
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
+const MIN_DIMENSIONS = { width: 200, height: 200 }
+const MAX_DIMENSIONS = { width: 4096, height: 4096 }
 
-watch(imageFile, (newFile) => {
-	if (newFile) {
-		imageUrl.value = URL.createObjectURL(newFile)
-	} else {
-		imageUrl.value = null
-	}
+type Schema = {
+	image: File | undefined
+	itemName: string | undefined
+}
+const state = ref<Partial<Schema>>({
+	image: undefined,
+	itemName: undefined,
 })
 
-const handleFileUpload = (event: Event) => {
-	const target = event.target as HTMLInputElement
-	if (target.files && target.files.length > 0) {
-		imageFile.value = target.files[0]!
-	}
+const checkImageDimensions = async (file: File): Promise<boolean> => {
+	const dataUrl = await new Promise<string>((resolve, reject) => {
+		const reader = new FileReader()
+		reader.onload = (e) => resolve(e.target?.result as string)
+		reader.onerror = reject
+		reader.readAsDataURL(file)
+	})
+
+	return await new Promise<boolean>((resolve, reject) => {
+		const img = new Image()
+		img.onload = () => {
+			const valid =
+				img.width >= MIN_DIMENSIONS.width &&
+				img.height >= MIN_DIMENSIONS.height &&
+				img.width <= MAX_DIMENSIONS.width &&
+				img.height <= MAX_DIMENSIONS.height
+			resolve(valid)
+		}
+		img.onerror = reject
+		img.src = dataUrl
+	})
 }
 
-const addItemSubmit = async () => {
-	if (!itemName.value || !imageFile.value) {
-		alert("Please fill out all required fields")
-		return
+const schema = z.object({
+	image: z
+		.file()
+		.mime(["image/jpeg", "image/jpg", "image/png"], {
+			message: "Invalid image type (JPG/PNG only)",
+		})
+		.max(MAX_FILE_SIZE, { message: "Image is too large (max 2MB)" })
+		.refine(
+			async (file) =>
+				checkImageDimensions(file).then(
+					(valid) => valid,
+					() => false
+				),
+			{
+				message: `Image dimensions must be between ${MIN_DIMENSIONS.width}x${MIN_DIMENSIONS.height} and ${MAX_DIMENSIONS.width}x${MAX_DIMENSIONS.height} pixels`,
+			}
+		),
+	itemName: z
+		.string()
+		.min(1, "Item name is required")
+		.max(20, "Item name must be at most 20 characters")
+		.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
+})
+
+const validate = async (state: Partial<Schema>): Promise<FormError[]> => {
+	const errors = []
+	const result = await schema.safeParseAsync(state)
+	if (!result.success) {
+		errors.push(...result.error.issues.map((err) => ({ name: String(err.path[0]), message: err.message })))
 	}
+	return errors
+}
+
+const onError = async (event: FormErrorEvent) => {
+	if (event?.errors?.[0]?.id) {
+		const el = document.getElementById(event.errors[0].id)
+		el?.focus()
+		el?.scrollIntoView({ behavior: "smooth", block: "center" })
+	}
+}
+const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 	try {
-		if (imageFile.value) {
-			const formData = new FormData()
-			formData.append("image", imageFile.value)
-			const { imageName } = await $fetch("/api/image/image", {
-				method: "POST",
-				body: formData,
-			})
-
-			await $fetch("/api/inventory/item", {
-				method: "PUT",
-				body: { itemID: "", name: itemName.value, categoryName: currentCategory, imgName: imageName },
-			})
-			navigateTo(`/inventory/${currentCategory}`)
+		const formData = new FormData()
+		if (event.data.image) {
+			formData.append("image", event.data.image)
 		}
+		const { imageName } = await $fetch("/api/image/image", {
+			method: "POST",
+			body: formData,
+		})
+		await $fetch("/api/inventory/item", {
+			method: "PUT",
+			body: { name: event.data.itemName, categoryName: currentCategory.value, imgName: imageName },
+		})
+
+		navigateTo(`/inventory/${currentCategory.value}`)
 	} catch (error) {
-		console.error("Failed to add item:", error)
-		alert("Failed to add item. Check console for details.")
+		// idk for now
 	}
-}
-
-// --Page navigations for each button--
-// Goes back to the inventory page for the current category
-const goBack = () => {
-	navigateTo(`/inventory/${currentCategory}`)
-}
-
-// Input validation so input is only letters, and is limited to 20 characters
-function validateInput(e: Event) {
-	const inputElement = e.target as HTMLInputElement
-	const input = inputElement.value
-
-	let lettersOnly = ""
-	for (const char of input) {
-		if ((char >= "A" && char <= "Z") || (char >= "a" && char <= "z")) {
-			lettersOnly += char
-		}
-	}
-
-	if (lettersOnly.length > 20) {
-		lettersOnly = lettersOnly.slice(0, 20)
-	}
-
-	inputElement.value = lettersOnly
-	itemName.value = lettersOnly
 }
 </script>

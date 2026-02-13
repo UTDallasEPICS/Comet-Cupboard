@@ -1,30 +1,36 @@
 <template>
-	<div class="p-4">
-		<SharedButtonNavigateBack text="Back to Categories" @click="navigateTo('/shopping')" />
-		<h1 class="text-center">{{ currentCategory || "Category" }}</h1>
-		<div class="mx-auto mb-6 flex w-full max-w-xl flex-col items-center">
-			<USelect v-model="sortOption" :items="sortOptions" />
+	<UContainer class="py-8">
+		<header>
+			<SharedButtonNavigateBack text="Back to Categories" :to="{ path: '/shopping' }" />
+			<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
+		</header>
 
-			<USelectMenu
-				v-model:search-term="searchQuery"
-				:items="filteredItemsNames"
-				ignore-filter
-				icon="material-symbols:search"
-				placeholder="Search items"
-			/>
-		</div>
-		<div class="mx-auto grid w-full max-w-437.5 grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
-			<ShoppingItemCard
-				v-for="item in filteredItems"
-				:key="item.itemID"
-				type-of-card="SHOPPING"
-				:img-name="item.imgName"
-				:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
-				:item-i-d="item.itemID"
-				:name="item.name"
-			/>
-		</div>
-	</div>
+		<section class="mt-4">
+			<SharedTextSectionTitle class="sr-only">Add Items to Your Cart</SharedTextSectionTitle>
+			<div class="mx-auto flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-start">
+				<USelectMenu
+					v-model:search-term="searchQuery"
+					:items="filteredItemsNames"
+					ignore-filter
+					icon="material-symbols:search"
+					placeholder="Search items"
+					class="grow"
+				/>
+				<USelect v-model="sortOption" :items="sortOptions" class="max-w-md grow" />
+			</div>
+			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				<li v-for="item in filteredItems" :key="item.itemID">
+					<ShoppingItemCard
+						type-of-card="SHOPPING"
+						:img-name="item.imgName"
+						:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
+						:item-i-d="item.itemID"
+						:name="item.name"
+					/>
+				</li>
+			</ul>
+		</section>
+	</UContainer>
 </template>
 
 <script setup lang="ts">

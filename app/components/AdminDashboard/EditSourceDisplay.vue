@@ -15,7 +15,7 @@
 		<!-- Input form for entering the name of the field to be added for the specified source. -->
 		<div class="mx-auto flex h-8 max-w-96 flex-row gap-x-3">
 			<div
-				class="focus-within:drop-shadow-standard flex h-full w-full items-center rounded-md border border-gray-300 bg-white transition-all duration-50 focus-within:border-blue-400"
+				class="focus-within:shadow-md flex h-full w-full items-center rounded-md border border-gray-300 bg-white transition-all duration-50 focus-within:border-blue-400"
 			>
 				<input
 					v-model="fieldLabel"
@@ -36,7 +36,7 @@
 				<!-- If the specified source has at least 1 field: -->
 				<div v-if="source.Fields?.length > 0" class="flex h-72 w-full flex-col gap-y-4 overflow-auto rounded-xl p-4">
 					<!-- Displays a list of fields for the specified source. Each field is represented as a card. -->
-					<div v-for="field in source.Fields" class="drop-shadow-standard flex w-full rounded-xl bg-white p-2">
+					<div v-for="field in source.Fields" class="shadow-md flex w-full rounded-xl bg-white p-2">
 						<!-- Displays the name of the specified field on the left of the card. -->
 						<div class="flex h-full items-center">
 							<p>{{ field.name }}</p>

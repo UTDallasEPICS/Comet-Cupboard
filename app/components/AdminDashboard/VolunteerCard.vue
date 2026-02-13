@@ -1,6 +1,6 @@
 <template>
 	<!-- Card representing the specified volunteer -->
-	<div class="drop-shadow-standard flex w-full rounded-xl bg-white p-2">
+	<div class="shadow-md flex w-full rounded-xl bg-white p-2">
 		<!-- Volunteer icon -->
 		<div class="aspect-square">
 			<UserIcon />
