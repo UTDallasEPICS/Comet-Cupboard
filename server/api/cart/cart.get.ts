@@ -1,7 +1,9 @@
+import { prisma } from "#server/utils/prismaUtil"
+
 export default defineEventHandler(async (event) => {
 	const netID = event.context.user.netID
 	try {
-		const cart = await event.context.prisma.cart.findUnique({
+		const cart = await prisma.cart.findUnique({
 			where: {
 				cartID: netID,
 			},

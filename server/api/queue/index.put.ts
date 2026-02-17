@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	netID: z.string(),
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
 	}
 	const { netID } = result.data
 
-	const newEntry = await event.context.prisma.queueEntry.update({
+	const newEntry = await prisma.queueEntry.update({
 		where: { netID },
 		data: { state: "INSIDE" },
 	})

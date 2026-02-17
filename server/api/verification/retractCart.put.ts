@@ -1,10 +1,11 @@
 import { constructVerifyCartListCartRemovedEvent } from "~~/server/utils/eventsUtil"
 import { broadcastToVolunteers } from "~~/server/utils/volunteerStreamUtil"
+import { prisma } from "#server/utils/prismaUtil"
 
 export default defineEventHandler(async (event) => {
 	const netID = event.context.user.netID
 
-	let cart = await event.context.prisma.cart.findUnique({
+	let cart = await prisma.cart.findUnique({
 		where: {
 			cartID: netID,
 		},
@@ -16,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
 	const cartID = cart.cartID
 
-	const pendingCart = await event.context.prisma.cart.findUnique({
+	const pendingCart = await prisma.cart.findUnique({
 		where: {
 			cartID: cartID,
 		},
@@ -28,7 +29,7 @@ export default defineEventHandler(async (event) => {
 		throw createError({ statusCode: 400, statusMessage: `Cart ${cartID} is not pending verification` })
 	}
 
-	cart = await event.context.prisma.cart.update({
+	cart = await prisma.cart.update({
 		where: {
 			cartID: cartID,
 		},

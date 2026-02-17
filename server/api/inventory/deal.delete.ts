@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	itemID: z.string(),
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
 	}
 	const { itemID } = result.data
 
-	const deal = await event.context.prisma.deal.delete({
+	const deal = await prisma.deal.delete({
 		where: {
 			itemID: itemID,
 		},

@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	source: z.string(),
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
 	}
 	const { source, inventoryCountChanges, fieldMap } = result.data
 
-	const foundSource = await event.context.prisma.source.findUnique({
+	const foundSource = await prisma.source.findUnique({
 		where: {
 			name: source,
 		},
@@ -24,7 +25,7 @@ export default defineEventHandler(async (event) => {
 		throw createError({ statusCode: 400, statusMessage: `Source ${source} does not exist` })
 	}
 
-	const transactionResult = await event.context.prisma.$transaction(async (tx) => {
+	const transactionResult = await prisma.$transaction(async (tx) => {
 		inventoryCountChanges.forEach(async (inventoryCountChange) => {
 			await tx.item.update({
 				where: {

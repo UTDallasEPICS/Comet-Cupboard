@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	categorySpecifier: z.string().optional(),
@@ -16,7 +17,7 @@ export default defineEventHandler(async (event) => {
 	const { categorySpecifier } = result.data
 
 	if (!categorySpecifier) {
-		const categoryGroups = await event.context.prisma.item.groupBy({
+		const categoryGroups = await prisma.item.groupBy({
 			by: ["categoryName"],
 			_sum: {
 				quantity: true,
@@ -29,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
 		return result
 	} else {
-		const rows = await event.context.prisma.item.findMany({
+		const rows = await prisma.item.findMany({
 			where: {
 				...(categorySpecifier ? { categoryName: categorySpecifier } : {}),
 			},

@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	cartID: z.string(),
@@ -12,7 +13,7 @@ export default defineEventHandler(async (event) => {
 		throw createError({ statusCode: 400, statusMessage: "Invalid request parameters" })
 	}
 	const { cartID } = queries.data
-	const pendingCart = await event.context.prisma.cart.findUnique({
+	const pendingCart = await prisma.cart.findUnique({
 		where: {
 			cartID: cartID,
 			pending: true,

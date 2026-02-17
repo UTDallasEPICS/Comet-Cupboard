@@ -1,5 +1,7 @@
+import { prisma } from "#server/utils/prismaUtil"
+
 export default defineEventHandler(async (event) => {
-	const orderItems = await event.context.prisma.order.findMany({
+	const orderItems = await prisma.order.findMany({
 		include: {
 			OrderItems: {
 				select: {

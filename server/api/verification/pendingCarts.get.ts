@@ -1,5 +1,7 @@
+import { prisma } from "#server/utils/prismaUtil"
+
 export default defineEventHandler(async (event) => {
-	const pendingCarts = await event.context.prisma.cart.findMany({
+	const pendingCarts = await prisma.cart.findMany({
 		where: {
 			pending: true,
 		},

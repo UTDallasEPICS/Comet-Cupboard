@@ -1,7 +1,9 @@
+import { prisma } from "#server/utils/prismaUtil"
+
 export default defineEventHandler(async (event) => {
 	// testing for now
 	const netID = event.context.user.netID
-	const newCart = await event.context.prisma.cart.create({
+	const newCart = await prisma.cart.create({
 		data: {
 			cartID: netID,
 		},

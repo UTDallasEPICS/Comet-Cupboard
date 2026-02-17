@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { constructVerifyCartListCartRemovedEvent } from "~~/server/utils/eventsUtil"
 import { broadcastToVolunteers } from "~~/server/utils/volunteerStreamUtil"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	cartID: z.string(),
@@ -18,7 +19,7 @@ export default defineEventHandler(async (event) => {
 
 	const { cartID, action, reason } = result.data
 
-	const pendingCart = await event.context.prisma.cart.findUnique({
+	const pendingCart = await prisma.cart.findUnique({
 		where: { cartID },
 	})
 
@@ -32,7 +33,7 @@ export default defineEventHandler(async (event) => {
 
 	if (action === "ACCEPT") {
 		// ACCEPT action
-		const cart = await event.context.prisma.$transaction(async (tx) => {
+		const cart = await prisma.$transaction(async (tx) => {
 			const existingCart = await tx.cart.findUnique({
 				where: { cartID },
 				include: { CartItems: true },
@@ -63,13 +64,13 @@ export default defineEventHandler(async (event) => {
 		await broadcastToVolunteers(JSON.stringify(constructVerifyCartListCartRemovedEvent(cartID)))
 		await messageToStudent(cartID, JSON.stringify(constructPendingVerificationAcceptedEvent(reason || "")))
 
-		// await event.context.prisma.queueEntry.delete({ where: { netID: cartID } })
+		// await prisma.queueEntry.delete({ where: { netID: cartID } })
 		// await broadcastToQueue(JSON.stringify({ type: "QUEUE_DELETE", payload: { netID: cartID } }))
 
 		return `Successfully accepted cart ${cartID}`
 	} else {
 		// REJECT action
-		const cart = await event.context.prisma.cart.update({
+		const cart = await prisma.cart.update({
 			where: { cartID },
 			data: { pending: false },
 		})

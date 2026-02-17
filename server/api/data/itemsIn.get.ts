@@ -1,5 +1,7 @@
+import { prisma } from "#server/utils/prismaUtil"
+
 export default defineEventHandler(async (event) => {
-	const itemCountChanges = await event.context.prisma.itemCountChange.findMany({
+	const itemCountChanges = await prisma.itemCountChange.findMany({
 		include: {
 			Item: {
 				select: {

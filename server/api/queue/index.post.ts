@@ -1,16 +1,18 @@
+import { prisma } from "#server/utils/prismaUtil"
+
 export default defineEventHandler(async (event) => {
 	const netID = event.context.user.netID
 
 	// By default, put in the WAITING queue
 
-	const queueEntry = await event.context.prisma.queueEntry.findUnique({
+	const queueEntry = await prisma.queueEntry.findUnique({
 		where: {
 			netID: netID,
 		},
 	})
 
 	if (!queueEntry) {
-		await event.context.prisma.queueEntry.create({
+		await prisma.queueEntry.create({
 			data: {
 				netID: netID,
 				state: "WAITING",

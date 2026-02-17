@@ -1,6 +1,8 @@
+import { prisma } from "#server/utils/prismaUtil"
+
 export default defineEventHandler(async (event) => {
 	// retrieve the list of categories from the db
-	const categories = await event.context.prisma.category.findMany({
+	const categories = await prisma.category.findMany({
 		select: {
 			name: true,
 		},

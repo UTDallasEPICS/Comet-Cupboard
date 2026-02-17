@@ -1,8 +1,10 @@
+import { prisma } from "#server/utils/prismaUtil"
+
 export default defineEventHandler(async (event) => {
 	const netID = event.context.user.netID
 	
 	try {
-		await event.context.prisma.cart.delete({
+		await prisma.cart.delete({
 			where: {
 				cartID: netID,
 			},

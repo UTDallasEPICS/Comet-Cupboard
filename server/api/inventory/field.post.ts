@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	source: z.string(),
@@ -14,7 +15,7 @@ export default defineEventHandler(async (event) => {
 	}
 	const { source, fieldName } = result.data
 
-	const field = event.context.prisma.field.create({
+	const field = await prisma.field.create({
 		data: {
 			name: fieldName,
 			sourceName: source,

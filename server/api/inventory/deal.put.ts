@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	itemID: z.string(),
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
 		throw createError({ statusCode: 400, statusMessage: "adjustedCount must be less than actualCount" })
 	}
 
-	const item = await event.context.prisma.item.findUnique({
+	const item = await prisma.item.findUnique({
 		where: {
 			itemID: itemID,
 		},
@@ -33,7 +34,7 @@ export default defineEventHandler(async (event) => {
 		throw createError({ statusCode: 404, statusMessage: `Item with id ${itemID} does not exist` })
 	}
 
-	const deal = await event.context.prisma.deal.upsert({
+	const deal = await prisma.deal.upsert({
 		where: {
 			itemID: itemID,
 		},

@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
     source: z.string(),
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
     const { source } = result.data
 
     //Delete (archive) an existing source with the given name:
-    const sourceToBeDeleted = await event.context.prisma.source.findUnique({
+    const sourceToBeDeleted = await prisma.source.findUnique({
         where: {
             name: source,
             archived: false,
@@ -24,7 +25,7 @@ export default defineEventHandler(async (event) => {
     if (!sourceToBeDeleted) {
 		throw createError({ statusCode: 500, statusMessage: "Failed to find source" })
 	}
-    const deletedSource = await event.context.prisma.source.update({
+    const deletedSource = await prisma.source.update({
         where: {
             name: source,
             archived: false,

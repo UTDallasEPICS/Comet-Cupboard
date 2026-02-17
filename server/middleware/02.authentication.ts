@@ -1,27 +1,23 @@
 import type { Prisma } from "@prisma/client"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import { prisma } from "#server/utils/prismaUtil"
 
 type UserInfo = Prisma.UserGetPayload<{
 	include: { Student: true; Volunteer: true; Admin: true }
 }>
 declare module "h3" {
 	interface H3EventContext {
-		prisma: PrismaClient
 		permissions: { [id: string]: boolean }
 		user: UserInfo
 	}
 }
 
 export default defineEventHandler(async (event) => {
-	event.context.prisma = prisma
 	event.context.permissions = {}
 	event.context.permissions[AccessPermission.PUBLIC] = true
 	const cookies = parseCookies(event)
 	if (cookies && cookies.netID) {
 		const netID: string = cookies.netID
-		const user = await event.context.prisma.user.findUnique({
+		const user = await prisma.user.findUnique({
 			where: {
 				netID: netID,
 			},

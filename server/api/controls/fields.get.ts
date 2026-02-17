@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	source: z.string(),
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
 	const { source } = result.data
 
-	const fields = await event.context.prisma.field.findMany({
+	const fields = await prisma.field.findMany({
 		where: {
 			sourceName: source,
 		},

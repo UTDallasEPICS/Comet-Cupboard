@@ -1,11 +1,12 @@
 import { broadcastToVolunteers } from "#server/utils/volunteerStreamUtil"
 import { constructVerifyCartListCartAddedEvent } from "#server/utils/eventsUtil"
+import { prisma } from "#server/utils/prismaUtil"
 
 export default defineEventHandler(async (event) => {
 	const netID = event.context.user.netID
 
 	try {
-		const cart = await event.context.prisma.$transaction(async (tx) => {
+		const cart = await prisma.$transaction(async (tx) => {
 			const existingCart = await tx.cart.findUnique({
 				where: { cartID: netID },
 				include: {

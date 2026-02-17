@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	getCounts: z.string().default("false"),
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
 
 	const showCounts: boolean = getCounts === "true" && event.context.permissions[AccessPermission.INVENTORY_MANAGEMENT]
 
-	const items = await event.context.prisma.item.findMany({
+	const items = await prisma.item.findMany({
 		where: {
 			// if checking availability, count must be greater than 0
 			// and archived must be false

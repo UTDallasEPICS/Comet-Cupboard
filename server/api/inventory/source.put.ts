@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	source: z.string(),
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
 	const { source } = result.data
 
 	//Check for an archived source with the same name as the source being added:
-	const archivedSource = await event.context.prisma.source.findUnique({
+	const archivedSource = await prisma.source.findUnique({
 		where: {
 			name: source,
 			archived: true,
@@ -24,7 +25,7 @@ export default defineEventHandler(async (event) => {
 
 	//If there is an archived source that has the same name as the source being added, unarchive that source:
 	if (archivedSource) {
-		const newSource = await event.context.prisma.source.update({
+		const newSource = await prisma.source.update({
 			where: {
 				name: source,
 				archived: true,
@@ -38,7 +39,7 @@ export default defineEventHandler(async (event) => {
 	
 	//Else, create a new source:
 	try {
-		const newSource = await event.context.prisma.source.create({
+		const newSource = await prisma.source.create({
 			data: {
 				name: source,
 			},

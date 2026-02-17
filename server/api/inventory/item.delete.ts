@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { unlink } from "node:fs/promises"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	itemID: z.string(),
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
 	const { itemID } = result.data
 
 	// delete item (really just archive it)
-	const item = await event.context.prisma.item.update({
+	const item = await prisma.item.update({
 		where: {
 			itemID: itemID,
 		},

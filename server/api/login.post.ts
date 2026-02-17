@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	netID: z.string().length(9),
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
 	}
 	const { netID } = result.data
 	// find user with NetID
-	const user = await event.context.prisma.user.findUnique({
+	const user = await prisma.user.findUnique({
 		where: {
 			netID: netID,
 		},

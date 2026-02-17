@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	itemID: z.string(),
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
 	}
 	const { itemID } = queries.data
 	// find item with corresponding itemID
-	const item = await event.context.prisma.item.findUnique({
+	const item = await prisma.item.findUnique({
 		where: {
 			itemID: itemID,
 		},

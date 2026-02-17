@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	itemID: z.string(),
@@ -20,7 +21,7 @@ export default defineEventHandler(async (event) => {
 		return "No changes made"
 	}
 
-	const transactionResult = await event.context.prisma.$transaction(async (tx) => {
+	const transactionResult = await prisma.$transaction(async (tx) => {
 		const cart = await tx.cart.findUnique({
 			where: { cartID: netID },
 			select: { cartID: true, pending: true },

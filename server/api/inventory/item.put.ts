@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { readFile, unlink } from "node:fs/promises"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	itemID: z.string().default(""),
@@ -23,7 +24,7 @@ export default defineEventHandler(async (event) => {
 	}
 	const { itemID, name, categoryName, imgName } = result.data
 	// check if category exists
-	const category = await event.context.prisma.category.findUnique({
+	const category = await prisma.category.findUnique({
 		where: {
 			name: categoryName,
 		},
@@ -35,7 +36,7 @@ export default defineEventHandler(async (event) => {
 	// store old item name to delete later if needed
 	let oldItemName = ""
 	if (itemID && imgName) {
-		const item = await event.context.prisma.item.findUnique({
+		const item = await prisma.item.findUnique({
 			where: {
 				itemID: itemID,
 			},
@@ -62,7 +63,7 @@ export default defineEventHandler(async (event) => {
 
 	// handle if an item with the same name and category already exists
 	if(!itemID) {
-		const sameItem = await event.context.prisma.item.findFirst({
+		const sameItem = await prisma.item.findFirst({
 			where: {
 				name: name,
 				categoryName: categoryName,
@@ -85,7 +86,7 @@ export default defineEventHandler(async (event) => {
 		}
 	}
 
-	const item = await event.context.prisma.item.upsert({
+	const item = await prisma.item.upsert({
 			where: { itemID: resolvedItemID },
 			update: { name, imgName, categoryName, archived: false },
 			create: { name, imgName, categoryName, archived: false },

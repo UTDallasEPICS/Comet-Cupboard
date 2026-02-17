@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	includeArchived: z.string().default("false"),
@@ -19,9 +20,9 @@ export default defineEventHandler(async (event) => {
 	}
 
 	// retrieve the list of sources (including archived sources if allowed by includeArchived variable) from the db
-	const sources = await event.context.prisma.source.findMany({
+	const sources = await prisma.source.findMany({
 		where: {
-			...((includeArchived === "false") ? { archived: false } : {}),
+			...(includeArchived === "false" ? { archived: false } : {}),
 		},
 		include: {
 			Fields: true,

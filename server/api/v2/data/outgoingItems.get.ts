@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
 
 const schema = z.object({
 	timeLevel: z.enum(["Day", "Week", "Month", "Semester", "Year"]).default("Day"),
@@ -18,7 +19,7 @@ export default defineEventHandler(async (event) => {
 	const { timeLevel, startDate, endDate } = result.data
 
 	// query with time filtering
-	const orderItems = await event.context.prisma.orderItem.findMany({
+	const orderItems = await prisma.orderItem.findMany({
 		where: {
 			...(startDate ? { Order: { date: { gte: startDate } } } : {}),
 			...(endDate ? { Order: { date: { lte: endDate } } } : {}),

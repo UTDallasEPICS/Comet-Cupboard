@@ -1,7 +1,8 @@
 import ExcelJS from "exceljs"
+import { prisma } from "#server/utils/prismaUtil"
 
 export default defineEventHandler(async (event) => {
-	const itemCountChanges = await event.context.prisma.itemCountChange.findMany({
+	const itemCountChanges = await prisma.itemCountChange.findMany({
 		include: {
 			Item: true,
 			Source: {
@@ -17,13 +18,13 @@ export default defineEventHandler(async (event) => {
 			allFieldNames.add(field.name)
 		})
 	})
-	const orderItems = await event.context.prisma.orderItem.findMany({
+	const orderItems = await prisma.orderItem.findMany({
 		include: {
 			Order: true,
 			Item: true,
 		},
 	})
-	const fields = await event.context.prisma.field.findMany()
+	const fields = await prisma.field.findMany()
 	const fieldKeys = fields.map((field) => ({
 		key: `(${field.sourceName})_${field.name}`,
 		name: field.name,
