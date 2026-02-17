@@ -10,9 +10,8 @@ export const useLogout = () => {
 
 		// Remove from queue (ignore errors)
 		try {
-			await $fetch("/api/queue", {
-				method: "DELETE",
-				body: { netID: netIDCookie.value },
+			await $fetch("/api/queue/leave", {
+				method: "POST",
 			})
 		} catch (error) {}
 

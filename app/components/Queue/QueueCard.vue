@@ -27,25 +27,5 @@ const props = defineProps({
 	},
 })
 
-const removeFromQueue = async () => {
-	try {
-		await $fetch("/api/queue", {
-			method: "DELETE",
-			body: {
-				netID: props.identification,
-			},
-		})
-	} catch (err) {}
-}
 
-const intoCupboard = async () => {
-	try {
-		await $fetch("/api/queue", {
-			method: "PUT",
-			body: {
-				netID: props.identification,
-			},
-		})
-	} catch (err) {}
-}
 </script>

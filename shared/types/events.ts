@@ -21,13 +21,32 @@ export interface PendingVerificationAcceptedEvent extends BaseEvent {
 	}
 }
 
-export interface QueueUpdatedEvent extends BaseEvent {
-	type: "queue.updated"
-	payload: {
-		numberInCupboard: number
-		numberInQueue: number
-		ownPositionInQueue: number | null
-	}
+export interface QueueEntry {
+	position: number
+	publicCode: string
+}
+
+export interface QueueEntryVolunteer extends QueueEntry {
+	netID: string
+}
+
+export type QueueEventType = "queue.entryAdded" | "queue.entryRemoved" | "queue.entryApproved" | "queue.queueUpdated"
+
+export interface QueueEvent<T = unknown> extends BaseEvent {
+	type: QueueEventType
+	payload: T
+}
+export interface QueueSingleEntryPayload {
+	entry: QueueEntry
+}
+
+export interface QueueSingleEntryVolunteerPayload {
+	entry: QueueEntryVolunteer
+}
+
+export interface QueueFullPayload {
+	queue: QueueEntry[]
+	queueVolunteer?: QueueEntryVolunteer[]
 }
 
 export interface VerifyCartListCartAddedEvent extends BaseEvent {
@@ -63,7 +82,7 @@ export type AppEvent =
 	| HeartbeatEvent
 	| PendingVerificationRejectedEvent
 	| PendingVerificationAcceptedEvent
-	| QueueUpdatedEvent
+	| QueueEvent
 	| VerifyCartListCartAddedEvent
 	| VerifyCartListCartRemovedEvent
 	| VolunteerListUpdatedEvent

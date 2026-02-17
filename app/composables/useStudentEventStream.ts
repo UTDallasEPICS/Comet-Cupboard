@@ -1,11 +1,18 @@
-// module scope (shared across all composable usages)
 let eventStream: EventSource | null = null
 const listeners: ((event: AppEvent) => void)[] = []
 
 export const useStudentEventStream = () => {
 	const cart = useCartStore()
+	const queue = useQueueStore()
+	const { handleQueueEvent } = queue
 	const toast = useToast()
 	const config = useRuntimeConfig()
+
+	const dispatchQueueEvent = (event: AppEvent) => {
+		if (event.type in ["queue.queueUpdated", "queue.entryApproved", "queue.entryRemoved", "queue.entryAdded"]) {
+			handleQueueEvent(event)
+		}
+	}
 
 	const connectStudent = () => {
 		// Prevent duplicate connections
@@ -27,6 +34,8 @@ export const useStudentEventStream = () => {
 				const event: AppEvent = JSON.parse(e.data)
 				// dispatch to all registered listeners
 				listeners.forEach((listener) => listener(event))
+
+				dispatchQueueEvent(event)
 
 				toast.add({
 					title: "Event received",

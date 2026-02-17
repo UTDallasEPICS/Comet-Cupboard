@@ -1,31 +1,47 @@
-// // stores/queue.ts
-// export const useQueueStore = defineStore("queue", {
-// 	state: () => ({
-// 		positions: {} as Record<string, number>,
-// 		version: 0,
-// 		lastEventId: 0,
-// 	}),
+export const useQueueStore = defineStore("queue", () => {
+	const queue = ref([])
+	const queueStatus = ref({})
 
-// 	actions: {
-// 		async fetchInitial() {
-// 			const data = await $fetch("/api/queue")
-// 			this.$patch(data)
-// 		},
+	const getQueue = async () => {
+		try {
+			const response = await $fetch("/api/queue/public")
+			if (response) {
+				queue.value = response
+			}
+		} catch (e) {
+			queue.value = []
+		}
+	}
 
-// 		handleEvent(event: AppEvent) {
-// 			if (event.id <= this.lastEventId) return
-// 			this.lastEventId = event.id
+	const updateQueueStatus = async () => {
+		try {
+			const response = await $fetch("/api/queue/status")
+			if (response) {
+				queueStatus.value = response
+			}
+		} catch (e) {
+			queueStatus.value = {}
+		}
+	}
+	getQueue()
+	updateQueueStatus()
 
-// 			switch (event.type) {
-// 				case "queue.updated":
-// 					if (event.payload.version <= this.version) return
-// 					this.$patch(event.payload)
-// 					break
+	const handleQueueEvent = (event: AppEvent) => {
+		switch (event.type) {
+			case "queue.queueUpdated":
+				queue.value = event.payload.queue
+				break
+			case "queue.entryAdded":
+				queue.value.push(event.payload.entry)
+				break
+			case "queue.entryRemoved":
+				queue.value = queue.value.filter((entry) => entry.publicCode !== event.payload.entry.publicCode)
+				break
+			case "queue.entryApproved":
+				queue.value = queue.value.filter((entry) => entry.publicCode !== event.payload.entry.publicCode)
+				break
+		}
+	}
 
-// 				case "resync.required":
-// 					this.fetchInitial()
-// 					break
-// 			}
-// 		},
-// 	},
-// })
+	return { handleQueueEvent, queue, getQueue, queueStatus, updateQueueStatus }
+})

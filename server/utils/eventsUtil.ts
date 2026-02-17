@@ -2,12 +2,17 @@ import type {
 	HeartbeatEvent,
 	PendingVerificationRejectedEvent,
 	PendingVerificationAcceptedEvent,
-	QueueUpdatedEvent,
+	QueueEvent,
 	VerifyCartListCartAddedEvent,
 	VerifyCartListCartRemovedEvent,
 	PendingVolunteerRequestRejectedEvent,
 	PendingVolunteerRequestAcceptedEvent,
 	VolunteerListUpdatedEvent,
+	QueueEntry,
+	QueueSingleEntryPayload,
+	QueueEntryVolunteer,
+	QueueSingleEntryVolunteerPayload,
+	QueueFullPayload,
 } from "#shared/types/events"
 
 export const constructHeartbeatEvent = (): HeartbeatEvent => {
@@ -22,8 +27,32 @@ export const constructPendingVerificationAcceptedEvent = (reason: string): Pendi
 	return { type: "cart.verification.accepted", payload: { reason } }
 }
 
-export const constructQueueUpdatedEvent = (numberInCupboard: number, numberInQueue: number, ownPositionInQueue: number | null): QueueUpdatedEvent => {
-	return { type: "queue.updated", payload: { numberInCupboard, numberInQueue, ownPositionInQueue } }
+export const constructQueueEntryAddedEvent = (entry: QueueEntry): QueueEvent<QueueSingleEntryPayload> => {
+	return { type: "queue.entryAdded", payload: { entry } }
+}
+
+export const constructQueueEntryRemovedEvent = (entry: QueueEntry): QueueEvent<QueueSingleEntryPayload> => {
+	return { type: "queue.entryRemoved", payload: { entry } }
+}
+
+export const constructQueueEntryApprovedEvent = (entry: QueueEntry): QueueEvent<QueueSingleEntryPayload> => {
+	return { type: "queue.entryApproved", payload: { entry } }
+}
+
+export const constructQueueEntryAddedVolunteerEvent = (entry: QueueEntryVolunteer): QueueEvent<QueueSingleEntryVolunteerPayload> => {
+	return { type: "queue.entryAdded", payload: { entry } }
+}
+
+export const constructQueueEntryRemovedVolunteerEvent = (entry: QueueEntryVolunteer): QueueEvent<QueueSingleEntryVolunteerPayload> => {
+	return { type: "queue.entryRemoved", payload: { entry } }
+}
+
+export const constructQueueEntryApprovedVolunteerEvent = (entry: QueueEntryVolunteer): QueueEvent<QueueSingleEntryVolunteerPayload> => {
+	return { type: "queue.entryApproved", payload: { entry } }
+}
+
+export const constructQueueUpdatedEvent = (queue: QueueEntry[], queueVolunteer?: QueueEntryVolunteer[]): QueueEvent<QueueFullPayload> => {
+	return { type: "queue.queueUpdated", payload: { queue, queueVolunteer } }
 }
 
 export const constructVerifyCartListCartAddedEvent = (cart: any): VerifyCartListCartAddedEvent => {
