@@ -12,71 +12,73 @@ export default defineEventHandler(async (event) => {
 	if (!result.success) {
 		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
 	}
+
 	const { itemID, incrementChange } = result.data
-	if (!event.context.user.Cart) {
-		throw createError({ statusCode: 404, statusMessage: `User ${event.context.user.netID} has no active cart` })
-	}
-	if (event.context.user.Cart.pending) {
-		throw createError({ statusCode: 400, statusMessage: `User ${event.context.user.netID} cart is pending verification` })
-	}
-	if (incrementChange < 0 && !event.context.user.Cart.CartItems.find((cartItem) => cartItem.itemID == itemID)) {
-		throw createError({ statusCode: 404, statusMessage: `Item with id ${itemID} not in cart` })
-	}
-	if (incrementChange == 0) {
+	const netID = event.context.user.netID
+
+	if (incrementChange === 0) {
 		return "No changes made"
 	}
+
 	const transactionResult = await event.context.prisma.$transaction(async (tx) => {
-		const cartItem = await tx.cartItem.upsert({
-			where: {
-				cartItemID: {
-					cartID: event.context.user.Cart.cartID,
-					itemID: itemID,
-				},
-			},
-			update: {
-				count: { increment: incrementChange },
-			},
-			// create is only ever ran when incrementChange > 0
-			create: {
-				cartID: event.context.user.Cart.cartID,
-				itemID: itemID,
-				count: incrementChange,
-				expiredCount: 0,
-			},
+		const cart = await tx.cart.findUnique({
+			where: { cartID: netID },
+			select: { cartID: true, pending: true },
 		})
 
+		if (!cart) {
+			throw createError({ statusCode: 404, statusMessage: `Cart not found for user ${netID}` })
+		}
 
-		let cartItemFinal = cartItem
-
-		// delete item from cart if needed
-		if (cartItem.count <= 0) {
-			cartItemFinal = await tx.cartItem.delete({
-				where: {
-					cartItemID: {
-						cartID: event.context.user.Cart.cartID,
-						itemID: itemID,
-					},
-				},
+		if (cart.pending) {
+			throw createError({
+				statusCode: 409,
+				statusMessage: `Cart is pending verification`,
 			})
 		}
-		// ensure expiredCount <= count
-		else if (cartItem.expiredCount > cartItem.count) {
-			cartItemFinal = await tx.cartItem.update({
-				where: {
-					cartItemID: {
-						cartID: event.context.user.Cart.cartID,
-						itemID: itemID,
-					},
-				},
-				data: {
-					expiredCount: cartItem.count,
-				},
+
+		if (incrementChange > 0) {
+			const cartItem = await tx.cartItem.upsert({
+				where: { cartItemID: { cartID: cart.cartID, itemID } },
+				update: { count: { increment: incrementChange } },
+				create: { cartID: cart.cartID, itemID, count: incrementChange, expiredCount: 0 },
+			})
+
+			if (cartItem.expiredCount > cartItem.count) {
+				return tx.cartItem.update({
+					where: { cartItemID: { cartID: cart.cartID, itemID } },
+					data: { expiredCount: cartItem.count },
+				})
+			}
+
+			return cartItem
+		} else {
+			const updated = await tx.cartItem.updateMany({
+				where: { cartID: cart.cartID, itemID },
+				data: { count: { increment: incrementChange } },
+			})
+
+			if (updated.count === 0) {
+				throw createError({ statusCode: 404, statusMessage: `Item not in cart` })
+			}
+			// Remove items with count <= 0
+			await tx.cartItem.deleteMany({
+				where: { cartID: cart.cartID, itemID, count: { lte: 0 } },
+			})
+			// Ensure expiredCount <= count
+			await tx.cartItem.updateMany({
+				where: { cartID: cart.cartID, itemID, expiredCount: { gt: 0 } },
+				data: { expiredCount: 0 }, // or set to count if needed
+			})
+			return tx.cartItem.findUnique({
+				where: { cartItemID: { cartID: cart.cartID, itemID } },
 			})
 		}
-		return cartItemFinal
 	})
+
 	if (!transactionResult) {
 		throw createError({ statusCode: 500, statusMessage: `Failed to edit item with id ${itemID} from cart` })
 	}
+
 	return `Successfully edited cartItem ${JSON.stringify(transactionResult)}`
 })

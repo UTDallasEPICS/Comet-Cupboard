@@ -48,15 +48,6 @@ const { cartItems, cartTotalCount, cartAdjustedCount } = storeToRefs(store)
 
 const markExpiredItems = ref(false)
 
-const toggleMarkExpiredItems = async () => {
-	markExpiredItems.value = !markExpiredItems.value
-	if (!markExpiredItems.value) {
-		cartItems.value.forEach((cartItem) => {
-			$fetch("/api/cart/cartItem", { method: "POST", body: { itemID: cartItem.itemID, incrementChange: 0, expiredCount: 0 } })
-		})
-		await getCart()
-	}
-}
 
 const submitCart = async () => {
 	if (cartItems.value.length === 0) return

@@ -33,40 +33,6 @@
 				/>
 				<template #body>
 					<UNavigationMenu :items="items" orientation="vertical" class="w-full" />
-					<!-- <div v-if="permissions['SHOPPING']">
-						<ULink :to="shoppingPath" class="">Shopping</ULink>
-						<USeparator :ui="{ border: 'border-black' }" />
-					</div>
-
-					<div v-if="permissions['VERIFY_CART']">
-						<ULink :to="verifyPath" class="">Verify Carts</ULink>
-						<USeparator :ui="{ border: 'border-black' }" />
-					</div>
-
-					<div v-if="permissions['INVENTORY_MANAGEMENT']">
-						<ULink :to="inventoryPath" class="">Inventory Management</ULink>
-						<USeparator :ui="{ border: 'border-black' }" />
-					</div>
-
-					<div v-if="permissions['PUBLIC']">
-						<ULink :to="queuePath" class="">Queue</ULink>
-						<USeparator :ui="{ border: 'border-black' }" />
-					</div>
-
-					<div v-if="permissions['ADMIN']">
-						<ULink :to="dataPath" class="">Data</ULink>
-						<USeparator :ui="{ border: 'border-black' }" />
-					</div>
-
-					<div v-if="permissions['ADMIN']">
-						<ULink :to="sourcePath" class="">Manage Sources</ULink>
-						<USeparator :ui="{ border: 'border-black' }" />
-					</div>
-
-					<div v-if="permissions['ADMIN']">
-						<ULink :to="volunteerPath" class="">Manage Volunteers</ULink>
-						<USeparator :ui="{ border: 'border-black' }" />
-					</div> -->
 				</template>
 			</USlideover>
 			<div class="relative ml-4 overflow-hidden">
@@ -106,16 +72,10 @@
 <script lang="ts" setup>
 import type { NavigationMenuItem } from "@nuxt/ui"
 
-interface Permissions {
-	SHOPPING?: boolean
-	VERIFY_CART?: boolean
-	INVENTORY_MANAGEMENT?: boolean
-	PUBLIC?: boolean
-	ADMIN?: boolean
-}
-
 const store = useCartStore()
+const permissions = usePermissionsStore()
 const { cartView, cartTotalCount } = storeToRefs(store)
+const { canStudentAccess, canVolunteerAccess, canAdminAccess } = storeToRefs(permissions)
 const { logout } = useLogout()
 
 const studentDashboardPath = "/landing/student"
@@ -130,18 +90,10 @@ const manageVolunteerPath = "/manage/volunteer"
 const queuePath = "/queue"
 const manageQueuePath = "/queue/manage"
 
-const accessCookie = ref(useCookie("AccessPermission"))
-
-const permissions = {
-	STUDENT: true,
-	VOLUNTEER: true,
-	ADMIN: true,
-}
-
 const items = ref<NavigationMenuItem[]>(
 	[
 		// Student Group
-		permissions.STUDENT && {
+		canStudentAccess.value && {
 			label: "Student",
 			icon: "i-lucide-user",
 			open: true,
@@ -153,7 +105,7 @@ const items = ref<NavigationMenuItem[]>(
 		},
 
 		// Volunteer Group
-		permissions.VOLUNTEER && {
+		canVolunteerAccess.value && {
 			label: "Volunteer",
 			icon: "i-lucide-users",
 			open: true,
@@ -166,7 +118,7 @@ const items = ref<NavigationMenuItem[]>(
 		},
 
 		// Admin Group
-		permissions.ADMIN && {
+		canAdminAccess.value && {
 			label: "Admin",
 			icon: "i-lucide-shield",
 			open: true,

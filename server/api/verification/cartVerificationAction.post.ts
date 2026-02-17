@@ -1,8 +1,10 @@
 import { z } from "zod"
+import { constructVerifyCartListCartRemovedEvent } from "~~/server/utils/eventsUtil"
+import { broadcastToVolunteers } from "~~/server/utils/volunteerStreamUtil"
 
 const schema = z.object({
 	cartID: z.string(),
-	action: z.string(),
+	action: z.enum(["ACCEPT", "REJECT"]),
 	reason: z.string().optional(),
 })
 
@@ -13,110 +15,68 @@ export default defineEventHandler(async (event) => {
 	if (!result.success) {
 		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
 	}
+
 	const { cartID, action, reason } = result.data
-	if (action != "ACCEPT" && action != "REJECT") {
-		throw createError({ statusCode: 400, statusMessage: "Invalid action: Expected ACCEPT or REJECT" })
-	}
+
 	const pendingCart = await event.context.prisma.cart.findUnique({
-		where: {
-			cartID: cartID,
-		},
+		where: { cartID },
 	})
+
 	if (!pendingCart) {
 		throw createError({ statusCode: 404, statusMessage: `User has no active cart for cartID ${cartID}` })
 	}
+
 	if (!pendingCart.pending) {
 		throw createError({ statusCode: 400, statusMessage: `Cart ${cartID} is not pending verification` })
 	}
 
-	if (action == "ACCEPT") {
-		const transactionResult = await event.context.prisma.$transaction(async (tx) => {
-			const cart = await tx.cart.delete({
-				where: {
-					cartID: cartID,
-				},
+	if (action === "ACCEPT") {
+		// ACCEPT action
+		const cart = await event.context.prisma.$transaction(async (tx) => {
+			const existingCart = await tx.cart.findUnique({
+				where: { cartID },
 				include: { CartItems: true },
 			})
-			const orderItems = cart.CartItems.map((cartItem) => {
-				return { itemID: cartItem.itemID, count: cartItem.count }
-			})
 
-			orderItems.forEach(async (orderItem) => {
+			const orderItems = existingCart.CartItems.map((cartItem) => ({
+				itemID: cartItem.itemID,
+				count: cartItem.count,
+			}))
+
+			for (const orderItem of orderItems) {
 				await tx.item.update({
-					where: {
-						itemID: orderItem.itemID,
-					},
-					data: {
-						quantity: { decrement: orderItem.count },
-					},
+					where: { itemID: orderItem.itemID },
+					data: { quantity: { decrement: orderItem.count } },
 				})
-			})
+			}
 
 			await tx.order.create({
 				data: {
-					netID: cart.cartID,
-					OrderItems: {
-						create: orderItems,
-					},
+					netID: existingCart.cartID,
+					OrderItems: { create: orderItems },
 				},
 			})
 
-			return "Success"
-		})
-		if (!transactionResult) {
-			throw createError({ statusCode: 500, statusMessage: `Failed to accept cart verification for cart ${cartID}` })
-		}
-		await broadcastToVolunteers(
-			JSON.stringify({
-				type: "ACCEPT CART",
-				payload: pendingCart,
-			})
-		)
-		await messageToUser(
-			cartID,
-			JSON.stringify({
-				type: "ACCEPT CART",
-				payload: `${reason}`,
-			})
-		)
-
-		await event.context.prisma.queueEntry.delete({
-			where: { netID: cartID },
+			await tx.cart.delete({ where: { cartID } })
 		})
 
-		await broadcastToQueue(
-			JSON.stringify({
-				type: "QUEUE_DELETE",
-				payload: { netID: cartID },
-			})
-		)
+		await broadcastToVolunteers(JSON.stringify(constructVerifyCartListCartRemovedEvent(cartID)))
+		await messageToStudent(cartID, JSON.stringify(constructPendingVerificationAcceptedEvent(reason || "")))
+
+		// await event.context.prisma.queueEntry.delete({ where: { netID: cartID } })
+		// await broadcastToQueue(JSON.stringify({ type: "QUEUE_DELETE", payload: { netID: cartID } }))
 
 		return `Successfully accepted cart ${cartID}`
-	} else if (action == "REJECT") {
+	} else {
+		// REJECT action
 		const cart = await event.context.prisma.cart.update({
-			where: {
-				cartID: cartID,
-			},
-			data: {
-				pending: false,
-			},
+			where: { cartID },
+			data: { pending: false },
 		})
-		if (!cart) {
-			throw createError({ statusCode: 500, statusMessage: `Failed to reject cart verification for cart ${cartID}` })
-		}
-		await broadcastToVolunteers(
-			JSON.stringify({
-				type: "REJECT CART",
-				payload: cart,
-			})
-		)
-		await messageToUser(
-			cartID,
-			JSON.stringify({
-				type: "REJECT CART",
-				payload: `${reason}`,
-			})
-		)
+
+		await broadcastToVolunteers(JSON.stringify(constructVerifyCartListCartRemovedEvent(cartID)))
+		await messageToStudent(cartID, JSON.stringify(constructPendingVerificationRejectedEvent(reason || "")))
+
 		return `Successfully rejected cart ${cartID}`
 	}
 })

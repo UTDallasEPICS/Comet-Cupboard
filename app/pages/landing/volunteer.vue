@@ -44,11 +44,5 @@ const volunteerLinks = [
 		icon: "i-lucide-clock",
 		to: "/queue/manage",
 	},
-	{
-		label: "Manage Emergency Bags",
-		description: "Update emergency bag options",
-		icon: "i-heroicons-shopping-bag",
-		to: "/emergency-bags/manage",
-	},
 ]
 </script>

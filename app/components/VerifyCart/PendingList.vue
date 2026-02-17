@@ -34,9 +34,7 @@ const emit = defineEmits(["update:select-cart"])
 
 const { data: pendingCarts } = await useFetch("/api/verification/pendingCarts")
 
-const pendingCartUpdates = ref<EventSource>()
 const pendingCartsList = ref(pendingCarts.value)
-const config = useRuntimeConfig()
 
 const pendingCartIDsAndAdjQTY = computed(() => {
 	if (!pendingCartsList.value) {
@@ -47,27 +45,26 @@ const pendingCartIDsAndAdjQTY = computed(() => {
 	})
 })
 
-if (import.meta.client) {
-	// change this to use env later
-	// also probably use zod to type check the message...
-	pendingCartUpdates.value = new EventSource(`${config.public.LOCAL_URL}api/verification/pendingCartsUpdate`)
-	pendingCartUpdates.value.onmessage = (event) => {
-		const { type, payload } = JSON.parse(event.data)
-		if (type === "NEW CART") {
-			const newCart = payload
-			pendingCartsList.value.push(newCart)
-		} else if (type === "ACCEPT CART" || type === "REJECT CART" || type === "RETRACT CART") {
-			const cartIDToRemove = payload.cartID
+const { onEvent } = useVolunteerEventStream()
+
+const unsubscribe = onEvent((event) => {
+	switch (event.type) {
+		case "verifyCartList.cart.added": {
+			const { cart } = event.payload
+			pendingCartsList.value.push(cart)
+			break
+		}
+		case "verifyCartList.cart.removed": {
+			const cartIDToRemove = event.payload.cartID
 			pendingCartsList.value = pendingCartsList.value.filter((pendingCart) => {
 				return pendingCart.cartID != cartIDToRemove
 			})
+			break
 		}
 	}
-}
+})
 
 onBeforeUnmount(() => {
-	if (pendingCartUpdates.value) {
-		pendingCartUpdates.value.close()
-	}
+	unsubscribe()
 })
 </script>

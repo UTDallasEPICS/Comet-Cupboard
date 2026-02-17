@@ -56,7 +56,6 @@
 							<p class="">Status: <span class="text-final-utd-green">Accepted</span></p>
 						</template>
 						<p>Reason: {{ cartVerificationReason }}</p>
-						<p>Logging out in {{ countdownTimer }} seconds...</p>
 					</UCard>
 				</template>
 			</template>
@@ -91,46 +90,28 @@ const cartVerificationReason = ref("")
 const store = useCartStore()
 const { getCart } = store
 const { cartItems } = storeToRefs(store)
-const { logout } = useLogout()
 
-let verificationUpdate: EventSource | null = null
+const { onEvent } = useStudentEventStream()
 
-onMounted(async () => {
-	const config = useRuntimeConfig()
-	verificationUpdate = new EventSource(`${config.public.LOCAL_URL}api/verification/cartRequestVerificationResponseWaiting`)
-
-	verificationUpdate.onmessage = async (event) => {
-		const raw = event.data
-
-		if (typeof raw !== "string" || !raw.trim().startsWith("{")) return
-
-		let parsed
-		try {
-			parsed = JSON.parse(raw)
-		} catch {
-			return
-		}
-
-		const { type, payload } = parsed
-		if (type === "REJECT CART") {
-			cartVerificationReason.value = payload || "No reason provided."
-			active.value = 2
-			cartRejected.value = true
-		} else if (type === "ACCEPT CART") {
-			cartVerificationReason.value = payload || "No reason provided."
+const unsubscribe = onEvent((event) => {
+	switch (event.type) {
+		case "cart.verification.accepted": {
+			cartVerificationReason.value = event.payload.reason || "No reason provided."
 			active.value = 2
 			cartRejected.value = false
-			startForceLogoutTimer()
+			break
+		}
+		case "cart.verification.rejected": {
+			cartVerificationReason.value = event.payload.reason || "No reason provided."
+			active.value = 2
+			cartRejected.value = true
+			break
 		}
 	}
 })
 
 onBeforeUnmount(() => {
-	if (verificationUpdate) {
-		verificationUpdate.close()
-		verificationUpdate = null
-	}
-	stopForceLogoutTimer()
+	unsubscribe()
 })
 
 const goToShopping = async () => await navigateTo("/shopping")
@@ -148,29 +129,5 @@ const submitCart = async () => {
 const cancelCart = async () => {
 	await $fetch("/api/verification/retractCart", { method: "PUT" })
 	active.value = 0
-}
-
-const countdownTimer = ref(10)
-let forceLogoutInterval: ReturnType<typeof setInterval> | null = null
-const startForceLogoutTimer = () => {
-	// prevent duplicate timers
-	if (forceLogoutInterval) return
-
-	forceLogoutInterval = setInterval(() => {
-		if (countdownTimer.value > 1) {
-			countdownTimer.value--
-		} else {
-			stopForceLogoutTimer()
-			getCart()
-			logout()
-		}
-	}, 1000)
-}
-
-const stopForceLogoutTimer = () => {
-	if (forceLogoutInterval) {
-		clearInterval(forceLogoutInterval)
-		forceLogoutInterval = null
-	}
 }
 </script>

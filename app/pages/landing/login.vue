@@ -15,28 +15,18 @@ const state = ref({
 	netID: "",
 })
 
-const accessCookie = useCookie("netID")
+const permissions = usePermissionsStore()
+const { setPermissionsFromServer } = permissions
+const { canStudentAccess, canVolunteerAccess, canAdminAccess } = storeToRefs(permissions)
 
 onMounted(async () => {
-	if (accessCookie.value) {
-		await $fetch("/api/updatePermissions", {
-			method: "GET",
-		})
-		const accessCookiePermission = useCookie("AccessPermission")
-		const permissions = accessCookiePermission.value && typeof accessCookiePermission.value === "object" ? accessCookiePermission.value : {}
-		if (!permissions["SHOPPING"]) {
-			//Enters the student into the queue
-			try {
-				await $fetch("/api/queue", {
-					method: "POST",
-				})
-			} catch (err) {
-				//We don't care about this error, we just don't want this to stop us though
-			}
-			await navigateTo("/queue")
-		} else {
-			await navigateTo("/shopping")
-		}
+	await setPermissionsFromServer()
+	if (canAdminAccess.value) {
+		navigateTo("/landing/admin")
+	} else if (canVolunteerAccess.value) {
+		navigateTo("/landing/volunteer")
+	} else if (canStudentAccess.value) {
+		navigateTo("/landing/student")
 	}
 })
 
@@ -46,9 +36,7 @@ const onSubmit = async () => {
 			method: "POST",
 			body: { netID: state.value.netID },
 		})
-		await $fetch("/api/updatePermissions", {
-			method: "GET",
-		})
+		await setPermissionsFromServer()
 		refreshCookie("netID")
 		refreshCookie("AccessPermission")
 		reloadNuxtApp()

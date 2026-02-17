@@ -18,10 +18,4 @@
 
 <script setup lang="ts">
 const { categories } = useCategories()
-
-onMounted(async () => {
-	try {
-		await $fetch("/api/cart/cart", { method: "PUT" })
-	} catch {}
-})
 </script>

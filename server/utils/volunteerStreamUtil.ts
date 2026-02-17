@@ -1,12 +1,11 @@
 type EventStream = ReturnType<typeof createEventStream>
 
-const userMap: { [netID: string]: { [nanoid: string]: EventStream } } = {}
 const volunteerMap: { [netID: string]: { [nanoid: string]: EventStream } } = {}
 
-const messageToUser = async (netID: string, message: string) => {
-	if (userMap[netID]) {
+const messageToVolunteer = async (netID: string, message: string) => {
+	if (volunteerMap[netID]) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		Object.entries(userMap[netID]).forEach(async ([nanoid, eventstream]) => {
+		Object.entries(volunteerMap[netID]).forEach(async ([nanoid, eventstream]) => {
 			await eventstream.push(message)
 		})
 	}
@@ -22,4 +21,4 @@ const broadcastToVolunteers = async (message: string) => {
 	})
 }
 
-export { userMap, volunteerMap, messageToUser, broadcastToVolunteers }
+export { volunteerMap, messageToVolunteer, broadcastToVolunteers }

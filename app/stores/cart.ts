@@ -1,5 +1,3 @@
-import { defineStore } from "pinia"
-
 export const useCartStore = defineStore("cart", () => {
 	const cart = ref({})
 	const cartView = ref(false)
@@ -15,6 +13,9 @@ export const useCartStore = defineStore("cart", () => {
 	const getCart = async () => {
 		try {
 			cart.value = await $fetch("/api/cart/cart")
+			if (!cart.value) {
+				cart.value = {}
+			}
 		} catch (e) {
 			cart.value = {}
 		}
@@ -47,6 +48,22 @@ export const useCartStore = defineStore("cart", () => {
 		}
 		return false
 	})
+
+	// handleEvent(event: AppEvent) {
+	// 			if (event.id <= this.lastEventId) return // ignore stale event
+	// 			this.lastEventId = event.id
+
+	// 			switch (event.type) {
+	// 				case "cart.updated":
+	// 					if (event.payload.version <= this.version) return // stale version
+	// 					this.$patch(event.payload)
+	// 					break
+
+	// 				case "resync.required":
+	// 					this.fetchInitial() // snapshot refetch
+	// 					break
+	// 			}
+	// 		},
 
 	return { cart, cartView, cartItems, cartTotalCount, cartAdjustedCount, pending, getCart, toggleCartView, resetCartView }
 })

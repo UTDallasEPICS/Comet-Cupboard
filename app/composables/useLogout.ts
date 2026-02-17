@@ -1,13 +1,12 @@
 export const useLogout = () => {
+	const { clearPermissions } = usePermissionsStore()
 	const netIDCookie = useCookie("netID")
-	const accessCookie = useCookie("access")
-	const permissions = ref({})
 
 	const logout = async () => {
 		// Delete cart (ignore errors)
 		try {
 			await $fetch("/api/cart/cart", { method: "DELETE" })
-		} catch (err) {}
+		} catch (error) {}
 
 		// Remove from queue (ignore errors)
 		try {
@@ -15,14 +14,10 @@ export const useLogout = () => {
 				method: "DELETE",
 				body: { netID: netIDCookie.value },
 			})
-		} catch (err) {}
+		} catch (error) {}
 
-		// Clear cookies
 		netIDCookie.value = null
-		accessCookie.value = null
-		permissions.value = accessCookie.value && typeof accessCookie.value === "object" ? accessCookie.value : {}
-
-		// Navigate to homepage
+		clearPermissions()
 		await navigateTo("/")
 	}
 

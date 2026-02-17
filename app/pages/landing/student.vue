@@ -38,11 +38,5 @@ const studentLinks = [
 		icon: "i-lucide-clock",
 		to: "/queue",
 	},
-	{
-		label: "Emergency Bags",
-		description: "View emergency bag options",
-		icon: "i-heroicons-shopping-bag",
-		to: "/emergency-bags",
-	},
 ]
 </script>
