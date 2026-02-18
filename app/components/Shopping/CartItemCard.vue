@@ -1,38 +1,16 @@
 <template>
-	<UCard
-		class="relative min-w-72"
-		:ui="{
-			header: 'p-2 py-2 sm:p-2 sm:py-2',
-			body: 'p-2 py-2 sm:p-2 sm:py-2',
-		}"
-	>
-		<template #header>
-			<div class="flex flex-row justify-between px-2">
-				<p class="truncate">
-					{{ name }}
-				</p>
-				<div class="flex items-center gap-2">
-					<UBadge v-if="badgeType === 'free'" label="Free" class="" />
-					<UBadge v-else-if="badgeType === 'deal'" :label="`${props.itemDeal.actualCount} for ${props.itemDeal.adjustedCount}`" class="" />
-					<UButton variant="ghost" icon="i-heroicons-x-mark" class="shrink-0" size="xs" @click="removeCartItem" />
-				</div>
+	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
+		<template #header-actions>
+			<UButton variant="ghost" icon="i-heroicons-x-mark" class="shrink-0" size="xs" @click="removeCartItem" />
+		</template>
+		<template #body>
+			<div class="flex items-end gap-1">
+				<UButton icon="i-heroicons-minus" size="xs" variant="soft" :disabled="props.count <= 1 || isSaving" @click="decrement" />
+				<SharedTextBase class="w-8 text-center">{{ props.count }}</SharedTextBase>
+				<UButton icon="i-heroicons-plus" size="xs" variant="soft" :disabled="isSaving" @click="increment" />
 			</div>
 		</template>
-
-		<div class="flex h-16 flex-row justify-between">
-			<img :src="`/api/public/image/${imgName}`" :alt="name" class="ml-2 aspect-square h-full border border-black object-cover" />
-			<div class="mt-auto flex flex-row items-center gap-2">
-				<p>QTY</p>
-				<div class="flex items-center gap-1">
-					<UButton icon="i-heroicons-minus" size="xs" variant="soft" :disabled="props.count <= 1 || isSaving" @click="decrement" />
-					<div class="flex w-8 items-center justify-center rounded">
-						{{ props.count }}
-					</div>
-					<UButton icon="i-heroicons-plus" size="xs" variant="soft" :disabled="isSaving" @click="increment" />
-				</div>
-			</div>
-		</div>
-	</UCard>
+	</SharedItemCard>
 </template>
 
 <script setup lang="ts">
@@ -40,23 +18,11 @@ const props = defineProps({
 	name: { type: String, required: true },
 	imgName: { type: String, required: true },
 	itemID: { type: String, required: true },
-	count: { type: Number, required: true },
-	expiredCount: { type: Number, required: true },
-	showExpired: { type: Boolean, default: false },
 	itemDeal: { type: Object, default: () => ({}) },
+	count: { type: Number, default: 0 },
 })
 
 const emit = defineEmits(["update:cart"])
-
-const dealExists = computed(() => {
-	return props.itemDeal && "actualCount" in props.itemDeal && "adjustedCount" in props.itemDeal
-})
-
-const badgeType = computed(() => {
-	if (!dealExists.value) return null
-	if (props.itemDeal.actualCount === 1 && props.itemDeal.adjustedCount === 0) return "free"
-	return "deal"
-})
 
 const isSaving = ref(false)
 
@@ -70,7 +36,9 @@ const increment = async () => {
 }
 
 const decrement = async () => {
-	if (props.count <= 1) return
+	if (props.count <= 1) {
+		return
+	}
 	await $fetch("/api/student/cart/cartItemCount", {
 		method: "POST",
 		body: { itemID: props.itemID, incrementChange: -1 },

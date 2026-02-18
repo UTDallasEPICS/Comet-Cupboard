@@ -20,7 +20,6 @@ export const useCartStore = defineStore("cart", () => {
 			cart.value = {}
 		}
 	}
-	getCart()
 
 	const cartItems = computed(() => {
 		if ("CartItems" in cart.value === false) {
@@ -48,22 +47,6 @@ export const useCartStore = defineStore("cart", () => {
 		}
 		return false
 	})
-
-	// handleEvent(event: AppEvent) {
-	// 			if (event.id <= this.lastEventId) return // ignore stale event
-	// 			this.lastEventId = event.id
-
-	// 			switch (event.type) {
-	// 				case "cart.updated":
-	// 					if (event.payload.version <= this.version) return // stale version
-	// 					this.$patch(event.payload)
-	// 					break
-
-	// 				case "resync.required":
-	// 					this.fetchInitial() // snapshot refetch
-	// 					break
-	// 			}
-	// 		},
 
 	return { cart, cartView, cartItems, cartTotalCount, cartAdjustedCount, pending, getCart, toggleCartView, resetCartView }
 })

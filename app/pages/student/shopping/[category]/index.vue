@@ -26,6 +26,7 @@
 						:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
 						:item-i-d="item.itemID"
 						:name="item.name"
+						:quantity="item.quantity"
 					/>
 				</li>
 			</ul>

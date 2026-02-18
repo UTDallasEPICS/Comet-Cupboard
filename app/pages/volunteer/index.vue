@@ -26,10 +26,14 @@
 
 <script setup lang="ts">
 const { roleLinks } = useNavigationLinks()
-const volunteerLinks = roleLinks["volunteer"].flatMap(link => {
-	if (link.children) {
-		return link.children
-	}
-	return link
-})
+const volunteerLinks = roleLinks["volunteer"]
+	.flatMap((link) => {
+		if (link.children) {
+			return link.children
+		}
+		return link
+	})
+	.filter((link) => {
+		return link.label != "Dashboard"
+	})
 </script>

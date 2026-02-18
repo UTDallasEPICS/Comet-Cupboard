@@ -59,10 +59,7 @@ model Item {
     CartItems        CartItem[]
     OrderItems       OrderItem[]
     archived         Boolean           @default(false)
-
-    createdAt        DateTime @default(now()) @map("created_at")
-    recentPopularity Json?    @map("recent_popularity")
-    popularityCounts Json?    @map("popularity_counts")
+    createdAt        DateTime          @default(now()) @map("created_at")
 
     @@map("item")
 }
@@ -110,12 +107,16 @@ model Cart {
 }
 
 model CartItem {
-    Item         Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-    itemID       String @map("item_id")
-    Cart         Cart   @relation(fields: [cartID], references: [cartID], onDelete: Cascade, onUpdate: Cascade)
-    cartID       String @map("cart_id")
-    count        Int    @map("count")
-    expiredCount Int    @map("expired_count")
+    Item                     Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+    itemID                   String @map("item_id")
+    Cart                     Cart   @relation(fields: [cartID], references: [cartID], onDelete: Cascade, onUpdate: Cascade)
+    cartID                   String @map("cart_id")
+    count                    Int    @map("count")
+    // Fields to track adjustments to decrease from total count
+    adjustedExpiredCount     Int    @default(0) @map("adjusted_expired_count")
+    adjustedDamagedCount     Int    @default(0) @map("adjusted_damaged_count")
+    adjustedOverstockedCount Int    @default(0) @map("adjusted_overstocked_count")
+    adjustedOtherCount       Int    @default(0) @map("adjusted_other_count")
 
     @@id(name: "cartItemID", [itemID, cartID])
     @@map("cart_item")
@@ -156,8 +157,7 @@ model QueueEntry {
     publicCode String   @unique
     joinedAt   DateTime @default(now())
     position   Int
-
-    User User @relation(fields: [netID], references: [netID])
+    User       User     @relation(fields: [netID], references: [netID])
 
     @@map("queue_entry")
 }

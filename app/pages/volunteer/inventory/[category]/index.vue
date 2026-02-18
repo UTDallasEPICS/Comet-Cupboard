@@ -7,7 +7,7 @@
 
 		<section class="mt-4">
 			<SharedTextSectionTitle class="sr-only">Edit {{ currentCategory }} Items</SharedTextSectionTitle>
-			<div class="mx-auto flex w-full gap-4 flex-row sm:items-center sm:justify-start">
+			<div class="mx-auto flex w-full flex-row gap-4 sm:items-center sm:justify-start">
 				<USelectMenu
 					v-model:search-term="searchTerm"
 					:items="categoryItems"
@@ -26,7 +26,7 @@
 						:img-name="item.imgName"
 						:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
 						:item-i-d="item.itemID"
-						:item-name="item.name"
+						:name="item.name"
 						@change-amount-update="updateItemChangeAmount"
 					/>
 				</li>
@@ -50,9 +50,7 @@ const inventoryStore = useInventoryStore()
 // Allow items to update based on sorting dropdown
 const reactiveItems = ref<any[]>([])
 
-const { data: items } = await useFetch("/api/student/inventory/items", {
-	query: { getCounts: true },
-})
+const { data: items } = await useFetch("/api/student/inventory/items")
 
 // Populate reactiveItems
 // This basically observes items, and when items first become available the callback runs and copies

@@ -42,15 +42,8 @@ export default defineEventHandler(async (event) => {
 			const cartItem = await tx.cartItem.upsert({
 				where: { cartItemID: { cartID: cart.cartID, itemID } },
 				update: { count: { increment: incrementChange } },
-				create: { cartID: cart.cartID, itemID, count: incrementChange, expiredCount: 0 },
+				create: { cartID: cart.cartID, itemID, count: incrementChange },
 			})
-
-			if (cartItem.expiredCount > cartItem.count) {
-				return tx.cartItem.update({
-					where: { cartItemID: { cartID: cart.cartID, itemID } },
-					data: { expiredCount: cartItem.count },
-				})
-			}
 
 			return cartItem
 		} else {
@@ -65,11 +58,6 @@ export default defineEventHandler(async (event) => {
 			// Remove items with count <= 0
 			await tx.cartItem.deleteMany({
 				where: { cartID: cart.cartID, itemID, count: { lte: 0 } },
-			})
-			// Ensure expiredCount <= count
-			await tx.cartItem.updateMany({
-				where: { cartID: cart.cartID, itemID, expiredCount: { gt: 0 } },
-				data: { expiredCount: 0 }, // or set to count if needed
 			})
 			return tx.cartItem.findUnique({
 				where: { cartItemID: { cartID: cart.cartID, itemID } },

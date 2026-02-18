@@ -23,8 +23,7 @@ export const useQueueStore = defineStore("queue", () => {
 			queueStatus.value = {}
 		}
 	}
-	getQueue()
-	updateQueueStatus()
+
 
 	const handleQueueEvent = (event: AppEvent) => {
 		switch (event.type) {

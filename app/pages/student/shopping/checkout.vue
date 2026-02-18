@@ -10,6 +10,18 @@
 				separator: 'bg-black',
 			}"
 		>
+			<template #AdjustCounts>
+				<p>Here is where you would adjust counts if we allowed it on this page</p>
+				<SharedButtonCancel text="Back to Shopping" @click="goToShopping" />
+				<SharedButtonPositiveAction text="Next" @click="incrementStepper" />
+			</template>
+
+			<template #ReviewCart>
+				<p>Here is where you would review the cart if we allowed it on this page</p>
+				<SharedButtonCancel text="Back" @click="decrementStepper" />
+				<SharedButtonPositiveAction text="Next" @click="incrementStepper" />
+			</template>
+
 			<template #Disclosures>
 				<UCard variant="outline">
 					<template #header>
@@ -31,8 +43,8 @@
 						national origin (ancestry), disability, marital status, sexual orientation, or military status, in any of its activities or operations.
 					</p>
 				</UCard>
-				<SharedButtonCancel text="Cancel" @click="goToShopping" />
-				<SharedButtonPositiveAction text="Confirm" @click="submitCart" />
+				<SharedButtonCancel text="Back" @click="decrementStepper" />
+				<SharedButtonPositiveAction text="Confirm and Submit Cart" @click="submitCart" />
 			</template>
 
 			<template #Verification>
@@ -68,6 +80,16 @@ import type { StepperItem } from "@nuxt/ui"
 
 const items: StepperItem[] = [
 	{
+		slot: "AdjustCounts" as const,
+		title: "Adjust Counts",
+		icon: "i-heroicons-pencil-square",
+	},
+	{
+		slot: "ReviewCart" as const,
+		title: "Review Cart",
+		icon: "i-heroicons-shopping-cart",
+	},
+	{
 		slot: "Disclosures" as const,
 		title: "Disclosures",
 		icon: "mdi:file-document-check",
@@ -97,13 +119,13 @@ const unsubscribe = onEvent((event) => {
 	switch (event.type) {
 		case "cart.verification.accepted": {
 			cartVerificationReason.value = event.payload.reason || "No reason provided."
-			active.value = 2
+			active.value = 4
 			cartRejected.value = false
 			break
 		}
 		case "cart.verification.rejected": {
 			cartVerificationReason.value = event.payload.reason || "No reason provided."
-			active.value = 2
+			active.value = 4
 			cartRejected.value = true
 			break
 		}
@@ -116,6 +138,14 @@ onBeforeUnmount(() => {
 
 const goToShopping = async () => await navigateTo("/student/shopping")
 
+const decrementStepper = () => {
+	active.value--
+}
+
+const incrementStepper = () => {
+	active.value++
+}
+
 const submitCart = async () => {
 	if (cartItems.value.length === 0) return
 
@@ -123,11 +153,11 @@ const submitCart = async () => {
 	await $fetch("/api/student/verification/cartRequestVerification", {
 		method: "POST",
 	})
-	active.value = 1
+	active.value = 3
 }
 
 const cancelCart = async () => {
 	await $fetch("/api/student/verification/retractCart", { method: "PUT" })
-	active.value = 0
+	active.value = 2
 }
 </script>

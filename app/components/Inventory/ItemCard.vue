@@ -1,35 +1,21 @@
 <template>
-	<UCard
-		class="relative min-w-72"
-		:ui="{
-			header: 'p-2 py-2 sm:p-2 sm:py-2',
-			body: 'p-2 py-2 sm:p-2 sm:py-2',
-		}"
-	>
-		<template #header>
-			<div class="flex flex-row items-center justify-between px-2">
-				<p class="truncate">{{ itemName }}</p>
-				<div class="flex flex-row items-center gap-2">
-					<UBadge v-if="dealExists" :label="dealText" />
-					<UDropdownMenu
-						:items="editMenuItems"
-						:content="{
-							align: 'end',
-							side: 'bottom',
-						}"
-					>
-						<UButton icon="material-symbols:edit" size="xs" variant="ghost" />
-					</UDropdownMenu>
-				</div>
-			</div>
+	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
+		<template #header-actions>
+			<UDropdownMenu
+				:items="editMenuItems"
+				:content="{
+					align: 'end',
+					side: 'bottom',
+				}"
+			>
+				<UButton icon="material-symbols:edit" size="xs" variant="ghost" />
+			</UDropdownMenu>
 		</template>
-
-		<div class="flex h-16 flex-row justify-between">
-			<img :src="`/api/public/image/${imgName}`" :alt="itemName" class="ml-2 aspect-square h-full border border-black object-cover" />
+		<template #body>
 			<div class="mt-auto flex flex-col items-end gap-2">
 				<div class="flex flex-row items-center gap-2">
 					<p>Qty:</p>
-					<div class="flex flex-row rounded-xl border">
+					<div class="border-final-text-soft flex flex-row rounded-xl border">
 						<div class="w-12">
 							<p class="ml-2 text-center">{{ props.currentCount }}</p>
 						</div>
@@ -58,29 +44,21 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</UCard>
+		</template>
+	</SharedItemCard>
 </template>
 
 <script lang="ts" setup>
 import type { DropdownMenuItem } from "@nuxt/ui"
 
 const props = defineProps({
-	itemName: {
+	name: {
 		type: String,
 		default: "Item name",
 	},
 	imgName: {
 		type: String,
 		default: "",
-	},
-	currentCount: {
-		type: Number,
-		default: 0,
-	},
-	changeCount: {
-		type: Number,
-		default: 0,
 	},
 	itemDeal: {
 		type: Object,
@@ -89,6 +67,14 @@ const props = defineProps({
 	itemID: {
 		type: String,
 		required: true,
+	},
+	currentCount: {
+		type: Number,
+		default: 0,
+	},
+	changeCount: {
+		type: Number,
+		default: 0,
 	},
 })
 
@@ -101,27 +87,10 @@ const editMenuItems = ref<DropdownMenuItem[]>([
 	{ label: "Delete", onClick: () => navigateTo(`/volunteer/inventory/${categoryName}/${props.itemID}/delete`) },
 ])
 
-const dealExists = computed(() => {
-	return props.itemDeal.actualCount !== undefined && props.itemDeal.adjustedCount !== undefined
-})
-
-const dealText = computed(() => {
-	if (!dealExists.value) {
-		return ""
-	}
-	const a = props.itemDeal.actualCount
-	const b = props.itemDeal.adjustedCount
-
-	if (a === 1 && b === 0) return "FREE"
-
-	return `${a} for ${b}`
-})
-
 const emit = defineEmits<{
 	(e: "changeAmountUpdate", itemID: string, amountChange: number): void
 }>()
 
-// Per-click adjustment amount based on input
 const adjustAmount = ref(1)
 
 // Functions for emits
