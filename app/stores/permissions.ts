@@ -4,7 +4,7 @@ export const usePermissionsStore = defineStore("permissions", () => {
 
 	const setPermissionsFromServer = async () => {
 		try {
-			await $fetch("/api/updatePermissions", {
+			await $fetch("/api/public/account/updatePermissions", {
 				method: "GET",
 			})
 			const accessCookiePermission = useCookie("AccessPermission")
@@ -23,9 +23,9 @@ export const usePermissionsStore = defineStore("permissions", () => {
 		accessCookiePermission.value = null
 	}
 
-	const canStudentAccess = computed(() => !!access.value.STUDENT)
-	const canVolunteerAccess = computed(() => !!access.value.VOLUNTEER)
 	const canAdminAccess = computed(() => !!access.value.ADMIN)
+	const canVolunteerAccess = computed(() => canAdminAccess.value || !!access.value.VOLUNTEER)
+	const canStudentAccess = computed(() => canVolunteerAccess.value || !!access.value.STUDENT)
 
 	return { setPermissionsFromServer, clearPermissions, canStudentAccess, canVolunteerAccess, canAdminAccess }
 })

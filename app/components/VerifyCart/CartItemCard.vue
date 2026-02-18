@@ -6,7 +6,7 @@
 
 		<div class="flex flex-row gap-x-4">
 			<div class="relative h-24 w-24 shrink-0">
-				<img :src="`/api/image/${imgName}`" class="h-full w-full rounded-lg object-cover" />
+				<img :src="`/api/public/image/${imgName}`" class="h-full w-full rounded-lg object-cover" />
 
 				<UBadge v-if="dealExists" variant="solid" size="lg" class="absolute top-0 left-0 rounded-tl-lg rounded-br-lg">
 					{{ dealText }}

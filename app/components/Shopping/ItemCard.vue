@@ -18,7 +18,7 @@
 		</template>
 
 		<div class="flex h-16 flex-row justify-between">
-			<img :src="`/api/image/${imgName}`" :alt="name" class="ml-2 aspect-square h-full border border-black object-cover" />
+			<img :src="`/api/public/image/${imgName}`" :alt="name" class="ml-2 aspect-square h-full border border-black object-cover" />
 			<div class="mt-auto">
 				<div class="flex flex-row items-center gap-2">
 					<p>QTY: 99</p>
@@ -51,7 +51,7 @@ const badgeType = computed(() => {
 })
 
 const addToCart = async () => {
-	await $fetch("/api/cart/cartItemCount", {
+	await $fetch("/api/student/cart/cartItemCount", {
 		method: "POST",
 		body: { itemID: props.itemID, incrementChange: 1 },
 	})

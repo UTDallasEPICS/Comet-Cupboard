@@ -77,18 +77,7 @@ const permissions = usePermissionsStore()
 const { cartView, cartTotalCount } = storeToRefs(store)
 const { canStudentAccess, canVolunteerAccess, canAdminAccess } = storeToRefs(permissions)
 const { logout } = useLogout()
-
-const studentDashboardPath = "/landing/student"
-const volunteerDashboardPath = "/landing/volunteer"
-const adminDashboardPath = "/landing/admin"
-const shoppingPath = "/shopping"
-const verifyPath = "/verify-cart"
-const inventoryPath = "/inventory"
-const dataPath = "/data-analytics"
-const manageSourcePath = "/manage/source"
-const manageVolunteerPath = "/manage/volunteer"
-const queuePath = "/queue"
-const manageQueuePath = "/queue/manage"
+const { roleLinks } = useNavigationLinks()
 
 const items = ref<NavigationMenuItem[]>(
 	[
@@ -97,11 +86,7 @@ const items = ref<NavigationMenuItem[]>(
 			label: "Student",
 			icon: "i-lucide-user",
 			open: true,
-			children: [
-				{ label: "Dashboard", to: studentDashboardPath, icon: "i-lucide-home" },
-				{ label: "Shopping", to: shoppingPath, icon: "i-lucide-shopping-cart" },
-				{ label: "Queue", to: queuePath, icon: "i-lucide-clock" },
-			],
+			children: [...roleLinks["student"]],
 		},
 
 		// Volunteer Group
@@ -109,12 +94,7 @@ const items = ref<NavigationMenuItem[]>(
 			label: "Volunteer",
 			icon: "i-lucide-users",
 			open: true,
-			children: [
-				{ label: "Dashboard", to: volunteerDashboardPath, icon: "i-lucide-home" },
-				{ label: "Inventory Management", to: inventoryPath, icon: "i-lucide-box" },
-				{ label: "Verify Cart", to: verifyPath, icon: "i-lucide-check-circle" },
-				{ label: "Queue Management", to: manageQueuePath, icon: "i-lucide-clock" },
-			],
+			children: [...roleLinks["volunteer"]],
 		},
 
 		// Admin Group
@@ -122,19 +102,10 @@ const items = ref<NavigationMenuItem[]>(
 			label: "Admin",
 			icon: "i-lucide-shield",
 			open: true,
-			children: [
-				{ label: "Dashboard", to: adminDashboardPath, icon: "i-lucide-home" },
-				{ label: "Data Page", to: dataPath, icon: "i-heroicons-chart-bar" },
-				{
-					label: "Management",
-					icon: "i-lucide-settings",
-					open: true,
-					children: [
-						{ label: "Volunteers", to: manageVolunteerPath, icon: "i-lucide-users" },
-						{ label: "Sources", to: manageSourcePath, icon: "i-lucide-box" },
-					],
-				},
-			],
+			children: roleLinks["admin"].map((item) => ({
+				...item,
+				open: true,
+			})),
 		},
 	].filter(Boolean) as NavigationMenuItem[]
 ) // filter out nulls

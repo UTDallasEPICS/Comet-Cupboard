@@ -13,7 +13,7 @@
 		</template>
 
 		<div class="flex h-16 flex-row justify-between">
-			<img :src="`/api/image/${imgName}`" :alt="itemName" class="ml-2 aspect-square h-full border border-black object-cover" />
+			<img :src="`/api/public/image/${imgName}`" :alt="itemName" class="ml-2 aspect-square h-full border border-black object-cover" />
 			<div class="mt-auto flex flex-col items-end gap-2">
 				<p class="">Current Qty: {{ adjustedCount }}</p>
 				<p class="">Change: {{ changeInCount }}</p>

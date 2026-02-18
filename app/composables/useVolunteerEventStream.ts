@@ -12,7 +12,7 @@ export const useVolunteerEventStream = () => {
 			return
 		}
 
-		eventStream = new EventSource(`${config.public.LOCAL_URL}api/events/volunteer`)
+		eventStream = new EventSource(`${config.public.LOCAL_URL}api/volunteer/events/volunteer`)
 
 		eventStream.onopen = () => {
 			toast.add({

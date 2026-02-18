@@ -4,7 +4,7 @@ export const useQueueStore = defineStore("queue", () => {
 
 	const getQueue = async () => {
 		try {
-			const response = await $fetch("/api/queue/public")
+			const response = await $fetch("/api/student/queue/public")
 			if (response) {
 				queue.value = response
 			}
@@ -15,7 +15,7 @@ export const useQueueStore = defineStore("queue", () => {
 
 	const updateQueueStatus = async () => {
 		try {
-			const response = await $fetch("/api/queue/status")
+			const response = await $fetch("/api/student/queue/status")
 			if (response) {
 				queueStatus.value = response
 			}

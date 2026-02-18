@@ -25,7 +25,7 @@
 		</template>
 
 		<div class="flex h-16 flex-row justify-between">
-			<img :src="`/api/image/${imgName}`" :alt="itemName" class="ml-2 aspect-square h-full border border-black object-cover" />
+			<img :src="`/api/public/image/${imgName}`" :alt="itemName" class="ml-2 aspect-square h-full border border-black object-cover" />
 			<div class="mt-auto flex flex-col items-end gap-2">
 				<div class="flex flex-row items-center gap-2">
 					<p>Qty:</p>
@@ -96,9 +96,9 @@ const route = useRoute()
 const categoryName = route.params.categoryName as string
 
 const editMenuItems = ref<DropdownMenuItem[]>([
-	{ label: "Edit", onClick: () => navigateTo(`/inventory/${categoryName}/${props.itemID}/edit`) },
-	{ label: "Item Deal", onClick: () => navigateTo(`/inventory/${categoryName}/${props.itemID}/deal`) },
-	{ label: "Delete", onClick: () => navigateTo(`/inventory/${categoryName}/${props.itemID}/delete`) },
+	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${categoryName}/${props.itemID}/edit`) },
+	{ label: "Item Deal", onClick: () => navigateTo(`/volunteer/inventory/${categoryName}/${props.itemID}/deal`) },
+	{ label: "Delete", onClick: () => navigateTo(`/volunteer/inventory/${categoryName}/${props.itemID}/delete`) },
 ])
 
 const dealExists = computed(() => {

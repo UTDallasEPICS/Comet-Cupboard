@@ -12,8 +12,8 @@
 					<SharedTextHeroDescription class="mt-6 text-white"> Supporting academic success by meeting basic needs. </SharedTextHeroDescription>
 
 					<div class="mt-10 flex flex-row gap-4">
-						<UButton size="xl" variant="solid" to="/landing/login"> Student Login </UButton>
-						<UButton size="xl" variant="solid" to="/landing/login"> Volunteer Login </UButton>
+						<UButton size="xl" variant="solid" to="/login"> Student Login </UButton>
+						<UButton size="xl" variant="solid" to="/login"> Volunteer Login </UButton>
 					</div>
 				</div>
 			</UContainer>

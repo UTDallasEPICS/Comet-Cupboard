@@ -20,12 +20,12 @@
 		</template>
 
 		<div class="flex h-16 flex-row justify-between">
-			<img :src="`/api/image/${imgName}`" :alt="name" class="ml-2 aspect-square h-full border border-black object-cover" />
-			<div class="mt-auto flex flex-row gap-2 items-center">
+			<img :src="`/api/public/image/${imgName}`" :alt="name" class="ml-2 aspect-square h-full border border-black object-cover" />
+			<div class="mt-auto flex flex-row items-center gap-2">
 				<p>QTY</p>
 				<div class="flex items-center gap-1">
 					<UButton icon="i-heroicons-minus" size="xs" variant="soft" :disabled="props.count <= 1 || isSaving" @click="decrement" />
-					<div class="flex items-center justify-center rounded w-8">
+					<div class="flex w-8 items-center justify-center rounded">
 						{{ props.count }}
 					</div>
 					<UButton icon="i-heroicons-plus" size="xs" variant="soft" :disabled="isSaving" @click="increment" />
@@ -61,7 +61,7 @@ const badgeType = computed(() => {
 const isSaving = ref(false)
 
 const increment = async () => {
-	await $fetch("/api/cart/cartItemCount", {
+	await $fetch("/api/student/cart/cartItemCount", {
 		method: "POST",
 		body: { itemID: props.itemID, incrementChange: 1 },
 	})
@@ -71,7 +71,7 @@ const increment = async () => {
 
 const decrement = async () => {
 	if (props.count <= 1) return
-	await $fetch("/api/cart/cartItemCount", {
+	await $fetch("/api/student/cart/cartItemCount", {
 		method: "POST",
 		body: { itemID: props.itemID, incrementChange: -1 },
 	})
@@ -80,7 +80,7 @@ const decrement = async () => {
 }
 
 const removeCartItem = async () => {
-	await $fetch("/api/cart/cartItem", {
+	await $fetch("/api/student/cart/cartItem", {
 		method: "DELETE",
 		body: { itemID: props.itemID },
 	})

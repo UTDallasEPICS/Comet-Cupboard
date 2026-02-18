@@ -52,6 +52,6 @@ const markExpiredItems = ref(false)
 const submitCart = async () => {
 	if (cartItems.value.length === 0) return
 	resetCartView()
-	await navigateTo("/shopping/checkout")
+	await navigateTo("/student/shopping/checkout")
 }
 </script>

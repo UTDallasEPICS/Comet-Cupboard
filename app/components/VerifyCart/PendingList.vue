@@ -32,7 +32,7 @@ const props = defineProps({
 
 const emit = defineEmits(["update:select-cart"])
 
-const { data: pendingCarts } = await useFetch("/api/verification/pendingCarts")
+const { data: pendingCarts } = await useFetch("/api/volunteer/verification/pendingCarts")
 
 const pendingCartsList = ref(pendingCarts.value)
 

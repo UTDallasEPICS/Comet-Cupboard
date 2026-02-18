@@ -83,7 +83,7 @@ const { data: cart } = await useAsyncData(
 		if (props.cartID === "") {
 			return await Promise.resolve(null)
 		}
-		return $fetch("/api/verification/pendingCart", {
+		return $fetch("/api/volunteer/verification/pendingCart", {
 			query: { cartID: props.cartID },
 		})
 	},
@@ -155,7 +155,7 @@ const cartTotalCount = computed(() => {
 })
 
 const rejectCart = async () => {
-	await $fetch("/api/verification/cartVerificationAction", {
+	await $fetch("/api/volunteer/verification/cartVerificationAction", {
 		method: "POST",
 		body: { cartID: props.cartID, action: "REJECT", reason: reason.value },
 	})
@@ -164,7 +164,7 @@ const rejectCart = async () => {
 }
 
 const acceptCart = async () => {
-	await $fetch("/api/verification/cartVerificationAction", {
+	await $fetch("/api/volunteer/verification/cartVerificationAction", {
 		method: "POST",
 		body: { cartID: props.cartID, action: "ACCEPT", reason: reason.value },
 	})

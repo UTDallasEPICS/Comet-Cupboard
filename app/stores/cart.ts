@@ -12,7 +12,7 @@ export const useCartStore = defineStore("cart", () => {
 
 	const getCart = async () => {
 		try {
-			cart.value = await $fetch("/api/cart/cart")
+			cart.value = await $fetch("/api/student/cart/cart")
 			if (!cart.value) {
 				cart.value = {}
 			}

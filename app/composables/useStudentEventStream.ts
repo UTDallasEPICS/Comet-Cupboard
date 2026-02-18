@@ -20,7 +20,7 @@ export const useStudentEventStream = () => {
 			return
 		}
 
-		eventStream = new EventSource(`${config.public.LOCAL_URL}api/events/student`)
+		eventStream = new EventSource(`${config.public.LOCAL_URL}api/student/events/student`)
 
 		eventStream.onopen = () => {
 			toast.add({
