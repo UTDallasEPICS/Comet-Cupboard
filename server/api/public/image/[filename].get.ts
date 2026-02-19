@@ -1,11 +1,5 @@
 import { z } from "zod"
 import { readFile } from "node:fs/promises"
-import { existsSync, mkdirSync } from "fs"
-
-const uploadDirectory = `${process.env.IMAGE_UPLOAD_DIRECTORY}`
-if (!existsSync(uploadDirectory)) {
-	mkdirSync(uploadDirectory)
-}
 
 const schema = z.object({
 	filename: z.string(),

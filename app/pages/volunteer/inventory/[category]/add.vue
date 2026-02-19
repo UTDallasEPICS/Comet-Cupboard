@@ -115,16 +115,15 @@ const onError = async (event: FormErrorEvent) => {
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 	try {
 		const formData = new FormData()
+		formData.append("name", event.data.itemName || "")
+		formData.append("categoryName", currentCategory.value as string)
 		if (event.data.image) {
 			formData.append("image", event.data.image)
 		}
-		const { imageName } = await $fetch("/api/public/image/image", {
-			method: "POST",
-			body: formData,
-		})
+
 		await $fetch("/api/volunteer/inventory/item", {
 			method: "PUT",
-			body: { name: event.data.itemName, categoryName: currentCategory.value, imgName: imageName },
+			body: formData,
 		})
 
 		navigateTo(`/volunteer/inventory/${currentCategory.value}`)
