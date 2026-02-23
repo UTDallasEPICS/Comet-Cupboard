@@ -1,9 +1,12 @@
 <template>
-	<div class="mt-4 w-full flex-1 overflow-y-auto pb-4">
-		<div v-if="cartItems.length === 0" class="mt-4 text-center text-gray-500">Your cart is empty</div>
-		<div v-else class="flex flex-col items-center gap-4">
-			<div v-for="cartItem in cartItems" :key="cartItem.Item.name" class="relative" style="width: 320px">
+	<UContainer>
+		<div v-if="cartItems.length === 0" class="py-12 text-center">
+			<SharedTextBase>Your cart is empty</SharedTextBase>
+		</div>
+		<div v-else>
+			<div class="flex w-full max-w-md flex-col items-center gap-4">
 				<ShoppingCartItemCard
+					v-for="cartItem in cartItems"
 					:key="cartItem.itemID"
 					class="w-full"
 					:count="cartItem.count"
@@ -21,12 +24,11 @@
 					@update:cart="getCart"
 				/>
 			</div>
+			<div class="flex justify-center pt-6">
+				<SharedButtonPositiveAction text="Proceed to Checkout" @click="proceedToCheckout" />
+			</div>
 		</div>
-
-		<div class="mt-2 mb-8 flex w-full justify-center">
-			<SharedButtonPositiveAction :text="'Proceed to Checkout'" @click="proceedToCheckout" />
-		</div>
-	</div>
+	</UContainer>
 </template>
 
 <script setup lang="ts">
