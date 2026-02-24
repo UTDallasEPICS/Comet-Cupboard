@@ -1,7 +1,7 @@
 import { z } from "zod"
-import { constructVerifyCartListCartRemovedEvent } from "~~/server/utils/eventsUtil"
 import { broadcastToVolunteers } from "~~/server/utils/volunteerStreamUtil"
 import { prisma } from "#server/utils/prismaUtil"
+import { constructCartSessionRemovedEvent } from "~~/server/utils/eventsUtil"
 
 const schema = z.object({
 	cartID: z.string(),
@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
 
 		await broadcastToVolunteers(JSON.stringify(constructVerifyCartListCartRemovedEvent(cartID)))
 		await messageToStudent(cartID, JSON.stringify(constructPendingVerificationAcceptedEvent(reason || "")))
-
+		await broadcastToVolunteers(JSON.stringify(constructCartSessionRemovedEvent(cartID)))
 		// await prisma.queueEntry.delete({ where: { netID: cartID } })
 		// await broadcastToQueue(JSON.stringify({ type: "QUEUE_DELETE", payload: { netID: cartID } }))
 

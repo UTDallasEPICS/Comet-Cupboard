@@ -63,6 +63,20 @@ export interface VerifyCartListCartRemovedEvent extends BaseEvent {
 	}
 }
 
+export interface CartSessionCreatedEvent extends BaseEvent {
+	type: "cartSession.created"
+	payload: {
+		cartID: string
+	}
+}
+
+export interface CartSessionRemovedEvent extends BaseEvent {
+	type: "cartSession.removed"
+	payload: {
+		cartID: string
+	}
+}
+
 export interface PendingVolunteerRequestRejectedEvent extends BaseEvent {
 	type: "volunteerRequest.rejected"
 }
@@ -88,3 +102,5 @@ export type AppEvent =
 	| VolunteerListUpdatedEvent
 	| PendingVolunteerRequestRejectedEvent
 	| PendingVolunteerRequestAcceptedEvent
+	| CartSessionCreatedEvent
+	| CartSessionRemovedEvent

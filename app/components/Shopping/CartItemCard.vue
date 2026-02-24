@@ -5,6 +5,7 @@
 		</template>
 		<template #body>
 			<div class="flex items-end gap-1">
+				<SharedTextBase>Quantity:</SharedTextBase>
 				<UButton icon="i-heroicons-minus" size="xs" variant="soft" :disabled="props.count <= 1 || isSaving" @click="decrement" />
 				<SharedTextBase class="w-8 text-center">{{ props.count }}</SharedTextBase>
 				<UButton icon="i-heroicons-plus" size="xs" variant="soft" :disabled="isSaving" @click="increment" />

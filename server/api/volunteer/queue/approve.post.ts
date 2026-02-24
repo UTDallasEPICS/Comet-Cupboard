@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/prismaUtil"
-import { constructQueueEntryApprovedEvent, constructQueueEntryApprovedVolunteerEvent } from "~~/server/utils/eventsUtil"
+import { constructCartSessionCreatedEvent, constructQueueEntryApprovedEvent, constructQueueEntryApprovedVolunteerEvent } from "~~/server/utils/eventsUtil"
 
 const schema = z.object({
 	netID: z.string(),
@@ -60,6 +60,7 @@ export default defineEventHandler(async (event) => {
 				})
 			)
 		)
+		await broadcastToVolunteers(JSON.stringify(constructCartSessionCreatedEvent(existingEntry.netID)))
 		return `User with netID ${netID} has been approved and moved to a cart`
 	})
 	return transaction

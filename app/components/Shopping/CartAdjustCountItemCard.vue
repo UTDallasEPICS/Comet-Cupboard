@@ -1,20 +1,27 @@
 <template>
 	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
-		<template #header-actions>
-			<UButton variant="ghost" icon="i-heroicons-x-mark" class="shrink-0" size="xs" @click="removeCartItem" />
-		</template>
 		<template #body>
 			<div class="mt-auto grid grid-cols-2 items-end gap-2">
 				<SharedTextBase class="text-end">QTY after Deals:</SharedTextBase>
 				<SharedTextBase class="text-center">{{ props.count }}</SharedTextBase>
 				<SharedTextBase class="text-end">Adjust Count:</SharedTextBase>
-				<div class="flex justify-center items-end gap-1">
-					<UButton icon="i-heroicons-minus" size="xs" variant="soft" :disabled="countAdjustment * -1 == props.count" @click="decrement" />
-					<SharedTextBase class="w-8 text-center">{{ countAdjustment }}</SharedTextBase>
-					<UButton icon="i-heroicons-plus" size="xs" variant="soft" :disabled="countAdjustment >= 0" @click="increment" />
+				<div class="flex justify-center">
+					<UInputNumber
+						v-model="countAdjustment"
+						placeholder="0"
+						:min="props.count * -1"
+						:max="0"
+						:increment="false"
+						:decrement="false"
+						class="w-12"
+						:ui="{
+							base: 'text-center',
+						}"
+						@blur="emit('update:modelValue', countAdjustment)"
+					/>
 				</div>
-                <SharedTextBase class="text-end">Final Count:</SharedTextBase>
-                <SharedTextBase class="text-center">{{ props.count + countAdjustment }}</SharedTextBase>
+				<SharedTextBase class="text-end">Final Count:</SharedTextBase>
+				<SharedTextBase class="text-center">{{ props.count + countAdjustment }}</SharedTextBase>
 			</div>
 		</template>
 	</SharedItemCard>
@@ -29,13 +36,6 @@ const props = defineProps({
 	count: { type: Number, default: 0 },
 })
 
+const emit = defineEmits(["update:modelValue"])
 const countAdjustment = ref(0)
-
-const increment = () => {
-	countAdjustment.value++
-}
-
-const decrement = () => {
-	countAdjustment.value--
-}
 </script>

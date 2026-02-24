@@ -13,6 +13,8 @@ import type {
 	QueueEntryVolunteer,
 	QueueSingleEntryVolunteerPayload,
 	QueueFullPayload,
+	CartSessionCreatedEvent,
+	CartSessionRemovedEvent,
 } from "#shared/types/events"
 
 export const constructHeartbeatEvent = (): HeartbeatEvent => {
@@ -61,6 +63,14 @@ export const constructVerifyCartListCartAddedEvent = (cart: any): VerifyCartList
 
 export const constructVerifyCartListCartRemovedEvent = (cartID: string): VerifyCartListCartRemovedEvent => {
 	return { type: "verifyCartList.cart.removed", payload: { cartID } }
+}
+
+export const constructCartSessionCreatedEvent = (cartID: string): CartSessionCreatedEvent => {
+	return { type: "cartSession.created", payload: { cartID } }
+}
+
+export const constructCartSessionRemovedEvent = (cartID: string): CartSessionRemovedEvent => {
+	return { type: "cartSession.removed", payload: { cartID } }
 }
 
 export const constructPendingVolunteerRequestRejectedEvent = (): PendingVolunteerRequestRejectedEvent => {

@@ -5,12 +5,20 @@ const listeners: ((event: AppEvent) => void)[] = []
 export const useVolunteerEventStream = () => {
 	const queue = useQueueStore()
 	const { handleVolunteerQueueEvent } = queue
+	const cartSessions = useCartSessionsStore()
+	const { handleCartSessionEvent } = cartSessions
 	const toast = useToast()
 	const config = useRuntimeConfig()
 
 	const dispatchVolunteerQueueEvent = async (event: AppEvent) => {
 		if (["queue.queueUpdated", "queue.entryApproved", "queue.entryRemoved", "queue.entryAdded"].includes(event.type)) {
 			await handleVolunteerQueueEvent(event)
+		}
+	}
+
+	const dispatchCartSessionEvent = async (event: AppEvent) => {
+		if (["cartSession.created", "cartSession.removed"].includes(event.type)) {
+			await handleCartSessionEvent(event)
 		}
 	}
 
@@ -37,17 +45,8 @@ export const useVolunteerEventStream = () => {
 				listeners.forEach((listener) => listener(event))
 
 				dispatchVolunteerQueueEvent(event)
-
-				toast.add({
-					title: "Event received",
-					description: `Received event of type: ${event.type}`,
-				})
-			} catch (error) {
-				toast.add({
-					title: "Error parsing event",
-					description: `Failed to parse event data: ${error}`,
-				})
-			}
+				dispatchCartSessionEvent(event)
+			} catch (error) {}
 		}
 
 		eventStream.onerror = () => {

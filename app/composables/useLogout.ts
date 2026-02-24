@@ -18,6 +18,7 @@ export const useLogout = () => {
 		netIDCookie.value = null
 		clearPermissions()
 		await navigateTo("/")
+		reloadNuxtApp()
 	}
 
 	return { logout }

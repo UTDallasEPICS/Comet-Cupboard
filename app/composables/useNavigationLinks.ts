@@ -18,16 +18,16 @@ export const useNavigationLinks = () => {
 				to: "/student",
 			},
 			{
-				label: "Shopping",
-				description: "Browse available items",
-				icon: "i-lucide-shopping-cart",
-				to: "/student/shopping",
-			},
-			{
 				label: "Queue",
 				description: "Join or view your queue status",
 				icon: "i-lucide-clock",
 				to: "/student/queue",
+			},
+			{
+				label: "Shopping",
+				description: "Browse available items",
+				icon: "i-lucide-shopping-cart",
+				to: "/student/shopping",
 			},
 		],
 

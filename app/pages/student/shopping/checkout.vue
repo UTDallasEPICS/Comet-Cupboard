@@ -54,16 +54,10 @@
 
 					<template #AdjustCounts>
 						<USeparator class="mb-4" />
-
 						<div class="flex flex-col gap-4">
 							<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 								<li v-for="cartItem in cartItems" :key="cartItem.itemID">
 									<ShoppingCartAdjustCountItemCard
-										class="w-full"
-										:count="cartItem.count"
-										:img-name="cartItem.Item.imgName"
-										:item-i-d="cartItem.itemID"
-										:name="cartItem.Item.name"
 										:item-deal="
 											cartItem.Item.Deal
 												? {
@@ -71,6 +65,16 @@
 														adjustedCount: cartItem.Item.Deal.adjustedCount,
 													}
 												: {}
+										"
+										class="w-full"
+										:count="cartItem.count"
+										:img-name="cartItem.Item.imgName"
+										:item-i-d="cartItem.itemID"
+										:name="cartItem.Item.name"
+										@update:model-value="
+											(countAdjustment) => {
+												countAdjustments[cartItem.itemID] = countAdjustment
+											}
 										"
 									/>
 								</li>
@@ -85,7 +89,7 @@
 					<template #ReviewCart>
 						<USeparator class="mb-4" />
 
-						<p>Here is where you would review the cart if we allowed it on this page</p>
+						<p>{{ countAdjustments }}</p>
 						<div class="flex flex-row justify-between gap-4">
 							<SharedButtonCancel text="Back" @click="decrementStepper" />
 							<SharedButtonPositiveAction text="Confirm and Submit Cart" @click="submitCart" />
@@ -189,6 +193,8 @@ const unsubscribe = onEvent((event) => {
 	}
 })
 
+const countAdjustments = ref<Record<string, number>>({})
+
 onBeforeUnmount(() => {
 	unsubscribe()
 })
@@ -210,9 +216,19 @@ const submitCart = async () => {
 		return
 	}
 
+	const allCartItemAdjustments = cartItems.value.map((cartItem) => {
+		return {
+			itemID: cartItem.itemID,
+			countAdjustment: -1 * countAdjustments.value[cartItem.itemID] || 0,
+		}
+	})
+
 	// send the cart to verification
 	await $fetch("/api/student/verification/cartRequestVerification", {
 		method: "POST",
+		body: {
+			adjustments: allCartItemAdjustments,
+		},
 	})
 	incrementStepper()
 }

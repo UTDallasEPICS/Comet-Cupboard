@@ -42,7 +42,7 @@
 
 		<template #right>
 			<USlideover
-				v-if="true"
+				v-if="!isEmptyObject(inventoryStore.quantityChanges)"
 				v-model:open="reviewChangesView"
 				side="right"
 				title="Preview Inventory Changes"
@@ -57,7 +57,7 @@
 					size: 'xl',
 				}"
 			>
-				<UChip :text="quantityItemsChanged" size="3xl">
+				<UChip :show="showQuantityItemsChanged" :text="quantityItemsChanged" size="3xl">
 					<UButton variant="ghost" icon="i-lucide-box" class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent" />
 				</UChip>
 				<template #body>
@@ -65,7 +65,7 @@
 				</template>
 			</USlideover>
 			<USlideover
-				v-if="true"
+				v-if="!isEmptyObject(cart)"
 				v-model:open="cartView"
 				side="right"
 				title="Preview Cart"
@@ -87,7 +87,7 @@
 					<ShoppingCartDrawer />
 				</template>
 			</USlideover>
-			<UButton v-if="true" variant="outline" icon="ci:log-out" size="xl" @click="logout" />
+			<UButton v-if="canStudentAccess" variant="outline" icon="ci:log-out" size="xl" @click="logout" />
 		</template>
 	</UHeader>
 </template>
@@ -98,9 +98,11 @@ import type { NavigationMenuItem } from "@nuxt/ui"
 const cartStore = useCartStore()
 const inventoryStore = useInventoryStore()
 const permissions = usePermissionsStore()
-const { cartView, cartTotalCount } = storeToRefs(cartStore)
+const { cart, cartView, cartTotalCount } = storeToRefs(cartStore)
 const { canStudentAccess, canVolunteerAccess, canAdminAccess } = storeToRefs(permissions)
 const { reviewChangesView, quantityItemsChanged } = storeToRefs(inventoryStore)
+const showQuantityItemsChanged = computed(() => quantityItemsChanged.value > 0)
+
 const { logout } = useLogout()
 const { roleLinks } = useNavigationLinks()
 
