@@ -6,7 +6,7 @@
 		<template #body>
 			<div class="mt-auto flex flex-col items-end gap-2">
 				<SharedTextBase>Current Qty: {{ quantity }}</SharedTextBase>
-				<SharedTextBase>Change: {{ changeInCount }}</SharedTextBase>
+				<SharedTextBase>Change: {{ changeCount }}</SharedTextBase>
 			</div>
 		</template>
 	</SharedItemCard>
@@ -34,14 +34,9 @@ const props = defineProps({
 		type: Number,
 		default: 0,
 	},
-	newQuantity: {
+	changeCount: {
 		type: Number,
 		default: 0,
 	},
-})
-
-const changeInCount = computed(() => {
-	const dif = props.newQuantity - props.quantity
-	return dif > 0 ? `+${dif}` : `${dif}`
 })
 </script>

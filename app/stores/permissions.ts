@@ -1,4 +1,3 @@
-// stores/permissions.ts
 export const usePermissionsStore = defineStore("permissions", () => {
 	const access = ref<Record<string, boolean>>({})
 

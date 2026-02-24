@@ -43,6 +43,29 @@
 		<template #right>
 			<USlideover
 				v-if="true"
+				v-model:open="reviewChangesView"
+				side="right"
+				title="Preview Inventory Changes"
+				:overlay="false"
+				:ui="{
+					content: 'max-w-112 mt-16 bg-final-page-bg',
+					header: 'bg-final-utd-orange',
+					title: 'text-white',
+					close: 'text-white hover:bg-transparent hover:text-black focus-visible:bg-transparent focus-visible:text-black focus-visible:ring-0 active:bg-transparent',
+				}"
+				:close="{
+					size: 'xl',
+				}"
+			>
+				<UChip :text="quantityItemsChanged" size="3xl">
+					<UButton variant="ghost" icon="i-lucide-box" class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent" />
+				</UChip>
+				<template #body>
+					<InventoryReviewChangesDrawer />
+				</template>
+			</USlideover>
+			<USlideover
+				v-if="true"
 				v-model:open="cartView"
 				side="right"
 				title="Preview Cart"
@@ -72,10 +95,12 @@
 <script lang="ts" setup>
 import type { NavigationMenuItem } from "@nuxt/ui"
 
-const store = useCartStore()
+const cartStore = useCartStore()
+const inventoryStore = useInventoryStore()
 const permissions = usePermissionsStore()
-const { cartView, cartTotalCount } = storeToRefs(store)
+const { cartView, cartTotalCount } = storeToRefs(cartStore)
 const { canStudentAccess, canVolunteerAccess, canAdminAccess } = storeToRefs(permissions)
+const { reviewChangesView, quantityItemsChanged } = storeToRefs(inventoryStore)
 const { logout } = useLogout()
 const { roleLinks } = useNavigationLinks()
 

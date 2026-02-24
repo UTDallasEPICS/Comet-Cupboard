@@ -1,47 +1,90 @@
 import { defineStore } from "pinia"
 
-export const useInventoryStore = defineStore("inventory", () => {
-	const changes = ref<
-		Record<
-			string,
-			{
-				oldCount: number
-				newCount: number
-				name: string
-				imgName: string
-			}
-		>
-	>({})
+interface QuantityChange {
+	quantity: number
+	countChange: number
+}
 
-	const updateItemCount = (item: { id: string; oldCount: number; newCount: number; name: string; imgName: string }) => {
-		changes.value = {
-			...changes.value,
-			[item.id]: {
-				oldCount: item.oldCount,
-				newCount: item.newCount,
-				name: item.name,
-				imgName: item.imgName,
-			},
+export const useInventoryStore = defineStore("inventory", () => {
+	const quantityChanges = ref<Record<string, QuantityChange>>({})
+
+	const quantityItemsChanged = computed(() => {
+		return Object.keys(quantityChanges.value).length
+	})
+
+	const reviewChangesView = ref(false)
+
+	const resetReviewChangesView = () => {
+		reviewChangesView.value = false
+	}
+
+	const getQuantityChange = (itemID: string) => {
+		if (!Object.keys(quantityChanges.value).includes(itemID)) {
+			return {
+				quantity: 0,
+				countChange: 0,
+			}
+		} else {
+			return quantityChanges.value[itemID]
 		}
 	}
 
-	const removeItem = (id: string) => {
-		if (!changes.value[id]) return
-		delete changes.value[id]
+	const updateQuantityChange = (payload: { itemID: string; quantity: number; countChange: number }) => {
+		const { itemID, quantity, countChange } = payload
+
+		if (!Object.keys(quantityChanges.value).includes(itemID)) {
+			quantityChanges.value[itemID] = {
+				quantity: quantity,
+				countChange: countChange,
+			}
+			return
+		}
+
+		if (countChange === 0) {
+			delete quantityChanges.value[itemID]
+			return
+		}
+
+		quantityChanges.value[itemID] = {
+			quantity: quantityChanges.value[itemID].quantity + countChange,
+			countChange: countChange,
+		}
 	}
 
-	const resetChanges = () => {
-		changes.value = {}
+	const resetQuantityChanges = () => {
+		quantityChanges.value = {}
 	}
 
-	const changedList = computed(() => {
-		return Object.entries(changes.value).map(([id, data]) => ({
-			id,
-			...data,
-		}))
-	})
+	const submitChanges = async (source: string, fieldMap?: Record<string, string>) => {
+		try {
+			await $fetch("/api/volunteer/inventory/itemCountChanges", {
+				method: "POST",
+				body: {
+					source: source,
+					inventoryCountChanges: Object.entries(quantityChanges.value).map(([itemID, change]) => {
+						return {
+							itemID: itemID,
+							countChange: change.countChange,
+						}
+					}),
+					fieldMap: fieldMap,
+				},
+			})
+			resetQuantityChanges()
+			await navigateTo("/volunteer/inventory")
+			reloadNuxtApp()
+			resetReviewChangesView()
+		} catch (e) {}
+	}
 
-	const totalChanges = computed(() => changedList.value.length)
-
-	return { changes, updateItemCount, removeItem, resetChanges, changedList, totalChanges }
+	return {
+		quantityChanges,
+		quantityItemsChanged,
+		updateQuantityChange,
+		resetQuantityChanges,
+		submitChanges,
+		reviewChangesView,
+		resetReviewChangesView,
+		getQuantityChange,
+	}
 })

@@ -6,10 +6,6 @@ export const useCartStore = defineStore("cart", () => {
 		cartView.value = false
 	}
 
-	const toggleCartView = () => {
-		cartView.value = !cartView.value
-	}
-
 	const getCart = async () => {
 		try {
 			cart.value = await $fetch("/api/student/cart/cart")
@@ -48,5 +44,5 @@ export const useCartStore = defineStore("cart", () => {
 		return false
 	})
 
-	return { cart, cartView, cartItems, cartTotalCount, cartAdjustedCount, pending, getCart, toggleCartView, resetCartView }
+	return { cart, cartView, cartItems, cartTotalCount, cartAdjustedCount, pending, getCart, resetCartView }
 })

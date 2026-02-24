@@ -21,22 +21,16 @@
 			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 				<li v-for="item in filteredItems" :key="item.itemID">
 					<InventoryItemCard
-						:change-count="inventoryStore.changes[item.itemID]?.newCount - inventoryStore.changes[item.itemID]?.oldCount || 0"
+						:change-count="quantityChanges[item.itemID]?.countChange || 0"
 						:current-count="item.quantity"
 						:img-name="item.imgName"
 						:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
 						:item-i-d="item.itemID"
 						:name="item.name"
-						@change-amount-update="updateItemChangeAmount"
 					/>
 				</li>
 			</ul>
 		</section>
-
-		<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
-			<SharedButtonPositiveAction v-if="Object.keys(inventoryStore.changes || {}).length === 0" text="No Changes" disabled />
-			<SharedButtonPositiveAction v-else text="Review Changes" @click="navigateTo(`/volunteer/inventory/${currentCategory}/review-changes`)" />
-		</footer>
 	</UContainer>
 </template>
 
@@ -47,6 +41,7 @@ const searchQuery = ref("")
 const route = useRoute()
 const currentCategory = route.params.category as string
 const inventoryStore = useInventoryStore()
+const { quantityChanges } = storeToRefs(inventoryStore)
 
 const { data: items } = await useFetch("/api/student/inventory/items")
 
@@ -82,27 +77,4 @@ const filteredItems = computed(() => {
 })
 
 const filteredItemsNames = computed(() => filteredItems.value.map((item) => item.name))
-
-const updateItemChangeAmount = (itemID: string, amountChange: number) => {
-	const item = items.value?.find((i) => i.itemID === itemID)
-	if (!item) return
-
-	const existingChange = inventoryStore.changes[itemID]
-	const oldCount = item.quantity
-	const currentNewCount = existingChange?.newCount ?? oldCount
-	const newCount = currentNewCount + amountChange
-
-	if (newCount === oldCount) {
-		inventoryStore.removeItem(itemID)
-		return
-	}
-
-	inventoryStore.updateItemCount({
-		id: itemID,
-		oldCount,
-		newCount,
-		name: item.name,
-		imgName: item.imgName,
-	})
-}
 </script>

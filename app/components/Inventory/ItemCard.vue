@@ -81,24 +81,31 @@ const props = defineProps({
 const route = useRoute()
 const currentCategory = route.params.category as string
 
+const inventoryStore = useInventoryStore()
+const { getQuantityChange, updateQuantityChange } = inventoryStore
+
 const editMenuItems = ref<DropdownMenuItem[]>([
 	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/edit`) },
 	{ label: "Item Deal", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/deal`) },
 	{ label: "Delete", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/delete`) },
 ])
 
-const emit = defineEmits<{
-	(e: "changeAmountUpdate", itemID: string, amountChange: number): void
-}>()
-
 const adjustAmount = ref(1)
 
 const increment = () => {
-	emit("changeAmountUpdate", props.itemID, adjustAmount.value)
+	updateQuantityChange({
+		itemID: props.itemID,
+		quantity: getQuantityChange(props.itemID).quantity,
+		countChange: getQuantityChange(props.itemID).countChange + adjustAmount.value,
+	})
 }
 
 const decrement = () => {
-	emit("changeAmountUpdate", props.itemID, -adjustAmount.value)
+	updateQuantityChange({
+		itemID: props.itemID,
+		quantity: getQuantityChange(props.itemID).quantity,
+		countChange: getQuantityChange(props.itemID).countChange - adjustAmount.value,
+	})
 }
 
 const displayChange = computed(() => {
