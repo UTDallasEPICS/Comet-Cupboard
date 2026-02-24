@@ -1,167 +1,174 @@
 <template>
-	<div>
-		<div v-if="item" class="mt-20 flex flex-col items-center justify-center gap-y-8 pt-10">
-			<div class="shadow-md relative flex h-80 w-full max-w-80 flex-col items-center justify-center gap-3 overflow-hidden rounded-xl bg-white">
-				<img v-if="imageUrl" :src="imageUrl" class="absolute inset-0 h-full w-full object-cover" />
-				<label
-					:class="{ 'bg-opacity-60': imageUrl }"
-					for="fileInput"
-					class="shadow-md z-10 flex h-16 w-40 cursor-pointer flex-row items-center justify-center gap-3 gap-x-3 rounded-xl"
-				>
-					<div class="flex flex-row items-center gap-x-3">
-						<CloudArrowUpIcon class="h-12 w-12 text-white" />
-						<p class="text-white">Upload</p>
-					</div>
-				</label>
-				<input id="fileInput" accept=".jpg, .jpeg, .png" type="file" @change="handleFileUpload" class="hidden" />
-			</div>
-			<div class="flex flex-col items-center">
-				<input
-					placeholder="Item Name (Limit 20 Characters)"
-					type="text"
-					v-model="itemName"
-					@input="validateInput"
-					class="w-80 w-full border-none bg-transparent text-left text-black outline-none"
-				/>
-				<div class="-mt-1 h-[2px] w-72 rounded-xl"></div>
-			</div>
-			<Listbox v-model="selectedCategory" v-slot="{ open }">
-				<div class="relative">
-					<ListboxButton
-						class="modal-buttonflex w-72 flex-row items-center border-2 bg-white px-4 text-left"
-					>
-						<div class="grow">
-							{{ selectedCategory || "Category" }}
+	<UContainer class="py-8">
+		<header>
+			<SharedButtonNavigateBack :text="'Back to ' + currentCategory" :to="{ path: `/volunteer/inventory/${currentCategory}` }" />
+			<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
+		</header>
+
+		<section class="mt-4">
+			<SharedTextSectionTitle>Edit {{ currentCategory }} Item</SharedTextSectionTitle>
+			<div class="mx-auto w-min">
+				<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
+					<UFormField id="image" name="image" label="Item Image" description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels">
+						<div class="flex flex-col gap-2">
+							<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
 						</div>
-						<ChevronUpIcon v-if="open" class="h-5" />
-						<ChevronDownIcon v-else class="h-5" />
-					</ListboxButton>
-					<ListboxOptions
-						class="shadow-md absolute top-12 z-50 max-h-36 w-full divide-y overflow-y-auto overscroll-contain rounded-xl bg-white"
+					</UFormField>
+					<UFormField
+						id="itemName"
+						name="itemName"
+						label="Item Name"
+						description="Item name must be at most 20 characters and only contain letters and spaces"
 					>
-						<ListboxOption
-							v-for="category in categories"
-							:key="category.name"
-							:value="category.name"
-							class="hover:cursor-pointer p-1 text-center text-wrap"
-						>
-							{{ category.name }}
-						</ListboxOption>
-					</ListboxOptions>
-				</div>
-			</Listbox>
-			<!-- Footer Buttons -->
-			<div class="mt-20 flex flex-row gap-x-4">
-				<button @click="goBack" class="shadow-md flex h-12 w-32 items-center justify-center rounded-xl">
-					<p class="text-white">Cancel</p>
-				</button>
-				<button @click="editItemSubmit" class="shadow-md flex h-12 w-32 items-center justify-center rounded-xl">
-					<p class="text-white">Submit</p>
-				</button>
+						<UInput v-model="state.itemName" placeholder="Enter item name" />
+					</UFormField>
+					<UFormField id="category" name="category" label="Category" description="Select the category for this item">
+						<USelect v-model="state.category" :items="categoryOptions" placeholder="Select category" />
+					</UFormField>
+					<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
+						<SharedButtonPositiveAction type="submit" text="Submit" />
+					</footer>
+				</UForm>
 			</div>
-		</div>
-	</div>
+		</section>
+	</UContainer>
 </template>
 
 <script lang="ts" setup>
-import { CloudArrowUpIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/vue/24/solid"
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/vue"
-import { useRoute, navigateTo } from "#imports"
+import * as z from "zod"
+import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui"
 
 const route = useRoute()
-const categoryName = route.params.categoryName as string
+const currentCategory = route.params.category as string
 const itemID = route.params.itemID as string
 
-// Fetch item data based on route
-const { data: item } = await useFetch(`/api/student/inventory/item`, {
-	params: { itemID },
+const { data: item } = await useFetch("/api/student/inventory/item/", {
+	query: { itemID },
 })
 
 const { data: categories } = await useFetch("/api/volunteer/controls/categories")
 
-const itemName = ref("")
-const imageFile = ref<File | null>(null)
-const imageUrl = ref("")
-const selectedCategory = ref<string | null>(null)
+const categoryOptions = computed(() => {
+	return categories.value?.map((category) => {
+		return category.name
+	})
+})
 
-watchEffect(() => {
+const originalImage = ref<Blob | null>(null)
+
+const state = ref<Partial<Schema>>({
+	image: originalImage.value
+		? new File([originalImage.value], item.value?.imgName, {
+				type: originalImage.value.type,
+			})
+		: undefined,
+	itemName: item.value?.name || undefined,
+	category: item.value?.categoryName || undefined,
+})
+
+watchEffect(async () => {
 	if (item.value) {
-		itemName.value = item.value.name || ""
-		selectedCategory.value = item.value.categoryName || null
-		imageUrl.value = item.value.imgName ? `/api/public/image/${item.value.imgName}` : ""
-	}
-})
-
-watch(imageFile, (newFile) => {
-	if (newFile) {
-		imageUrl.value = URL.createObjectURL(newFile)
-	} else if (item.value?.imgName) {
-		imageUrl.value = `/api/public/image/${item.value.imgName}`
+		originalImage.value = await $fetch<Blob>(`/api/public/image/${item.value.imgName}`, { responseType: "blob" })
+		state.value.image = new File([originalImage.value], item.value.imgName, {
+			type: originalImage.value.type,
+		})
 	} else {
-		imageUrl.value = ""
+		originalImage.value = null
 	}
 })
 
-const handleFileUpload = (event: Event) => {
-	const target = event.target as HTMLInputElement
-	if (target.files && target.files.length > 0) {
-		imageFile.value = target.files[0]!
-	}
+const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
+const MIN_DIMENSIONS = { width: 200, height: 200 }
+const MAX_DIMENSIONS = { width: 4096, height: 4096 }
+
+type Schema = {
+	image: File | undefined
+	itemName: string | undefined
+	category: string | undefined
 }
 
-const editItemSubmit = async () => {
-	try {
-		let imgName = item.value?.imgName
+const checkImageDimensions = async (file: File): Promise<boolean> => {
+	const dataUrl = await new Promise<string>((resolve, reject) => {
+		const reader = new FileReader()
+		reader.onload = (e) => resolve(e.target?.result as string)
+		reader.onerror = reject
+		reader.readAsDataURL(file)
+	})
 
-		if (imageFile.value) {
-			const formData = new FormData()
-			formData.append("image", imageFile.value)
-			const { imageName } = await $fetch("/api/public/image/image", {
-				method: "POST",
-				body: formData,
-			})
-			imgName = imageName
+	return await new Promise<boolean>((resolve, reject) => {
+		const img = new Image()
+		img.onload = () => {
+			const valid =
+				img.width >= MIN_DIMENSIONS.width &&
+				img.height >= MIN_DIMENSIONS.height &&
+				img.width <= MAX_DIMENSIONS.width &&
+				img.height <= MAX_DIMENSIONS.height
+			resolve(valid)
+		}
+		img.onerror = reject
+		img.src = dataUrl
+	})
+}
+
+const schema = z.object({
+	image: z
+		.file()
+		.mime(["image/jpeg", "image/jpg", "image/png"], {
+			message: "Invalid image type (JPG/PNG only)",
+		})
+		.max(MAX_FILE_SIZE, { message: "Image is too large (max 2MB)" })
+		.refine(
+			async (file) =>
+				checkImageDimensions(file).then(
+					(valid) => valid,
+					() => false
+				),
+			{
+				message: `Image dimensions must be between ${MIN_DIMENSIONS.width}x${MIN_DIMENSIONS.height} and ${MAX_DIMENSIONS.width}x${MAX_DIMENSIONS.height} pixels`,
+			}
+		),
+	itemName: z
+		.string()
+		.min(1, "Item name is required")
+		.max(20, "Item name must be at most 20 characters")
+		.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
+	category: z.string().min(1, "Category is required"),
+})
+
+const validate = async (state: Partial<Schema>): Promise<FormError[]> => {
+	const errors = []
+	const result = await schema.safeParseAsync(state)
+	if (!result.success) {
+		errors.push(...result.error.issues.map((err) => ({ name: String(err.path[0]), message: err.message })))
+	}
+	return errors
+}
+
+const onError = async (event: FormErrorEvent) => {
+	if (event?.errors?.[0]?.id) {
+		const el = document.getElementById(event.errors[0].id)
+		el?.focus()
+		el?.scrollIntoView({ behavior: "smooth", block: "center" })
+	}
+}
+const onSubmit = async (event: FormSubmitEvent<Schema>) => {
+	try {
+		const formData = new FormData()
+		formData.append("itemID", itemID)
+		formData.append("name", event.data.itemName || "")
+		formData.append("categoryName", event.data.category || "")
+		if (event.data.image) {
+			formData.append("image", event.data.image)
 		}
 
 		await $fetch("/api/volunteer/inventory/item", {
 			method: "PUT",
-			body: {
-				itemID,
-				name: itemName.value,
-				categoryName: selectedCategory.value,
-				imgName,
-			},
+			body: formData,
 		})
 
-		navigateTo(`/volunteer/inventory/${categoryName}`)
+		navigateTo(`/volunteer/inventory/${currentCategory}`)
 	} catch (error) {
-		console.error("Error editing item:", error)
+		// idk for now
 	}
-}
-
-// --Page navigations for each button--
-// Goes back to the inventory page for the current category
-const goBack = () => {
-	navigateTo(`/volunteer/inventory/${categoryName}`)
-}
-
-// Input validation so input is only letters/symbols, and is limited to 20 characters
-function validateInput(e: Event) {
-	const inputElement = e.target as HTMLInputElement
-	const input = inputElement.value
-
-	let filtered = ""
-	for (const char of input) {
-		if (char < "0" || char > "9") {
-			filtered += char
-		}
-	}
-
-	if (filtered.length > 20) {
-		filtered = filtered.slice(0, 20)
-	}
-
-	inputElement.value = filtered
-	itemName.value = filtered
 }
 </script>

@@ -1,60 +1,51 @@
 <template>
-	<div>
-		<div class="mt-10 flex flex-col items-center justify-center gap-y-8 pt-10">
-			<V2SharedStatusMessageWarning :warningMessage="`Item ${itemName}' will be archived`" />
-			<div class="shadow-md relative flex h-80 w-full max-w-96 flex-col items-center justify-center gap-3 rounded-xl bg-white">
-				<!-- Delete confirmation text -->
-				<div class="flex w-full flex-col items-center justify-center px-8 text-center">
-					<p class="break-words text-black">Are you sure you want to delete</p>
-					<p class="break-words text-black">{{ itemName + "?" }}</p>
+	<UContainer class="py-8">
+		<header>
+			<SharedButtonNavigateBack :text="'Back to ' + currentCategory" :to="{ path: `/volunteer/inventory/${currentCategory}` }" />
+			<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
+		</header>
+
+		<section class="mt-4">
+			<SharedTextSectionTitle>Delete {{ item?.name }}</SharedTextSectionTitle>
+			<SharedBannerWarning :text="`Are you sure you want to delete ${item?.name}? This will archive the item.`" class="mt-4 w-full" />
+
+			<div class="mx-auto mt-4 w-min">
+				<div class="w-92">
+					<img
+						:src="`/api/public/image/${item?.imgName}`"
+						:alt="item?.name"
+						class="border-final-border-soft aspect-square h-full rounded-lg border object-cover"
+					/>
+					<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
+						<SharedButtonPositiveAction text="Confirm Delete" @click="confirm" />
+					</footer>
 				</div>
 			</div>
-			<!-- Footer Buttons -->
-			<div class="mt-20 flex flex-row gap-x-4">
-				<button @click="goBack" class="shadow-md flex h-12 w-32 items-center justify-center rounded-xl">
-					<p class="text-white">Cancel</p>
-				</button>
-				<button @click="deleteItemSubmit" class="shadow-md flex h-12 w-32 items-center justify-center rounded-xl">
-					<p class="text-white">Yes, Delete</p>
-				</button>
-			</div>
-		</div>
-	</div>
+		</section>
+	</UContainer>
 </template>
 
 <script lang="ts" setup>
-import { useRoute, navigateTo } from "#imports"
-
-const emit = defineEmits(["submit"])
 const route = useRoute()
-const currentCategory = route.params.categoryName as string
+const currentCategory = route.params.category as string
 const itemID = route.params.itemID as string
 
-// Fetch item data based on route
 const { data: item } = await useFetch(`/api/student/inventory/item`, {
 	params: { itemID },
 })
 
-const itemName = computed(() => item.value?.name ?? "")
-
-const toggleDeleteItem = () => {
-	emit("submit")
-}
-
-const deleteItemSubmit = async () => {
-	if (!item.value) return
-
-	await $fetch("/api/volunteer/inventory/item", {
-		method: "DELETE",
-		body: { itemID: item.value.itemID },
-	})
-	toggleDeleteItem()
-
-	navigateTo(`/volunteer/inventory/${currentCategory}`)
-}
-
-// Goes back to the inventory page for the current category
-const goBack = () => {
-	navigateTo(`/volunteer/inventory/${currentCategory}`)
+const confirm = async () => {
+	try {
+		if (item.value) {
+			await $fetch("/api/volunteer/inventory/item", {
+				method: "DELETE",
+				body: { itemID: item.value.itemID },
+			})
+		}
+	} catch (error) {
+		// idk for now
+	} finally {
+		navigateTo(`/volunteer/inventory/${currentCategory}`)
+	}
 }
 </script>

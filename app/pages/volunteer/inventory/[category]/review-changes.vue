@@ -1,70 +1,58 @@
 <template>
-	<div class="p-4">
-		<USelect v-model="selectedSource" :items="sources.map((s) => s.name)" placeholder="Select source" class="w-48" />
-		<!-- Metadata input field -->
-		<div v-if="fields.length > 0" class="flex flex-col gap-3 lg:flex-row">
-				<div v-for="fieldName in fields" :key="fieldName" class="flex w-72 flex-col gap-1">
-					<label :for="fieldName" class="">{{ fieldName }}</label>
+	<UContainer class="py-8">
+		<header>
+			<SharedButtonNavigateBack :text="'Back to ' + currentCategory" :to="{ path: `/volunteer/inventory/${currentCategory}` }" />
+			<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
+		</header>
 
-					<div
-						class="flex h-12 items-center rounded-md border border-gray-300 bg-white transition-all duration-50"
-						:class="{ 'focus-within:shadow-md focus-within:border-blue-400': true }"
-					>
-						<input
-							v-model="fieldInputs[fieldName]"
-							type="text"
-							placeholder="Enter data"
-							:id="fieldName"
-							class="w-full border-none bg-transparent pl-2 outline-none"
-						/>
-					</div>
-				</div>
+		<section class="mt-4">
+			<SharedTextSectionTitle>Review Changes</SharedTextSectionTitle>
+			<div class="mx-auto mt-4 flex w-full flex-row gap-4 sm:items-center sm:justify-start">
+				<USelectMenu
+					v-model="selectedSource"
+					:items="sources?.map((s) => s.name) || []"
+					ignore-filter
+					icon="i-lucide-database"
+					placeholder="Select a source"
+					class="grow"
+				/>
+				<!-- <div v-if="fields.length > 0" class="flex flex-col gap-3 lg:flex-row">
+					<UFormGroup v-for="fieldName in fields" :key="fieldName" :label="fieldName" class="w-72">
+						<UInput v-model="fieldInputs[fieldName]" :placeholder="'Enter data'" />
+					</UFormGroup>
+				</div> -->
 			</div>
-		<div :style="{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 250px))', gap: '1rem' }" class="mx-auto my-4 w-full">
-			<InventoryReviewItemCard
-				v-for="item in changedItems"
-				:key="item.id"
-				:adjusted-count="item.newCount"
-				:img-name="item.imgName"
-				:item-count="item.oldCount"
-				:item-name="item.name"
-			/>
-		</div>
+			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				<li v-for="item in changedItems" :key="item.id">
+					<InventoryReviewItemCard
+						:key="item.id"
+						:name="item.name"
+						:img-name="item.imgName"
+						:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
+						:item-i-d="item.id"
+						:quantity="item.oldCount"
+						:new-quantity="item.newCount"
+					/>
+				</li>
+			</ul>
+		</section>
 
-		<div class="lg_mt-0 lg_justify-end lg_self-end mt-32 flex flex-row gap-x-4">
-			<SharedButtonCancel text="Cancel" @click="goBack" />
-			<SharedButtonPositiveAction :disabled="!selectedSource" text="Submit" @click="submit" />
-		</div>
-	</div>
+		<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
+			<SharedButtonPositiveAction v-if="!selectedSource" text="No source selected" disabled />
+			<SharedButtonPositiveAction v-else text="Submit" @click="submit" />
+		</footer>
+	</UContainer>
 </template>
 
 <script lang="ts" setup>
 const route = useRoute()
-const category = route.params.category as string
-const selectedSource = ref<string | null>(null)
+const currentCategory = computed(() => route.params.category)
+const selectedSource = ref("")
 const { data: sources } = await useFetch("/api/volunteer/controls/sources")
 const fields = ref<string[]>([])
 const fieldInputs = ref<Record<string, string>>({})
 const inventoryStore = useInventoryStore()
 const changedItems = computed(() => inventoryStore.changedList)
-
-const goBack = () => {
-	navigateTo(`/volunteer/inventory/${category}`)
-}
-
-// Handling metadata being present in a source
-watch(selectedSource, async (newSource) => {
-	if (newSource) {
-		const { data } = await useFetch("/api/volunteer/controls/fields", {
-			query: { source: newSource },
-		})
-		fields.value = data.value?.map((field) => field.name) || []
-		fieldInputs.value = Object.fromEntries(fields.value.map((name) => [name, ""]))
-	} else {
-		fields.value = []
-		fieldInputs.value = {}
-	}
-})
 
 const submit = async () => {
 	try {
@@ -84,7 +72,7 @@ const submit = async () => {
 			},
 		})
 		inventoryStore.resetChanges()
-		navigateTo(`/volunteer/inventory/${category}`)
+		navigateTo(`/volunteer/inventory/${currentCategory.value}`)
 	} catch (error) {
 		console.error("Error submitting item count changes:", error)
 	}

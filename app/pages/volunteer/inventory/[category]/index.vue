@@ -9,8 +9,8 @@
 			<SharedTextSectionTitle class="sr-only">Edit {{ currentCategory }} Items</SharedTextSectionTitle>
 			<div class="mx-auto flex w-full flex-row gap-4 sm:items-center sm:justify-start">
 				<USelectMenu
-					v-model:search-term="searchTerm"
-					:items="categoryItems"
+					v-model:search-term="searchQuery"
+					:items="filteredItemsNames"
 					ignore-filter
 					icon="material-symbols:search"
 					placeholder="Search items"
@@ -19,7 +19,7 @@
 				<SharedButtonPositiveAction text="+ Add" :to="`/volunteer/inventory/${currentCategory}/add`" />
 			</div>
 			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-				<li v-for="item in filteredCategoryItems" :key="item.itemID">
+				<li v-for="item in filteredItems" :key="item.itemID">
 					<InventoryItemCard
 						:change-count="inventoryStore.changes[item.itemID]?.newCount - inventoryStore.changes[item.itemID]?.oldCount || 0"
 						:current-count="item.quantity"
@@ -33,9 +33,9 @@
 			</ul>
 		</section>
 
-		<footer class="sticky right-4 bottom-8 flex justify-end space-x-2 sm:ml-auto">
+		<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
 			<SharedButtonPositiveAction v-if="Object.keys(inventoryStore.changes || {}).length === 0" text="No Changes" disabled />
-			<SharedButtonPositiveAction v-else text="Review Changes" @click="goToReviewPage" />
+			<SharedButtonPositiveAction v-else text="Review Changes" @click="navigateTo(`/volunteer/inventory/${currentCategory}/review-changes`)" />
 		</footer>
 	</UContainer>
 </template>
@@ -43,44 +43,28 @@
 <script lang="ts" setup>
 import Fuse from "fuse.js"
 
-const searchTerm = ref("")
+const searchQuery = ref("")
 const route = useRoute()
-const currentCategory = computed(() => route.params.category)
+const currentCategory = route.params.category as string
 const inventoryStore = useInventoryStore()
-// Allow items to update based on sorting dropdown
-const reactiveItems = ref<any[]>([])
 
 const { data: items } = await useFetch("/api/student/inventory/items")
 
-// Populate reactiveItems
-// This basically observes items, and when items first become available the callback runs and copies
-// the array into reactiveItems.value
-// This allows computed cards to show after filtering
-watch(
-	items,
-	(val) => {
-		reactiveItems.value = val || []
-	},
-	{ immediate: true }
-)
-
-// Review Changes Button
-const goToReviewPage = () => {
-	// To avoid unexpected paths
-	const cat = currentCategory.value || route.params.categoryName
-	navigateTo(`/volunteer/inventory/${cat}/review-changes`)
-}
-
-// Watches reactiveItems and currentCategory, returns only items whose categoryName matches the URL
 const categoryItems = computed(() => {
-	return reactiveItems.value.filter((item) => item.categoryName?.toLowerCase() === currentCategory.value?.toLowerCase())
+	return (
+		items.value?.filter((item) => {
+			const itemCategory = item.categoryName?.trim().toLowerCase() || ""
+			const currentCategoryLower = currentCategory?.trim().toLowerCase() || ""
+			return itemCategory.includes(currentCategoryLower)
+		}) || []
+	)
 })
 
-const filteredCategoryItems = computed(() => {
+const filteredItems = computed(() => {
 	if (!categoryItems.value) return []
 
 	// Sort by search
-	const term = searchTerm.value.trim()
+	const term = searchQuery.value.trim()
 	let filtered: typeof categoryItems.value = []
 
 	if (!term) {
@@ -97,8 +81,10 @@ const filteredCategoryItems = computed(() => {
 	return filtered
 })
 
+const filteredItemsNames = computed(() => filteredItems.value.map((item) => item.name))
+
 const updateItemChangeAmount = (itemID: string, amountChange: number) => {
-	const item = reactiveItems.value.find((i) => i.itemID === itemID)
+	const item = items.value?.find((i) => i.itemID === itemID)
 	if (!item) return
 
 	const existingChange = inventoryStore.changes[itemID]
@@ -118,13 +104,5 @@ const updateItemChangeAmount = (itemID: string, amountChange: number) => {
 		name: item.name,
 		imgName: item.imgName,
 	})
-}
-
-const getChangeCount = (itemID: string) => {
-	const entry = inventoryStore.changes?.[itemID]
-	if (!entry) return 0
-	const newCount = entry.newCount ?? 0
-	const oldCount = entry.oldCount ?? 0
-	return newCount - oldCount
 }
 </script>

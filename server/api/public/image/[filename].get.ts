@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { set, z } from "zod"
 import { readFile } from "node:fs/promises"
 
 const schema = z.object({
@@ -14,6 +14,12 @@ export default defineEventHandler(async (event) => {
 	try {
 		// PLEASE OH PLEASE KEEP THIS ASYNC
 		const contents = await readFile(imagePath)
+		const fileType = filename.split(".").pop()?.toLowerCase()
+		if (fileType === "jpg" || fileType === "jpeg") {
+			setResponseHeader(event, "Content-Type", "image/jpeg")
+		} else if (fileType === "png") {
+			setResponseHeader(event, "Content-Type", "image/png")
+		}
 		return contents
 	} catch (err) {
 		if (err.code === "ENOENT") {

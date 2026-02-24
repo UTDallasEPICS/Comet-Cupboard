@@ -22,7 +22,9 @@
 					>
 						<UInput v-model="state.itemName" placeholder="Enter item name" />
 					</UFormField>
-					<SharedButtonPositiveAction type="submit" text="Submit" />
+					<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
+						<SharedButtonPositiveAction type="submit" text="Submit" />
+					</footer>
 				</UForm>
 			</div>
 		</section>
@@ -34,7 +36,7 @@ import * as z from "zod"
 import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui"
 
 const route = useRoute()
-const currentCategory = computed(() => route.params.category)
+const currentCategory = route.params.category as string
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
 const MIN_DIMENSIONS = { width: 200, height: 200 }

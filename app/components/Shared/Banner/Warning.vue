@@ -7,7 +7,7 @@
 	>
 		<div class="flex items-center gap-x-2">
 			<UIcon name="material-symbols:warning-rounded" />
-			<p>{{ text }}</p>
+			<SharedTextBase>{{ text }}</SharedTextBase>
 		</div>
 	</UCard>
 </template>

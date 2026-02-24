@@ -1,212 +1,152 @@
 <template>
-	<div>
-		<div class="mt-20 flex flex-col items-center justify-center gap-y-8 pt-10">
-			<div class="shadow-md relative flex h-80 w-full max-w-80 flex-col items-center justify-center gap-3 overflow-hidden rounded-xl bg-white">
-				<!-- Deal Tag -->
-				<div v-if="dealExists" class="absolute top-0 left-0 z-20 w-32 rounded-tl-md rounded-br-md px-4 py-1">
-					<p class="text-center text-white">{{ dealText }}</p>
-				</div>
-				<img v-if="imageUrl" :src="imageUrl" class="absolute inset-0 h-full w-full object-cover" />
-				<div class="flex flex-row items-center gap-x-3"></div>
-			</div>
-			<div class="flex flex-col items-center justify-center">
-				<div class="flex flex-row items-center gap-3">
-					<p class="">Deal is</p>
-					<div class="flex flex-col items-center">
-						<input
-							:class="{ 'border-red-negative': invalidActualCount }"
-							min="1"
-							type="number"
-							v-model.number="actualCount"
-							@change="checkInput"
-							:placeholder="originalActualCount"
-							class="w-8 border-none bg-transparent text-center text-black outline-none"
-						/>
-						<div class="-mt-1 h-[3px] w-8 rounded-xl"></div>
+	<UContainer class="py-8">
+		<header>
+			<SharedButtonNavigateBack :text="'Back to ' + currentCategory" :to="{ path: `/volunteer/inventory/${currentCategory}` }" />
+			<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
+		</header>
+
+		<section class="mt-4">
+			<SharedTextSectionTitle>Edit {{ item?.name }} Deal</SharedTextSectionTitle>
+			<div class="mx-auto w-min">
+				<img
+					:src="`/api/public/image/${item?.imgName}`"
+					:alt="item?.name"
+					class="border-final-border-soft aspect-square h-full rounded-lg border object-cover"
+				/>
+
+				<URadioGroup v-model="selectedDealOption" class="mt-4" :items="dealOptions" />
+
+				<UForm :validate="validate" :state="state" class="mt-4 w-96 space-y-4" @submit="onSubmit" @error="onError">
+					<div v-if="selectedDealOption == 'Deal is X for Y'">
+						<UFormField id="newDealActualCount" name="newDealActualCount" label="Actual Count" description="The number of items in the deal">
+							<UInputNumber v-model="state.newDealActualCount" placeholder="Enter actual count" :min="1" :max="99" />
+						</UFormField>
+						<UFormField
+							id="newDealAdjustedCount"
+							name="newDealAdjustedCount"
+							label="Adjusted Count"
+							description="The number of items the actual count is being adjusted to in the deal"
+						>
+							<UInputNumber v-model="state.newDealAdjustedCount" placeholder="Enter adjusted count" :min="0" :max="99" />
+						</UFormField>
 					</div>
-					<p class="">for</p>
-					<div class="flex flex-col items-center">
-						<input
-							:class="{ 'border-red-negative': invalidAdjustedCount }"
-							min="0"
-							type="number"
-							v-model.number="adjustedCount"
-							@change="checkInput"
-							:max="actualCount !== null ? actualCount - 1 : undefined"
-							:placeholder="originalAdjustedCount"
-							class="w-8 border-none bg-transparent text-center text-black outline-none"
-						/>
-						<div class="-mt-1 h-[3px] w-8 rounded-xl"></div>
-					</div>
-				</div>
+
+					<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
+						<SharedButtonPositiveAction type="submit" text="Submit" />
+					</footer>
+				</UForm>
 			</div>
-		</div>
-		<!-- Mark free and remove deals buttons -->
-		<button @click="markAsFree" class="shadow-md relative mt-6 flex h-12 w-48 items-center justify-center rounded-xl">
-			<p class="text-white">Mark as Free</p>
-		</button>
-		<button
-			v-if="dealExists"
-			@click="deleteDeal"
-			class="shadow-md relative mt-6 flex h-12 w-48 items-center justify-center rounded-xl"
-		>
-			<p class="text-white">Remove Deals</p>
-		</button>
-		<!-- Footer Buttons -->
-		<div class="mt-20 flex flex-row gap-x-4">
-			<button @click="goBack" class="shadow-md flex h-12 w-32 items-center justify-center rounded-xl">
-				<p class="text-white">Cancel</p>
-			</button>
-			<button @click="editDeal" class="shadow-md flex h-12 w-32 items-center justify-center rounded-xl">
-				<p class="text-white">Submit</p>
-			</button>
-		</div>
-	</div>
+		</section>
+	</UContainer>
 </template>
 
 <script lang="ts" setup>
-import { useRoute, navigateTo } from "#imports"
+import * as z from "zod"
+import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui"
 
 const route = useRoute()
+const currentCategory = route.params.category as string
 const itemID = route.params.itemID as string
 
-// Fetch item data based on route
+const dealOptions = ref(["No deal", "Deal is X for Y", "Free deal"])
+const selectedDealOption = ref("No deal")
+
+type Schema = {
+	newDealActualCount: number
+	newDealAdjustedCount: number
+}
+
+const state = ref<Partial<Schema>>({
+	newDealActualCount: 2,
+	newDealAdjustedCount: 1,
+})
+
 const { data: item } = await useFetch(`/api/student/inventory/item`, {
 	params: { itemID },
 })
 
-const imageUrl = ref("")
-const emit = defineEmits(["submit"])
-const currentCategory = route.params.categoryName as string
-
-const actualCount = ref<number | null>(null)
-const adjustedCount = ref<number | null>(null)
-const originalActualCount = ref<string>("X")
-const originalAdjustedCount = ref<string>("Y")
-const invalidActualCount = ref(false)
-const invalidAdjustedCount = ref(false)
-
-watch(
-	item,
-	(val) => {
-		if (!val) return
-
-		if (val.Deal) {
-			const a = Number(val.Deal.actualCount)
-			const b = Number(val.Deal.adjustedCount)
-
-			actualCount.value = !isNaN(a) ? a : null
-
-			adjustedCount.value = !isNaN(b) ? b : null
+watchEffect(async () => {
+	if (item.value) {
+		if (item.value.Deal) {
+			if (item.value.Deal.actualCount === 1 && item.value.Deal.adjustedCount === 0) {
+				selectedDealOption.value = "Free deal"
+			} else {
+				selectedDealOption.value = "Deal is X for Y"
+			}
+			state.value.newDealActualCount = item.value.Deal.actualCount
+			state.value.newDealAdjustedCount = item.value.Deal.adjustedCount
 		} else {
-			actualCount.value = null
-			adjustedCount.value = null
-		}
-
-		originalActualCount.value = actualCount.value !== null ? String(actualCount.value) : "X"
-		originalAdjustedCount.value = adjustedCount.value !== null ? String(adjustedCount.value) : "Y"
-
-		imageUrl.value = val.imgName ? `/api/public/image/${item.value.imgName}` : ""
-	},
-	{ immediate: true }
-)
-
-const toggleDeal = () => {
-	emit("submit")
-}
-
-const deleteDeal = async () => {
-	if (!item.value) return
-	await $fetch("/api/volunteer/inventory/deal", {
-		method: "DELETE",
-		body: { itemID: item.value.itemID },
-	})
-	toggleDeal()
-	navigateTo(`/volunteer/inventory/${currentCategory}`)
-}
-
-const markAsFree = () => {
-	if (!item.value) return
-	actualCount.value = 1
-	adjustedCount.value = 0
-}
-
-// --Page navigations for each button--
-// Goes back to the inventory page for the current category
-const goBack = () => {
-	navigateTo(`/volunteer/inventory/${currentCategory}`)
-}
-
-const checkInput = () => {
-	const a = actualCount.value
-	const b = adjustedCount.value
-
-	invalidActualCount.value = false
-	invalidAdjustedCount.value = false
-
-	let alertText = ""
-
-	if (a === null || a === undefined || Number.isNaN(a)) {
-		invalidActualCount.value = true
-		alertText = "The actual count must be a number"
-	} else if (a < 1) {
-		invalidActualCount.value = true
-		alertText = "The actual count must greater than zero"
-	}
-	if (b === null || b === undefined || Number.isNaN(b)) {
-		invalidAdjustedCount.value = true
-		if (alertText === "") {
-			alertText += "The adjusted count must be a number"
-		} else {
-			alertText += ", the adjusted count must be a number"
-		}
-	} else if (b < 0) {
-		invalidAdjustedCount.value = true
-		if (alertText === "") {
-			alertText += "The adjusted count must be positive"
-		} else {
-			alertText += ", the adjusted count must be positive"
+			selectedDealOption.value = "No deal"
 		}
 	}
-	if (!Number.isNaN(a) && !Number.isNaN(b) && a !== null && b !== null && a <= b) {
-		invalidActualCount.value = true
-		invalidAdjustedCount.value = true
-		alertText = "The actual count must be greater than the adjusted count"
-	}
-	alertText += "."
-	return alertText
-}
-
-const dealExists = computed(() => {
-	return item.value?.Deal != null
 })
 
-const dealText = computed(() => {
-	if (!dealExists.value) {
-		return ""
-	}
-	const a = item.value.Deal.actualCount
-	const b = item.value.Deal.adjustedCount
-
-	if (a === 1 && b === 0) return "FREE"
-
-	return `${a} for ${b}`
+const schema = z.object({
+	newDealActualCount: z.number().min(1, "Actual count must be at least 1"),
+	newDealAdjustedCount: z
+		.number()
+		.min(0, "Adjusted count must be at least 0")
+		.refine(
+			(value) => {
+				if (state.value.newDealActualCount !== undefined) {
+					return value < state.value.newDealActualCount
+				}
+				return true
+			},
+			{ message: "Adjusted count must be less than actual count", path: ["newDealAdjustedCount"] }
+		),
 })
 
-const editDeal = async () => {
-	if (!item.value) return
-	const alertText = checkInput()
-
-	if (invalidActualCount.value || invalidAdjustedCount.value) {
-		alert(alertText)
-		return
+const validate = async (state: Partial<Schema>): Promise<FormError[]> => {
+	const errors = []
+	const result = await schema.safeParseAsync(state)
+	if (!result.success) {
+		errors.push(...result.error.issues.map((err) => ({ name: String(err.path[0]), message: err.message })))
 	}
+	return errors
+}
 
-	await $fetch("/api/volunteer/inventory/deal", {
-		method: "PUT",
-		body: { itemID: item.value.itemID, actualCount: actualCount.value, adjustedCount: adjustedCount.value },
-	})
-	toggleDeal()
-	navigateTo(`/volunteer/inventory/${currentCategory}`)
+const onError = async (event: FormErrorEvent) => {
+	if (event?.errors?.[0]?.id) {
+		const el = document.getElementById(event.errors[0].id)
+		el?.focus()
+		el?.scrollIntoView({ behavior: "smooth", block: "center" })
+	}
+}
+
+const onSubmit = async (event: FormSubmitEvent<Schema>) => {
+	try {
+		if (selectedDealOption.value === "No deal") {
+			if (item.value?.Deal) {
+				await $fetch("/api/volunteer/inventory/deal", {
+					method: "DELETE",
+					body: { itemID: item.value?.itemID },
+				})
+			}
+			return
+		} else if (selectedDealOption.value === "Free deal") {
+			await $fetch("/api/volunteer/inventory/deal", {
+				method: "PUT",
+				body: { itemID: item.value?.itemID, actualCount: 1, adjustedCount: 0 },
+			})
+			return
+		} else {
+			if (state.value.newDealAdjustedCount == 0) {
+				await $fetch("/api/volunteer/inventory/deal", {
+					method: "PUT",
+					body: { itemID: item.value?.itemID, actualCount: 1, adjustedCount: 0 },
+				})
+			} else {
+				await $fetch("/api/volunteer/inventory/deal", {
+					method: "PUT",
+					body: { itemID: item.value?.itemID, actualCount: event.data.newDealActualCount, adjustedCount: event.data.newDealAdjustedCount },
+				})
+			}
+		}
+	} catch (error) {
+		// idk for now
+	} finally {
+		navigateTo(`/volunteer/inventory/${currentCategory}`)
+	}
 }
 </script>

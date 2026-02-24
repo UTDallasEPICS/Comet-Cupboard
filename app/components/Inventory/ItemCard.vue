@@ -14,13 +14,13 @@
 		<template #body>
 			<div class="mt-auto flex flex-col items-end gap-2">
 				<div class="flex flex-row items-center gap-2">
-					<p>Qty:</p>
+					<SharedTextBase>Qty:</SharedTextBase>
 					<div class="border-final-text-soft flex flex-row rounded-xl border">
 						<div class="w-12">
 							<p class="ml-2 text-center">{{ props.currentCount }}</p>
 						</div>
 
-						<div :style="clipStyle" class="bg-final-page-bg flex w-16 items-center justify-center rounded-r-xl">
+						<div :style="clipStyle" class="bg-final-border-soft flex w-16 items-center justify-center rounded-r-xl">
 							<p class="text-center">{{ displayChange }}</p>
 						</div>
 					</div>
@@ -79,12 +79,12 @@ const props = defineProps({
 })
 
 const route = useRoute()
-const categoryName = route.params.categoryName as string
+const currentCategory = route.params.category as string
 
 const editMenuItems = ref<DropdownMenuItem[]>([
-	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${categoryName}/${props.itemID}/edit`) },
-	{ label: "Item Deal", onClick: () => navigateTo(`/volunteer/inventory/${categoryName}/${props.itemID}/deal`) },
-	{ label: "Delete", onClick: () => navigateTo(`/volunteer/inventory/${categoryName}/${props.itemID}/delete`) },
+	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/edit`) },
+	{ label: "Item Deal", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/deal`) },
+	{ label: "Delete", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/delete`) },
 ])
 
 const emit = defineEmits<{
@@ -93,12 +93,11 @@ const emit = defineEmits<{
 
 const adjustAmount = ref(1)
 
-// Functions for emits
-function increment() {
+const increment = () => {
 	emit("changeAmountUpdate", props.itemID, adjustAmount.value)
 }
 
-function decrement() {
+const decrement = () => {
 	emit("changeAmountUpdate", props.itemID, -adjustAmount.value)
 }
 
@@ -107,7 +106,7 @@ const displayChange = computed(() => {
 	return c > 0 ? `+${c}` : `${c}`
 })
 
-function ensureValid() {
+const ensureValid = () => {
 	if (adjustAmount.value === null || adjustAmount.value === "" || isNaN(adjustAmount.value)) {
 		adjustAmount.value = 1
 	}
