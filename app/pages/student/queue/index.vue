@@ -4,7 +4,6 @@
 			<SharedTextPageTitle>Queue</SharedTextPageTitle>
 		</header>
 
-		<!-- Queue Overview -->
 		<section class="mt-4">
 			<UCard>
 				<template #header>
@@ -12,37 +11,64 @@
 				</template>
 
 				<div class="space-y-2">
-					<!-- <SharedTextBase> Students in Queue: {{ studentsInQueue }} </SharedTextBase>
-
-					<SharedTextBase>
-						Estimated Wait If You Join Now:
-						{{ estimatedWaitIfJoinNow }} minutes
-					</SharedTextBase> -->
-					<SharedTextBase> Public Code: {{ queueStatus.publicCode }} </SharedTextBase>
-					<SharedTextBase> Position: {{ queueStatus.position }} </SharedTextBase>
+					<div v-if="!isEmptyObject(queueStatus)">
+						<SharedTextBase> Public Code: {{ queueStatus.publicCode }} </SharedTextBase>
+						<SharedTextBase> Position: {{ queueStatus.position }} </SharedTextBase>
+						<SharedButtonCancel text="Leave Queue" @click="leaveQueue" />
+					</div>
+					<div v-else>
+						<div v-if="!isEmptyObject(cart)">
+							<SharedTextBase> You already have an active cart. </SharedTextBase>
+						</div>
+						<div v-else>
+							<SharedTextBase> You are not currently in the queue. </SharedTextBase>
+							<SharedButtonPositiveAction text="Join Queue" @click="joinQueue" />
+						</div>
+					</div>
 				</div>
 			</UCard>
 		</section>
 
 		<section class="mt-4">
 			<UCard>
-				<div class="space-y-4">
-					<SharedTextBase> You are not currently in the queue. </SharedTextBase>
-
-					<UButton block @click="joinQueue"> Join Queue </UButton>
-				</div>
+				<template #header>
+					<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
+				</template>
+				<UTable :data="queue" :columns="columns" :meta="meta" empty="No one currently in queue" />
 			</UCard>
 		</section>
 	</UContainer>
 </template>
 
 <script lang="ts" setup>
+import { isEmptyObject } from "#shared/utils/helper"
+
 const queueStore = useQueueStore()
 const { queue, queueStatus } = storeToRefs(queueStore)
+const { getQueue, updateQueueStatus } = queueStore
 
-onMounted(() => {
-	queueStore.getQueue()
-	queueStore.updateQueueStatus()
+const cartStore = useCartStore()
+const { cart } = storeToRefs(cartStore)
+
+const columns = [
+	{ accessorKey: "position", header: "Position" },
+	{ accessorKey: "publicCode", header: "Display Name" },
+]
+
+const meta = {
+	class: {
+		tr: (row) => {
+			if (row.original.publicCode === queueStatus.value?.publicCode) {
+				return "bg-final-utd-green/10"
+			}
+			return ""
+		},
+	},
+}
+
+onMounted(async () => {
+	await getQueue()
+	await updateQueueStatus()
 })
 
 const joinQueue = async () => {

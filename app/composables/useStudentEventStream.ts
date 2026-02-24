@@ -8,9 +8,9 @@ export const useStudentEventStream = () => {
 	const toast = useToast()
 	const config = useRuntimeConfig()
 
-	const dispatchQueueEvent = (event: AppEvent) => {
-		if (event.type in ["queue.queueUpdated", "queue.entryApproved", "queue.entryRemoved", "queue.entryAdded"]) {
-			handleQueueEvent(event)
+	const dispatchQueueEvent = async (event: AppEvent) => {
+		if (["queue.queueUpdated", "queue.entryApproved", "queue.entryRemoved", "queue.entryAdded"].includes(event.type)) {
+			await handleQueueEvent(event)
 		}
 	}
 

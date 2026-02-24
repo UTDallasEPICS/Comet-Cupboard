@@ -3,8 +3,16 @@ let eventStream: EventSource | null = null
 const listeners: ((event: AppEvent) => void)[] = []
 
 export const useVolunteerEventStream = () => {
+	const queue = useQueueStore()
+	const { handleVolunteerQueueEvent } = queue
 	const toast = useToast()
 	const config = useRuntimeConfig()
+
+	const dispatchVolunteerQueueEvent = async (event: AppEvent) => {
+		if (["queue.queueUpdated", "queue.entryApproved", "queue.entryRemoved", "queue.entryAdded"].includes(event.type)) {
+			await handleVolunteerQueueEvent(event)
+		}
+	}
 
 	const connectVolunteer = () => {
 		// Prevent duplicate connections
@@ -27,6 +35,8 @@ export const useVolunteerEventStream = () => {
 
 				// dispatch to all registered listeners
 				listeners.forEach((listener) => listener(event))
+
+				dispatchVolunteerQueueEvent(event)
 
 				toast.add({
 					title: "Event received",

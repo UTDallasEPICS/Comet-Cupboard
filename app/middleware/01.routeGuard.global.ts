@@ -1,18 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default defineNuxtRouteMiddleware((to, from) => {
-	// const accessCookie = useCookie("AccessPermission")
-	// const permissions = accessCookie.value
-	// // TODO, handle when navigating back to index page while logged in
-	// if (to.path == "/") {
-	// 	return
-	// }
-	// // page does not exist in pageAccessMap
-	// if (!pageAccessMap[to.path]) {
+	// const permissions = usePermissionsStore()
+	// const { canStudentAccess, canVolunteerAccess, canAdminAccess, loaded, setPermissionsFromServer } = permissions
+
+	// if (to.path.startsWith("/admin") && !canAdminAccess) {
 	// 	return navigateTo("/")
 	// }
-	// // do not have permission to access
-	// const requiredAccessPermission: string = pageAccessMap[to.path]
-	// if (!(permissions && typeof permissions === "object" && permissions[requiredAccessPermission])) {
+	// if (to.path.startsWith("/volunteer") && !canVolunteerAccess) {
+	// 	return navigateTo("/")
+	// }
+	// if (to.path.startsWith("/student") && !canStudentAccess) {
 	// 	return navigateTo("/")
 	// }
 })
