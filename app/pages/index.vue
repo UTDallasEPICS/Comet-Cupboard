@@ -1,52 +1,31 @@
-<template lang="pug">
-div.flex.flex-row.items-center.justify-center
-	form(@submit.prevent="handleSubmit")
-		label NetID
-		input(required type="text" v-model="netID").border-black.border-2
+<template>
+	<div>
+		<section class="relative text-white" style="background-image: url(&quot;/shelves.jpg&quot;); background-size: cover; background-position: center">
+			<div class="absolute inset-0 bg-black/50" />
+			<UContainer class="relative py-24">
+				<div>
+					<SharedTextHero class="text-white">
+						Welcome to the <br />
+						Comet Cupboard
+					</SharedTextHero>
+
+					<SharedTextHeroDescription class="mt-6 text-white"> Supporting academic success by meeting basic needs. </SharedTextHeroDescription>
+
+					<div class="mt-10 flex flex-row gap-4">
+						<UButton size="xl" variant="solid" to="/login"> Student Login </UButton>
+						<UButton size="xl" variant="solid" to="/login"> Volunteer Login </UButton>
+					</div>
+				</div>
+			</UContainer>
+		</section>
+
+		<section class="py-20">
+			<UContainer>
+				<div class="mx-auto max-w-2xl text-center">
+					<SharedTextSectionTitle> Upcoming Restocks and Notices </SharedTextSectionTitle>
+					<SharedTextBase class="mt-4"> I'm going to put a calendar here :) </SharedTextBase>
+				</div>
+			</UContainer>
+		</section>
+	</div>
 </template>
-
-<script lang="ts" setup>
-const netID = ref("")
-
-const accessCookie = useCookie("netID")
-
-onMounted(async () => {
-	if (accessCookie.value) {
-		await $fetch("/api/updatePermissions", {
-			method: "GET",
-		})
-		const accessCookiePermission = useCookie("AccessPermission")
-		const permissions = accessCookiePermission.value && typeof accessCookiePermission.value === "object" ? accessCookiePermission.value : {}
-		if (!permissions["SHOPPING"]) {
-			//Enters the student into the queue
-			try {
-				await $fetch("/api/queue", {
-					method: "POST",
-				})
-			} catch (err) {
-				//We don't care about this error, we just don't want this to stop us though
-			}
-			await navigateTo("/v2/queue")
-		} else {
-			await navigateTo("/v2/shopping")
-		}
-	}
-})
-
-const handleSubmit = async () => {
-	try {
-		await $fetch("/api/login", {
-			method: "POST",
-			body: { netID: netID.value },
-		})
-		await $fetch("/api/updatePermissions", {
-			method: "GET",
-		})
-		refreshCookie("netID")
-		refreshCookie("AccessPermission")
-		reloadNuxtApp()
-	} catch (e) {
-		/* lol */
-	}
-}
-</script>

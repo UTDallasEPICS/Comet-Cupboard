@@ -1,0 +1,67 @@
+import { z } from "zod"
+import { prisma } from "#server/utils/prismaUtil"
+import { constructCartSessionCreatedEvent, constructQueueEntryApprovedEvent, constructQueueEntryApprovedVolunteerEvent } from "~~/server/utils/eventsUtil"
+
+const schema = z.object({
+	netID: z.string(),
+})
+
+const validateSchema = schema.strict().required()
+
+export default defineEventHandler(async (event) => {
+	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
+	if (!result.success) {
+		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
+	}
+	const { netID } = result.data
+
+	const existingEntry = await prisma.queueEntry.findUnique({
+		where: { netID },
+	})
+	if (!existingEntry) {
+		throw createError({ statusCode: 400, statusMessage: `User with netID ${netID} is not in the queue` })
+	}
+	const transaction = await prisma.$transaction(async (tx) => {
+		await tx.queueEntry.delete({
+			where: { netID },
+		})
+		// await tx.queueEntry.updateMany({
+		//     where: {
+		//         position: {
+		//             gt: existingEntry.position,
+		//         },
+		//     },
+		//     data: {
+		//         position: {
+		//             decrement: 1,
+		//         },
+		//     },
+		// })
+		await tx.cart.create({
+			data: {
+				cartID: netID,
+			},
+		})
+
+		await broadcastToStudents(
+			JSON.stringify(
+				constructQueueEntryApprovedEvent({
+					position: existingEntry.position,
+					publicCode: existingEntry.publicCode,
+				})
+			)
+		)
+		await broadcastToVolunteers(
+			JSON.stringify(
+				constructQueueEntryApprovedVolunteerEvent({
+					position: existingEntry.position,
+					publicCode: existingEntry.publicCode,
+					netID: existingEntry.netID,
+				})
+			)
+		)
+		await broadcastToVolunteers(JSON.stringify(constructCartSessionCreatedEvent(existingEntry.netID)))
+		return `User with netID ${netID} has been approved and moved to a cart`
+	})
+	return transaction
+})

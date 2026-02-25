@@ -1,3 +1,0 @@
-checkMissingPermissions()
-
-export default defineEventHandler(() => {})

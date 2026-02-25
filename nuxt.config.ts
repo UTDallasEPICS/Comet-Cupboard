@@ -1,13 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 	devtools: { enabled: true },
-	modules: ["@nuxt/eslint", "@nuxtjs/tailwindcss", "@pinia/nuxt", "@nuxt/test-utils/module"],
+	modules: ["@nuxt/eslint", "@pinia/nuxt", "@nuxt/ui"],
 	css: ["~/assets/css/main.css"],
 	runtimeConfig: { public: { LOCAL_URL: "" } },
-
-	postcss: { plugins: { tailwindcss: {}, autoprefixer: {} } },
-	build: { transpile: ["@vuepic/vue-datepicker"] },
 	features: { inlineStyles: false },
-
+	ui: {
+		colorMode: false,
+	},
 	compatibilityDate: "2025-03-07",
 })

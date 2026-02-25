@@ -59,10 +59,7 @@ model Item {
     CartItems        CartItem[]
     OrderItems       OrderItem[]
     archived         Boolean           @default(false)
-
     createdAt        DateTime          @default(now()) @map("created_at")
-    recentPopularity Json? @map("recent_popularity")
-    popularityCounts Json? @map("popularity_counts")
 
     @@map("item")
 }
@@ -90,11 +87,11 @@ model Field {
 }
 
 model Source {
-    sourceID         String             @id @default(cuid()) @map("source_id")
-    name             String             @map("name") @unique
+    sourceID         String            @id @default(cuid()) @map("source_id")
+    name             String            @unique @map("name")
     ItemCountChanges ItemCountChange[]
     Fields           Field[]
-    archived         Boolean            @default(false) @map("archived")
+    archived         Boolean           @default(false) @map("archived")
 
     @@map("source")
 }
@@ -110,12 +107,13 @@ model Cart {
 }
 
 model CartItem {
-    Item         Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-    itemID       String @map("item_id")
-    Cart         Cart   @relation(fields: [cartID], references: [cartID], onDelete: Cascade, onUpdate: Cascade)
-    cartID       String @map("cart_id")
-    count        Int    @map("count")
-    expiredCount Int    @map("expired_count")
+    Item            Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+    itemID          String @map("item_id")
+    Cart            Cart   @relation(fields: [cartID], references: [cartID], onDelete: Cascade, onUpdate: Cascade)
+    cartID          String @map("cart_id")
+    count           Int    @map("count")
+    // Fields to track adjustments to decrease from total count
+    countAdjustment Int    @default(0) @map("count_adjustment")
 
     @@id(name: "cartItemID", [itemID, cartID])
     @@map("cart_item")
@@ -152,16 +150,11 @@ model Deal {
 }
 
 model QueueEntry {
-    netID    String     @id
-    state    QueueState
-    joinedAt DateTime   @default(now())
-
-    User User @relation(fields: [netID], references: [netID])
+    netID      String   @id
+    publicCode String   @unique
+    joinedAt   DateTime @default(now())
+    position   Int
+    User       User     @relation(fields: [netID], references: [netID])
 
     @@map("queue_entry")
-}
-
-enum QueueState {
-    WAITING
-    INSIDE
 }
