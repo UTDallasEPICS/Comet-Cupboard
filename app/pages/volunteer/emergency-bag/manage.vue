@@ -17,28 +17,52 @@
                     'hover:!text-white',
                     'focus:!text-white',
                     'rounded-t-lg rounded-b-none',
-                    'bg-[var(--color-final-cancel-gray)]',
+                    'bg-[#979797]',
                     'data-[state=active]:bg-[var(--color-primary)]',
                     'px-4 py-2 text-sm font-medium text-center',
                     'cursor-pointer'
                 ].join(' '),
 
                 content: [
-                    'w-full max-w-full ',
+                    'w-full max-w-full mr-auto',
                     'bg-[#F0F0F0]',
                     'rounded-lg rounded-tl-none',
-                    'p-6',
+                    'p-0',
                     'min-h-[calc(90vh-var(--ui-header-height))] md:min-h-[calc(80vh-var(--ui-header-height))]'
                 ].join(' ')
                 }"
             >
+                <!--START OF ADD BAG STUFF-->
                 <template #add>
-                <div>Add New Bag content</div>
+                    <div>
+                        <div class="rounded-tr-lg p-2 bg-[var(--color-final-cancel-gray)] text-white">
+                            <UInput
+                                v-model="a_searchQuery"
+                                icon="material-symbols:search"
+                                placeholder="Search items"
+                                class="w-full md:w-1/3"
+                            />
+                        </div>
+                        Add New Bag content
+                    </div>
                 </template>
+                <!--END OF ADD BAG STUFF-->
 
+                <!--START OF VIEW/MODIFY BAG STUFF-->
                 <template #view>
-                <div>View/Modify Bags content</div>
+                    <div>
+                        <div class="rounded-tr-lg p-2 bg-[var(--color-final-cancel-gray)] text-white">
+                            <UInput
+                                v-model="vm_searchQuery"
+                                icon="material-symbols:search"
+                                placeholder="Search items"
+                                class="w-full md:w-1/3"
+                            />
+                        </div>
+                        View/Modify Bags content
+                    </div>
                 </template>
+                <!--END OF VIEW/MODIFY BAG STUFF-->
             </UTabs>
         </div>
     </div>
@@ -51,5 +75,11 @@ const items = [
   { label: 'Add New Bag', slot: 'add' },
   { label: 'View/Modify Bags', slot: 'view' }
 ]
+
+//Add Tab
+const a_searchQuery = ref('')
+
+//View/Modify Tab 
+const vm_searchQuery = ref('')
 
 </script>
