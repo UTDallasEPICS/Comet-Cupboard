@@ -10,6 +10,8 @@ export default defineEventHandler((event) => {
 		requiredAccessPermission = AccessPermission.VOLUNTEER
 	} else if (requestPath.startsWith("/api/student") || requestPath.startsWith("/student")) {
 		requiredAccessPermission = AccessPermission.STUDENT
+	} else if (requestPath.startsWith("/api/head-admin") || requestPath.startsWith("/head-admin")) {
+		requiredAccessPermission = AccessPermission.HEAD_ADMIN
 	}
 
 	if (!event.context.permissions[requiredAccessPermission]) {

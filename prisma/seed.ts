@@ -3,7 +3,7 @@ import { nanoid } from "nanoid"
 import { existsSync, mkdirSync, readdirSync } from "fs"
 import "dotenv/config"
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
-import { PrismaClient } from "./generated/prisma/client"
+import { PrismaClient, RoleType } from "./generated/prisma/client"
 
 const connectionString = `${process.env.DATABASE_URL}`
 const adapter = new PrismaBetterSqlite3({ url: connectionString })
@@ -33,19 +33,17 @@ categories.forEach((category) => {
 })
 
 const validUsers = [
-	{ netID: "stu000000" },
-	{ netID: "stu000001" },
-	{ netID: "stu000002" },
-	{ netID: "vol000000" },
-	{ netID: "vol000001" },
-	{ netID: "adm000000" },
+	{ netID: "stu000000", role: RoleType.STUDENT },
+	{ netID: "stu000001", role: RoleType.STUDENT },
+	{ netID: "stu000002", role: RoleType.STUDENT },
+	{ netID: "vol000000", role: RoleType.VOLUNTEER },
+	{ netID: "vol000001", role: RoleType.VOLUNTEER },
+	{ netID: "adm000000", role: RoleType.ADMIN },
+	{ netID: "had000000", role: RoleType.HEAD_ADMIN },
 ]
 
 const createUsers = async () => {
 	await prisma.user.createMany({ data: validUsers })
-	await prisma.student.createMany({ data: validUsers.filter((user) => user.netID.includes("stu") || user.netID.includes("vol")) })
-	await prisma.volunteer.createMany({ data: validUsers.filter((user) => user.netID.includes("vol")) })
-	await prisma.admin.createMany({ data: validUsers.filter((user) => user.netID.includes("adm")) })
 }
 
 const createSources = async () => {

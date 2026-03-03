@@ -1,9 +1,8 @@
-import type { Prisma } from "@prisma/client"
+import type { User } from "../../prisma/generated/prisma/client"
+import { RoleType } from "../../prisma/generated/prisma/client"
 import { prisma } from "#server/utils/prismaUtil"
 
-type UserInfo = Prisma.UserGetPayload<{
-	include: { Student: true; Volunteer: true; Admin: true }
-}>
+type UserInfo = User
 declare module "h3" {
 	interface H3EventContext {
 		permissions: { [id: string]: boolean }
@@ -21,26 +20,27 @@ export default defineEventHandler(async (event) => {
 			where: {
 				netID: netID,
 			},
-			include: {
-				Student: true,
-				Volunteer: true,
-				Admin: true,
-			},
 		})
 
 		if (user) {
 			event.context.user = user
-			if (user.Student) {
+			if (user.role === RoleType.STUDENT) {
 				event.context.permissions[AccessPermission.STUDENT] = true
 			}
-			if (user.Volunteer) {
+			if (user.role === RoleType.VOLUNTEER) {
 				event.context.permissions[AccessPermission.STUDENT] = true
 				event.context.permissions[AccessPermission.VOLUNTEER] = true
 			}
-			if (user.Admin) {
+			if (user.role === RoleType.ADMIN) {
 				event.context.permissions[AccessPermission.STUDENT] = true
 				event.context.permissions[AccessPermission.VOLUNTEER] = true
 				event.context.permissions[AccessPermission.ADMIN] = true
+			}
+			if (user.role === RoleType.HEAD_ADMIN) {
+				event.context.permissions[AccessPermission.STUDENT] = true
+				event.context.permissions[AccessPermission.VOLUNTEER] = true
+				event.context.permissions[AccessPermission.ADMIN] = true
+				event.context.permissions[AccessPermission.HEAD_ADMIN] = true
 			}
 		}
 	}
