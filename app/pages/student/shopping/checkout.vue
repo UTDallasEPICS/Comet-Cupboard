@@ -142,28 +142,28 @@ const items: StepperItem[] = [
 	{
 		slot: "Disclosures" as const,
 		title: "Disclosures",
-		icon: "mdi:file-document-check",
+		icon: icons["disclosures"],
 	},
 	{
 		slot: "AdjustCounts" as const,
 		title: "Adjust Counts",
-		icon: "i-heroicons-pencil-square",
+		icon: icons["edit"],
 	},
 	{
 		slot: "ReviewCart" as const,
 		title: "Review Cart",
-		icon: "i-heroicons-shopping-cart",
+		icon: icons["shopping"],
 	},
 
 	{
 		slot: "Verification" as const,
 		title: "Pending Verification",
-		icon: "material-symbols:check-circle-outline",
+		icon: icons["verification"],
 	},
 	{
 		slot: "Confirmation" as const,
 		title: "Confirmation",
-		icon: "material-symbols:check-circle",
+		icon: icons["confirmation"],
 	},
 ]
 

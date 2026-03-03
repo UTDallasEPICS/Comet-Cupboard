@@ -1,14 +1,14 @@
 <template>
 	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
 		<template #header-actions>
-			<UButton variant="ghost" icon="i-heroicons-x-mark" class="shrink-0" size="xs" @click="removeCartItem" />
+			<UButton variant="ghost" :icon="icons['close']" class="shrink-0" size="xs" @click="removeCartItem" />
 		</template>
 		<template #body>
 			<div class="flex items-end gap-1">
 				<SharedTextBase>Quantity:</SharedTextBase>
-				<UButton icon="i-heroicons-minus" size="xs" variant="soft" :disabled="props.count <= 1 || isSaving" @click="decrement" />
+				<UButton :icon="icons['subtract']" size="xs" variant="soft" :disabled="props.count <= 1 || isSaving" @click="decrement" />
 				<SharedTextBase class="w-8 text-center">{{ props.count }}</SharedTextBase>
-				<UButton icon="i-heroicons-plus" size="xs" variant="soft" :disabled="isSaving" @click="increment" />
+				<UButton :icon="icons['add']" size="xs" variant="soft" :disabled="isSaving" @click="increment" />
 			</div>
 		</template>
 	</SharedItemCard>

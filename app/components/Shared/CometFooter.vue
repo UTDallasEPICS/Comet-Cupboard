@@ -27,7 +27,7 @@
 			<div class="space-y-2">
 				<p class="font-bold">Connect With Us</p>
 				<ULink :to="instagram">
-					<UIcon name="mdi:instagram" class="size-6 text-white" />
+					<UIcon :name="icons['instagram']" class="size-6 text-white" />
 				</ULink>
 			</div>
 		</div>

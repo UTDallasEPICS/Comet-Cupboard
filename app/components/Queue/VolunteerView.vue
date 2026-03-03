@@ -40,7 +40,7 @@ const columns = [
 				},
 				() =>
 					h(UButton, {
-						icon: "i-lucide-ellipsis-vertical",
+						icon: icons["ellipsesActions"],
 						color: "neutral",
 						variant: "ghost",
 						"aria-label": "Actions dropdown",
