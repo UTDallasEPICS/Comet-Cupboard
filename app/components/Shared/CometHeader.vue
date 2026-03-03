@@ -26,7 +26,7 @@
 				<UButton
 					variant="ghost"
 					size="xl"
-					icon="ci:hamburger-lg"
+					:icon="icons['hamburger']"
 					:ui="{
 						leadingIcon: 'size-8',
 					}"
@@ -58,7 +58,7 @@
 				}"
 			>
 				<UChip :show="showQuantityItemsChanged" :text="quantityItemsChanged" size="3xl">
-					<UButton variant="ghost" icon="i-lucide-box" class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent" />
+					<UButton variant="ghost" :icon="icons['inventory']" class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent" />
 				</UChip>
 				<template #body>
 					<InventoryReviewChangesDrawer />
@@ -87,7 +87,7 @@
 					<ShoppingCartDrawer />
 				</template>
 			</USlideover>
-			<UButton v-if="canStudentAccess" variant="outline" icon="ci:log-out" size="xl" @click="logout" />
+			<UButton v-if="canStudentAccess" variant="outline" :icon="icons['logout']" size="xl" @click="logout" />
 		</template>
 	</UHeader>
 </template>
@@ -111,7 +111,7 @@ const items = ref<NavigationMenuItem[]>(
 		// Student Group
 		canStudentAccess.value && {
 			label: "Student",
-			icon: "i-lucide-user",
+			icon: icons["student"],
 			open: true,
 			children: [...roleLinks["student"]],
 		},
@@ -119,7 +119,7 @@ const items = ref<NavigationMenuItem[]>(
 		// Volunteer Group
 		canVolunteerAccess.value && {
 			label: "Volunteer",
-			icon: "i-lucide-users",
+			icon: icons["volunteer"],
 			open: true,
 			children: [...roleLinks["volunteer"]],
 		},
@@ -127,7 +127,7 @@ const items = ref<NavigationMenuItem[]>(
 		// Admin Group
 		canAdminAccess.value && {
 			label: "Admin",
-			icon: "i-lucide-shield",
+			icon: icons["admin"],
 			open: true,
 			children: roleLinks["admin"].map((item) => ({
 				...item,

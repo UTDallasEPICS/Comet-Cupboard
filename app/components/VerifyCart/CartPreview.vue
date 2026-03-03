@@ -15,7 +15,7 @@
 						:label="category"
 						color="primary"
 						variant="solid"
-						trailing-icon="i-lucide-chevron-down"
+						:trailing-icon="icons['chevronDown']"
 						block
 						class="group"
 						:ui="{

@@ -12,7 +12,7 @@
 					v-model:search-term="searchQuery"
 					:items="filteredItemsNames"
 					ignore-filter
-					icon="material-symbols:search"
+					:icon="icons['search']"
 					placeholder="Search items"
 					class="grow"
 				/>

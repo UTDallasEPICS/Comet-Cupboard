@@ -6,7 +6,7 @@
 		}"
 	>
 		<div class="flex items-center gap-x-2">
-			<UIcon name="material-symbols:warning-rounded" />
+			<UIcon :name="icons['warning']" />
 			<SharedTextBase>{{ text }}</SharedTextBase>
 		</div>
 	</UCard>

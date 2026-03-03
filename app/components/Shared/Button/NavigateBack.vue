@@ -1,7 +1,7 @@
 <template>
 	<UButton variant="ghost">
 		<div class="flex items-center gap-x-2">
-			<UIcon name="material-symbols:arrow-back" />
+			<UIcon :name="icons['back']" />
 			<p>{{ text }}</p>
 		</div>
 	</UButton>
