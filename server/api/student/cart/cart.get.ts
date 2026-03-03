@@ -1,4 +1,5 @@
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 export default defineEventHandler(async (event) => {
 	const netID = event.context.user.netID
@@ -22,12 +23,12 @@ export default defineEventHandler(async (event) => {
 		})
 
 		if (!cart) {
-			setResponseStatus(event, 204)
+			setResponseStatus(event, StatusCodes.NO_CONTENT)
 			return
 		}
 
 		return cart
 	} catch (error) {
-		throw createError({ statusCode: 500, statusMessage: "Unable to retrieve cart" })
+		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: "Unable to retrieve cart" })
 	}
 })

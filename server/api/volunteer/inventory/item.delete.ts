@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { unlink } from "node:fs/promises"
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	itemID: z.string(),
@@ -11,7 +12,7 @@ const validateSchema = schema.strict().required()
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
 	}
 	const { itemID } = result.data
 
@@ -27,7 +28,7 @@ export default defineEventHandler(async (event) => {
 	})
 
 	if (!item) {
-		throw createError({ statusCode: 500, statusMessage: `Failed to delete item with id ${itemID}` })
+		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: `Failed to delete item with id ${itemID}` })
 	}
 
 	// delete old image, if this fails we're not in that much trouble hopefully

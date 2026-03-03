@@ -1,5 +1,6 @@
 import { prisma } from "#server/utils/prismaUtil"
 import { constructCartSessionRemovedEvent } from "~~/server/utils/eventsUtil"
+import { StatusCodes } from "http-status-codes"
 
 export default defineEventHandler(async (event) => {
 	const netID = event.context.user.netID
@@ -16,8 +17,8 @@ export default defineEventHandler(async (event) => {
 		return `Successfully deleted cart ${netID}`
 	} catch (error: any) {
 		if (error.code === "P2025") {
-			throw createError({ statusCode: 404, statusMessage: "Cart not found" })
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Cart not found" })
 		}
-		throw createError({ statusCode: 500, statusMessage: "Unable to delete cart" })
+		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: "Unable to delete cart" })
 	}
 })

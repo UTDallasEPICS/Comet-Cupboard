@@ -1,5 +1,6 @@
-import { set, z } from "zod"
+import { z } from "zod"
 import { readFile } from "node:fs/promises"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	filename: z.string(),
@@ -23,9 +24,9 @@ export default defineEventHandler(async (event) => {
 		return contents
 	} catch (err) {
 		if (err.code === "ENOENT") {
-			throw createError({ statusCode: 404, statusMessage: `File not found: ${filename}` })
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `File not found: ${filename}` })
 		} else {
-			throw createError({ statusCode: 500, statusMessage: "Internal server error" })
+			throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: "Internal server error" })
 		}
 	}
 })

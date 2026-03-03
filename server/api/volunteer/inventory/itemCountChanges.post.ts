@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	source: z.string(),
@@ -12,7 +13,7 @@ const validateSchema = schema.strict()
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
 	}
 	const { source, inventoryCountChanges, fieldMap } = result.data
 
@@ -22,7 +23,7 @@ export default defineEventHandler(async (event) => {
 		},
 	})
 	if (!foundSource) {
-		throw createError({ statusCode: 400, statusMessage: `Source ${source} does not exist` })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: `Source ${source} does not exist` })
 	}
 
 	const transactionResult = await prisma.$transaction(async (tx) => {
@@ -50,7 +51,7 @@ export default defineEventHandler(async (event) => {
 	})
 
 	if (!transactionResult) {
-		throw createError({ statusCode: 500, statusMessage: "Failed to process inventory count changes" })
+		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: "Failed to process inventory count changes" })
 	}
 
 	return `Successfully processed inventory count changes: ${JSON.stringify(result)}`

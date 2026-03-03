@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	categorySpecifier: z.string().optional(),
@@ -11,7 +12,7 @@ export default defineEventHandler(async (event) => {
 	const result = await getValidatedQuery(event, (query) => validateSchema.safeParse(query))
 
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid request parameters" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request parameters" })
 	}
 
 	const { categorySpecifier } = result.data

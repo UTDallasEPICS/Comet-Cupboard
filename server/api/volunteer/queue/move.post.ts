@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	netID: z.string(),
@@ -11,13 +12,13 @@ const validateSchema = schema.strict().required()
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
 	}
 	const { netID, newPosition } = result.data
 
 	const entry = await prisma.queueEntry.findUnique({ where: { netID } })
 	if (!entry) {
-		throw createError({ statusCode: 404, statusMessage: "Student not in queue" })
+		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Student not in queue" })
 	}
 
 	const oldPosition = entry.position

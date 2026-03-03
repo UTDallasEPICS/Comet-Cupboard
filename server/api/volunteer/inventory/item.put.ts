@@ -2,6 +2,7 @@ import { z } from "zod"
 import { unlink, writeFile } from "node:fs/promises"
 import { prisma } from "#server/utils/prismaUtil"
 import { nanoid } from "nanoid"
+import { StatusCodes } from "http-status-codes"
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024
 const uploadDirectory = `${process.env.IMAGE_UPLOAD_DIRECTORY}`
@@ -31,7 +32,7 @@ export default defineEventHandler(async (event) => {
 	const result = validateSchema.safeParse(data)
 
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
 	}
 
 	const { name, categoryName, image, itemID } = result.data
@@ -43,7 +44,7 @@ export default defineEventHandler(async (event) => {
 		},
 	})
 	if (!category) {
-		throw createError({ statusCode: 400, statusMessage: "Category does not exist" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Category does not exist" })
 	}
 
 	// store old item image to delete later if editing an item
@@ -55,7 +56,7 @@ export default defineEventHandler(async (event) => {
 			},
 		})
 		if (!item) {
-			throw createError({ statusCode: 500, statusMessage: "Failed to edit item" })
+			throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: "Failed to edit item" })
 		}
 		oldImgName = item.imgName
 	}
@@ -84,7 +85,7 @@ export default defineEventHandler(async (event) => {
 	}
 
 	if (!item) {
-		throw createError({ statusCode: 500, statusMessage: `Failed to edit item` })
+		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: `Failed to edit item` })
 	}
 
 	return `Successfully ${itemID ? "edited" : "created"} item: ${JSON.stringify(item)}`

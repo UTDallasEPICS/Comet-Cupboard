@@ -2,6 +2,7 @@ import { z } from "zod"
 import { broadcastToVolunteers } from "#server/utils/volunteerStreamUtil"
 import { constructVerifyCartListCartAddedEvent } from "#server/utils/eventsUtil"
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	adjustments: z.array(
@@ -19,7 +20,7 @@ export default defineEventHandler(async (event) => {
 
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
 	}
 
 	const { adjustments } = result.data
@@ -41,25 +42,25 @@ export default defineEventHandler(async (event) => {
 			})
 
 			if (!existingCart) {
-				throw createError({ statusCode: 404, statusMessage: `User ${netID} has no active cart` })
+				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `User ${netID} has no active cart` })
 			}
 
 			if (existingCart.pending) {
-				throw createError({ statusCode: 400, statusMessage: `Cart ${netID} is already pending verification` })
+				throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: `Cart ${netID} is already pending verification` })
 			}
 
 			for (const adjustment of adjustments) {
 				const cartItem = existingCart.CartItems.find((cartItem) => cartItem.itemID === adjustment.itemID)
 				if (!cartItem) {
 					throw createError({
-						statusCode: 400,
+						statusCode: StatusCodes.BAD_REQUEST,
 						statusMessage: `Item ${adjustment.itemID} is not in the cart and cannot be adjusted`,
 					})
 				}
 				const adjustedCountOff = adjustment.countAdjustment
 				if (adjustedCountOff > cartItem.count) {
 					throw createError({
-						statusCode: 400,
+						statusCode: StatusCodes.BAD_REQUEST,
 						statusMessage: `Adjusted count for item ${adjustment.itemID} exceeds quantity in cart`,
 					})
 				}
@@ -93,7 +94,7 @@ export default defineEventHandler(async (event) => {
 		return `Successfully requested cart verification for user ${netID}`
 	} catch (error: any) {
 		throw createError({
-			statusCode: error?.statusCode || 500,
+			statusCode: error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
 			statusMessage: error?.statusMessage || "Failed to request cart verification",
 		})
 	}

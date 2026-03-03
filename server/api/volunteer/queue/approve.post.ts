@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/prismaUtil"
 import { constructCartSessionCreatedEvent, constructQueueEntryApprovedEvent, constructQueueEntryApprovedVolunteerEvent } from "~~/server/utils/eventsUtil"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	netID: z.string(),
@@ -11,7 +12,7 @@ const validateSchema = schema.strict().required()
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
 	}
 	const { netID } = result.data
 
@@ -19,7 +20,7 @@ export default defineEventHandler(async (event) => {
 		where: { netID },
 	})
 	if (!existingEntry) {
-		throw createError({ statusCode: 400, statusMessage: `User with netID ${netID} is not in the queue` })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: `User with netID ${netID} is not in the queue` })
 	}
 	const transaction = await prisma.$transaction(async (tx) => {
 		await tx.queueEntry.delete({

@@ -1,4 +1,5 @@
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 export default defineEventHandler(async (event) => {
 	// retrieve the list of categories from the db
@@ -11,7 +12,7 @@ export default defineEventHandler(async (event) => {
 		},
 	})
 	if (!categories) {
-		throw createError({ statusCode: 500, statusMessage: "Failed to find categories" })
+		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: "Failed to find categories" })
 	}
 	return categories
 })

@@ -1,4 +1,5 @@
 import { AccessPermission } from "#shared/utils/permissions"
+import { StatusCodes } from "http-status-codes"
 
 export default defineEventHandler((event) => {
 	const requestPath = getRequestURL(event).pathname
@@ -12,6 +13,6 @@ export default defineEventHandler((event) => {
 	}
 
 	if (!event.context.permissions[requiredAccessPermission]) {
-		throw createError({ statusCode: 403, statusMessage: "Unauthorized" })
+		throw createError({ statusCode: StatusCodes.FORBIDDEN, statusMessage: "Unauthorized" })
 	}
 })
