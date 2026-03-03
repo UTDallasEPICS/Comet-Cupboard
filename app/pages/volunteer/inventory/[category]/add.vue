@@ -118,7 +118,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 	try {
 		const formData = new FormData()
 		formData.append("name", event.data.itemName || "")
-		formData.append("categoryName", currentCategory.value as string)
+		formData.append("categoryName", currentCategory as string)
 		if (event.data.image) {
 			formData.append("image", event.data.image)
 		}
@@ -128,7 +128,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 			body: formData,
 		})
 
-		navigateTo(`/volunteer/inventory/${currentCategory.value}`)
+		navigateTo(`/volunteer/inventory/${currentCategory}`)
 	} catch (error) {
 		// idk for now
 	}
