@@ -1,4 +1,5 @@
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 export default defineEventHandler(async (event) => {
 	const netID = event.context.user.netID
@@ -6,7 +7,7 @@ export default defineEventHandler(async (event) => {
 		where: { netID },
 	})
 	if (!existingEntry) {
-		throw createError({ statusCode: 400, statusMessage: `User with netID ${netID} is not in the queue` })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: `User with netID ${netID} is not in the queue` })
 	}
 
 	return existingEntry

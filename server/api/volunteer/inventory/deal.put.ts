@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	itemID: z.string(),
@@ -16,12 +17,12 @@ const validateSchema = schema.strict().required()
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
 	}
 	const { itemID, actualCount, adjustedCount } = result.data
 
 	if (actualCount <= adjustedCount) {
-		throw createError({ statusCode: 400, statusMessage: "adjustedCount must be less than actualCount" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "adjustedCount must be less than actualCount" })
 	}
 
 	const item = await prisma.item.findUnique({
@@ -31,7 +32,7 @@ export default defineEventHandler(async (event) => {
 	})
 
 	if (!item) {
-		throw createError({ statusCode: 404, statusMessage: `Item with id ${itemID} does not exist` })
+		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Item with id ${itemID} does not exist` })
 	}
 
 	const deal = await prisma.deal.upsert({
@@ -50,7 +51,7 @@ export default defineEventHandler(async (event) => {
 	})
 
 	if (!deal) {
-		throw createError({ statusCode: 500, statusMessage: `Failed to edit deal for item with id ${itemID}` })
+		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: `Failed to edit deal for item with id ${itemID}` })
 	}
 	return `Successfully edited deal: ${JSON.stringify(deal)}`
 })

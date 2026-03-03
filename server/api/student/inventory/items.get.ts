@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	checkAvailability: z.string().default("false"),
@@ -11,7 +12,7 @@ const validateSchema = schema.strict().partial()
 export default defineEventHandler(async (event) => {
 	const queries = await getValidatedQuery(event, (query) => validateSchema.safeParse(query))
 	if (!queries.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid request parameters" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request parameters" })
 	}
 	const { checkAvailability, includeArchived } = queries.data
 
@@ -27,7 +28,7 @@ export default defineEventHandler(async (event) => {
 		},
 	})
 	if (!items) {
-		throw createError({ statusCode: 500, statusMessage: "Failed to find items" })
+		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Items not found" })
 	}
 	return items
 })

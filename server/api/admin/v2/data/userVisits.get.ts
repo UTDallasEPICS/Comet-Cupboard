@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	timeLevel: z.enum(["Day", "Week", "Month", "Semester", "Year"]).default("Day"),
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
 	const result = await getValidatedQuery(event, (query) => validateSchema.safeParse(query))
 
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid request parameters" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request parameters" })
 	}
 
 	const { timeLevel, startDate, endDate } = result.data

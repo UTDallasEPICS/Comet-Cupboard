@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	source: z.string(),
@@ -10,7 +11,7 @@ const validateSchema = schema.strict().required()
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid input" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid input" })
 	}
 
 	const { source } = result.data
@@ -46,6 +47,6 @@ export default defineEventHandler(async (event) => {
 		})
 		return newSource
 	} catch (error) {
-		throw createError({ statusCode: 404, statusMessage: "Error adding Source" })
+		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Error adding Source" })
 	}
 })

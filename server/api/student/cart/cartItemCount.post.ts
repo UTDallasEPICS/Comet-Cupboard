@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	itemID: z.string(),
@@ -11,7 +12,7 @@ const validateSchema = schema.strict().required()
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
 	}
 
 	const { itemID, incrementChange } = result.data
@@ -28,12 +29,12 @@ export default defineEventHandler(async (event) => {
 		})
 
 		if (!cart) {
-			throw createError({ statusCode: 404, statusMessage: `Cart not found for user ${netID}` })
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Cart not found for user ${netID}` })
 		}
 
 		if (cart.pending) {
 			throw createError({
-				statusCode: 409,
+				statusCode: StatusCodes.CONFLICT,
 				statusMessage: `Cart is pending verification`,
 			})
 		}
@@ -53,7 +54,7 @@ export default defineEventHandler(async (event) => {
 			})
 
 			if (updated.count === 0) {
-				throw createError({ statusCode: 404, statusMessage: `Item not in cart` })
+				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Item not in cart` })
 			}
 			// Remove items with count <= 0
 			await tx.cartItem.deleteMany({
@@ -66,7 +67,7 @@ export default defineEventHandler(async (event) => {
 	})
 
 	if (!transactionResult) {
-		throw createError({ statusCode: 500, statusMessage: `Failed to edit item with id ${itemID} from cart` })
+		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: `Failed to edit item with id ${itemID} from cart` })
 	}
 
 	return `Successfully edited cartItem ${JSON.stringify(transactionResult)}`
