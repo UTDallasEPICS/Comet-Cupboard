@@ -1,4 +1,4 @@
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
 
 export default defineEventHandler(async (event) => {
 	const queue = await prisma.queueEntry.findMany({

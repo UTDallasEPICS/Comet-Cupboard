@@ -11,6 +11,8 @@
 </template>
 
 <script lang="ts" setup>
+const toast = useToast()
+
 const state = ref({
 	netID: "",
 })
@@ -40,8 +42,9 @@ const onSubmit = async () => {
 		refreshCookie("netID")
 		refreshCookie("AccessPermission")
 		reloadNuxtApp()
-	} catch (e) {
-		/* lol */
+	} catch (error) {
+		const defaultErrorMessage = "An error occurred during login. Please try again."
+		toast.add({ title: "Login Failed", description: error.data.data ?? defaultErrorMessage, color: "error" })
 	}
 }
 </script>

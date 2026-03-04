@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({

@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { broadcastToVolunteers } from "~~/server/utils/volunteerStreamUtil"
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
 import { constructCartSessionRemovedEvent } from "~~/server/utils/eventsUtil"
 import { StatusCodes } from "http-status-codes"
 

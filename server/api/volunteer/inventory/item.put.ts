@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { unlink, writeFile } from "node:fs/promises"
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
 import { nanoid } from "nanoid"
 import { StatusCodes } from "http-status-codes"
 

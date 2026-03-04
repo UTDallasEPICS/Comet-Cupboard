@@ -1,4 +1,4 @@
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
 
 export default defineEventHandler(async (event) => {

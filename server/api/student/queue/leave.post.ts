@@ -1,4 +1,4 @@
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
 import { constructQueueEntryRemovedEvent, constructQueueEntryRemovedVolunteerEvent } from "~~/server/utils/eventsUtil"
 import { StatusCodes } from "http-status-codes"
 

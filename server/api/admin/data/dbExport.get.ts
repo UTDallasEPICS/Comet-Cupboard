@@ -1,5 +1,5 @@
 import ExcelJS from "exceljs"
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
 
 export default defineEventHandler(async (event) => {
 	const itemCountChanges = await prisma.itemCountChange.findMany({

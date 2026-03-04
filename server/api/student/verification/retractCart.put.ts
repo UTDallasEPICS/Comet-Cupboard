@@ -1,6 +1,6 @@
 import { constructVerifyCartListCartRemovedEvent } from "~~/server/utils/eventsUtil"
 import { broadcastToVolunteers } from "~~/server/utils/volunteerStreamUtil"
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
 
 export default defineEventHandler(async (event) => {

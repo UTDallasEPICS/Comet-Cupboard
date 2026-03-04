@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
 import { constructCartSessionCreatedEvent, constructQueueEntryApprovedEvent, constructQueueEntryApprovedVolunteerEvent } from "~~/server/utils/eventsUtil"
 import { StatusCodes } from "http-status-codes"
 
