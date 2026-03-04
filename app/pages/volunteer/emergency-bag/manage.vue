@@ -5,11 +5,9 @@
             <UTabs
                 :items="items"
                 :ui="{
-                root: 'gap-0',
-                list: '!rounded-b-none',
+                root: 'gap-0 border-2 border-final-border-soft rounded-lg',
                 trigger: 'rounded-t-lg rounded-b-none md:!w-1/4 md:flex-none',
                 content: [
-                    'bg-[#F0F0F0]',
                     'rounded-lg rounded-tl-none',
                     'p-0',
                 ].join(' ')
