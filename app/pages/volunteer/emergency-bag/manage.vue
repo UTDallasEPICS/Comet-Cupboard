@@ -6,36 +6,19 @@
                 :items="items"
                 :ui="{
                 root: 'gap-0',
-                list: 'bg-transparent p-0 flex w-full mr-auto md:w-1/2',
-                indicator: 'hidden',
-
-                trigger: [
-                    'flex-1',
-                    'text-white',
-                    'data-[state=active]:!text-white',
-                    '[&_*]:!text-white',
-                    'hover:!text-white',
-                    'focus:!text-white',
-                    'rounded-t-lg rounded-b-none',
-                    'bg-[#979797]',
-                    'data-[state=active]:bg-[var(--color-primary)]',
-                    'px-4 py-2 text-sm font-medium text-center',
-                    'cursor-pointer'
-                ].join(' '),
-
+                list: '!rounded-b-none',
+                trigger: 'rounded-t-lg rounded-b-none md:!w-1/4 md:flex-none',
                 content: [
-                    'w-full max-w-full mr-auto',
                     'bg-[#F0F0F0]',
                     'rounded-lg rounded-tl-none',
                     'p-0',
-                    'min-h-[calc(90vh-var(--ui-header-height))] md:min-h-[calc(80vh-var(--ui-header-height))]'
                 ].join(' ')
                 }"
-            >
+                >
                 <!--START OF ADD BAG STUFF-->
                 <template #add>
                     <div>
-                        <div class="rounded-tr-lg p-2 bg-[var(--color-final-cancel-gray)] text-white">
+                        <div class="rounded-t-lg p-2 bg-final-cancel-gray text-white">
                             <UInput
                                 v-model="a_searchQuery"
                                 icon="material-symbols:search"
@@ -51,7 +34,7 @@
                 <!--START OF VIEW/MODIFY BAG STUFF-->
                 <template #view>
                     <div>
-                        <div class="rounded-tr-lg p-2 bg-[var(--color-final-cancel-gray)] text-white">
+                        <div class="rounded-t-lg p-2 bg-final-cancel-gray text-white">
                             <UInput
                                 v-model="vm_searchQuery"
                                 icon="material-symbols:search"
