@@ -1,27 +1,24 @@
 <template>
     <div class="w-full flex items-center justify-center p-6">
         <!--Tabs-->
-        <div class="w-[95%] md:w-[80%] ">
+        <UContainer>
             <UTabs
                 :items="items"
                 :ui="{
                 root: 'gap-0 border-2 border-final-border-soft rounded-lg',
-                trigger: 'rounded-t-lg rounded-b-none md:!w-1/4 md:flex-none',
-                content: [
-                    'rounded-lg rounded-tl-none',
-                    'p-0',
-                ].join(' ')
+                trigger: 'rounded-t-lg',
+                content: 'rounded-b-lg p-0'
                 }"
                 >
                 <!--START OF ADD BAG STUFF-->
                 <template #add>
                     <div>
-                        <div class="rounded-t-lg p-2 bg-final-cancel-gray text-white">
+                        <div class="p-2 bg-final-cancel-gray text-white">
                             <UInput
-                                v-model="a_searchQuery"
+                                v-model="manage_searchQuery"
                                 icon="material-symbols:search"
                                 placeholder="Search items"
-                                class="w-full md:w-1/3"
+                                class="w-full md:w-72"
                             />
                         </div>
                         Add New Bag content
@@ -32,12 +29,12 @@
                 <!--START OF VIEW/MODIFY BAG STUFF-->
                 <template #view>
                     <div>
-                        <div class="rounded-t-lg p-2 bg-final-cancel-gray text-white">
+                        <div class="p-2 bg-final-cancel-gray text-white">
                             <UInput
-                                v-model="vm_searchQuery"
+                                v-model="manage_searchQuery"
                                 icon="material-symbols:search"
                                 placeholder="Search items"
-                                class="w-full md:w-1/3"
+                                class="w-full md:w-72"
                             />
                         </div>
                         View/Modify Bags content
@@ -45,7 +42,7 @@
                 </template>
                 <!--END OF VIEW/MODIFY BAG STUFF-->
             </UTabs>
-        </div>
+        </UContainer>
     </div>
 </template>
 
@@ -57,10 +54,11 @@ const items = [
   { label: 'View/Modify Bags', slot: 'view' }
 ]
 
-//Add Tab
-const a_searchQuery = ref('')
+//Search Query
+const manage_searchQuery = ref('')
 
-//View/Modify Tab 
-const vm_searchQuery = ref('')
+//Add Tab
+
+//View Tab
 
 </script>
