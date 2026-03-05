@@ -2,6 +2,7 @@ import { z } from "zod"
 import { broadcastToVolunteers } from "~~/server/utils/volunteerStreamUtil"
 import { prisma } from "#server/utils/prismaUtil"
 import { constructCartSessionRemovedEvent } from "~~/server/utils/eventsUtil"
+import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
 	cartID: z.string(),
@@ -14,7 +15,7 @@ const validateSchema = schema.strict().required()
 export default defineEventHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
-		throw createError({ statusCode: 400, statusMessage: "Invalid request body" })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
 	}
 
 	const { cartID, action, reason } = result.data
@@ -24,11 +25,11 @@ export default defineEventHandler(async (event) => {
 	})
 
 	if (!pendingCart) {
-		throw createError({ statusCode: 404, statusMessage: `User has no active cart for cartID ${cartID}` })
+		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `User has no active cart for cartID ${cartID}` })
 	}
 
 	if (!pendingCart.pending) {
-		throw createError({ statusCode: 400, statusMessage: `Cart ${cartID} is not pending verification` })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: `Cart ${cartID} is not pending verification` })
 	}
 
 	if (action === "ACCEPT") {

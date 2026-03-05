@@ -1,14 +1,19 @@
 import { copyFile } from "node:fs/promises"
 import { nanoid } from "nanoid"
-import { PrismaClient } from "@prisma/client"
 import { existsSync, mkdirSync, readdirSync } from "fs"
+import "dotenv/config"
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
+import { PrismaClient } from "./generated/prisma/client"
+
+const connectionString = `${process.env.DATABASE_URL}`
+const adapter = new PrismaBetterSqlite3({ url: connectionString })
+const prisma = new PrismaClient({ adapter })
 
 const uploadDirectory = `${process.env.IMAGE_UPLOAD_DIRECTORY}`
 if (!existsSync(uploadDirectory)) {
 	mkdirSync(uploadDirectory)
 }
 
-const prisma: PrismaClient = new PrismaClient()
 const sources: Array<string> = ["NTFB", "Community Garden", "Individual Donation", "Cannot Distribute", "Error"]
 const categories: Array<string> = readdirSync("./test-images")
 const items = []

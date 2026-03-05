@@ -1,5 +1,6 @@
 import { prisma } from "#server/utils/prismaUtil"
 import { constructQueueEntryAddedEvent, constructQueueEntryAddedVolunteerEvent } from "~~/server/utils/eventsUtil"
+import { StatusCodes } from "http-status-codes"
 
 let temporaryQueuePublicCode: number = 0
 
@@ -10,13 +11,13 @@ export default defineEventHandler(async (event) => {
 		where: { netID },
 	})
 	if (existingEntry) {
-		throw createError({ statusCode: 400, statusMessage: `User with netID ${netID} is already in the queue` })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: `User with netID ${netID} is already in the queue` })
 	}
 	const existingCart = await prisma.cart.findUnique({
 		where: { cartID: netID },
 	})
 	if (existingCart) {
-		throw createError({ statusCode: 400, statusMessage: `User with netID ${netID} already has a cart` })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: `User with netID ${netID} already has a cart` })
 	}
 	const maxPositionEntry = await prisma.queueEntry.findFirst({
 		orderBy: { position: "desc" },

@@ -2,7 +2,7 @@
 	<div class="relative cursor-pointer" :class="{ 'cursor-not-allowed opacity-50': cartDisabled }">
 		<div class="relative flex items-center justify-center rounded-md bg-green-900" style="width: 50px; height: 50px; background-color: #154734">
 			<UIcon
-				name="iconamoon:shopping-card-fill"
+				:name="icons['shopping']"
 				class="hover:text-final-utd-orange text-white transition-colors duration-200"
 				style="width: 40px; height: 40px"
 			/>

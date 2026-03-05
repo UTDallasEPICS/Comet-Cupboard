@@ -1,6 +1,7 @@
 import { constructVerifyCartListCartRemovedEvent } from "~~/server/utils/eventsUtil"
 import { broadcastToVolunteers } from "~~/server/utils/volunteerStreamUtil"
 import { prisma } from "#server/utils/prismaUtil"
+import { StatusCodes } from "http-status-codes"
 
 export default defineEventHandler(async (event) => {
 	const netID = event.context.user.netID
@@ -12,7 +13,7 @@ export default defineEventHandler(async (event) => {
 	})
 
 	if (!cart) {
-		throw createError({ statusCode: 404, statusMessage: `User ${event.context.user.netID} has no active cart` })
+		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `User ${event.context.user.netID} has no active cart` })
 	}
 
 	const cartID = cart.cartID
@@ -23,10 +24,10 @@ export default defineEventHandler(async (event) => {
 		},
 	})
 	if (!pendingCart) {
-		throw createError({ statusCode: 404, statusMessage: `User has no active cart for cartID ${cartID}` })
+		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `User has no active cart for cartID ${cartID}` })
 	}
 	if (!pendingCart.pending) {
-		throw createError({ statusCode: 400, statusMessage: `Cart ${cartID} is not pending verification` })
+		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: `Cart ${cartID} is not pending verification` })
 	}
 
 	cart = await prisma.cart.update({
@@ -39,7 +40,7 @@ export default defineEventHandler(async (event) => {
 	})
 
 	if (!cart) {
-		throw createError({ statusCode: 500, statusMessage: `Failed to retract cart ${cartID}` })
+		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: `Failed to retract cart ${cartID}` })
 	}
 
 	await broadcastToVolunteers(JSON.stringify(constructVerifyCartListCartRemovedEvent(cartID)))

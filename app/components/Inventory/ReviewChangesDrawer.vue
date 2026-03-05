@@ -8,7 +8,7 @@
 				v-model="selectedSource"
 				:items="sources?.map((s) => s.name) || []"
 				ignore-filter
-				icon="i-lucide-database"
+				:icon="icons['source']"
 				placeholder="Select a source"
 				class="grow"
 			/>

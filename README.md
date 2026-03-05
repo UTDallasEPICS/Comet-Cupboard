@@ -37,7 +37,7 @@ cp .env.example .env
 
 ```bash
 # Initialize the database and test data seeding
-npx prisma migrate dev --name init
+npm run dev-prisma
 ```
 
 ### Running the Application

@@ -1,7 +1,7 @@
 <template>
 	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
 		<template #header-actions>
-			<!-- <UButton variant="ghost" icon="i-heroicons-x-mark" class="shrink-0" size="xs" @click="removeCartItem" /> -->
+			<!-- <UButton variant="ghost" :icon="icons['close']" class="shrink-0" size="xs" @click="removeCartItem" /> -->
 		</template>
 		<template #body>
 			<div class="mt-auto flex flex-col items-end gap-2">
