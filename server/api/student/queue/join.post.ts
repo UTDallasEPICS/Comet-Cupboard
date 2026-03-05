@@ -1,5 +1,5 @@
 import { prisma } from "#server/utils/db"
-import { constructQueueEntryAddedEvent, constructQueueEntryAddedVolunteerEvent } from "#server/utils/eventsFactory"
+import { createEvent } from "#server/utils/eventsFactory"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
 

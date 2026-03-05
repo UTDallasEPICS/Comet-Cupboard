@@ -24,5 +24,5 @@ export default defineSafeHandler(async (event) => {
 	}
 
 	setCookie(event, "netID", netID)
-	return `Successful login for user ${netID}`
+	return "Successful login"
 })

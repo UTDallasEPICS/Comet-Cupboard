@@ -1,5 +1,5 @@
-import { constructVerifyCartListCartRemovedEvent } from "#server/utils/eventsFactory"
-import { broadcastToVolunteers } from "#server/utils/volunteerStreamUtil"
+import { createEvent } from "#server/utils/eventsFactory"
+
 import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"

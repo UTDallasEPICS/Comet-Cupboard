@@ -2,74 +2,70 @@ import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
+import { validateBody } from "#server/utils/validation"
 
-const schema = z.object({
-	itemID: z.string(),
-	incrementChange: z.number().int().min(-1).max(1),
-})
-
-const validateSchema = schema.strict().required()
+const schema = z
+	.object({
+		itemID: z.string(),
+		incrementChange: z.number().int().min(-1).max(1),
+	})
+	.strict()
+	.required()
 
 export default defineSafeHandler(async (event) => {
-	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
-	if (!result.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
-	}
-
-	const { itemID, incrementChange } = result.data
+	const { itemID, incrementChange } = await validateBody(event, schema)
 	const netID = event.context.user.netID
 
 	if (incrementChange === 0) {
 		return "No changes made"
 	}
 
-	const transactionResult = await prisma.$transaction(async (tx) => {
+	await prisma.$transaction(async (tx) => {
 		const cart = await tx.cart.findUnique({
 			where: { cartID: netID },
 			select: { cartID: true, pending: true },
 		})
 
 		if (!cart) {
-			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Cart not found for user ${netID}` })
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Cart not found" })
 		}
 
 		if (cart.pending) {
 			throw createError({
 				statusCode: StatusCodes.CONFLICT,
-				statusMessage: `Cart is pending verification`,
+				statusMessage: "Cart is pending verification",
 			})
 		}
 
 		if (incrementChange > 0) {
-			const cartItem = await tx.cartItem.upsert({
-				where: { cartItemID: { cartID: cart.cartID, itemID } },
+			return await tx.cartItem.upsert({
+				where: { cartItemID: { cartID: cart.cartID, itemID: itemID } },
 				update: { count: { increment: incrementChange } },
-				create: { cartID: cart.cartID, itemID, count: incrementChange },
+				create: { cartID: cart.cartID, itemID: itemID, count: incrementChange },
 			})
-
-			return cartItem
 		} else {
-			const updated = await tx.cartItem.updateMany({
-				where: { cartID: cart.cartID, itemID },
-				data: { count: { increment: incrementChange } },
-			})
+			try {
+				const updatedItem = await tx.cartItem.update({
+					where: { cartItemID: { cartID: cart.cartID, itemID: itemID } },
+					data: { count: { increment: incrementChange } },
+				})
 
-			if (updated.count === 0) {
-				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Item not in cart` })
+				if (updatedItem.count <= 0) {
+					await tx.cartItem.delete({
+						where: { cartItemID: { cartID: cart.cartID, itemID: itemID } },
+					})
+					return null
+				}
+
+				return updatedItem
+			} catch (error: unknown) {
+				if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+					throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Item not in cart" })
+				}
+				throw error
 			}
-			// Remove items with count <= 0
-			await tx.cartItem.deleteMany({
-				where: { cartID: cart.cartID, itemID, count: { lte: 0 } },
-			})
-			return tx.cartItem.findUnique({
-				where: { cartItemID: { cartID: cart.cartID, itemID } },
-			})
 		}
 	})
 
-	if (!transactionResult) {
-		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: `Failed to edit item with id ${itemID} from cart` })
-	}
-
-	return `Successfully edited cartItem ${JSON.stringify(transactionResult)}`
+	return "Successfully edited cartItem"
 })

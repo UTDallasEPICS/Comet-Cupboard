@@ -1,7 +1,8 @@
 import { connectionsByRole } from "#server/utils/eventstreams"
 import type { AppEvent } from "#shared/types/events"
 
-export async function publishEvent(event: AppEvent) {
+// Fire-and-forget WebSocket broadcast (shouldn't await this since we don't want to block the main flow of the API handler)
+export const publishEvent = async (event: AppEvent) => {
 	switch (event.type) {
 		case "queue.entryAdded":
 			break
