@@ -1,5 +1,5 @@
-import type { Prisma } from "@prisma/client"
-import { prisma } from "#server/utils/prismaUtil"
+import type { Prisma } from "../../prisma/generated/prisma/client"
+import { prisma } from "#server/utils/db"
 
 type UserInfo = Prisma.UserGetPayload<{
 	include: { Student: true; Volunteer: true; Admin: true }
@@ -11,7 +11,7 @@ declare module "h3" {
 	}
 }
 
-export default defineEventHandler(async (event) => {
+export default defineSafeHandler(async (event) => {
 	event.context.permissions = {}
 	event.context.permissions[AccessPermission.PUBLIC] = true
 	const cookies = parseCookies(event)

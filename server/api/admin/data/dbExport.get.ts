@@ -1,30 +1,38 @@
 import ExcelJS from "exceljs"
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
+import { defineSafeHandler } from "#server/utils/handler"
 
-export default defineEventHandler(async (event) => {
-	const itemCountChanges = await prisma.itemCountChange.findMany({
-		include: {
-			Item: true,
-			Source: {
-				include: {
-					Fields: true,
+export default defineSafeHandler(async (event) => {
+	const { itemCountChanges, orderItems, fields } = await prisma.$transaction(async (tx) => {
+		const itemCountChanges = await tx.itemCountChange.findMany({
+			include: {
+				Item: true,
+				Source: {
+					include: {
+						Fields: true,
+					},
 				},
 			},
-		},
+		})
+		
+		const orderItems = await tx.orderItem.findMany({
+			include: {
+				Order: true,
+				Item: true,
+			},
+		})
+		
+		const fields = await tx.field.findMany()
+		
+		return { itemCountChanges, orderItems, fields }
 	})
+	
 	const allFieldNames = new Set<string>()
 	itemCountChanges.forEach((change) => {
 		change.Source.Fields.forEach((field) => {
 			allFieldNames.add(field.name)
 		})
 	})
-	const orderItems = await prisma.orderItem.findMany({
-		include: {
-			Order: true,
-			Item: true,
-		},
-	})
-	const fields = await prisma.field.findMany()
 	const fieldKeys = fields.map((field) => ({
 		key: `(${field.sourceName})_${field.name}`,
 		name: field.name,
@@ -87,5 +95,6 @@ export default defineEventHandler(async (event) => {
 
 	const buffer = await workbook.xlsx.writeBuffer()
 	setHeader(event, "Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	setHeader(event, "Content-Disposition", 'attachment; filename="mycupboard-report.xlsx"')
 	return buffer
 })

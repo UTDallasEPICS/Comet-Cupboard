@@ -3,7 +3,7 @@ interface CartSession {
 }
 
 export const useCartSessionsStore = defineStore("cartSessions", () => {
-	const cartSessions = ref<CartSession[]>([])
+	const cartSessions = ref<Array<CartSession>>([])
 
 	const getCartSessions = async () => {
 		try {

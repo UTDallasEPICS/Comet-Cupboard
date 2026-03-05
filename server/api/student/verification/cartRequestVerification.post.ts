@@ -1,77 +1,78 @@
 import { z } from "zod"
-import { broadcastToVolunteers } from "#server/utils/volunteerStreamUtil"
-import { constructVerifyCartListCartAddedEvent } from "#server/utils/eventsUtil"
-import { prisma } from "#server/utils/prismaUtil"
+import { createEvent } from "#server/utils/eventsFactory"
+import { publishEvent } from "#server/utils/eventBus"
+import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
+import { defineSafeHandler } from "#server/utils/handler"
+import { validateBody } from "#server/utils/validation"
 
-const schema = z.object({
-	adjustments: z.array(
-		z.object({
-			itemID: z.string().min(1),
-			countAdjustment: z.number().int().min(0),
-		})
-	),
-})
+const schema = z
+	.object({
+		adjustments: z.array(
+			z.object({
+				itemID: z.string().min(1),
+				countAdjustment: z.number().int().min(0),
+			})
+		),
+	})
+	.strict()
+	.required()
 
-const validateSchema = schema.strict().required()
-
-export default defineEventHandler(async (event) => {
+export default defineSafeHandler(async (event) => {
 	const netID = event.context.user.netID
 
-	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
-	if (!result.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
-	}
+	const { adjustments } = await validateBody(event, schema)
 
-	const { adjustments } = result.data
-
-	try {
-		const cart = await prisma.$transaction(async (tx) => {
-			const existingCart = await tx.cart.findUnique({
-				where: { cartID: netID },
-				include: {
-					CartItems: {
-						include: {
-							Item: {
-								omit: { quantity: true },
-								include: { Deal: true },
-							},
+	const cart = await prisma.$transaction(async (tx) => {
+		const existingCart = await tx.cart.findUnique({
+			where: { cartID: netID, pending: false },
+			include: {
+				CartItems: {
+					include: {
+						Item: {
+							omit: { quantity: true },
+							include: { Deal: true },
 						},
 					},
 				},
-			})
+			},
+		})
 
-			if (!existingCart) {
-				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `User ${netID} has no active cart` })
+		if (!existingCart) {
+			throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "User has no non-pending cart" })
+		}
+
+		for (const adjustment of adjustments) {
+			const cartItem = existingCart.CartItems.find((cartItem) => cartItem.itemID === adjustment.itemID)
+			if (!cartItem) {
+				throw createError({
+					statusCode: StatusCodes.BAD_REQUEST,
+					statusMessage: "Item is not in the cart and cannot be adjusted",
+				})
 			}
-
-			if (existingCart.pending) {
-				throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: `Cart ${netID} is already pending verification` })
+			const adjustedCountOff = adjustment.countAdjustment
+			if (adjustedCountOff > cartItem.count) {
+				throw createError({
+					statusCode: StatusCodes.BAD_REQUEST,
+					statusMessage: "Adjusted count for item exceeds quantity in cart",
+				})
 			}
-
-			for (const adjustment of adjustments) {
-				const cartItem = existingCart.CartItems.find((cartItem) => cartItem.itemID === adjustment.itemID)
-				if (!cartItem) {
-					throw createError({
-						statusCode: StatusCodes.BAD_REQUEST,
-						statusMessage: `Item ${adjustment.itemID} is not in the cart and cannot be adjusted`,
-					})
-				}
-				const adjustedCountOff = adjustment.countAdjustment
-				if (adjustedCountOff > cartItem.count) {
-					throw createError({
-						statusCode: StatusCodes.BAD_REQUEST,
-						statusMessage: `Adjusted count for item ${adjustment.itemID} exceeds quantity in cart`,
-					})
-				}
+			try {
 				await tx.cartItem.update({
 					where: { cartItemID: { cartID: netID, itemID: adjustment.itemID } },
 					data: {
 						countAdjustment: adjustment.countAdjustment,
 					},
 				})
+			} catch (error: unknown) {
+				if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+					throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Cart item not found" })
+				}
+				throw error
 			}
+		}
 
+		try {
 			const updatedCart = await tx.cart.update({
 				where: { cartID: netID },
 				data: { pending: true },
@@ -86,16 +87,15 @@ export default defineEventHandler(async (event) => {
 					},
 				},
 			})
-
 			return updatedCart
-		})
+		} catch (error: unknown) {
+			if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Cart not found" })
+			}
+			throw error
+		}
+	})
+	publishEvent(createEvent("verifyCartList.cart.added", { cart: cart }))
 
-		await broadcastToVolunteers(JSON.stringify(constructVerifyCartListCartAddedEvent(cart)))
-		return `Successfully requested cart verification for user ${netID}`
-	} catch (error: any) {
-		throw createError({
-			statusCode: error?.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
-			statusMessage: error?.statusMessage || "Failed to request cart verification",
-		})
-	}
+	return "Successfully requested cart verification"
 })

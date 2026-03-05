@@ -99,7 +99,7 @@ model Source {
 model Cart {
     User      User       @relation(fields: [cartID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
     cartID    String     @id @map("cart_id")
-    updatedAt DateTime   @updatedAt @map("updated_at")
+    joinedAt  DateTime   @default(now()) @map("joined_at")
     CartItems CartItem[]
     pending   Boolean    @default(false) @map("pending")
 
@@ -150,10 +150,10 @@ model Deal {
 }
 
 model QueueEntry {
-    netID      String   @id
-    publicCode String   @unique
-    joinedAt   DateTime @default(now())
-    position   Int
+    netID      String   @id @map("net_id")
+    publicCode String   @map("public_code")
+    joinedAt   DateTime @default(now()) @map("joined_at")
+    position   Int      @map("position")
     User       User     @relation(fields: [netID], references: [netID])
 
     @@map("queue_entry")

@@ -5,21 +5,25 @@ import { validateQuery } from "#server/utils/validation"
 
 const schema = z
 	.object({
-		pending: z.string().default("false"),
+		includeArchived: z.string().default("false"),
 	})
 	.strict()
 	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { pending } = validateQuery(event, schema)
+	const { includeArchived } = validateQuery(event, schema)
 
-	const carts = await prisma.cart.findMany({
+	const sources = await prisma.source.findMany({
 		where: {
-			pending: pending === "true",
+			...(includeArchived === "false" ? { archived: false } : {}),
+		},
+		include: {
+			Fields: true,
 		},
 		orderBy: {
-			joinedAt: "asc",
+			name: "asc",
 		},
 	})
-	return carts
+
+	return sources
 })

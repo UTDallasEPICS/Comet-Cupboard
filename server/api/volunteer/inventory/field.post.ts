@@ -1,31 +1,25 @@
 import { z } from "zod"
-import { prisma } from "#server/utils/prismaUtil"
-import { StatusCodes } from "http-status-codes"
+import { prisma } from "#server/utils/db"
+import { defineSafeHandler } from "#server/utils/handler"
+import { validateBody } from "#server/utils/validation"
 
-const schema = z.object({
-	source: z.string(),
-	fieldName: z.string(),
-})
+const schema = z
+	.object({
+		source: z.string(),
+		fieldName: z.string(),
+	})
+	.strict()
+	.required()
 
-const validateSchema = schema.strict().required()
+export default defineSafeHandler(async (event) => {
+	const { source, fieldName } = await validateBody(event, schema)
 
-export default defineEventHandler(async (event) => {
-	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
-	if (!result.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
-	}
-	const { source, fieldName } = result.data
-
-	const field = await prisma.field.create({
+	await prisma.field.create({
 		data: {
 			name: fieldName,
 			sourceName: source,
 		},
 	})
 
-	if (!field) {
-		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: "Failed to add field: " + fieldName })
-	}
-
-	return field
+	return "Field added successfully"
 })
