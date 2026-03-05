@@ -1,8 +1,9 @@
 import { z } from "zod"
 import { broadcastToVolunteers } from "#server/utils/volunteerStreamUtil"
-import { constructVerifyCartListCartAddedEvent } from "~~/server/utils/eventsFactory"
+import { constructVerifyCartListCartAddedEvent } from "#server/utils/eventsFactory"
 import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
+import { defineSafeHandler } from "#server/utils/handler"
 
 const schema = z.object({
 	adjustments: z.array(
@@ -15,7 +16,7 @@ const schema = z.object({
 
 const validateSchema = schema.strict().required()
 
-export default defineEventHandler(async (event) => {
+export default defineSafeHandler(async (event) => {
 	const netID = event.context.user.netID
 
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))

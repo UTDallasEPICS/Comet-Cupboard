@@ -1,7 +1,7 @@
 import { AccessPermission } from "#shared/utils/permissions"
 import { StatusCodes, ReasonPhrases } from "http-status-codes"
 
-export default defineEventHandler((event) => {
+export default defineSafeHandler((event) => {
 	const requestPath = getRequestURL(event).pathname
 	let requiredAccessPermission: AccessPermission = AccessPermission.PUBLIC
 	if (requestPath.startsWith("/api/admin") || requestPath.startsWith("/admin")) {

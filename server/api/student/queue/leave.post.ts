@@ -1,8 +1,9 @@
 import { prisma } from "#server/utils/db"
-import { constructQueueEntryRemovedEvent, constructQueueEntryRemovedVolunteerEvent } from "~~/server/utils/eventsFactory"
+import { constructQueueEntryRemovedEvent, constructQueueEntryRemovedVolunteerEvent } from "#server/utils/eventsFactory"
 import { StatusCodes } from "http-status-codes"
+import { defineSafeHandler } from "#server/utils/handler"
 
-export default defineEventHandler(async (event) => {
+export default defineSafeHandler(async (event) => {
 	const netID = event.context.user.netID
 
 	const existingEntry = await prisma.queueEntry.findUnique({

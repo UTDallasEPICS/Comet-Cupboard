@@ -1,7 +1,8 @@
 import ExcelJS from "exceljs"
 import { prisma } from "#server/utils/db"
+import { defineSafeHandler } from "#server/utils/handler"
 
-export default defineEventHandler(async (event) => {
+export default defineSafeHandler(async (event) => {
 	const itemCountChanges = await prisma.itemCountChange.findMany({
 		include: {
 			Item: true,
@@ -87,5 +88,6 @@ export default defineEventHandler(async (event) => {
 
 	const buffer = await workbook.xlsx.writeBuffer()
 	setHeader(event, "Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	setHeader(event, "Content-Disposition", 'attachment; filename="mycupboard-report.xlsx"')
 	return buffer
 })

@@ -1,6 +1,7 @@
 import { prisma } from "#server/utils/db"
+import { defineSafeHandler } from "#server/utils/handler"
 
-export default defineEventHandler(async (event) => {
+export default defineSafeHandler(async (event) => {
 	const queue = await prisma.queueEntry.findMany({
 		orderBy: { position: "asc" },
 		select: {

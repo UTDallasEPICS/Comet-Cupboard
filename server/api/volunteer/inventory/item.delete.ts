@@ -2,6 +2,7 @@ import { z } from "zod"
 import { unlink } from "node:fs/promises"
 import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
+import { defineSafeHandler } from "#server/utils/handler"
 
 const schema = z.object({
 	itemID: z.string(),
@@ -9,7 +10,7 @@ const schema = z.object({
 
 const validateSchema = schema.strict().required()
 
-export default defineEventHandler(async (event) => {
+export default defineSafeHandler(async (event) => {
 	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
 	if (!result.success) {
 		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })

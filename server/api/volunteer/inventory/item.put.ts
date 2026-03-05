@@ -3,6 +3,7 @@ import { unlink, writeFile } from "node:fs/promises"
 import { prisma } from "#server/utils/db"
 import { nanoid } from "nanoid"
 import { StatusCodes } from "http-status-codes"
+import { defineSafeHandler } from "#server/utils/handler"
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024
 const uploadDirectory = `${process.env.IMAGE_UPLOAD_DIRECTORY}`
@@ -26,7 +27,7 @@ const validateSchema = schema.strict().required()
 	Providing itemID implies wanting to edit an existing item
 */
 
-export default defineEventHandler(async (event) => {
+export default defineSafeHandler(async (event) => {
 	const formData = await readFormData(event)
 	const data = { image: formData.get("image"), name: formData.get("name"), categoryName: formData.get("categoryName"), itemID: formData.get("itemID") || "" }
 	const result = validateSchema.safeParse(data)

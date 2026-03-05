@@ -1,8 +1,9 @@
 import { nanoid } from "nanoid"
-import { createEvent } from "~~/server/utils/eventsFactory"
+import { createEvent } from "#server/utils/eventsFactory"
 import { connectionsByRole } from "#server/utils/eventstreams"
+import { defineSafeHandler } from "#server/utils/handler"
 
-export default defineEventHandler((event) => {
+export default defineSafeHandler((event) => {
 	const eventStream = createEventStream(event)
 	const eventStreamID = nanoid()
 

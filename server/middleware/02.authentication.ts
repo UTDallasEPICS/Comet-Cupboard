@@ -11,7 +11,7 @@ declare module "h3" {
 	}
 }
 
-export default defineEventHandler(async (event) => {
+export default defineSafeHandler(async (event) => {
 	event.context.permissions = {}
 	event.context.permissions[AccessPermission.PUBLIC] = true
 	const cookies = parseCookies(event)

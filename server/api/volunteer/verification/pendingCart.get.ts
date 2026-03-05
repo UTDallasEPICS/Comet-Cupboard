@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
+import { defineSafeHandler } from "#server/utils/handler"
 
 const schema = z.object({
 	cartID: z.string(),
@@ -8,7 +9,7 @@ const schema = z.object({
 
 const validateSchema = schema.strict().required()
 
-export default defineEventHandler(async (event) => {
+export default defineSafeHandler(async (event) => {
 	const queries = await getValidatedQuery(event, (query) => validateSchema.safeParse(query))
 	if (!queries.success) {
 		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request parameters" })
