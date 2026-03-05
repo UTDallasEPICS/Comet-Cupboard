@@ -22,7 +22,7 @@ export default defineSafeHandler(async (event) => {
 		return "User has left the queue"
 	} catch (error: unknown) {
 		if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
-			throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "User is not in the queue" })
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "User is not in the queue" })
 		}
 		throw error
 	}

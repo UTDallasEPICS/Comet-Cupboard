@@ -45,10 +45,17 @@ export default defineSafeHandler(async (event) => {
 			})
 		}
 
-		await tx.queueEntry.update({
-			where: { netID },
-			data: { position: newPosition },
-		})
+		try {
+			await tx.queueEntry.update({
+				where: { netID },
+				data: { position: newPosition },
+			})
+		} catch (error: unknown) {
+			if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Queue entry not found" })
+			}
+			throw error
+		}
 
 		const updatedQueue = await tx.queueEntry.findMany({
 			orderBy: { position: "asc" },

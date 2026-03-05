@@ -18,16 +18,22 @@ export default defineSafeHandler(async (event) => {
 			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "User has no pending cart" })
 		}
 
-		const cart = await tx.cart.update({
-			where: {
-				cartID: pendingCart.cartID,
-			},
-			data: {
-				pending: false,
-			},
-		})
-
-		return cart
+		try {
+			const cart = await tx.cart.update({
+				where: {
+					cartID: pendingCart.cartID,
+				},
+				data: {
+					pending: false,
+				},
+			})
+			return cart
+		} catch (error: unknown) {
+			if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Cart not found" })
+			}
+			throw error
+		}
 	})
 
 	publishEvent(createEvent("verifyCartList.cart.removed", { cartID: cart.cartID }))

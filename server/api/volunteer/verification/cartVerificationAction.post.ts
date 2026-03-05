@@ -19,7 +19,7 @@ export default defineSafeHandler(async (event) => {
 	const { cartID, action, reason } = await validateBody(event, schema)
 
 	const transactionResult = await prisma.$transaction(async (tx) => {
-		const pendingCart = await prisma.cart.findUnique({
+		const pendingCart = await tx.cart.findUnique({
 			where: { cartID: cartID, pending: true },
 			include: { CartItems: true },
 		})
@@ -35,10 +35,17 @@ export default defineSafeHandler(async (event) => {
 			}))
 
 			for (const orderItem of orderItems) {
-				await tx.item.update({
-					where: { itemID: orderItem.itemID },
-					data: { quantity: { decrement: orderItem.count } },
-				})
+				try {
+					await tx.item.update({
+						where: { itemID: orderItem.itemID },
+						data: { quantity: { decrement: orderItem.count } },
+					})
+				} catch (error: unknown) {
+					if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+						throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Item not found" })
+					}
+					throw error
+				}
 			}
 
 			await tx.order.create({
@@ -48,7 +55,14 @@ export default defineSafeHandler(async (event) => {
 				},
 			})
 
-			await tx.cart.delete({ where: { cartID } })
+			try {
+				await tx.cart.delete({ where: { cartID } })
+			} catch (error: unknown) {
+				if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+					throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Cart not found" })
+				}
+				throw error
+			}
 
 			publishEvent(createEvent("cart.verification.decision", { decision: "ACCEPT", reason }))
 			publishEvent(createEvent("cartSession.removed", { cartID }))
@@ -56,10 +70,17 @@ export default defineSafeHandler(async (event) => {
 
 			return "Successfully accepted cart"
 		} else {
-			await tx.cart.update({
-				where: { cartID },
-				data: { pending: false },
-			})
+			try {
+				await tx.cart.update({
+					where: { cartID },
+					data: { pending: false },
+				})
+			} catch (error: unknown) {
+				if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+					throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Cart not found" })
+				}
+				throw error
+			}
 
 			publishEvent(createEvent("cart.verification.decision", { decision: "REJECT", reason }))
 			publishEvent(createEvent("verifyCartList.cart.removed", { cartID }))

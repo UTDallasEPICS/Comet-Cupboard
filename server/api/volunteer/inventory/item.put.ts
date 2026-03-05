@@ -4,13 +4,14 @@ import { prisma } from "#server/utils/db"
 import { nanoid } from "nanoid"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
+import { validateFormData } from "#server/utils/validation"
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024
-const uploadDirectory = "${process.env.IMAGE_UPLOAD_DIRECTORY}"
+const uploadDirectory = process.env.IMAGE_UPLOAD_DIRECTORY
 
 const schema = z
 	.object({
-		itemID: z.string(),
+		itemID: z.string().default(""),
 		name: z.string(),
 		categoryName: z.string(),
 		image: z
@@ -29,15 +30,7 @@ const schema = z
 */
 
 export default defineSafeHandler(async (event) => {
-	const formData = await readFormData(event)
-	const data = { image: formData.get("image"), name: formData.get("name"), categoryName: formData.get("categoryName"), itemID: formData.get("itemID") || "" }
-	const result = schema.safeParse(data)
-
-	if (!result.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
-	}
-
-	const { name, categoryName, image, itemID } = result.data
+	const { name, categoryName, image, itemID } = await validateFormData(event, schema)
 
 	await prisma.$transaction(async (tx) => {
 		const category = await tx.category.findUnique({ where: { name: categoryName } })
@@ -68,10 +61,17 @@ export default defineSafeHandler(async (event) => {
 
 		let item
 		if (itemID) {
-			item = await tx.item.update({
-				where: { itemID },
-				data: { name, imgName: newImgName, categoryName, archived: false },
-			})
+			try {
+				item = await tx.item.update({
+					where: { itemID },
+					data: { name, imgName: newImgName, categoryName, archived: false },
+				})
+			} catch (error: unknown) {
+				if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+					throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Item not found" })
+				}
+				throw error
+			}
 		} else {
 			item = await tx.item.create({
 				data: { name, imgName: newImgName, categoryName, archived: false },

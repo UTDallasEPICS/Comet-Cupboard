@@ -39,7 +39,7 @@ export default defineSafeHandler(async (event) => {
 		})
 
 		if (!existingCart) {
-			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "User has active non-pending cart" })
+			throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "User has no non-pending cart" })
 		}
 
 		for (const adjustment of adjustments) {
@@ -57,30 +57,43 @@ export default defineSafeHandler(async (event) => {
 					statusMessage: "Adjusted count for item exceeds quantity in cart",
 				})
 			}
-			await tx.cartItem.update({
-				where: { cartItemID: { cartID: netID, itemID: adjustment.itemID } },
-				data: {
-					countAdjustment: adjustment.countAdjustment,
-				},
-			})
+			try {
+				await tx.cartItem.update({
+					where: { cartItemID: { cartID: netID, itemID: adjustment.itemID } },
+					data: {
+						countAdjustment: adjustment.countAdjustment,
+					},
+				})
+			} catch (error: unknown) {
+				if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+					throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Cart item not found" })
+				}
+				throw error
+			}
 		}
 
-		const updatedCart = await tx.cart.update({
-			where: { cartID: netID },
-			data: { pending: true },
-			include: {
-				CartItems: {
-					include: {
-						Item: {
-							omit: { quantity: true },
-							include: { Deal: true },
+		try {
+			const updatedCart = await tx.cart.update({
+				where: { cartID: netID },
+				data: { pending: true },
+				include: {
+					CartItems: {
+						include: {
+							Item: {
+								omit: { quantity: true },
+								include: { Deal: true },
+							},
 						},
 					},
 				},
-			},
-		})
-
-		return updatedCart
+			})
+			return updatedCart
+		} catch (error: unknown) {
+			if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Cart not found" })
+			}
+			throw error
+		}
 	})
 	publishEvent(createEvent("verifyCartList.cart.added", { cart: cart }))
 

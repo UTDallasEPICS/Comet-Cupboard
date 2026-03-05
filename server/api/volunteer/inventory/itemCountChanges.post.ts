@@ -23,10 +23,17 @@ export default defineSafeHandler(async (event) => {
 		}
 
 		for (const change of inventoryCountChanges) {
-			await tx.item.update({
-				where: { itemID: change.itemID },
-				data: { quantity: { increment: change.countChange } },
-			})
+			try {
+				await tx.item.update({
+					where: { itemID: change.itemID },
+					data: { quantity: { increment: change.countChange } },
+				})
+			} catch (error: unknown) {
+				if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+					throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Item not found" })
+				}
+				throw error
+			}
 		}
 
 		return await tx.itemCountChange.createMany({
