@@ -24,8 +24,7 @@ export default defineSafeHandler(async (event) => {
 	})
 
 	if (!cart) {
-		setResponseStatus(event, StatusCodes.NO_CONTENT)
-		return
+		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "User does not have a cart" })
 	}
 
 	return cart

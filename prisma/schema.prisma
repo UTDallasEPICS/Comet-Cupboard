@@ -150,10 +150,10 @@ model Deal {
 }
 
 model QueueEntry {
-    netID      String   @id
-    publicCode String   @unique
-    joinedAt   DateTime @default(now())
-    position   Int
+    netID      String   @id @map("net_id")
+    publicCode String   @map("public_code")
+    joinedAt   DateTime @default(now()) @map("joined_at")
+    position   Int      @map("position")
     User       User     @relation(fields: [netID], references: [netID])
 
     @@map("queue_entry")

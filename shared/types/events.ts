@@ -1,29 +1,18 @@
-export interface QueueEntry {
+export interface QueueEntryNonSensitive {
 	position: number
 	publicCode: string
 }
 
-export interface QueueEntryVolunteer extends QueueEntry {
+export interface QueueEntry extends QueueEntryNonSensitive {
 	netID: string
-}
-
-export type QueueEventType = "queue.entryAdded" | "queue.entryRemoved" | "queue.entryApproved" | "queue.queueUpdated"
-
-export interface QueueEvent<T = unknown> extends BaseEvent {
-	type: QueueEventType
-	payload: T
-}
-export interface QueueSingleEntryPayload {
-	entry: QueueEntry
-}
-
-export interface QueueSingleEntryVolunteerPayload {
-	entry: QueueEntryVolunteer
 }
 
 export interface QueueFullPayload {
 	queue: QueueEntry[]
-	queueVolunteer?: QueueEntryVolunteer[]
+}
+
+export interface QueueFullPayloadNonSensitive {
+	queue: QueueEntryNonSensitive[]
 }
 
 export type Decision = "accepted" | "rejected"
@@ -33,10 +22,10 @@ export interface EventMap {
 	heartbeat: undefined
 
 	/* queue */
-	"queue.entryAdded": { entry: QueueEntry }
-	"queue.entryRemoved": { entry: QueueEntry }
-	"queue.entryApproved": { entry: QueueEntry }
-	"queue.queueUpdated": { queue: QueueEntry[]; queueVolunteer?: QueueEntryVolunteer[] }
+	"queue.entryAdded": QueueEntry
+	"queue.entryRemoved": QueueEntry
+	"queue.entryApproved": QueueEntry
+	"queue.queueUpdated": QueueEntry[]
 
 	/* cart session */
 	"cartSession.created": { cartID: string }
