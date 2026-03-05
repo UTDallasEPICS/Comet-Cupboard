@@ -46,7 +46,7 @@ export const useCartStore = defineStore("cart", () => {
 	const handleCartEvent = async (event: AppEvent) => {
 		switch (event.type) {
 			case "queue.entryApproved":
-				if (!cart.value && !queueStatus.value) {
+				if (!cart.value && queueStatus.value) {
 					// update cart if in queue and cart is empty, to check if the approved entry is for the current user
 					await getCart()
 				}

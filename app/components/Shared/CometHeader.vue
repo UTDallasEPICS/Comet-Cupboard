@@ -65,7 +65,7 @@
 				</template>
 			</USlideover>
 			<USlideover
-				v-if="!cart"
+				v-if="cart"
 				v-model:open="cartView"
 				side="right"
 				title="Preview Cart"
