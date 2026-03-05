@@ -99,7 +99,7 @@ model Source {
 model Cart {
     User      User       @relation(fields: [cartID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
     cartID    String     @id @map("cart_id")
-    updatedAt DateTime   @updatedAt @map("updated_at")
+    joinedAt  DateTime   @default(now()) @map("joined_at")
     CartItems CartItem[]
     pending   Boolean    @default(false) @map("pending")
 
