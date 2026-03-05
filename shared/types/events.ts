@@ -15,7 +15,7 @@ export interface QueueFullPayloadNonSensitive {
 	queue: QueueEntryNonSensitive[]
 }
 
-export type Decision = "accepted" | "rejected"
+export type Decision = "ACCEPT" | "REJECT"
 
 export interface EventMap {
 	/* system */

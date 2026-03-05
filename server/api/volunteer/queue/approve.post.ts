@@ -1,69 +1,49 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { createEvent } from "#server/utils/eventsFactory"
+import { publishEvent } from "#server/utils/eventBus"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
+import { validateBody } from "#server/utils/validation"
 
-const schema = z.object({
-	netID: z.string(),
-})
-
-const validateSchema = schema.strict().required()
+const schema = z
+	.object({
+		netID: z.string(),
+	})
+	.strict()
+	.required()
 
 export default defineSafeHandler(async (event) => {
-	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
-	if (!result.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
-	}
-	const { netID } = result.data
+	const result = await validateBody(event, schema)
+	const { netID } = result
 
-	const existingEntry = await prisma.queueEntry.findUnique({
-		where: { netID },
-	})
-	if (!existingEntry) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: `User with netID ${netID} is not in the queue` })
-	}
-	const transaction = await prisma.$transaction(async (tx) => {
-		await tx.queueEntry.delete({
-			where: { netID },
-		})
-		// await tx.queueEntry.updateMany({
-		//     where: {
-		//         position: {
-		//             gt: existingEntry.position,
-		//         },
-		//     },
-		//     data: {
-		//         position: {
-		//             decrement: 1,
-		//         },
-		//     },
-		// })
-		await tx.cart.create({
-			data: {
-				cartID: netID,
-			},
-		})
+	const transactionResult = await prisma.$transaction(async (tx) => {
+		try {
+			const queueEntry = await tx.queueEntry.delete({
+				where: { netID },
+			})
+			await tx.cart.create({
+				data: {
+					cartID: netID,
+				},
+			})
 
-		await broadcastToStudents(
-			JSON.stringify(
-				constructQueueEntryApprovedEvent({
-					position: existingEntry.position,
-					publicCode: existingEntry.publicCode,
+			publishEvent(createEvent("cartSession.created", { cartID: netID }))
+			publishEvent(
+				createEvent("queue.entryApproved", {
+					netID: netID,
+					position: queueEntry.position,
+					publicCode: queueEntry.publicCode,
 				})
 			)
-		)
-		await broadcastToVolunteers(
-			JSON.stringify(
-				constructQueueEntryApprovedVolunteerEvent({
-					position: existingEntry.position,
-					publicCode: existingEntry.publicCode,
-					netID: existingEntry.netID,
-				})
-			)
-		)
-		await broadcastToVolunteers(JSON.stringify(constructCartSessionCreatedEvent(existingEntry.netID)))
-		return `User with netID ${netID} has been approved and moved to a cart`
+
+			return "User has been approved and moved to a cart session"
+		} catch (error) {
+			if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Queue entry not found" })
+			}
+			throw error
+		}
 	})
-	return transaction
+	return transactionResult
 })

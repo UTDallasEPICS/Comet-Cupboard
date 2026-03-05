@@ -1,46 +1,35 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { createEvent } from "#server/utils/eventsFactory"
+import { publishEvent } from "#server/utils/eventBus"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
+import { validateBody } from "#server/utils/validation"
 
-const schema = z.object({
-	cartID: z.string(),
-	action: z.enum(["ACCEPT", "REJECT"]),
-	reason: z.string().optional(),
-})
-
-const validateSchema = schema.strict().required()
+const schema = z
+	.object({
+		cartID: z.string(),
+		action: z.enum(["ACCEPT", "REJECT"]),
+		reason: z.string().optional(),
+	})
+	.strict()
+	.required()
 
 export default defineSafeHandler(async (event) => {
-	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
-	if (!result.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
-	}
+	const { cartID, action, reason } = await validateBody(event, schema)
 
-	const { cartID, action, reason } = result.data
+	const transactionResult = await prisma.$transaction(async (tx) => {
+		const pendingCart = await prisma.cart.findUnique({
+			where: { cartID: cartID, pending: true },
+			include: { CartItems: true },
+		})
 
-	const pendingCart = await prisma.cart.findUnique({
-		where: { cartID },
-	})
+		if (!pendingCart) {
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "User has no active pending cart" })
+		}
 
-	if (!pendingCart) {
-		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `User has no active cart for cartID ${cartID}` })
-	}
-
-	if (!pendingCart.pending) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: `Cart ${cartID} is not pending verification` })
-	}
-
-	if (action === "ACCEPT") {
-		// ACCEPT action
-		const cart = await prisma.$transaction(async (tx) => {
-			const existingCart = await tx.cart.findUnique({
-				where: { cartID },
-				include: { CartItems: true },
-			})
-
-			const orderItems = existingCart.CartItems.map((cartItem) => ({
+		if (action === "ACCEPT") {
+			const orderItems = pendingCart.CartItems.map((cartItem) => ({
 				itemID: cartItem.itemID,
 				count: cartItem.count,
 			}))
@@ -54,31 +43,30 @@ export default defineSafeHandler(async (event) => {
 
 			await tx.order.create({
 				data: {
-					netID: existingCart.cartID,
+					netID: pendingCart.cartID,
 					OrderItems: { create: orderItems },
 				},
 			})
 
 			await tx.cart.delete({ where: { cartID } })
-		})
 
-		await broadcastToVolunteers(JSON.stringify(constructVerifyCartListCartRemovedEvent(cartID)))
-		await messageToStudent(cartID, JSON.stringify(constructPendingVerificationAcceptedEvent(reason || "")))
-		await broadcastToVolunteers(JSON.stringify(constructCartSessionRemovedEvent(cartID)))
-		// await prisma.queueEntry.delete({ where: { netID: cartID } })
-		// await broadcastToQueue(JSON.stringify({ type: "QUEUE_DELETE", payload: { netID: cartID } }))
+			publishEvent(createEvent("cart.verification.decision", { decision: "ACCEPT", reason }))
+			publishEvent(createEvent("cartSession.removed", { cartID }))
+			publishEvent(createEvent("verifyCartList.cart.removed", { cartID }))
 
-		return `Successfully accepted cart ${cartID}`
-	} else {
-		// REJECT action
-		const cart = await prisma.cart.update({
-			where: { cartID },
-			data: { pending: false },
-		})
+			return "Successfully accepted cart"
+		} else {
+			await tx.cart.update({
+				where: { cartID },
+				data: { pending: false },
+			})
 
-		await broadcastToVolunteers(JSON.stringify(constructVerifyCartListCartRemovedEvent(cartID)))
-		await messageToStudent(cartID, JSON.stringify(constructPendingVerificationRejectedEvent(reason || "")))
+			publishEvent(createEvent("cart.verification.decision", { decision: "REJECT", reason }))
+			publishEvent(createEvent("verifyCartList.cart.removed", { cartID }))
 
-		return `Successfully rejected cart ${cartID}`
-	}
+			return "Successfully rejected cart"
+		}
+	})
+
+	return transactionResult
 })

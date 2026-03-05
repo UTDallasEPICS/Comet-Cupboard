@@ -2,19 +2,18 @@ import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
+import { validateQuery } from "#server/utils/validation"
 
-const schema = z.object({
-	cartID: z.string(),
-})
-
-const validateSchema = schema.strict().required()
+const schema = z
+	.object({
+		cartID: z.string(),
+	})
+	.strict()
+	.required()
 
 export default defineSafeHandler(async (event) => {
-	const queries = await getValidatedQuery(event, (query) => validateSchema.safeParse(query))
-	if (!queries.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request parameters" })
-	}
-	const { cartID } = queries.data
+	const { cartID } = validateQuery(event, schema)
+
 	const pendingCart = await prisma.cart.findUnique({
 		where: {
 			cartID: cartID,
@@ -23,7 +22,7 @@ export default defineSafeHandler(async (event) => {
 		include: { CartItems: { include: { Item: { include: { Deal: true } } } } },
 	})
 	if (!pendingCart) {
-		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Failed to find pending cart with cartID ${cartID}` })
+		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Failed to find pending cart" })
 	}
 	return pendingCart
 })
