@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid"
-import { constructHeartbeatEvent } from "#server/utils/eventsUtil"
-import { volunteerMap } from "#server/utils/volunteerStreamUtil"
+import { createEvent } from "~~/server/utils/eventsFactory"
+import { connectionsByRole } from "#server/utils/eventstreams"
 
 export default defineEventHandler((event) => {
 	const eventStream = createEventStream(event)
@@ -9,35 +9,21 @@ export default defineEventHandler((event) => {
 	// Send a heartbeat event every 60 seconds to detect disconnections and clean up resources
 	const heartbeatInterval = setInterval(async () => {
 		try {
-			await eventStream.push(JSON.stringify(constructHeartbeatEvent()))
+			await eventStream.push(JSON.stringify(createEvent("heartbeat")))
 		} catch {
 			clearInterval(heartbeatInterval)
 			eventStream.close()
-			if (volunteerMap[event.context.user.netID][eventStreamID]) {
-				delete volunteerMap[event.context.user.netID][eventStreamID]
-				if (Object.keys(volunteerMap[event.context.user.netID]).length === 0) {
-					delete volunteerMap[event.context.user.netID]
-				}
-			}
+			connectionsByRole.volunteer.removeConnection(event.context.user.netID, eventStreamID)
 		}
 	}, 60 * 1000)
 
 	eventStream.onClosed(async () => {
 		clearInterval(heartbeatInterval)
 		await eventStream.close()
-		if (volunteerMap[event.context.user.netID][eventStreamID]) {
-			delete volunteerMap[event.context.user.netID][eventStreamID]
-			if (Object.keys(volunteerMap[event.context.user.netID]).length === 0) {
-				delete volunteerMap[event.context.user.netID]
-			}
-		}
+		connectionsByRole.volunteer.removeConnection(event.context.user.netID, eventStreamID)
 	})
 
-	if (!volunteerMap[event.context.user.netID]) {
-		volunteerMap[event.context.user.netID] = {}
-	}
-
-	volunteerMap[event.context.user.netID][eventStreamID] = eventStream
+	connectionsByRole.volunteer.addConnection(event.context.user.netID, eventStreamID, eventStream)
 
 	return eventStream.send()
 })

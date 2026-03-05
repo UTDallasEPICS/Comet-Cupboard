@@ -1,5 +1,5 @@
 import { prisma } from "#server/utils/db"
-import { constructCartSessionRemovedEvent } from "~~/server/utils/eventsUtil"
+import { constructCartSessionRemovedEvent } from "~~/server/utils/eventsFactory"
 import { StatusCodes } from "http-status-codes"
 
 export default defineEventHandler(async (event) => {

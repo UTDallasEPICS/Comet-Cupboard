@@ -1,4 +1,4 @@
-import { constructVerifyCartListCartRemovedEvent } from "~~/server/utils/eventsUtil"
+import { constructVerifyCartListCartRemovedEvent } from "~~/server/utils/eventsFactory"
 import { broadcastToVolunteers } from "~~/server/utils/volunteerStreamUtil"
 import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"

@@ -1,5 +1,5 @@
 import { prisma } from "#server/utils/db"
-import { constructQueueEntryAddedEvent, constructQueueEntryAddedVolunteerEvent } from "~~/server/utils/eventsUtil"
+import { constructQueueEntryAddedEvent, constructQueueEntryAddedVolunteerEvent } from "~~/server/utils/eventsFactory"
 import { StatusCodes } from "http-status-codes"
 
 let temporaryQueuePublicCode: number = 0

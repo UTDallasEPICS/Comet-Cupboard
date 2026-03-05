@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { broadcastToVolunteers } from "~~/server/utils/volunteerStreamUtil"
 import { prisma } from "#server/utils/db"
-import { constructCartSessionRemovedEvent } from "~~/server/utils/eventsUtil"
+import { constructCartSessionRemovedEvent } from "~~/server/utils/eventsFactory"
 import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({

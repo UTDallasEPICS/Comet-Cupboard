@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/db"
-import { constructCartSessionCreatedEvent, constructQueueEntryApprovedEvent, constructQueueEntryApprovedVolunteerEvent } from "~~/server/utils/eventsUtil"
+import { constructCartSessionCreatedEvent, constructQueueEntryApprovedEvent, constructQueueEntryApprovedVolunteerEvent } from "~~/server/utils/eventsFactory"
 import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
