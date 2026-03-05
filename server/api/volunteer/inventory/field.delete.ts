@@ -2,29 +2,29 @@ import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
+import { validateBody } from "#server/utils/validation"
 
-const schema = z.object({
-	fieldID: z.string(),
-})
-
-const validateSchema = schema.strict().required()
+const schema = z
+	.object({
+		fieldID: z.string(),
+	})
+	.strict()
+	.required()
 
 export default defineSafeHandler(async (event) => {
-	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
-	if (!result.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
+	const { fieldID } = await validateBody(event, schema)
+
+	try {
+		await prisma.field.delete({
+			where: {
+				fieldID: fieldID,
+			},
+		})
+		return "Field deleted successfully"
+	} catch (error) {
+		if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "No field found with id" })
+		}
+		throw error
 	}
-	const { fieldID } = result.data
-
-	const field = await prisma.field.delete({
-		where: {
-			fieldID: fieldID,
-		},
-	})
-
-	if (!field) {
-		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: "Failed to delete field: " + fieldID })
-	}
-
-	return field
 })

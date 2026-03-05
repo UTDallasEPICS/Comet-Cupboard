@@ -1,22 +1,17 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/db"
-import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
+import { validateQuery } from "#server/utils/validation"
 
-const schema = z.object({
-	source: z.string(),
-})
-
-const validateSchema = schema.strict().required()
+const schema = z
+	.object({
+		source: z.string(),
+	})
+	.strict()
+	.required()
 
 export default defineSafeHandler(async (event) => {
-	const result = await getValidatedQuery(event, (query) => validateSchema.safeParse(query))
-
-	if (!result.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request parameters" })
-	}
-
-	const { source } = result.data
+	const { source } = validateQuery(event, schema)
 
 	const fields = await prisma.field.findMany({
 		where: {

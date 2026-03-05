@@ -1,27 +1,18 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/db"
-import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
+import { validateQuery } from "#server/utils/validation"
 
-const schema = z.object({
-	includeArchived: z.string().default("false"),
-})
-
-const validateSchema = schema.strict().partial()
+const schema = z
+	.object({
+		includeArchived: z.string().default("false"),
+	})
+	.strict()
+	.required()
 
 export default defineSafeHandler(async (event) => {
-	const queries = await getValidatedQuery(event, (query) => validateSchema.safeParse(query))
-	if (!queries.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request parameters" })
-	}
-	const { includeArchived } = queries.data
+	const { includeArchived } = validateQuery(event, schema)
 
-	//Only administrators can view archived sources
-	if (includeArchived === "true" && !event.context.permissions[AccessPermission.ADMIN]) {
-		throw createError({ statusCode: StatusCodes.FORBIDDEN, statusMessage: `User ${event.context.user.netID} is unauthorized to view archived sources` })
-	}
-
-	// retrieve the list of sources (including archived sources if allowed by includeArchived variable) from the db
 	const sources = await prisma.source.findMany({
 		where: {
 			...(includeArchived === "false" ? { archived: false } : {}),
@@ -34,8 +25,5 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
-	if (!sources) {
-		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: "Failed to find sources" })
-	}
 	return sources
 })
