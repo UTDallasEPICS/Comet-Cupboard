@@ -64,7 +64,7 @@ export default defineSafeHandler(async (event) => {
 				throw error
 			}
 
-			publishEvent(createEvent("cart.verification.decision", { decision: "ACCEPT", reason }))
+			publishEvent(createEvent("cart.verification.decision", { netID: cartID, decision: "ACCEPT", reason }))
 			publishEvent(createEvent("cartSession.removed", { cartID }))
 			publishEvent(createEvent("verifyCartList.cart.removed", { cartID }))
 
@@ -82,7 +82,7 @@ export default defineSafeHandler(async (event) => {
 				throw error
 			}
 
-			publishEvent(createEvent("cart.verification.decision", { decision: "REJECT", reason }))
+			publishEvent(createEvent("cart.verification.decision", { netID: cartID, decision: "REJECT", reason }))
 			publishEvent(createEvent("verifyCartList.cart.removed", { cartID }))
 
 			return "Successfully rejected cart"

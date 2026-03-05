@@ -26,12 +26,12 @@ const createConnectionManager = () => {
 			return
 		}
 
-		await Promise.all(Object.values(userConnections).map((stream) => stream.push(JSON.stringify(message))))
+		await Promise.all(Object.values(userConnections).map((stream) => stream.push(message)))
 	}
 
 	const broadcast = async (message: string) => {
 		await Promise.all(
-			Object.values(connectionMap).flatMap((userConnections) => Object.values(userConnections).map((stream) => stream.push(JSON.stringify(message))))
+			Object.values(connectionMap).flatMap((userConnections) => Object.values(userConnections).map((stream) => stream.push(message)))
 		)
 	}
 

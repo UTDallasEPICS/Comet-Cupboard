@@ -1,34 +1,5 @@
-interface Item {
-	itemID: string
-	name: string
-	categoryName: string
-	imgName: string
-	archived: boolean
-	createdAt: string
-	Deal?: {
-		itemID: string
-		actualCount: number
-		adjustedCount: number
-	}
-}
-
-interface CartItem {
-	itemID: string
-	cartID: string
-	count: number
-	countAdjustment: number
-	Item: Item
-}
-
-interface Cart {
-	cartID: string
-	updatedAt: string
-	pending: boolean
-	CartItems: CartItem[]
-}
-
 export const useCartStore = defineStore("cart", () => {
-	const cart = ref<Cart | object>({})
+	const cart = ref<Record<string, any> | null>(null)
 	const cartView = ref(false)
 	const queueStore = useQueueStore()
 	const { queueStatus } = storeToRefs(queueStore)
@@ -40,23 +11,20 @@ export const useCartStore = defineStore("cart", () => {
 	const getCart = async () => {
 		try {
 			cart.value = await $fetch("/api/student/cart/cart")
-			if (!cart.value) {
-				cart.value = {}
-			}
 		} catch (e) {
-			cart.value = {}
+			cart.value = null
 		}
 	}
 
 	const cartItems = computed(() => {
-		if ("CartItems" in cart.value === false) {
+		if (cart.value === null || "CartItems" in cart.value === false) {
 			return []
 		}
 		return cart.value.CartItems
 	})
 
 	const cartTotalCount = computed(() => {
-		if ("CartItems" in cart.value === false) {
+		if (cart.value === null || "CartItems" in cart.value === false) {
 			return 0
 		}
 		return cart.value.CartItems.map((cartItem) => {
@@ -69,16 +37,16 @@ export const useCartStore = defineStore("cart", () => {
 	})
 
 	const pending = computed(() => {
-		if ("pending" in cart.value) {
-			return cart.value.pending
+		if (cart.value === null || "pending" in cart.value === false) {
+			return false
 		}
-		return false
+		return cart.value.pending
 	})
 
 	const handleCartEvent = async (event: AppEvent) => {
 		switch (event.type) {
 			case "queue.entryApproved":
-				if (isEmptyObject(cart.value) && !isEmptyObject(queueStatus.value)) {
+				if (!cart.value && !queueStatus.value) {
 					// update cart if in queue and cart is empty, to check if the approved entry is for the current user
 					await getCart()
 				}
