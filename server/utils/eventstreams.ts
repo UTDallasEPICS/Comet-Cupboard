@@ -30,9 +30,7 @@ const createConnectionManager = () => {
 	}
 
 	const broadcast = async (message: string) => {
-		await Promise.all(
-			Object.values(connectionMap).flatMap((userConnections) => Object.values(userConnections).map((stream) => stream.push(message)))
-		)
+		await Promise.all(Object.values(connectionMap).flatMap((userConnections) => Object.values(userConnections).map((stream) => stream.push(message))))
 	}
 
 	return {
@@ -47,5 +45,4 @@ const createConnectionManager = () => {
 export const connectionsByRole = {
 	student: createConnectionManager(),
 	volunteer: createConnectionManager(),
-	admin: createConnectionManager(),
 }

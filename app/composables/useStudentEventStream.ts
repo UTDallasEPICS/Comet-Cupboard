@@ -21,6 +21,19 @@ export const useStudentEventStream = () => {
 		}
 	}
 
+	const handleVolunteerRequestDecisionEvent = async (event: AppEvent) => {
+		if (event.type === "volunteerRequest.decision") {
+			const { netID, decision } = event.payload
+			if (decision === "ACCEPT") {
+				reloadNuxtApp()
+				toast.add({
+					title: "Congratulations!",
+					description: "Your volunteer request has been approved. You now have access to volunteer features.",
+				})
+			}
+		}
+	}
+
 	const connectStudent = () => {
 		// Prevent duplicate connections
 		if (eventStream) {
@@ -44,6 +57,7 @@ export const useStudentEventStream = () => {
 
 				dispatchCartEvent(event)
 				dispatchQueueEvent(event)
+				handleVolunteerRequestDecisionEvent(event)
 			} catch (error) {}
 		}
 

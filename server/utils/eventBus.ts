@@ -127,12 +127,6 @@ export const publishEvent = async (event: AppEvent) => {
 					payload: event.payload,
 				})
 			)
-			connectionsByRole.admin.broadcast(
-				JSON.stringify({
-					type: "volunteerRequest.decision",
-					payload: event.payload,
-				})
-			)
 			break
 		default:
 			console.warn(`Unhandled event type: ${event.type}`)

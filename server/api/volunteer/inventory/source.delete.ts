@@ -3,6 +3,7 @@ import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateBody } from "#server/utils/validation"
+import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 const schema = z
 	.object({
@@ -25,7 +26,7 @@ export default defineSafeHandler(async (event) => {
 		})
 		return "Successfully archived source"
 	} catch (error) {
-		if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+		if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
 			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "No source found with name" })
 		}
 		throw error

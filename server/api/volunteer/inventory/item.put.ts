@@ -5,6 +5,7 @@ import { nanoid } from "nanoid"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateFormData } from "#server/utils/validation"
+import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024
 const uploadDirectory = process.env.IMAGE_UPLOAD_DIRECTORY
@@ -67,7 +68,7 @@ export default defineSafeHandler(async (event) => {
 					data: { name, imgName: newImgName, categoryName, archived: false },
 				})
 			} catch (error: unknown) {
-				if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+				if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
 					throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Item not found" })
 				}
 				throw error
