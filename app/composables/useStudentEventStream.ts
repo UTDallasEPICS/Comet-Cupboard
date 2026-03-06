@@ -7,6 +7,8 @@ export const useStudentEventStream = () => {
 	const queue = useQueueStore()
 	const { handleQueueEvent } = queue
 	const toast = useToast()
+	const permissions = usePermissionsStore()
+	const { setPermissionsFromServer } = permissions
 	const config = useRuntimeConfig()
 
 	const dispatchQueueEvent = async (event: AppEvent) => {
@@ -18,6 +20,20 @@ export const useStudentEventStream = () => {
 	const dispatchCartEvent = async (event: AppEvent) => {
 		if (["queue.entryApproved"].includes(event.type)) {
 			await handleCartEvent(event)
+		}
+	}
+
+	const handleVolunteerRequestDecisionEvent = async (event: AppEvent) => {
+		if (event.type === "volunteerRequest.decision") {
+			const { netID, decision } = event.payload
+			if (decision === "ACCEPT") {
+				await setPermissionsFromServer()
+				refreshCookie("netID")
+				refreshCookie("AccessPermission")
+
+				await navigateTo("/volunteer")
+				reloadNuxtApp()
+			}
 		}
 	}
 
@@ -44,6 +60,7 @@ export const useStudentEventStream = () => {
 
 				dispatchCartEvent(event)
 				dispatchQueueEvent(event)
+				handleVolunteerRequestDecisionEvent(event)
 			} catch (error) {}
 		}
 

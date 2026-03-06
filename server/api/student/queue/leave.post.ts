@@ -3,6 +3,7 @@ import { createEvent } from "#server/utils/eventsFactory"
 import { publishEvent } from "#server/utils/eventBus"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
+import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 export default defineSafeHandler(async (event) => {
 	const netID = event.context.user.netID
@@ -21,7 +22,7 @@ export default defineSafeHandler(async (event) => {
 		)
 		return "User has left the queue"
 	} catch (error: unknown) {
-		if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+		if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
 			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "User is not in the queue" })
 		}
 		throw error

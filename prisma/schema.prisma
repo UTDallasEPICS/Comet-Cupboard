@@ -7,37 +7,30 @@ datasource db {
     provider = "sqlite"
 }
 
+enum RoleType {
+    STUDENT
+    VOLUNTEER
+    ADMIN
+    HEAD_ADMIN
+}
+
+model RoleRequest {
+    userID String   @id @map("user_id")
+    User   User     @relation(fields: [userID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
+    role   RoleType @map("role")
+
+    @@map("role_request")
+}
+
 model User {
-    netID      String      @id @map("net_id")
-    Student    Student?
-    Volunteer  Volunteer?
-    Admin      Admin?
-    Cart       Cart?
-    Orders     Order[]
-    QueueEntry QueueEntry?
+    netID       String       @id @map("net_id")
+    role        RoleType     @map("role")
+    roleRequest RoleRequest?
+    Cart        Cart?
+    Orders      Order[]
+    QueueEntry  QueueEntry?
 
     @@map("user")
-}
-
-model Student {
-    User  User   @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
-    netID String @id @map("net_id")
-
-    @@map("student")
-}
-
-model Volunteer {
-    User  User   @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
-    netID String @id @map("net_id")
-
-    @@map("volunteer")
-}
-
-model Admin {
-    User  User   @relation(fields: [netID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
-    netID String @id @map("net_id")
-
-    @@map("admin")
 }
 
 model Category {

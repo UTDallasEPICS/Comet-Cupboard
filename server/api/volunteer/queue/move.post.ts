@@ -5,6 +5,7 @@ import { publishEvent } from "#server/utils/eventBus"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateBody } from "#server/utils/validation"
+import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 const schema = z
 	.object({
@@ -51,7 +52,7 @@ export default defineSafeHandler(async (event) => {
 				data: { position: newPosition },
 			})
 		} catch (error: unknown) {
-			if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+			if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
 				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Queue entry not found" })
 			}
 			throw error
