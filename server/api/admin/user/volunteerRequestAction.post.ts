@@ -4,7 +4,7 @@ import { validateBody } from "#server/utils/validation"
 import { createEvent } from "#server/utils/eventsFactory"
 import { publishEvent } from "#server/utils/eventBus"
 import { StatusCodes } from "http-status-codes"
-import { RoleType, RequestStatus } from "../../../../prisma/generated/prisma/client"
+import { RoleType } from "../../../../prisma/generated/prisma/client"
 
 const schema = z.object({
 	userID: z.string(),
@@ -19,7 +19,6 @@ export default defineSafeHandler(async (event) => {
 			where: {
 				userID: userID,
 				role: RoleType.VOLUNTEER,
-				status: RequestStatus.PENDING,
 				User: {
 					role: RoleType.STUDENT,
 				},
@@ -31,20 +30,13 @@ export default defineSafeHandler(async (event) => {
 		}
 
 		if (action === "ACCEPT") {
-			await tx.roleRequest.update({
-				where: {
-					userID: userID,
-				},
-				data: {
-					status: RequestStatus.APPROVED,
-				},
-			})
-
 			await tx.user.update({ where: { netID: userID }, data: { role: RoleType.VOLUNTEER } })
-		} else {
-			// REJECT action
-			await tx.roleRequest.update({ where: { userID: userID }, data: { status: RequestStatus.REJECTED } })
 		}
+		await tx.roleRequest.delete({
+			where: {
+				userID: userID,
+			},
+		})
 		publishEvent(
 			createEvent("volunteerRequest.decision", {
 				netID: userID,
@@ -54,5 +46,5 @@ export default defineSafeHandler(async (event) => {
 		return "Volunteer request " + (action === "ACCEPT" ? "approved" : "rejected")
 	})
 
-    return transactionResult
+	return transactionResult
 })

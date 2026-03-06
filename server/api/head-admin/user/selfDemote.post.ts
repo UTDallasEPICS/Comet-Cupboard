@@ -6,6 +6,15 @@ export default defineSafeHandler(async (event) => {
 	const userID = event.context.user.netID
 
 	try {
+		const currentHeadAdmins = await prisma.user.findMany({
+			where: {
+				role: RoleType.HEAD_ADMIN,
+			},
+		})
+		if (currentHeadAdmins.length <= 1) {
+			throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Cannot demote self as the only head admin" })
+		}
+
 		await prisma.user.update({
 			where: {
 				netID: userID,

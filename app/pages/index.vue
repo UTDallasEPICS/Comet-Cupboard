@@ -13,7 +13,7 @@
 
 					<div class="mt-10 flex flex-row gap-4">
 						<UButton size="xl" variant="solid" to="/login"> Student Login </UButton>
-						<UButton size="xl" variant="solid" to="/login"> Volunteer Login </UButton>
+						<UButton size="xl" variant="solid" to="/vol-login"> Volunteer Login </UButton>
 					</div>
 				</div>
 			</UContainer>

@@ -7,6 +7,8 @@ export const useStudentEventStream = () => {
 	const queue = useQueueStore()
 	const { handleQueueEvent } = queue
 	const toast = useToast()
+	const permissions = usePermissionsStore()
+	const { setPermissionsFromServer } = permissions
 	const config = useRuntimeConfig()
 
 	const dispatchQueueEvent = async (event: AppEvent) => {
@@ -25,11 +27,12 @@ export const useStudentEventStream = () => {
 		if (event.type === "volunteerRequest.decision") {
 			const { netID, decision } = event.payload
 			if (decision === "ACCEPT") {
+				await setPermissionsFromServer()
+				refreshCookie("netID")
+				refreshCookie("AccessPermission")
+
+				await navigateTo("/volunteer")
 				reloadNuxtApp()
-				toast.add({
-					title: "Congratulations!",
-					description: "Your volunteer request has been approved. You now have access to volunteer features.",
-				})
 			}
 		}
 	}

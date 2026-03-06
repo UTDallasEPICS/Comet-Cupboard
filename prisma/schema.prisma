@@ -14,18 +14,10 @@ enum RoleType {
     HEAD_ADMIN
 }
 
-enum RequestStatus {
-    PENDING
-    APPROVED
-    REJECTED
-}
-
 model RoleRequest {
-    userID String @id @map("user_id")
-    User   User   @relation(fields: [userID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
-
-    role   RoleType      @map("role")
-    status RequestStatus @default(PENDING)
+    userID String   @id @map("user_id")
+    User   User     @relation(fields: [userID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
+    role   RoleType @map("role")
 
     @@map("role_request")
 }

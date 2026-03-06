@@ -77,10 +77,10 @@ export const useNavigationLinks = () => {
 				icon: icons["management"],
 				children: [
 					{
-						label: "Manage Volunteers",
-						description: "Add, edit, or remove volunteers",
+						label: "Manage Roles",
+						description: "Add, edit, or remove roles",
 						icon: icons["volunteer"],
-						to: "/admin/manage/volunteers",
+						to: "/admin/manage/roles",
 					},
 					{
 						label: "Manage Sources",

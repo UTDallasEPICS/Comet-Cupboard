@@ -22,9 +22,11 @@ export const usePermissionsStore = defineStore("permissions", () => {
 		accessCookiePermission.value = null
 	}
 
-	const canAdminAccess = computed(() => !!access.value.ADMIN)
+	// head admins > admins > volunteers > students
+	const canHeadAdminAccess = computed(() => !!access.value.HEAD_ADMIN)
+	const canAdminAccess = computed(() => canHeadAdminAccess.value || !!access.value.ADMIN)
 	const canVolunteerAccess = computed(() => canAdminAccess.value || !!access.value.VOLUNTEER)
 	const canStudentAccess = computed(() => canVolunteerAccess.value || !!access.value.STUDENT)
 
-	return { setPermissionsFromServer, clearPermissions, canStudentAccess, canVolunteerAccess, canAdminAccess }
+	return { setPermissionsFromServer, clearPermissions, canStudentAccess, canVolunteerAccess, canAdminAccess, canHeadAdminAccess }
 })

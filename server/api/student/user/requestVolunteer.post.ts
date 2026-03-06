@@ -1,6 +1,6 @@
 import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
-import { RoleType, RequestStatus } from "../../../../prisma/generated/prisma/client"
+import { RoleType } from "../../../../prisma/generated/prisma/client"
 
 export default defineSafeHandler(async (event) => {
 	const netID = event.context.user.netID
@@ -20,7 +20,6 @@ export default defineSafeHandler(async (event) => {
 		const existingRequest = await tx.roleRequest.findFirst({
 			where: {
 				userID: netID,
-				status: RequestStatus.PENDING,
 				role: RoleType.VOLUNTEER,
 			},
 		})
@@ -33,7 +32,6 @@ export default defineSafeHandler(async (event) => {
 			data: {
 				userID: netID,
 				role: RoleType.VOLUNTEER,
-				status: RequestStatus.PENDING,
 			},
 		})
 
