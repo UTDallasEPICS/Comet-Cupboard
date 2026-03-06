@@ -14,7 +14,7 @@
                 <template #add>
                     <div>
                         <div class="p-2 bg-final-cancel-gray text-white">
-                            <UInput
+                            <UInputMenu
                                 v-model="manage_searchQuery"
                                 icon="material-symbols:search"
                                 placeholder="Search items"
@@ -30,7 +30,7 @@
                 <template #view>
                     <div>
                         <div class="p-2 bg-final-cancel-gray text-white">
-                            <UInput
+                            <UInputMenu
                                 v-model="manage_searchQuery"
                                 icon="material-symbols:search"
                                 placeholder="Search items"
