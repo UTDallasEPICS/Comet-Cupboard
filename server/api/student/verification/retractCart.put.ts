@@ -1,48 +1,41 @@
-import { constructVerifyCartListCartRemovedEvent } from "~~/server/utils/eventsUtil"
-import { broadcastToVolunteers } from "~~/server/utils/volunteerStreamUtil"
-import { prisma } from "#server/utils/prismaUtil"
+import { createEvent } from "#server/utils/eventsFactory"
+import { publishEvent } from "#server/utils/eventBus"
+import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
+import { defineSafeHandler } from "#server/utils/handler"
 
-export default defineEventHandler(async (event) => {
+export default defineSafeHandler(async (event) => {
 	const netID = event.context.user.netID
 
-	let cart = await prisma.cart.findUnique({
-		where: {
-			cartID: netID,
-		},
+	const cart = await prisma.$transaction(async (tx) => {
+		const pendingCart = await tx.cart.findUnique({
+			where: {
+				cartID: netID,
+				pending: true,
+			},
+		})
+		if (!pendingCart) {
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "User has no pending cart" })
+		}
+
+		try {
+			const cart = await tx.cart.update({
+				where: {
+					cartID: pendingCart.cartID,
+				},
+				data: {
+					pending: false,
+				},
+			})
+			return cart
+		} catch (error: unknown) {
+			if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Cart not found" })
+			}
+			throw error
+		}
 	})
 
-	if (!cart) {
-		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `User ${event.context.user.netID} has no active cart` })
-	}
-
-	const cartID = cart.cartID
-
-	const pendingCart = await prisma.cart.findUnique({
-		where: {
-			cartID: cartID,
-		},
-	})
-	if (!pendingCart) {
-		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `User has no active cart for cartID ${cartID}` })
-	}
-	if (!pendingCart.pending) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: `Cart ${cartID} is not pending verification` })
-	}
-
-	cart = await prisma.cart.update({
-		where: {
-			cartID: cartID,
-		},
-		data: {
-			pending: false,
-		},
-	})
-
-	if (!cart) {
-		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: `Failed to retract cart ${cartID}` })
-	}
-
-	await broadcastToVolunteers(JSON.stringify(constructVerifyCartListCartRemovedEvent(cartID)))
-	return `Successfully retracted cart ${cartID}`
+	publishEvent(createEvent("verifyCartList.cart.removed", { cartID: cart.cartID }))
+	return "Successfully retracted cart"
 })

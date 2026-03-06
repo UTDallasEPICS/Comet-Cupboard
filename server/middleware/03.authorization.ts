@@ -1,7 +1,7 @@
 import { AccessPermission } from "#shared/utils/permissions"
-import { StatusCodes } from "http-status-codes"
+import { StatusCodes, ReasonPhrases } from "http-status-codes"
 
-export default defineEventHandler((event) => {
+export default defineSafeHandler((event) => {
 	const requestPath = getRequestURL(event).pathname
 	let requiredAccessPermission: AccessPermission = AccessPermission.PUBLIC
 	if (requestPath.startsWith("/api/admin") || requestPath.startsWith("/admin")) {
@@ -15,6 +15,6 @@ export default defineEventHandler((event) => {
 	}
 
 	if (!event.context.permissions[requiredAccessPermission]) {
-		throw createError({ statusCode: StatusCodes.FORBIDDEN, statusMessage: "Unauthorized" })
+		throw createError({ statusCode: StatusCodes.FORBIDDEN, statusMessage: ReasonPhrases.FORBIDDEN })
 	}
 })

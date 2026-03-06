@@ -1,34 +1,29 @@
 import { z } from "zod"
-import { prisma } from "#server/utils/prismaUtil"
-import { StatusCodes } from "http-status-codes"
+import { prisma } from "#server/utils/db"
+import { defineSafeHandler } from "#server/utils/handler"
+import { validateQuery } from "#server/utils/validation"
 
-const schema = z.object({
-	checkAvailability: z.string().default("false"),
-	includeArchived: z.string().default("false"),
-})
+// quanity and archived information are not sensitive information to students
+const schema = z
+	.object({
+		checkAvailability: z.string().default("false"),
+		includeArchived: z.string().default("false"),
+	})
+	.strict()
+	.required()
 
-const validateSchema = schema.strict().partial()
-
-export default defineEventHandler(async (event) => {
-	const queries = await getValidatedQuery(event, (query) => validateSchema.safeParse(query))
-	if (!queries.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request parameters" })
-	}
-	const { checkAvailability, includeArchived } = queries.data
+export default defineSafeHandler(async (event) => {
+	const { checkAvailability, includeArchived } = validateQuery(event, schema)
 
 	const items = await prisma.item.findMany({
 		where: {
-			// if checking availability, count must be greater than 0
-			// and archived must be false
-			...((checkAvailability === "true") ? { quantity: { gt: 0 } } : {}),
-			...((includeArchived === "false") ? { archived: false } : {})
+			...(checkAvailability === "true" ? { quantity: { gt: 0 } } : {}),
+			...(includeArchived === "false" ? { archived: false } : {}),
 		},
 		include: {
 			Deal: true,
 		},
 	})
-	if (!items) {
-		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Items not found" })
-	}
+
 	return items
 })

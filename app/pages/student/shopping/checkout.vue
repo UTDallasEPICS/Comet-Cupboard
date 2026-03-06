@@ -178,16 +178,10 @@ const { onEvent } = useStudentEventStream()
 
 const unsubscribe = onEvent((event) => {
 	switch (event.type) {
-		case "cart.verification.accepted": {
+		case "cart.verification.decision": {
 			cartVerificationReason.value = event.payload.reason || "No reason provided."
 			active.value = 4
-			cartRejected.value = false
-			break
-		}
-		case "cart.verification.rejected": {
-			cartVerificationReason.value = event.payload.reason || "No reason provided."
-			active.value = 4
-			cartRejected.value = true
+			cartRejected.value = event.payload.decision === "ACCEPT" ? false : true
 			break
 		}
 	}

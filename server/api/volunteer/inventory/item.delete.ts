@@ -1,39 +1,36 @@
 import { z } from "zod"
-import { unlink } from "node:fs/promises"
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
+import { defineSafeHandler } from "#server/utils/handler"
+import { validateBody } from "#server/utils/validation"
 
-const schema = z.object({
-	itemID: z.string(),
-})
-
-const validateSchema = schema.strict().required()
-
-export default defineEventHandler(async (event) => {
-	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
-	if (!result.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
-	}
-	const { itemID } = result.data
-
-	// delete item (really just archive it)
-	const item = await prisma.item.update({
-		where: {
-			itemID: itemID,
-		},
-		data: {
-			archived: true,
-			quantity: 0, // Reset inventory upon deleting
-		},
+const schema = z
+	.object({
+		itemID: z.string(),
 	})
+	.strict()
+	.required()
 
-	if (!item) {
-		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: `Failed to delete item with id ${itemID}` })
+export default defineSafeHandler(async (event) => {
+	const { itemID } = await validateBody(event, schema)
+
+	try {
+		// delete item (really just archive it)
+		await prisma.item.update({
+			where: {
+				itemID: itemID,
+			},
+			data: {
+				archived: true,
+				quantity: 0, // Reset inventory upon deleting
+			},
+		})
+	} catch (error) {
+		if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "No item found with id" })
+		}
+		throw error
 	}
 
-	// delete old image, if this fails we're not in that much trouble hopefully
-	// kind of lazy to put the item back in the db if this fails
-	await unlink(`${process.env.IMAGE_UPLOAD_DIRECTORY}/${item.imgName}`)
-
-	return `Successfully deleted item with id ${itemID}`
+	return "Successfully archived item"
 })

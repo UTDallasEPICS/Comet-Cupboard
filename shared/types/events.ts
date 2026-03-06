@@ -1,106 +1,47 @@
-export interface BaseEvent {
-	type: string
-	payload?: any
-}
-
-export interface HeartbeatEvent extends BaseEvent {
-	type: "heartbeat"
-}
-
-export interface PendingVerificationRejectedEvent extends BaseEvent {
-	type: "cart.verification.rejected"
-	payload: {
-		reason: string
-	}
-}
-
-export interface PendingVerificationAcceptedEvent extends BaseEvent {
-	type: "cart.verification.accepted"
-	payload: {
-		reason: string
-	}
-}
-
-export interface QueueEntry {
+export interface QueueEntryNonSensitive {
 	position: number
 	publicCode: string
 }
 
-export interface QueueEntryVolunteer extends QueueEntry {
+export interface QueueEntry extends QueueEntryNonSensitive {
 	netID: string
-}
-
-export type QueueEventType = "queue.entryAdded" | "queue.entryRemoved" | "queue.entryApproved" | "queue.queueUpdated"
-
-export interface QueueEvent<T = unknown> extends BaseEvent {
-	type: QueueEventType
-	payload: T
-}
-export interface QueueSingleEntryPayload {
-	entry: QueueEntry
-}
-
-export interface QueueSingleEntryVolunteerPayload {
-	entry: QueueEntryVolunteer
 }
 
 export interface QueueFullPayload {
 	queue: QueueEntry[]
-	queueVolunteer?: QueueEntryVolunteer[]
 }
 
-export interface VerifyCartListCartAddedEvent extends BaseEvent {
-	type: "verifyCartList.cart.added"
-	payload: {
-		cart: any
-	}
+export interface QueueFullPayloadNonSensitive {
+	queue: QueueEntryNonSensitive[]
 }
 
-export interface VerifyCartListCartRemovedEvent extends BaseEvent {
-	type: "verifyCartList.cart.removed"
-	payload: {
-		cartID: string
-	}
+export type Decision = "ACCEPT" | "REJECT"
+
+export interface EventMap {
+	/* system */
+	heartbeat: undefined
+
+	/* queue */
+	"queue.entryAdded": QueueEntry
+	"queue.entryRemoved": QueueEntry
+	"queue.entryApproved": QueueEntry
+	"queue.queueUpdated": QueueEntry[]
+
+	/* cart session */
+	"cartSession.created": { cartID: string }
+	"cartSession.removed": { cartID: string }
+
+	/* cart verification */
+	"cart.verification.decision": { netID: string; decision: Decision; reason?: string }
+
+	/* verify cart list */
+	"verifyCartList.cart.added": { cart: any }
+	"verifyCartList.cart.removed": { cartID: string }
+
+	/* volunteer */
+	"volunteerRequest.decision": { netID: string; decision: Decision }
 }
 
-export interface CartSessionCreatedEvent extends BaseEvent {
-	type: "cartSession.created"
-	payload: {
-		cartID: string
-	}
-}
-
-export interface CartSessionRemovedEvent extends BaseEvent {
-	type: "cartSession.removed"
-	payload: {
-		cartID: string
-	}
-}
-
-export interface PendingVolunteerRequestRejectedEvent extends BaseEvent {
-	type: "volunteerRequest.rejected"
-}
-
-export interface PendingVolunteerRequestAcceptedEvent extends BaseEvent {
-	type: "volunteerRequest.accepted"
-}
-
-export interface VolunteerListUpdatedEvent extends BaseEvent {
-	type: "volunteerList.updated"
-	payload: {
-		volunteers: string[]
-	}
-}
-
-export type AppEvent =
-	| HeartbeatEvent
-	| PendingVerificationRejectedEvent
-	| PendingVerificationAcceptedEvent
-	| QueueEvent
-	| VerifyCartListCartAddedEvent
-	| VerifyCartListCartRemovedEvent
-	| VolunteerListUpdatedEvent
-	| PendingVolunteerRequestRejectedEvent
-	| PendingVolunteerRequestAcceptedEvent
-	| CartSessionCreatedEvent
-	| CartSessionRemovedEvent
+export type AppEvent = {
+	[K in keyof EventMap]: EventMap[K] extends undefined ? { type: K } : { type: K; payload: EventMap[K] }
+}[keyof EventMap]

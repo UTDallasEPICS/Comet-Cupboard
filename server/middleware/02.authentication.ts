@@ -1,6 +1,6 @@
 import type { User } from "../../prisma/generated/prisma/client"
 import { RoleType } from "../../prisma/generated/prisma/client"
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
 
 type UserInfo = User
 declare module "h3" {
@@ -10,7 +10,7 @@ declare module "h3" {
 	}
 }
 
-export default defineEventHandler(async (event) => {
+export default defineSafeHandler(async (event) => {
 	event.context.permissions = {}
 	event.context.permissions[AccessPermission.PUBLIC] = true
 	const cookies = parseCookies(event)

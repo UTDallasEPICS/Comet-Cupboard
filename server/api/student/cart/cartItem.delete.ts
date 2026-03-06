@@ -1,36 +1,37 @@
 import { z } from "zod"
-import { prisma } from "#server/utils/prismaUtil"
+import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
+import { defineSafeHandler } from "#server/utils/handler"
+import { validateBody } from "#server/utils/validation"
 
-const schema = z.object({
-	itemID: z.string(),
-})
+const schema = z
+	.object({
+		itemID: z.string(),
+	})
+	.strict()
+	.required()
 
-const validateSchema = schema.strict().required()
-
-export default defineEventHandler(async (event) => {
-	const result = await readValidatedBody(event, (body) => validateSchema.safeParse(body))
-	if (!result.success) {
-		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid request body" })
-	}
-	const { itemID } = result.data
-
+export default defineSafeHandler(async (event) => {
+	const { itemID } = await validateBody(event, schema)
 	const netID = event.context.user.netID
+
 	try {
-		const result = await prisma.cartItem.deleteMany({
+		await prisma.cartItem.delete({
 			where: {
-				cartID: netID,
+				cartItemID: {
+					cartID: netID,
+					itemID: itemID,
+				},
 				Cart: {
 					pending: false,
 				},
-				itemID: itemID,
 			},
 		})
-		if (result.count == 0) {
-			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Item with id ${itemID} not in cart` })
+		return "Successfully deleted item from cart"
+	} catch (error: unknown) {
+		if (typeof error === "object" && error !== null && "code" in error && error.code === "P2025") {
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Item not in cart" })
 		}
-		return `Successfully deleted item ${itemID} from cart`
-	} catch (error) {
-		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: "Failed to delete item from cart" })
+		throw error
 	}
 })

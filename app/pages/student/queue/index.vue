@@ -11,13 +11,13 @@
 				</template>
 
 				<div class="space-y-2">
-					<div v-if="!isEmptyObject(queueStatus)">
+					<div v-if="queueStatus">
 						<SharedTextBase> Public Code: {{ queueStatus.publicCode }} </SharedTextBase>
 						<SharedTextBase> Position: {{ queueStatus.position }} </SharedTextBase>
 						<SharedButtonCancel text="Leave Queue" @click="leaveQueue" />
 					</div>
 					<div v-else>
-						<div v-if="!isEmptyObject(cart)">
+						<div v-if="cart">
 							<SharedTextBase> You already have an active cart. </SharedTextBase>
 						</div>
 						<div v-else>

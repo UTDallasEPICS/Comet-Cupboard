@@ -41,7 +41,7 @@
 
 <script lang="ts" setup>
 const selectedSource = ref("")
-const { data: sources } = await useFetch("/api/volunteer/controls/sources")
+const { data: sources } = await useFetch("/api/volunteer/inventory/sources")
 const { data: items } = await useFetch("/api/student/inventory/items")
 const fields = ref<string[]>([])
 const fieldInputs = ref<Record<string, string>>({})

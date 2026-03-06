@@ -46,7 +46,7 @@ const { data: item } = await useFetch("/api/student/inventory/item/", {
 	query: { itemID },
 })
 
-const { data: categories } = await useFetch("/api/volunteer/controls/categories")
+const { data: categories } = await useFetch("/api/student/inventory/categories")
 
 const categoryOptions = computed(() => {
 	return categories.value?.map((category) => {
