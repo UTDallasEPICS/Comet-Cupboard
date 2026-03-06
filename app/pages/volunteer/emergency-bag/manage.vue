@@ -12,7 +12,7 @@
                 >
                 <!--START OF ADD BAG STUFF-->
                 <template #add>
-                    <div>
+                    <section>
                         <div class="p-2 bg-final-cancel-gray text-white">
                             <UInputMenu
                                 v-model="manage_searchQuery"
@@ -22,13 +22,13 @@
                             />
                         </div>
                         Add New Bag content
-                    </div>
+                    </section>
                 </template>
                 <!--END OF ADD BAG STUFF-->
 
                 <!--START OF VIEW/MODIFY BAG STUFF-->
                 <template #view>
-                    <div>
+                    <section>
                         <div class="p-2 bg-final-cancel-gray text-white">
                             <UInputMenu
                                 v-model="manage_searchQuery"
@@ -38,7 +38,7 @@
                             />
                         </div>
                         View/Modify Bags content
-                    </div>
+                    </section>
                 </template>
                 <!--END OF VIEW/MODIFY BAG STUFF-->
             </UTabs>
