@@ -16,7 +16,7 @@
                         <div class="p-2 bg-final-cancel-gray text-white">
                             <UInputMenu
                                 v-model="manage_searchQuery"
-                                icon="material-symbols:search"
+                                :icon="icons['search']"
                                 placeholder="Search items"
                                 class="w-full md:w-72"
                             />
@@ -32,7 +32,7 @@
                         <div class="p-2 bg-final-cancel-gray text-white">
                             <UInputMenu
                                 v-model="manage_searchQuery"
-                                icon="material-symbols:search"
+                                :icon="icons['search']"
                                 placeholder="Search items"
                                 class="w-full md:w-72"
                             />
