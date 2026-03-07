@@ -6,7 +6,7 @@
 		</header>
 
 		<section class="mt-4">
-			<SharedTextSectionTitle>Edit {{ currentCategory.name }} Category</SharedTextSectionTitle>
+			<SharedTextSectionTitle>Edit {{ currentCategory?.name }} Category</SharedTextSectionTitle>
 			<div class="mx-auto w-min">
 				<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
 					<UFormField id="image" name="image" label="Item Image" description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels">

@@ -3,17 +3,12 @@
 		<template #header>
 			<SharedTextSectionTitle> Volunteers and Admins </SharedTextSectionTitle>
 		</template>
-		<UTable :data="workerUsers" :columns="columns" empty="No worker users currently available" />
+		<UTable :data="workerUsers" :columns="tableColumns" empty="No worker users currently available" />
 	</UCard>
 </template>
 
 <script lang="ts" setup>
-import { h, resolveComponent } from "vue"
-
 const toast = useToast()
-
-const UButton = resolveComponent("UButton")
-const UDropdownMenu = resolveComponent("UDropdownMenu")
 
 const permissions = usePermissionsStore()
 const { canAdminAccess, canHeadAdminAccess } = storeToRefs(permissions)
@@ -23,76 +18,13 @@ const currentUserNetID = useCookie("netID")
 const { data: workerUsers, refresh } = await useFetch("/api/admin/user/workerUsers", {
 	method: "GET",
 })
-const columns = [
-	{
-		accessorKey: "netID",
-		header: ({ column }) => {
-			const isSorted = column.getIsSorted()
 
-			return h(UButton, {
-				color: "neutral",
-				variant: "ghost",
-				label: "Net ID",
-				icon: isSorted ? (isSorted === "asc" ? icons["sortAsc"] : icons["sortDesc"]) : icons["sort"],
-				class: "-mx-2.5",
-				onClick: () => column.toggleSorting(column.getIsSorted() === "asc"),
-			})
-		},
-	},
-	{
-		accessorKey: "role",
-		header: ({ column }) => {
-			const isSorted = column.getIsSorted()
+const UButton = resolveComponent("UButton")
+const UCheckbox = resolveComponent("UCheckbox")
+const UDropdownMenu = resolveComponent("UDropdownMenu")
 
-			return h(UButton, {
-				color: "neutral",
-				variant: "ghost",
-				label: "Role",
-				icon: isSorted ? (isSorted === "asc" ? icons["sortAsc"] : icons["sortDesc"]) : icons["sort"],
-				class: "-mx-2.5",
-				onClick: () => column.toggleSorting(column.getIsSorted() === "asc"),
-			})
-		},
-	},
-	{
-		id: "actions",
-		meta: {
-			class: {
-				td: "text-right",
-			},
-		},
-		cell: ({ row }) => {
-			return h(
-				UDropdownMenu,
-				{
-					content: {
-						align: "end",
-					},
-					items: getRowItems(row),
-					"aria-label": "Actions dropdown",
-				},
-				() =>
-					h(UButton, {
-						icon: icons["ellipsesActions"],
-						color: "neutral",
-						variant: "ghost",
-						"aria-label": "Actions dropdown",
-					})
-			)
-		},
-	},
-]
-
-const getRowItems = (row) => {
-	const items = [
-		{
-			type: "label",
-			label: "Actions",
-		},
-		{
-			type: "separator",
-		},
-	]
+const getActionItems = (row) => {
+	const items = [{ type: "label", label: "Actions" }, { type: "separator" }]
 
 	if (canHeadAdminAccess.value) {
 		if (row.original.role !== "HEAD_ADMIN") {
@@ -140,6 +72,13 @@ const getRowItems = (row) => {
 
 	return items
 }
+
+const columnsDef = [
+	{ header: "Net ID", accessorKey: "netID", type: "text", sortable: true },
+	{ header: "Role", accessorKey: "role", type: "text", sortable: true },
+	{ id: "actions", type: "actions", items: getActionItems, meta: { class: { td: "text-right" } } },
+]
+const tableColumns = buildNuxtUITable(columnsDef, { UButton, UCheckbox, UDropdownMenu })
 
 const demoteVolunteertoStudent = async (row) => {
 	try {

@@ -34,7 +34,7 @@
 				<template #header>
 					<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
 				</template>
-				<UTable :data="queue" :columns="columns" :meta="meta" empty="No one currently in queue" />
+				<UTable :data="queue" :columns="tableColumns" :meta="meta" empty="No one currently in queue" />
 			</UCard>
 		</section>
 	</UContainer>
@@ -48,10 +48,11 @@ const { getQueue, updateQueueStatus } = queueStore
 const cartStore = useCartStore()
 const { cart } = storeToRefs(cartStore)
 
-const columns = [
-	{ accessorKey: "position", header: "Position" },
-	{ accessorKey: "publicCode", header: "Display Name" },
+const columnsDef = [
+	{ header: "Position", accessorKey: "position", type: "text" },
+	{ header: "Display Name", accessorKey: "publicCode", type: "text" },
 ]
+const tableColumns = buildNuxtUITable(columnsDef, {})
 
 const meta = {
 	class: {

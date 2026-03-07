@@ -12,57 +12,24 @@
 				<div class="w-full">
 					<SharedButtonPositiveAction class="ml-auto block" text="Add Category" @click="navigateTo('/admin/manage/categories/add')" />
 				</div>
-				<UTable :data="categories" :columns="columns" empty="No categories currently available" />
+				<UTable :data="categories" :columns="tableColumns" empty="No categories currently available" />
 			</UCard>
 		</section>
 	</UContainer>
 </template>
 
 <script setup lang="ts">
-const UCheckbox = resolveComponent("UCheckbox")
-const UButton = resolveComponent("UButton")
-
 const { getCategories } = useCategories()
 const categories = await getCategories(true)
 
-const columns = [
-	{
-		header: "Image",
-		accessorKey: "imgName",
-		cell: ({ row }) =>
-			h("img", {
-				src: `/api/public/image/${row.original.imgName}`,
-				alt: row.original.name,
-				class: "min-w-20 max-w-20 aspect-square object-cover rounded",
-			}),
-	},
-	{ header: "Name", accessorKey: "name" },
-	{
-		header: "Archived",
-		accessorKey: "archived",
-		cell: ({ row }) => {
-			return h(UCheckbox, {
-				modelValue: row.original.archived,
-				variant: "solid",
-				disabled: true, 
-				size: "xl",
-			})
-		},
-	},
-	{
-		id: "actions",
-		meta: {
-			class: {
-				td: "text-right",
-			},
-		},
-		cell: ({ row }) => {
-			return h(UButton, {
-				icon: icons["edit"],
-				variant: "ghost",
-				onClick: () => navigateTo(`/admin/manage/categories/${row.original.categoryID}/edit`),
-			})
-		},
-	},
+const UButton = resolveComponent("UButton")
+const UCheckbox = resolveComponent("UCheckbox")
+const UDropdownMenu = resolveComponent("UDropdownMenu")
+const columnsDef = [
+	{ header: "Image", accessorKey: "imgName", type: "image" },
+	{ header: "Name", accessorKey: "name", type: "text", sortable: true },
+	{ header: "Archived", accessorKey: "archived", type: "checkbox", sortable: true, disabled: true, size: "xl" },
+	{ id: "edit", type: "edit", onClick: (row) => navigateTo(`/admin/manage/categories/${row.original.categoryID}/edit`) },
 ]
+const tableColumns = buildNuxtUITable(columnsDef, { UButton, UCheckbox, UDropdownMenu })
 </script>
