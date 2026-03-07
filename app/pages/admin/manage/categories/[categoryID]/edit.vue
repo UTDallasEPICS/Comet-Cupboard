@@ -1,12 +1,12 @@
 <template>
 	<UContainer class="py-8">
 		<header>
-			<SharedButtonNavigateBack :text="'Back to ' + currentCategory" :to="{ path: `/volunteer/inventory/${currentCategory}` }" />
-			<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
+			<SharedButtonNavigateBack text="Back to Manage Categories" :to="{ path: `/admin/manage/categories` }" />
+			<SharedTextPageTitle>Manage Categories</SharedTextPageTitle>
 		</header>
 
 		<section class="mt-4">
-			<SharedTextSectionTitle>Edit {{ currentCategory }} Item</SharedTextSectionTitle>
+			<SharedTextSectionTitle>Edit {{ currentCategory.name }} Category</SharedTextSectionTitle>
 			<div class="mx-auto w-min">
 				<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
 					<UFormField id="image" name="image" label="Item Image" description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels">
@@ -15,15 +15,15 @@
 						</div>
 					</UFormField>
 					<UFormField
-						id="itemName"
-						name="itemName"
-						label="Item Name"
-						description="Item name must be at most 20 characters and only contain letters and spaces"
+						id="categoryName"
+						name="categoryName"
+						label="Category Name"
+						description="Category name must be at most 20 characters and only contain letters and spaces"
 					>
-						<UInput v-model="state.itemName" placeholder="Enter item name" />
+						<UInput v-model="state.categoryName" placeholder="Enter category name" />
 					</UFormField>
-					<UFormField id="category" name="category" label="Category" description="Select the category for this item">
-						<USelect v-model="state.category" :items="categoryOptions" placeholder="Select category" />
+					<UFormField id="archived" name="archived" label="Archived" description="Check if the category is archived">
+						<UCheckbox v-model="state.archived" />
 					</UFormField>
 					<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
 						<SharedButtonPositiveAction type="submit" text="Submit" />
@@ -39,37 +39,29 @@ import * as z from "zod"
 import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui"
 
 const route = useRoute()
-const currentCategory = route.params.category as string
-const itemID = route.params.itemID as string
-
-const { data: item } = await useFetch("/api/student/inventory/item/", {
-	query: { itemID },
-})
+const categoryID = route.params.categoryID as string
 
 const { data: categories } = await useFetch("/api/student/inventory/categories")
-
-const categoryOptions = computed(() => {
-	return categories.value?.map((category) => {
-		return category.name
-	})
+const currentCategory = computed(() => {
+	return categories.value?.find((category) => category.categoryID === categoryID)
 })
 
 const originalImage = ref<Blob | null>(null)
 
 const state = ref<Partial<Schema>>({
 	image: originalImage.value
-		? new File([originalImage.value], item.value?.imgName, {
+		? new File([originalImage.value], currentCategory.value?.imgName, {
 				type: originalImage.value.type,
 			})
 		: undefined,
-	itemName: item.value?.name || undefined,
-	category: item.value?.categoryName || undefined,
+	categoryName: currentCategory.value?.name || undefined,
+	archived: currentCategory.value?.archived || false,
 })
 
 watchEffect(async () => {
-	if (item.value) {
-		originalImage.value = await $fetch<Blob>(`/api/public/image/${item.value.imgName}`, { responseType: "blob" })
-		state.value.image = new File([originalImage.value], item.value.imgName, {
+	if (currentCategory.value) {
+		originalImage.value = await $fetch<Blob>(`/api/public/image/${currentCategory.value.imgName}`, { responseType: "blob" })
+		state.value.image = new File([originalImage.value], currentCategory.value.imgName, {
 			type: originalImage.value.type,
 		})
 	} else {
@@ -79,17 +71,17 @@ watchEffect(async () => {
 
 type Schema = {
 	image: File | undefined
-	itemName: string | undefined
-	category: string | undefined
+	categoryName: string | undefined
+	archived: boolean | undefined
 }
 
 const schema = imageSchema.extend({
-	itemName: z
+	categoryName: z
 		.string()
-		.min(1, "Item name is required")
-		.max(20, "Item name must be at most 20 characters")
-		.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
-	category: z.string().min(1, "Category is required"),
+		.min(1, "Category name is required")
+		.max(20, "Category name must be at most 20 characters")
+		.regex(/^[A-Za-z ]+$/, "Category name must only contain letters and spaces"),
+	archived: z.boolean().default(false),
 })
 
 const validate = async (state: Partial<Schema>): Promise<FormError[]> => {
@@ -111,19 +103,19 @@ const onError = async (event: FormErrorEvent) => {
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 	try {
 		const formData = new FormData()
-		formData.append("itemID", itemID)
-		formData.append("name", event.data.itemName || "")
-		formData.append("categoryName", event.data.category || "")
+		formData.append("categoryID", categoryID)
+		formData.append("categoryName", event.data.categoryName || "")
+		formData.append("archived", event.data.archived?.toString() || "false")
 		if (event.data.image) {
 			formData.append("image", event.data.image)
 		}
 
-		await $fetch("/api/volunteer/inventory/item", {
+		await $fetch("/api/admin/inventory/category", {
 			method: "PUT",
 			body: formData,
 		})
 
-		navigateTo(`/volunteer/inventory/${currentCategory}`)
+		navigateTo("/admin/manage/categories")
 	} catch (error) {
 		// idk for now
 	}

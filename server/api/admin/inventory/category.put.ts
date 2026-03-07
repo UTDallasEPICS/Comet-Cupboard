@@ -8,63 +8,59 @@ import { imageSchema, deleteImage, uploadImage, processImage } from "#server/uti
 
 const schema = imageSchema
 	.extend({
-		itemID: z.string().default(""),
-		name: z.string(),
+		categoryID: z.string().default(""),
 		categoryName: z.string(),
+		archived: z.string().default("false"),
 	})
 	.strict()
 	.required()
 
 /*
-	Not providing itemID implies wanting to create a new item
-	Providing itemID implies wanting to edit an existing item
+	Not providing categoryID implies wanting to create a new category
+	Providing categoryID implies wanting to edit an existing category
 */
 
 export default defineSafeHandler(async (event) => {
-	const { name, categoryName, image, itemID } = await validateFormData(event, schema)
+	const { categoryName, image, categoryID, archived } = await validateFormData(event, schema)
 
 	await prisma.$transaction(async (tx) => {
-		const category = await tx.category.findUnique({ where: { name: categoryName } })
-		if (!category) {
-			throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Category does not exist" })
-		}
-
 		// store old item image to delete later if editing an item
 		let oldImgName = ""
-		if (itemID) {
-			const existingItem = await tx.item.findUnique({ where: { itemID } })
-			if (!existingItem) {
-				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Item does not exist` })
+		if (categoryID) {
+			const existingCategory = await tx.category.findUnique({ where: { categoryID } })
+			if (!existingCategory) {
+				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Category does not exist` })
 			}
-			oldImgName = existingItem.imgName
+			oldImgName = existingCategory.imgName
 		}
 
 		const newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
 
-		let item
-		if (itemID) {
+		let category
+		if (categoryID) {
 			try {
-				item = await tx.item.update({
-					where: { itemID },
-					data: { name, imgName: newImgName, categoryName, archived: false },
+				category = await tx.category.update({
+					where: { categoryID },
+					data: { name: categoryName, imgName: newImgName, archived: archived === "true" },
 				})
 			} catch (error: unknown) {
 				if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
-					throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Item not found" })
+					throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Category not found" })
 				}
 				throw error
 			}
 		} else {
-			item = await tx.item.create({
-				data: { name, imgName: newImgName, categoryName, archived: false },
+			category = await tx.category.create({
+				data: { name: categoryName, imgName: newImgName, archived: archived === "true" },
 			})
 		}
+
 		// safest way to ensure we don't accidentally delete an image if something goes wrong during the transaction
 		if (oldImgName) {
 			await deleteImage(oldImgName)
 		}
-		return item
+		return category
 	})
 
-	return "Successfully edited item"
+	return "Successfully edited category"
 })

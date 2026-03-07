@@ -41,8 +41,6 @@
 </template>
 
 <script lang="ts" setup>
-import { isEmptyObject } from "#shared/utils/helper"
-
 const queueStore = useQueueStore()
 const { queue, queueStatus } = storeToRefs(queueStore)
 const { getQueue, updateQueueStatus } = queueStore

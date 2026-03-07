@@ -5,24 +5,27 @@ import { validateBody } from "#server/utils/validation"
 
 const schema = z
 	.object({
-		source: z.string(),
+		sourceID: z.string().default(""),
+		name: z.string(),
+		archived: z.boolean().default(false),
 	})
 	.strict()
 	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { source } = await validateBody(event, schema)
+	const { sourceID, name, archived } = await validateBody(event, schema)
 
 	await prisma.source.upsert({
 		where: {
-			name: source,
+			sourceID: sourceID,
 		},
 		update: {
-			archived: false,
+			name: name,
+			archived: archived,
 		},
 		create: {
-			name: source,
-			archived: false,
+			name: name,
+			archived: archived,
 		},
 	})
 

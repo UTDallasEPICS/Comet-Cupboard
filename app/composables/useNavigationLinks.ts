@@ -83,6 +83,12 @@ export const useNavigationLinks = () => {
 						to: "/admin/manage/roles",
 					},
 					{
+						label: "Manage Categories",
+						description: "Add or edit categories",
+						icon: icons["categories"],
+						to: "/admin/manage/categories",
+					},
+					{
 						label: "Manage Sources",
 						description: "Add or edit data sources",
 						icon: icons["sources"],
