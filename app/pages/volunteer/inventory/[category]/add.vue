@@ -33,21 +33,11 @@
 
 <script lang="ts" setup>
 import * as z from "zod"
-import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui"
 
 const route = useRoute()
 const currentCategory = route.params.category as string
 
-type Schema = {
-	image: File | undefined
-	itemName: string | undefined
-}
-const state = ref<Partial<Schema>>({
-	image: undefined,
-	itemName: undefined,
-})
-
-const schema = imageSchema.extend({
+const formSchema = imageSchema.extend({
 	itemName: z
 		.string()
 		.min(1, "Item name is required")
@@ -55,23 +45,12 @@ const schema = imageSchema.extend({
 		.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
 })
 
-const validate = async (state: Partial<Schema>): Promise<FormError[]> => {
-	const errors = []
-	const result = await schema.safeParseAsync(state)
-	if (!result.success) {
-		errors.push(...result.error.issues.map((err) => ({ name: String(err.path[0]), message: err.message })))
-	}
-	return errors
-}
+const { schema, state, validate, onError } = createFormBuilder(formSchema, () => ({
+	image: undefined,
+	itemName: undefined,
+}))
 
-const onError = async (event: FormErrorEvent) => {
-	if (event?.errors?.[0]?.id) {
-		const el = document.getElementById(event.errors[0].id)
-		el?.focus()
-		el?.scrollIntoView({ behavior: "smooth", block: "center" })
-	}
-}
-const onSubmit = async (event: FormSubmitEvent<Schema>) => {
+const onSubmit = async (event) => {
 	try {
 		const formData = new FormData()
 		formData.append("name", event.data.itemName || "")

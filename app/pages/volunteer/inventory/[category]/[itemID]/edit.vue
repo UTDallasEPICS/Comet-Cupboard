@@ -36,7 +36,6 @@
 
 <script lang="ts" setup>
 import * as z from "zod"
-import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui"
 
 const route = useRoute()
 const currentCategory = route.params.category as string
@@ -56,7 +55,16 @@ const categoryOptions = computed(() => {
 
 const originalImage = ref<Blob | null>(null)
 
-const state = ref<Partial<Schema>>({
+const formSchema = imageSchema.extend({
+	itemName: z
+		.string()
+		.min(1, "Item name is required")
+		.max(20, "Item name must be at most 20 characters")
+		.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
+	category: z.string().min(1, "Category is required"),
+})
+
+const { schema, state, validate, onError } = createFormBuilder(formSchema, () => ({
 	image: originalImage.value
 		? new File([originalImage.value], item.value?.imgName, {
 				type: originalImage.value.type,
@@ -64,7 +72,7 @@ const state = ref<Partial<Schema>>({
 		: undefined,
 	itemName: item.value?.name || undefined,
 	category: item.value?.categoryName || undefined,
-})
+}))
 
 watchEffect(async () => {
 	if (item.value) {
@@ -77,38 +85,7 @@ watchEffect(async () => {
 	}
 })
 
-type Schema = {
-	image: File | undefined
-	itemName: string | undefined
-	category: string | undefined
-}
-
-const schema = imageSchema.extend({
-	itemName: z
-		.string()
-		.min(1, "Item name is required")
-		.max(20, "Item name must be at most 20 characters")
-		.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
-	category: z.string().min(1, "Category is required"),
-})
-
-const validate = async (state: Partial<Schema>): Promise<FormError[]> => {
-	const errors = []
-	const result = await schema.safeParseAsync(state)
-	if (!result.success) {
-		errors.push(...result.error.issues.map((err) => ({ name: String(err.path[0]), message: err.message })))
-	}
-	return errors
-}
-
-const onError = async (event: FormErrorEvent) => {
-	if (event?.errors?.[0]?.id) {
-		const el = document.getElementById(event.errors[0].id)
-		el?.focus()
-		el?.scrollIntoView({ behavior: "smooth", block: "center" })
-	}
-}
-const onSubmit = async (event: FormSubmitEvent<Schema>) => {
+const onSubmit = async (event) => {
 	try {
 		const formData = new FormData()
 		formData.append("itemID", itemID)
