@@ -8,5 +8,14 @@ export default defineNuxtConfig({
 	ui: {
 		colorMode: false,
 	},
+	nitro: {
+		experimental: {
+			tasks: true,
+		},
+		scheduledTasks: {
+			// Run `db:cleanup` task every day at midnight
+			"0 0 * * *": ["db:cleanup"],
+		},
+	},
 	compatibilityDate: "2025-03-07",
 })
