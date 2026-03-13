@@ -34,8 +34,11 @@ model User {
 }
 
 model Category {
-    name  String @id @map("name")
-    Items Item[]
+    categoryID String  @id @default(cuid()) @map("id")
+    name       String  @unique @map("name")
+    imgName    String  @map("img_name")
+    archived   Boolean @default(false) @map("archived")
+    Items      Item[]
 
     @@map("category")
 }
@@ -51,7 +54,7 @@ model Item {
     ItemCountChanges ItemCountChange[]
     CartItems        CartItem[]
     OrderItems       OrderItem[]
-    archived         Boolean           @default(false)
+    archived         Boolean           @default(false) @map("archived")
     createdAt        DateTime          @default(now()) @map("created_at")
 
     @@map("item")
@@ -63,18 +66,18 @@ model ItemCountChange {
     amountChanged Int      @map("amount_changed")
     Item          Item     @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
     itemID        String   @map("item_id")
-    Source        Source   @relation(fields: [sourceName], references: [name], onDelete: Restrict, onUpdate: Cascade)
-    sourceName    String   @map("source_name")
+    Source        Source   @relation(fields: [sourceID], references: [sourceID], onDelete: Restrict, onUpdate: Cascade)
+    sourceID      String   @map("source_id")
     fieldMap      Json?    @map("field_map")
 
     @@map("item_count_change")
 }
 
 model Field {
-    fieldID    String @id @default(cuid()) @map("field_id")
-    name       String
-    Source     Source @relation(fields: [sourceName], references: [name], onDelete: Restrict, onUpdate: Cascade)
-    sourceName String @map("source_name")
+    fieldID  String @id @default(cuid()) @map("field_id")
+    name     String
+    Source   Source @relation(fields: [sourceID], references: [sourceID], onDelete: Restrict, onUpdate: Cascade)
+    sourceID String @map("source_id")
 
     @@map("field")
 }

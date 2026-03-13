@@ -7,7 +7,7 @@ import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 const schema = z
 	.object({
-		source: z.string(),
+		sourceID: z.string(),
 		inventoryCountChanges: z.array(z.object({ itemID: z.string(), countChange: z.number().int() })),
 		fieldMap: z.record(z.string(), z.string()).optional(),
 	})
@@ -15,10 +15,10 @@ const schema = z
 	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { source, inventoryCountChanges, fieldMap } = await validateBody(event, schema)
+	const { sourceID, inventoryCountChanges, fieldMap } = await validateBody(event, schema)
 
 	await prisma.$transaction(async (tx) => {
-		const foundSource = await tx.source.findUnique({ where: { name: source } })
+		const foundSource = await tx.source.findUnique({ where: { sourceID: sourceID } })
 		if (!foundSource) {
 			throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Source does not exist" })
 		}
@@ -42,7 +42,7 @@ export default defineSafeHandler(async (event) => {
 				return {
 					amountChanged: inventoryCountChange.countChange,
 					itemID: inventoryCountChange.itemID,
-					sourceName: source,
+					sourceID: sourceID,
 					fieldMap: fieldMap ?? {},
 				}
 			}),
