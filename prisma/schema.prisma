@@ -15,10 +15,10 @@ enum RoleType {
 }
 
 enum BagCategory {
-    VEG_PB
-    VEG_NPB
-    NONVEG_PB
-    NONVEG_NPB
+    VEGETARIAN_AND_PEANUT_BUTTER
+    VEGETARIAN_AND_NON_PEANUT_BUTTER
+    NONVEGETARIAN_AND_PEANUT_BUTTER
+    NONVEGETARIAN_AND_NON_PEANUT_BUTTER
 }
 
 model RoleRequest {
@@ -60,8 +60,8 @@ model Item {
     OrderItems       OrderItem[]
     archived         Boolean           @default(false)
     createdAt        DateTime          @default(now()) @map("created_at")
-    bagItems         BagItem[]
-    issuedBagItems   IssuedBagItem[]
+    EmergencyBagItems         EmergencyBagItem[]
+    IssuedBagItems           IssuedBagItem[]
 
     @@map("item")
 }
@@ -166,10 +166,9 @@ model EmergencyBag {
     Location       Location?   @relation(fields: [locationName], references: [name], onDelete: Restrict, onUpdate: Cascade)
     locationName   String?
     bagCategory    BagCategory @map("bag_category")
-    bagItems       BagItem[]
-    bagDescription String      @map("bag_description")
-    expiryDate     DateTime    @map("expiry_date")
-    archived       Boolean     @default(false) @map("archived")
+    EmergencybagItems       EmergencyBagItem[]
+    bagDescription String?      @map("bag_description")
+    expiryDate     DateTime     @map("expiry_date")
     // 5 digit ID for volunteers/students
     label          String      @unique
 
@@ -178,8 +177,8 @@ model EmergencyBag {
 
 model Location {
     name                String               @id @map("name")
-    emergencyBags       EmergencyBag[]
-    issuedEmergencyBags IssuedEmergencyBag[]
+    EmergencyBags       EmergencyBag[]
+    IssuedEmergencyBags IssuedEmergencyBag[]
     address             String               @map("address")
     website             String               @map("website")
     archived            Boolean              @default(false) @map("archived")
@@ -187,14 +186,14 @@ model Location {
     @@map("location")
 }
 
-model BagItem {
+model EmergencyBagItem {
     Item         Item         @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
     itemID       String       @map("item_id")
     bagID        String       @map("bag_id")
-    emergencyBag EmergencyBag @relation(fields: [bagID], references: [bagID], onDelete: Cascade, onUpdate: Cascade)
+    EmergencyBag EmergencyBag @relation(fields: [bagID], references: [bagID], onDelete: Cascade, onUpdate: Cascade)
     itemCount    Int          @map("count")
 
-    @@id(name: "bagItemID", [itemID, bagID])
+    @@id(name: "emergencyBagItemID", [itemID, bagID])
     @@map("bag_item")
 }
 
@@ -205,10 +204,9 @@ model IssuedEmergencyBag {
     Location       Location        @relation(fields: [location], references: [name], onDelete: Restrict, onUpdate: Cascade)
     location       String
     bagCategory    BagCategory     @map("bag_category")
-    bagItems       IssuedBagItem[]
-    bagDescription String          @map("bag_description")
+    EmergencyBagItems       IssuedBagItem[]
+    bagDescription String?         @map("bag_description")
     expiryDate     DateTime        @map("expiry_date")
-    archived       Boolean         @default(true) @map("archived")
     //5 digit ID for volunteers/students
     label          String          @unique
 
@@ -220,9 +218,9 @@ model IssuedBagItem {
     Item               Item               @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
     itemID             String             @map("item_id")
     bagID              String             @map("bag_id")
-    issuedEmergencyBag IssuedEmergencyBag @relation(fields: [bagID], references: [bagID], onDelete: Cascade, onUpdate: Cascade)
+    IssuedEmergencyBag IssuedEmergencyBag @relation(fields: [bagID], references: [bagID], onDelete: Cascade, onUpdate: Cascade)
     itemCount          Int                @map("count")
 
-    @@id(name: "bagItemID", [itemID, bagID])
+    @@id(name: "emergencyBagItemID", [itemID, bagID])
     @@map("issued_bag_item")
 }

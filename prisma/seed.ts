@@ -42,6 +42,38 @@ const validUsers = [
 	{ netID: "had000000", role: RoleType.HEAD_ADMIN },
 ]
 
+//
+const locations = [
+	{name: "Police Station", address: "100 N Floyd Road", website: "utdpolice.com"},
+	{name: "Activity Center", address: "800 Campbell Rd", website: "utdAC.com"}
+]
+
+const emergencyBags = [
+	{bagCategory: 2, expiryDate: new Date("2026-07-28"), label: "12345"},
+	{bagCategory: 0, expiryDate: new Date("2027-01-01"), label: "15453"},
+	{bagCategory: 1, expiryDate: new Date("2026-09-31"), label: "54321"},
+]
+
+const bagItems = [
+	{itemID: items[0].itemID , bagID: emergencyBags[0].bagID, itemCount: 3},
+	{itemID: items[0].itemID , bagID: emergencyBags[1].bagID, itemCount: 5},
+	{itemID: items[2].itemID , bagID: emergencyBags[2].bagID, itemCount: 7}
+]
+
+
+const createLocations = async () => {
+	await prisma.user.createMany({ data: locations})
+}
+
+const createEmergencyBags = async () => {
+	await prisma.user.createMany({ data: emergencyBags})
+}
+
+const createBagItems = async () => {
+	await prisma.user.createMany({ data: bagItems})
+}
+//
+
 const createUsers = async () => {
 	await prisma.user.createMany({ data: validUsers })
 }
@@ -189,6 +221,9 @@ const main = async () => {
 	await createDeals()
 	await createRestocks()
 	await createOrders()
+	await createLocations()
+	await createEmergencyBags()
+	await createBagItems()
 	console.log(`Database has been seeded. 🌱`)
 }
 
