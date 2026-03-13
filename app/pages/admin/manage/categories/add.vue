@@ -59,6 +59,7 @@ const onSubmit = async (event) => {
 		if (event.data.image) {
 			formData.append("image", event.data.image)
 		}
+		formData.append("archived", "false")
 
 		await $fetch("/api/admin/inventory/category", {
 			method: "PUT",

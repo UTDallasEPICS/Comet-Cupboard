@@ -6,11 +6,28 @@ import { validateBody } from "#server/utils/validation"
 const schema = z
 	.object({
 		sourceID: z.string().default(""),
-		name: z.string(),
-		archived: z.boolean().default(false),
+		name: z.string().min(1, "Name cannot be empty"),
+		archived: z.boolean(),
 	})
 	.strict()
-	.required()
+	.partial({
+		name: true,
+		archived: true,
+	})
+	.refine(
+		({ sourceID, name, archived }) => {
+			if (sourceID === "") {
+				// creating a new source, so all fields are required
+				if (!name || archived === undefined) {
+					return false
+				}
+			}
+			return true
+		},
+		{
+			error: "name and archived are required when creating a new source",
+		}
+	)
 
 export default defineSafeHandler(async (event) => {
 	const { sourceID, name, archived } = await validateBody(event, schema)
@@ -20,8 +37,8 @@ export default defineSafeHandler(async (event) => {
 			sourceID: sourceID,
 		},
 		update: {
-			name: name,
-			archived: archived,
+			...(name && { name }),
+			...(archived !== undefined && { archived }),
 		},
 		create: {
 			name: name,

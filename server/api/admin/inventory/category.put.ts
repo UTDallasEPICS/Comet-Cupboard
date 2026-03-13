@@ -9,16 +9,29 @@ import { imageSchema, deleteImage, uploadImage, processImage } from "#server/uti
 const schema = imageSchema
 	.extend({
 		categoryID: z.string().default(""),
-		categoryName: z.string(),
-		archived: z.string().default("false"),
+		categoryName: z.string().min(1, "Category name cannot be empty"),
+		archived: z.enum(["true", "false"]),
 	})
 	.strict()
-	.required()
-
-/*
-	Not providing categoryID implies wanting to create a new category
-	Providing categoryID implies wanting to edit an existing category
-*/
+	.partial({
+		categoryName: true,
+		archived: true,
+		image: true,
+	})
+	.refine(
+		({ categoryID, categoryName, archived, image }) => {
+			if (categoryID === "") {
+				// creating a new category, so all fields are required
+				if (!categoryName || !archived || !image) {
+					return false
+				}
+			}
+			return true
+		},
+		{
+			error: "categoryName, archived, and image are required when creating a new category",
+		}
+	)
 
 export default defineSafeHandler(async (event) => {
 	const { categoryName, image, categoryID, archived } = await validateFormData(event, schema)
@@ -29,19 +42,26 @@ export default defineSafeHandler(async (event) => {
 		if (categoryID) {
 			const existingCategory = await tx.category.findUnique({ where: { categoryID } })
 			if (!existingCategory) {
-				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Category does not exist` })
+				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Category does not exist" })
 			}
 			oldImgName = existingCategory.imgName
 		}
 
-		const newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
+		let newImgName = undefined
+		if (image) {
+			newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
+		}
 
 		let category
 		if (categoryID) {
 			try {
 				category = await tx.category.update({
 					where: { categoryID },
-					data: { name: categoryName, imgName: newImgName, archived: archived === "true" },
+					data: {
+						...(categoryName !== undefined && { name: categoryName }),
+						...(newImgName !== undefined && { imgName: newImgName }),
+						...(archived !== undefined && { archived: archived === "true" }),
+					},
 				})
 			} catch (error: unknown) {
 				if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
@@ -56,7 +76,7 @@ export default defineSafeHandler(async (event) => {
 		}
 
 		// safest way to ensure we don't accidentally delete an image if something goes wrong during the transaction
-		if (oldImgName) {
+		if (oldImgName && newImgName) {
 			await deleteImage(oldImgName)
 		}
 		return category

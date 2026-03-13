@@ -40,7 +40,12 @@ import * as z from "zod"
 const route = useRoute()
 const categoryID = route.params.categoryID as string
 
-const { data: categories } = await useFetch("/api/student/inventory/categories")
+const { data: categories } = await useFetch("/api/student/inventory/categories", {
+	method: "GET",
+	query: {
+		includeArchived: "true",
+	},
+})
 const currentCategory = computed(() => {
 	return categories.value?.find((category) => category.categoryID === categoryID)
 })
@@ -58,14 +63,20 @@ watchEffect(async () => {
 	}
 })
 
-const formSchema = imageSchema.extend({
-	categoryName: z
-		.string()
-		.min(1, "Category name is required")
-		.max(20, "Category name must be at most 20 characters")
-		.regex(/^[A-Za-z ]+$/, "Category name must only contain letters and spaces"),
-	archived: z.boolean().default(false),
-})
+const formSchema = imageSchema
+	.extend({
+		categoryName: z
+			.string()
+			.min(1, "Category name is required")
+			.max(20, "Category name must be at most 20 characters")
+			.regex(/^[A-Za-z ]+$/, "Category name must only contain letters and spaces"),
+		archived: z.boolean().default(false),
+	})
+	.partial({
+		image: true,
+		categoryName: true,
+		archived: true,
+	})
 
 const { schema, state, validate, onError } = createFormBuilder(formSchema, () => ({
 	image: originalImage.value
@@ -81,8 +92,12 @@ const onSubmit = async (event) => {
 	try {
 		const formData = new FormData()
 		formData.append("categoryID", categoryID)
-		formData.append("categoryName", event.data.categoryName || "")
-		formData.append("archived", event.data.archived?.toString() || "false")
+		if (event.data.categoryName) {
+			formData.append("categoryName", event.data.categoryName)
+		}
+		if (event.data.archived !== undefined) {
+			formData.append("archived", event.data.archived.toString())
+		}
 		if (event.data.image) {
 			formData.append("image", event.data.image)
 		}

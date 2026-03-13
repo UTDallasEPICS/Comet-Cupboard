@@ -25,6 +25,9 @@
 					<UFormField id="category" name="category" label="Category" description="Select the category for this item">
 						<USelect v-model="state.category" :items="categoryOptions" placeholder="Select category" />
 					</UFormField>
+					<UFormField id="archived" name="archived" label="Archived" description="Check if the category is archived">
+						<UCheckbox v-model="state.archived" />
+					</UFormField>
 					<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
 						<SharedButtonPositiveAction type="submit" text="Submit" />
 					</footer>
@@ -55,14 +58,21 @@ const categoryOptions = computed(() => {
 
 const originalImage = ref<Blob | null>(null)
 
-const formSchema = imageSchema.extend({
-	itemName: z
-		.string()
-		.min(1, "Item name is required")
-		.max(20, "Item name must be at most 20 characters")
-		.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
-	category: z.string().min(1, "Category is required"),
-})
+const formSchema = imageSchema
+	.extend({
+		itemName: z
+			.string()
+			.min(1, "Item name is required")
+			.max(20, "Item name must be at most 20 characters")
+			.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
+		category: z.string().min(1, "Category is required"),
+		archived: z.boolean().default(false),
+	})
+	.partial({
+		image: true,
+		itemName: true,
+		category: true,
+	})
 
 const { schema, state, validate, onError } = createFormBuilder(formSchema, () => ({
 	image: originalImage.value
@@ -72,6 +82,7 @@ const { schema, state, validate, onError } = createFormBuilder(formSchema, () =>
 		: undefined,
 	itemName: item.value?.name || undefined,
 	category: item.value?.categoryName || undefined,
+	archived: item.value?.archived || false,
 }))
 
 watchEffect(async () => {
@@ -94,6 +105,7 @@ const onSubmit = async (event) => {
 		if (event.data.image) {
 			formData.append("image", event.data.image)
 		}
+		formData.append("archived", event.data.archived ? "true" : "false")
 
 		await $fetch("/api/volunteer/inventory/item", {
 			method: "PUT",

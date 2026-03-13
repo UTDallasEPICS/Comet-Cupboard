@@ -55,6 +55,7 @@ const onSubmit = async (event) => {
 		const formData = new FormData()
 		formData.append("name", event.data.itemName || "")
 		formData.append("categoryName", currentCategory as string)
+		formData.append("archived", "false")
 		if (event.data.image) {
 			formData.append("image", event.data.image)
 		}

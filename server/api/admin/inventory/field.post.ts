@@ -6,7 +6,7 @@ import { validateBody } from "#server/utils/validation"
 const schema = z
 	.object({
 		sourceID: z.string(),
-		fieldName: z.string(),
+		fieldName: z.string().min(1, "Field name cannot be empty"),
 	})
 	.strict()
 	.required()
