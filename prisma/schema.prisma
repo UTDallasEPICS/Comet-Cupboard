@@ -61,7 +61,7 @@ model Item {
     archived         Boolean           @default(false)
     createdAt        DateTime          @default(now()) @map("created_at")
     EmergencyBagItems         EmergencyBagItem[]
-    IssuedBagItems           IssuedBagItem[]
+    IssuedBagItems           IssuedEmergencyBagItem[]
 
     @@map("item")
 }
@@ -204,7 +204,7 @@ model IssuedEmergencyBag {
     Location       Location        @relation(fields: [location], references: [name], onDelete: Restrict, onUpdate: Cascade)
     location       String
     bagCategory    BagCategory     @map("bag_category")
-    EmergencyBagItems       IssuedBagItem[]
+    EmergencyBagItems       IssuedEmergencyBagItem[]
     bagDescription String?         @map("bag_description")
     expiryDate     DateTime        @map("expiry_date")
     //5 digit ID for volunteers/students
@@ -214,7 +214,7 @@ model IssuedEmergencyBag {
 }
 
 //Table for issued Bag items
-model IssuedBagItem {
+model IssuedEmergencyBagItem {
     Item               Item               @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
     itemID             String             @map("item_id")
     bagID              String             @map("bag_id")

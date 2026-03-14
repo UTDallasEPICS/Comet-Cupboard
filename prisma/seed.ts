@@ -3,7 +3,7 @@ import { nanoid } from "nanoid"
 import { existsSync, mkdirSync, readdirSync } from "fs"
 import "dotenv/config"
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
-import { PrismaClient, RoleType } from "./generated/prisma/client"
+import { PrismaClient, RoleType, BagCategory} from "./generated/prisma/client"
 
 const connectionString = `${process.env.DATABASE_URL}`
 const adapter = new PrismaBetterSqlite3({ url: connectionString })
@@ -49,29 +49,52 @@ const locations = [
 ]
 
 const emergencyBags = [
-	{bagCategory: 2, expiryDate: new Date("2026-07-28"), label: "12345"},
-	{bagCategory: 0, expiryDate: new Date("2027-01-01"), label: "15453"},
-	{bagCategory: 1, expiryDate: new Date("2026-09-31"), label: "54321"},
-]
-
-const bagItems = [
-	{itemID: items[0].itemID , bagID: emergencyBags[0].bagID, itemCount: 3},
-	{itemID: items[0].itemID , bagID: emergencyBags[1].bagID, itemCount: 5},
-	{itemID: items[2].itemID , bagID: emergencyBags[2].bagID, itemCount: 7}
+	{bagCategory: BagCategory.NONVEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2026-07-28"), label: "12345"},
+	{bagCategory: BagCategory.VEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2027-01-01"), label: "15453"},
+	{bagCategory: BagCategory.NONVEGETARIAN_AND_PEANUT_BUTTER, expiryDate: new Date("2026-09-31"), label: "54321"},
 ]
 
 
 const createLocations = async () => {
-	await prisma.user.createMany({ data: locations})
+	await prisma.location.createMany({ data: locations})
 }
 
 const createEmergencyBags = async () => {
-	await prisma.user.createMany({ data: emergencyBags})
+	await prisma.emergencyBag.createMany({ data: emergencyBags})
 }
 
 const createBagItems = async () => {
-	await prisma.user.createMany({ data: bagItems})
+	const bags = await prisma.emergencyBag.findMany()
+
+	await prisma.emergencyBagItem.createMany({
+		data: [
+			{itemID: items[0].itemID , bagID: bags[0].bagID, itemCount: 3},
+			{itemID: items[0].itemID , bagID: bags[1].bagID, itemCount: 5},
+			{itemID: items[2].itemID , bagID: bags[2].bagID, itemCount: 7}
+		]
+})
 }
+
+const createIssuedEmergencyBags = async () => {
+	await prisma.issuedEmergencyBag.createMany({
+		data: [
+			{bagCategory: BagCategory.VEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2026-05-01"), label: "99999", location: "Police Station"}
+		]
+})
+}
+
+const createIssuedEmergencyBagItems = async () => {
+	const bags = await prisma.emergencyBag.findMany()
+
+	await prisma.emergencyBagItem.createMany({
+		data: [
+			{itemID: items[0].itemID , bagID: bags[0].bagID, itemCount: 3},
+			{itemID: items[0].itemID , bagID: bags[1].bagID, itemCount: 5},
+			{itemID: items[2].itemID , bagID: bags[2].bagID, itemCount: 7}
+		]
+})
+}
+
 //
 
 const createUsers = async () => {
@@ -221,9 +244,14 @@ const main = async () => {
 	await createDeals()
 	await createRestocks()
 	await createOrders()
+	
 	await createLocations()
 	await createEmergencyBags()
 	await createBagItems()
+	
+	await createIssuedEmergencyBags()
+	await createIssuedEmergencyBagItems()
+
 	console.log(`Database has been seeded. 🌱`)
 }
 
