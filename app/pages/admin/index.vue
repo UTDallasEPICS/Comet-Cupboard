@@ -25,7 +25,6 @@
 </template>
 
 <script setup lang="ts">
-const { roleLinks } = useNavigationLinks()
 const adminLinks = roleLinks["admin"]
 	.flatMap((link) => {
 		if (link.children) {

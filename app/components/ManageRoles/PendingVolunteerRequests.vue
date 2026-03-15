@@ -3,69 +3,33 @@
 		<template #header>
 			<SharedTextSectionTitle> Pending Volunteer Requests </SharedTextSectionTitle>
 		</template>
-		<UTable :data="pendingVolunteerRequests" :columns="columns" empty="No pending volunteer requests currently available" />
+		<UTable :data="pendingVolunteerRequests" :columns="tableColumns" empty="No pending volunteer requests currently available" />
 	</UCard>
 </template>
 
 <script lang="ts" setup>
-import { h, resolveComponent } from "vue"
-
-const UButton = resolveComponent("UButton")
-const UDropdownMenu = resolveComponent("UDropdownMenu")
-
 const { data: pendingVolunteerRequests, refresh } = await useFetch("/api/admin/user/pendingVolunteerRequests", {
 	method: "GET",
 })
-const columns = [
-	{ accessorKey: "userID", header: "User ID" },
-	{
-		id: "actions",
-		meta: {
-			class: {
-				td: "text-right",
-			},
-		},
-		cell: ({ row }) => {
-			return h(
-				UDropdownMenu,
-				{
-					content: {
-						align: "end",
-					},
-					items: getRowItems(row),
-					"aria-label": "Actions dropdown",
-				},
-				() =>
-					h(UButton, {
-						icon: icons["ellipsesActions"],
-						color: "neutral",
-						variant: "ghost",
-						"aria-label": "Actions dropdown",
-					})
-			)
-		},
-	},
-]
 
-const getRowItems = (row) => {
+const UButton = resolveComponent("UButton")
+const UCheckbox = resolveComponent("UCheckbox")
+const UDropdownMenu = resolveComponent("UDropdownMenu")
+
+const getActionItems = (row) => {
 	return [
-		{
-			type: "label",
-			label: "Actions",
-		},
-		{
-			type: "separator",
-		},
-		{
-			label: "Accept",
-			onClick: () => approveVolunteerRequest(row),
-		},
-		{
-			label: "Reject",
-			onClick: () => rejectVolunteerRequest(row),
-		},
+		{ type: "label", label: "Actions" },
+		{ type: "separator" },
+		{ label: "Accept", onClick: () => approveVolunteerRequest(row) },
+		{ label: "Reject", onClick: () => rejectVolunteerRequest(row) },
 	]
 }
+
+const columnsDef = [
+	{ header: "User ID", accessorKey: "userID", type: "text", sortable: true },
+	{ id: "actions", type: "actions", items: getActionItems, meta: { class: { td: "text-right" } } },
+]
+const tableColumns = buildNuxtUITable(columnsDef, { UButton, UCheckbox, UDropdownMenu })
 
 const approveVolunteerRequest = async (row) => {
 	try {

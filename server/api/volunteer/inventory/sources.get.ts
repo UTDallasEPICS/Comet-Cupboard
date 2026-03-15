@@ -5,7 +5,7 @@ import { validateQuery } from "#server/utils/validation"
 
 const schema = z
 	.object({
-		includeArchived: z.string().default("false"),
+		includeArchived: z.enum(["true", "false"]).default("false"),
 	})
 	.strict()
 	.required()

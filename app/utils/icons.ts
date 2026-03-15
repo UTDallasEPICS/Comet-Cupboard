@@ -23,10 +23,12 @@ export const icons = {
 	data: "i-lucide-chart-column-big",
 	management: "i-lucide-settings",
 	sources: "i-lucide-database",
+	categories: "i-lucide-tags",
 	disclosures: "i-lucide-file-text",
 	pending: "i-lucide-hourglass",
 	confirmation: "i-lucide-check-circle",
 	warning: "i-lucide-triangle-alert",
 	search: "i-lucide-search",
 	instagram: "i-lucide-instagram",
+	information: "i-lucide-info",
 }

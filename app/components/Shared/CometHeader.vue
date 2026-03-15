@@ -104,7 +104,6 @@ const { reviewChangesView, quantityItemsChanged } = storeToRefs(inventoryStore)
 const showQuantityItemsChanged = computed(() => quantityItemsChanged.value > 0)
 
 const { logout } = useLogout()
-const { roleLinks } = useNavigationLinks()
 
 const items = ref<NavigationMenuItem[]>(
 	[

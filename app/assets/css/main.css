@@ -4,13 +4,13 @@
 @theme {
 	--color-primary: #e4701e;
 	--color-secondary: #154734;
+	--color-warning: #ffc247;
 
 	--color-final-utd-green: #154734;
 	--color-final-utd-orange: #e4701e; /* slightly off from utd's orange, but matches comet cupboard colors */
 	--color-final-page-bg: #f9fafb;
 	--color-final-cancel-gray: #4a4a4a;
 	--color-final-negative-red: #d20b0b;
-	--color-final-yellow-warning: #ffc247;
 
 	--color-final-text-soft: oklch(0.372 0.044 257.287);
 	--color-final-border-soft: oklch(90% 0.013 255.508);

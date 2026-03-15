@@ -1,9 +1,10 @@
-import { copyFile } from "node:fs/promises"
+import { readFile, copyFile } from "node:fs/promises"
 import { nanoid } from "nanoid"
 import { existsSync, mkdirSync, readdirSync } from "fs"
 import "dotenv/config"
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
 import { PrismaClient, RoleType, BagCategory } from "./generated/prisma/client"
+import { uploadImage, processImage } from "../server/utils/image"
 
 const connectionString = `${process.env.DATABASE_URL}`
 const adapter = new PrismaBetterSqlite3({ url: connectionString })
@@ -14,21 +15,25 @@ if (!existsSync(uploadDirectory)) {
 	mkdirSync(uploadDirectory)
 }
 
-const sources: Array<string> = ["NTFB", "Community Garden", "Individual Donation", "Cannot Distribute", "Error"]
-const categories: Array<string> = readdirSync("./test-images")
+const sources = []
+
+const categories: Array<string> = readdirSync("./test-images").filter((file) => {
+	return !(file === "_category_banners")
+})
 const items = []
 
 categories.forEach((category) => {
 	const categoryItems: Array<string> = readdirSync("./test-images/" + category)
 	categoryItems.forEach(async (categoryItem) => {
+		const imgBuffer = await processImage(await readFile("./test-images/" + category + "/" + categoryItem))
+		const imgName = await uploadImage(imgBuffer)
 		items.push({
 			itemID: nanoid(),
 			name: categoryItem.split(".")[0],
 			quantity: Math.floor(Math.random() * 20),
-			imgName: categoryItem,
+			imgName: imgName,
 			categoryName: category,
 		})
-		await copyFile("./test-images/" + category + "/" + categoryItem, `${uploadDirectory}/${categoryItem}`)
 	})
 })
 
@@ -58,19 +63,44 @@ const createUsers = async () => {
 }
 
 const createSources = async () => {
-	await prisma.source.createMany({
-		data: sources.map((source) => {
+	const sourceNames = ["NTFB", "Community Garden", "Individual Donation", "Cannot Distribute", "Error"]
+	const createdSources = await prisma.source.createManyAndReturn({
+		data: sourceNames.map((source) => {
 			return { name: source }
 		}),
 	})
+	sources.push(...createdSources)
 }
 
 const createCategories = async () => {
+	const categoriesWithImages = [
+		{ name: "Breakfast Grains", img: "./test-images/_category_banners/grains.jpg" },
+		{ name: "Fridge Items", img: "./test-images/_category_banners/fridge.jpg" },
+		{ name: "Frozen Items", img: "./test-images/_category_banners/frozen.jpg" },
+		{ name: "Fruits", img: "./test-images/_category_banners/fruits.jpg" },
+		{ name: "Household Items", img: "./test-images/_category_banners/household.jpg" },
+		{ name: "Miscellaneous", img: "./test-images/_category_banners/misc.jpg" },
+		{ name: "Pantry Staples", img: "./test-images/_category_banners/pantry_staples.jpg" },
+		{ name: "Personal Care", img: "./test-images/_category_banners/personal_care.png" },
+		{ name: "Proteins", img: "./test-images/_category_banners/proteins.jpg" },
+		{ name: "Snacks", img: "./test-images/_category_banners/snacks.jpg" },
+		{ name: "Soup", img: "./test-images/_category_banners/soup.jpg" },
+		{ name: "Vegetables", img: "./test-images/_category_banners/vegetables.jpg" },
+	]
+
+	const categoriesWithNewImages = categoriesWithImages.map(async (category) => {
+		const buffer = await processImage(await readFile(category.img))
+		const imgName = await uploadImage(buffer)
+		return { ...category, imgName }
+	})
 	await prisma.category.createMany({
-		data: categories.map((category) => {
-			return { name: category }
+		data: (await Promise.all(categoriesWithNewImages)).map((category) => {
+			return { name: category.name, imgName: category.imgName }
 		}),
 	})
+	for (const category of categoriesWithImages) {
+		await copyFile(category.img, `${uploadDirectory}/${category.img.split("/").slice(-1)[0]}`)
+	}
 }
 
 const createItems = async () => {
@@ -166,7 +196,7 @@ const createRestocks = async () => {
 					itemID: itemID,
 					date: new Date(tempDate),
 					amountChanged: Math.floor(Math.random() * 10) + 5,
-					sourceName: sources[Math.floor(Math.random() * sources.length)],
+					sourceID: sources[Math.floor(Math.random() * sources.length)].sourceID,
 				})
 			})
 		}

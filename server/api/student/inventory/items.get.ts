@@ -6,8 +6,8 @@ import { validateQuery } from "#server/utils/validation"
 // quanity and archived information are not sensitive information to students
 const schema = z
 	.object({
-		checkAvailability: z.string().default("false"),
-		includeArchived: z.string().default("false"),
+		checkAvailability: z.enum(["true", "false"]).default("false"),
+		includeArchived: z.enum(["true", "false"]).default("false"),
 	})
 	.strict()
 	.required()

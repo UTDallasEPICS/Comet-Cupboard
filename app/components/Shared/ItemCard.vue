@@ -4,6 +4,7 @@
 		:ui="{
 			header: 'p-2 py-2 sm:p-2 sm:py-2',
 			body: 'p-2 py-2 sm:p-2 sm:py-2',
+			footer: 'p-2 py-2 sm:p-2 sm:py-2',
 		}"
 	>
 		<template #header>
@@ -25,6 +26,9 @@
 			/>
 			<slot name="body" />
 		</div>
+		<template v-if="$slots.footer" #footer>
+			<slot name="footer" />
+		</template>
 	</UCard>
 </template>
 

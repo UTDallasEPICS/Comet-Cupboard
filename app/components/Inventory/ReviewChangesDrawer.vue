@@ -6,9 +6,11 @@
 		<div v-else>
 			<USelectMenu
 				v-model="selectedSource"
-				:items="sources?.map((s) => s.name) || []"
+				:items="sources || []"
+				value-key="sourceID"
+				label-key="name"
 				ignore-filter
-				:icon="icons['source']"
+				:icon="icons['sources']"
 				placeholder="Select a source"
 				class="grow"
 			/>
