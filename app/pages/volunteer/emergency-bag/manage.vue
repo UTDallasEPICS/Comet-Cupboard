@@ -14,7 +14,7 @@
                 <template #add>
                     <section>
                         <div class="p-2 bg-final-cancel-gray text-white">
-                            <UInputMenu
+                            <UInput
                                 v-model="manage_searchQuery"
                                 :icon="icons['search']"
                                 placeholder="Search items"
@@ -30,7 +30,7 @@
                 <template #view>
                     <section>
                         <div class="p-2 bg-final-cancel-gray text-white">
-                            <UInputMenu
+                            <UInput
                                 v-model="manage_searchQuery"
                                 :icon="icons['search']"
                                 placeholder="Search items"
@@ -41,7 +41,7 @@
                         <UTable
                         v-model:expanded="expanded"
                         v-model="selected"
-                        :data="emergencyBags || []"
+                        :data="view_filteredBags"
                         :columns="columns"
                         :ui="{
                             td: 'py-2',
@@ -168,5 +168,23 @@ const columns: TableColumn<any>[] = [
       })
   }
 ]
+
+const view_filteredBags = computed(() => {
+  if (!emergencyBags.value) return []
+
+  const view_query = manage_searchQuery.value.toLowerCase().trim()
+
+  if (!view_query) return emergencyBags.value
+
+  return emergencyBags.value.filter((bag: any) => {
+    const categoryShort = categoryMap[bag.bagCategory] ?? bag.bagCategory
+    return (
+      bag.label?.toLowerCase().includes(view_query) ||
+      bag.locationName?.toLowerCase().includes(view_query) ||
+      bag.bagCategory?.toLowerCase().includes(view_query) ||
+      categoryShort.toLowerCase().includes(view_query)
+    )
+  })
+})
 
 </script>
