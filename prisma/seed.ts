@@ -3,7 +3,7 @@ import { nanoid } from "nanoid"
 import { existsSync, mkdirSync, readdirSync } from "fs"
 import "dotenv/config"
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
-import { PrismaClient, RoleType } from "./generated/prisma/client"
+import { PrismaClient, RoleType, BagCategory } from "./generated/prisma/client"
 import { uploadImage, processImage } from "../server/utils/image"
 
 const connectionString = `${process.env.DATABASE_URL}`
@@ -45,6 +45,17 @@ const validUsers = [
 	{ netID: "vol000001", role: RoleType.VOLUNTEER },
 	{ netID: "adm000000", role: RoleType.ADMIN },
 	{ netID: "had000000", role: RoleType.HEAD_ADMIN },
+]
+
+const locations = [
+	{ name: "Police Station", address: "100 N Floyd Road" },
+	{ name: "Activity Center", address: "800 Campbell Rd" },
+]
+
+const emergencyBags = [
+	{ bagCategory: BagCategory.NONVEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2026-07-28"), label: "12345", locationName: "Police Station" },
+	{ bagCategory: BagCategory.VEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2027-01-01"), label: "15453" },
+	{ bagCategory: BagCategory.NONVEGETARIAN_AND_PEANUT_BUTTER, expiryDate: new Date("2026-09-31"), label: "54321" },
 ]
 
 const createUsers = async () => {
@@ -111,6 +122,50 @@ const createDeals = async () => {
 			actualCount: 3,
 			adjustedCount: 1,
 		},
+	})
+}
+
+const createLocations = async () => {
+	await prisma.location.createMany({ 
+		data: locations 
+	})
+}
+
+const createEmergencyBags = async () => {
+	await prisma.emergencyBag.createMany({
+		data: emergencyBags 
+	})
+}
+
+const createEmergencyBagItems = async () => {
+	const bags = await prisma.emergencyBag.findMany()
+
+	await prisma.emergencyBagItem.createMany({
+		data: [
+			{ itemID: items[0].itemID, bagID: bags[0].bagID, count: 3 },
+			{ itemID: items[0].itemID, bagID: bags[1].bagID, count: 5 },
+			{ itemID: items[2].itemID, bagID: bags[2].bagID, count: 7 },
+		],
+	})
+}
+
+const createIssuedEmergencyBags = async () => {
+	await prisma.issuedEmergencyBag.createMany({
+		data: [ 
+			{ bagCategory: BagCategory.VEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2026-05-01"), label: "99999", location: "Police Station" }
+		],
+	})
+}
+
+const createIssuedEmergencyBagItems = async () => {
+	const bags = await prisma.issuedEmergencyBag.findMany()
+
+	await prisma.issuedEmergencyBagItem.createMany({
+		data: [
+			{ itemID: items[0].itemID, bagID: bags[0].bagID, count: 3 },
+			{ itemID: items[0].itemID, bagID: bags[1].bagID, count: 5 },
+			{ itemID: items[2].itemID, bagID: bags[2].bagID, count: 7 },
+		],
 	})
 }
 
@@ -219,6 +274,14 @@ const main = async () => {
 	await createDeals()
 	await createRestocks()
 	await createOrders()
+
+	await createLocations()
+	await createEmergencyBags()
+	await createEmergencyBagItems()
+
+	await createIssuedEmergencyBags()
+	await createIssuedEmergencyBagItems()
+
 	console.log(`Database has been seeded. 🌱`)
 }
 
