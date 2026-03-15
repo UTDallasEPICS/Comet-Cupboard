@@ -14,6 +14,13 @@ enum RoleType {
     HEAD_ADMIN
 }
 
+enum BagCategory {
+    VEGETARIAN_AND_PEANUT_BUTTER
+    VEGETARIAN_AND_NON_PEANUT_BUTTER
+    NONVEGETARIAN_AND_PEANUT_BUTTER
+    NONVEGETARIAN_AND_NON_PEANUT_BUTTER
+}
+
 model RoleRequest {
     userID String   @id @map("user_id")
     User   User     @relation(fields: [userID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
@@ -58,6 +65,8 @@ model Item {
     OrderItems                  OrderItem[]
     archived                    Boolean                      @default(false) @map("archived")
     createdAt                   DateTime                     @default(now()) @map("created_at")
+    EmergencyBagItems       EmergencyBagItem[]
+    IssuedEmergencyBagItems IssuedEmergencyBagItem[]
 
     @@map("item")
 }
@@ -174,4 +183,67 @@ model QueueEntry {
     User       User     @relation(fields: [netID], references: [netID])
 
     @@map("queue_entry")
+}
+
+model Location {
+    name                String               @id @map("name")
+    EmergencyBags       EmergencyBag[]
+    IssuedEmergencyBags IssuedEmergencyBag[]
+    address             String               @map("address")
+    archived            Boolean              @default(false) @map("archived")
+
+    @@map("location")
+}
+
+model EmergencyBag {
+    bagID             String             @id @default(cuid()) @map("bag_id")
+    Location          Location?          @relation(fields: [locationName], references: [name], onDelete: Restrict, onUpdate: Cascade)
+    locationName      String?
+    bagCategory       BagCategory        @map("bag_category")
+    EmergencyBagItems EmergencyBagItem[]
+    bagDescription    String?            @default("") @map("bag_description")
+    expiryDate        DateTime           @map("expiry_date")
+    // 5 digit ID for volunteers/students
+    label             String             @unique
+
+    @@map("emergency_bag")
+}
+
+model EmergencyBagItem {
+    Item         Item         @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+    itemID       String       @map("item_id")
+    bagID        String       @map("bag_id")
+    EmergencyBag EmergencyBag @relation(fields: [bagID], references: [bagID], onDelete: Cascade, onUpdate: Cascade)
+    count        Int          @map("count")
+
+    @@id(name: "emergencyBagItemID", [itemID, bagID])
+    @@map("emergency_bag_item")
+}
+
+//Table for Issued bags (archive)
+
+model IssuedEmergencyBag {
+    bagID             String                   @id @default(cuid()) @map("bag_id")
+    Location          Location                 @relation(fields: [location], references: [name], onDelete: Restrict, onUpdate: Cascade)
+    location          String
+    bagCategory       BagCategory              @map("bag_category")
+    EmergencyBagItems IssuedEmergencyBagItem[]
+    bagDescription    String?                  @default("") @map("bag_description")
+    expiryDate        DateTime                 @map("expiry_date")
+    //5 digit ID for volunteers/students
+    label             String                   @unique
+
+    @@map("issued_emergency_bag")
+}
+
+//Table for issued Bag items
+model IssuedEmergencyBagItem {
+    Item               Item               @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+    itemID             String             @map("item_id")
+    bagID              String             @map("bag_id")
+    IssuedEmergencyBag IssuedEmergencyBag @relation(fields: [bagID], references: [bagID], onDelete: Cascade, onUpdate: Cascade)
+    count              Int                @map("count")
+
+    @@id(name: "emergencyBagItemID", [itemID, bagID])
+    @@map("issued_emergency_bag_item")
 }
