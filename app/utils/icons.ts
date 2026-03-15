@@ -30,4 +30,5 @@ export const icons = {
 	warning: "i-lucide-triangle-alert",
 	search: "i-lucide-search",
 	instagram: "i-lucide-instagram",
+	information: "i-lucide-info",
 }
