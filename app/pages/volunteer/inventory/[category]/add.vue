@@ -22,6 +22,23 @@
 					>
 						<UInput v-model="state.itemName" placeholder="Enter item name" />
 					</UFormField>
+					<UCard
+						:ui="{
+							header: 'p-2 py-2 sm:p-2 sm:py-2',
+							body: 'p-2 py-2 sm:p-2 sm:py-2',
+						}"
+					>
+						<template #header>
+							<SharedTextBase class="mb-1"> Existing Items with Similar Names </SharedTextBase>
+						</template>
+						<template #default>
+							<ul class="space-y-1">
+								<li v-for="similarItem in mostSimilarItems" :key="similarItem.id">
+									<SharedTextBase>{{ similarItem.name }}</SharedTextBase>
+								</li>
+							</ul>
+						</template>
+					</UCard>
 					<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
 						<SharedButtonPositiveAction type="submit" text="Submit" />
 					</footer>
@@ -49,6 +66,25 @@ const { schema, state, validate, onError } = createFormBuilder(formSchema, () =>
 	image: undefined,
 	itemName: undefined,
 }))
+
+const { data: items } = await useFetch("/api/student/inventory/items", {
+	method: "GET",
+	query: {
+		checkAvailability: "false",
+		includeArchived: "true",
+	},
+})
+const { query, filtered } = useFuzzySearch(items ?? ref([]), { searchKeys: ["name"] })
+watch(
+	() => state.value.itemName,
+	(name) => {
+		query.value = name || ""
+	},
+	{ immediate: true }
+)
+const mostSimilarItems = computed(() => {
+	return filtered.value.slice(0, 5)
+})
 
 const onSubmit = async (event) => {
 	try {

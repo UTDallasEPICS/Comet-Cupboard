@@ -1,6 +1,6 @@
 <template>
 	<UContainer>
-		<div v-if="isEmptyObject(quantityChanges)" class="py-12 text-center">
+		<div v-if="inventoryItemsMap.length === 0" class="py-12 text-center">
 			<SharedTextBase>No changes to review</SharedTextBase>
 		</div>
 		<div v-else>
@@ -15,11 +15,11 @@
 				class="grow"
 			/>
 			<!-- <div v-if="fields.length > 0" class="flex flex-col gap-3 lg:flex-row">
-					<UFormGroup v-for="fieldName in fields" :key="fieldName" :label="fieldName" class="w-72">
-						<UInput v-model="fieldInputs[fieldName]" :placeholder="'Enter data'" />
-					</UFormGroup>
-				</div> -->
-			<ul class="flex w-full max-w-md flex-col items-center gap-4">
+				<UFormGroup v-for="fieldName in fields" :key="fieldName" :label="fieldName" class="w-72">
+					<UInput v-model="fieldInputs[fieldName]" :placeholder="'Enter data'" />
+				</UFormGroup>
+			</div> -->
+			<ul class="mt-4 flex w-full max-w-md flex-col items-center gap-4">
 				<li v-for="item in inventoryItemsMap" :key="item.id">
 					<InventoryReviewItemCard
 						:key="item.id"
@@ -48,23 +48,24 @@ const { data: items } = await useFetch("/api/student/inventory/items")
 const fields = ref<string[]>([])
 const fieldInputs = ref<Record<string, string>>({})
 const inventoryStore = useInventoryStore()
-const { quantityChanges } = storeToRefs(inventoryStore)
+const { inventoryChangesItems } = storeToRefs(inventoryStore)
 const { submitChanges } = inventoryStore
 
 const inventoryItemsMap = computed(() => {
 	return (
 		items.value
 			?.filter((item) => {
-				return Object.keys(quantityChanges.value).includes(item.itemID)
+				return inventoryChangesItems.value.some((change) => change.itemID === item.itemID)
 			})
 			.map((item) => {
+				const change = inventoryChangesItems.value.find((c) => c.itemID === item.itemID)
 				return {
 					id: item.itemID,
 					name: item.name,
 					imgName: item.imgName,
 					Deal: item.Deal,
 					oldCount: item.quantity,
-					changeCount: quantityChanges.value[item.itemID].countChange,
+					changeCount: change ? change.count : 0,
 				}
 			}) || []
 	)
