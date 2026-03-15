@@ -7,19 +7,13 @@
 
 		<section class="mt-4">
 			<SharedTextSectionTitle class="sr-only">Edit {{ currentCategory }} Items</SharedTextSectionTitle>
-			<div class="mx-auto flex w-full flex-row gap-4 sm:items-center sm:justify-start">
-				<USelectMenu
-					v-model:search-term="searchQuery"
-					:items="filteredItemsNames"
-					ignore-filter
-					:icon="icons['search']"
-					placeholder="Search items"
-					class="grow"
-				/>
+			<div class="mx-auto flex w-full flex-row flex-wrap gap-4 sm:items-center sm:justify-start">
+				<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search items" class="grow" />
+				<USelect v-model="sortOption" :items="sortOptions" class="max-w-md grow" />
 				<SharedButtonPositiveAction text="+ Add" :to="`/volunteer/inventory/${currentCategory}/add`" />
 			</div>
 			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-				<li v-for="item in filteredItems" :key="item.itemID">
+				<li v-for="item in filtered" :key="item.itemID">
 					<InventoryItemCard
 						:change-count="inventoryChangesItems.find((i) => i.itemID === item.itemID)?.count || 0"
 						:current-count="item.quantity"
@@ -35,13 +29,13 @@
 </template>
 
 <script lang="ts" setup>
-import Fuse from "fuse.js"
-
-const searchQuery = ref("")
 const route = useRoute()
 const currentCategory = route.params.category as string
 const inventoryStore = useInventoryStore()
 const { inventoryChangesItems } = storeToRefs(inventoryStore)
+
+const sortOption = ref("Alphabetical")
+const sortOptions = ["Alphabetical", "Quantity"]
 
 const { data: items } = await useFetch("/api/student/inventory/items")
 
@@ -55,26 +49,18 @@ const categoryItems = computed(() => {
 	)
 })
 
-const filteredItems = computed(() => {
-	if (!categoryItems.value) return []
-
-	// Sort by search
-	const term = searchQuery.value.trim()
-	let filtered: typeof categoryItems.value = []
-
-	if (!term) {
-		// Nothing searched, show all
-		filtered = [...categoryItems.value]
-	} else {
-		const fuse = new Fuse(categoryItems.value, {
-			keys: ["name"],
-			threshold: 0.6,
-		})
-		filtered = fuse.search(term).map((r) => r.item)
+const sortedItems = computed(() => {
+	if (!categoryItems.value) {
+		return []
 	}
-
-	return filtered
+	const sorted = [...categoryItems.value]
+	if (sortOption.value === "Alphabetical") {
+		sorted.sort((a, b) => a.name.localeCompare(b.name))
+	} else if (sortOption.value === "Quantity") {
+		sorted.sort((a, b) => b.quantity - a.quantity)
+	}
+	return sorted
 })
 
-const filteredItemsNames = computed(() => filteredItems.value.map((item) => item.name))
+const { query, filtered } = useFuzzySearch(sortedItems, { searchKeys: ["name"] })
 </script>
