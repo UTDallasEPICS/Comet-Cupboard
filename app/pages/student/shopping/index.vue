@@ -17,6 +17,5 @@
 </template>
 
 <script setup lang="ts">
-const { getCategories } = useCategories()
-const categories = await getCategories()
+const { data: categories } = await useFetch("/api/student/inventory/categories")
 </script>

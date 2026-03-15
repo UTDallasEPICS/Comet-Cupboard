@@ -42,7 +42,7 @@
 					<UFormField id="category" name="category" label="Category" description="Select the category for this item">
 						<USelect v-model="state.category" :items="categoryOptions" placeholder="Select category" />
 					</UFormField>
-					<UFormField id="archived" name="archived" label="Archived" description="Check if the category is archived">
+					<UFormField id="archived" name="archived" label="Archived" description="Check if the item is archived">
 						<UCheckbox v-model="state.archived" />
 					</UFormField>
 					<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">

@@ -7,7 +7,10 @@
 
 		<section class="mt-4">
 			<SharedTextSectionTitle class="sr-only">Add Items to Your Cart</SharedTextSectionTitle>
-			<div class="mx-auto flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-start">
+			<div class="mt-4 flex flex-row justify-end">
+				<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="horizontal" />
+			</div>
+			<div class="mx-auto mt-4 flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-start">
 				<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search items" class="grow" />
 				<USelect v-model="sortOption" :items="sortOptions" class="max-w-md grow" />
 			</div>
@@ -38,9 +41,17 @@ const { data: items } = await useFetch("/api/student/inventory/items", {
 	query: { checkAvailability: "true" },
 })
 
+const toggleOptions = ref(["Deal"])
+const toggleItems = ref([])
+const shownItems = computed(() => {
+	return items.value.filter((item) => {
+		return !toggleItems.value.includes("Deal") || item.Deal !== null
+	})
+})
+
 const categoryItems = computed(() => {
 	return (
-		items.value?.filter((item) => {
+		shownItems.value?.filter((item) => {
 			const itemCategory = item.categoryName?.trim().toLowerCase() || ""
 			const currentCategoryLower = currentCategory?.trim().toLowerCase() || ""
 			return itemCategory.includes(currentCategoryLower)
