@@ -46,7 +46,7 @@ model Category {
 
 model Item {
     itemID                      String                       @id @default(cuid()) @map("item_id")
-    name                        String                       @map("name")
+    name                        String                       @unique @map("name")
     Category                    Category                     @relation(fields: [categoryName], references: [name], onDelete: Restrict, onUpdate: Cascade)
     categoryName                String                       @map("category_name")
     quantity                    Int                          @default(0) @map("quantity")

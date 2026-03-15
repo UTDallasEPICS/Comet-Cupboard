@@ -16,7 +16,7 @@ export const useFuzzySearch = <T>(
 			if (options.searchKeys?.length) {
 				fuse.value = new Fuse(items.value, {
 					keys: options.searchKeys,
-					threshold: 0.6,
+					threshold: 0.5,
 				})
 			}
 		},

@@ -22,6 +22,23 @@
 					>
 						<UInput v-model="state.categoryName" placeholder="Enter category name" />
 					</UFormField>
+					<UCard
+						:ui="{
+							header: 'p-2 py-2 sm:p-2 sm:py-2',
+							body: 'p-2 py-2 sm:p-2 sm:py-2',
+						}"
+					>
+						<template #header>
+							<SharedTextBase class="mb-1"> Existing Categories with Similar Names </SharedTextBase>
+						</template>
+						<template #default>
+							<ul class="space-y-1">
+								<li v-for="similarItem in mostSimilarItems" :key="similarItem.id">
+									<SharedTextBase>{{ similarItem.name }}</SharedTextBase>
+								</li>
+							</ul>
+						</template>
+					</UCard>
 					<UFormField id="archived" name="archived" label="Archived" description="Check if the category is archived">
 						<UCheckbox v-model="state.archived" />
 					</UFormField>
@@ -87,6 +104,18 @@ const { schema, state, validate, onError } = createFormBuilder(formSchema, () =>
 	categoryName: currentCategory.value?.name || undefined,
 	archived: currentCategory.value?.archived || false,
 }))
+
+const { query, filtered } = useFuzzySearch(categories ?? ref([]), { searchKeys: ["name"] })
+watch(
+	() => state.value.categoryName,
+	(name) => {
+		query.value = name || ""
+	},
+	{ immediate: true }
+)
+const mostSimilarItems = computed(() => {
+	return filtered.value.slice(0, 5)
+})
 
 const onSubmit = async (event) => {
 	try {
