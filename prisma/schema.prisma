@@ -164,6 +164,16 @@ model QueueEntry {
     @@map("queue_entry")
 }
 
+model Location {
+    name                String               @id @map("name")
+    EmergencyBags       EmergencyBag[]
+    IssuedEmergencyBags IssuedEmergencyBag[]
+    address             String               @map("address")
+    archived            Boolean              @default(false) @map("archived")
+
+    @@map("location")
+}
+
 model EmergencyBag {
     bagID             String             @id @default(cuid()) @map("bag_id")
     Location          Location?          @relation(fields: [locationName], references: [name], onDelete: Restrict, onUpdate: Cascade)
@@ -215,14 +225,4 @@ model IssuedEmergencyBagItem {
 
     @@id(name: "emergencyBagItemID", [itemID, bagID])
     @@map("issued_emergency_bag_item")
-}
-
-model Location {
-    name                String               @id @map("name")
-    EmergencyBags       EmergencyBag[]
-    IssuedEmergencyBags IssuedEmergencyBag[]
-    address             String               @map("address")
-    archived            Boolean              @default(false) @map("archived")
-
-    @@map("location")
 }
