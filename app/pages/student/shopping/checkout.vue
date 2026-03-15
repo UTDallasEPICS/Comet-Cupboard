@@ -47,14 +47,30 @@
 							</UCard>
 							<div class="flex flex-row justify-between gap-4">
 								<SharedButtonCancel text="Back" @click="goToShopping" />
-								<SharedButtonPositiveAction text="Next" @click="incrementStepper" />
+								<SharedButtonPositiveAction text="I Agree" @click="incrementStepper" />
 							</div>
 						</div>
 					</template>
 
 					<template #AdjustCounts>
 						<USeparator class="mb-4" />
-						<div class="flex flex-col gap-4">
+						<UAlert
+							title="Review each item and adjust expired/damaged/overstocked counts before continuing."
+							:icon="icons['information']"
+							color="neutral"
+							variant="outline"
+						/>
+						<div class="mt-4 flex flex-col gap-4">
+							<UAlert
+								v-for="warning in pendingCartWarnings(combineCartAndTemporaryAdjustments)"
+								:key="warning"
+								:icon="icons['warning']"
+								color="warning"
+								:title="warning"
+								class="text-black"
+							/>
+						</div>
+						<div class="mt-4 flex flex-col gap-4">
 							<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 								<li v-for="cartItem in cartItems" :key="cartItem.itemID">
 									<ShoppingCartAdjustCountItemCard
@@ -71,6 +87,7 @@
 										:img-name="cartItem.Item.imgName"
 										:item-i-d="cartItem.itemID"
 										:name="cartItem.Item.name"
+										:count-adjustment="countAdjustments[cartItem.itemID] || 0"
 										@update:model-value="
 											(countAdjustment) => {
 												countAdjustments[cartItem.itemID] = countAdjustment
@@ -89,18 +106,86 @@
 					<template #ReviewCart>
 						<USeparator class="mb-4" />
 
-						<p>{{ countAdjustments }}</p>
-						<div class="flex flex-row justify-between gap-4">
-							<SharedButtonCancel text="Back" @click="decrementStepper" />
-							<SharedButtonPositiveAction text="Confirm and Submit Cart" @click="submitCart" />
+						<UAlert
+							title="Review your cart one last time before submitting for verification."
+							:icon="icons['information']"
+							color="neutral"
+							variant="outline"
+						/>
+
+						<div class="mt-4 flex flex-col gap-4">
+							<UAlert
+								v-for="warning in pendingCartWarnings(combineCartAndTemporaryAdjustments)"
+								:key="warning"
+								:icon="icons['warning']"
+								color="warning"
+								:title="warning"
+								class="text-black"
+							/>
+						</div>
+						<div class="mt-4 flex flex-col gap-4">
+							<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+								<li v-for="cartItem in cartItems" :key="cartItem.itemID">
+									<ShoppingCartReviewItemCard
+										:item-deal="
+											cartItem.Item.Deal
+												? {
+														actualCount: cartItem.Item.Deal.actualCount,
+														adjustedCount: cartItem.Item.Deal.adjustedCount,
+													}
+												: {}
+										"
+										class="w-full"
+										:count="cartItem.count"
+										:img-name="cartItem.Item.imgName"
+										:item-i-d="cartItem.itemID"
+										:name="cartItem.Item.name"
+										:count-adjustment="countAdjustments[cartItem.itemID] || 0"
+									/>
+								</li>
+							</ul>
+							<div class="flex flex-row justify-between gap-4">
+								<SharedButtonCancel text="Back" @click="decrementStepper" />
+								<SharedButtonPositiveAction text="Confirm and Submit Cart" @click="submitCart" />
+							</div>
 						</div>
 					</template>
 
 					<template #Verification>
-						<USeparator class="mb-4" />
+						<USeparator class="m4-6" />
 
-						<p>Pretend there is a shopping cart that is pending here</p>
-						<SharedButtonCancel text="Cancel" @click="cancelCart" />
+						<UAlert
+							title="Your cart has been submitted and is awaiting verification. A staff member will review the items and finalize your request."
+							:icon="icons['information']"
+							color="neutral"
+							variant="outline"
+						/>
+
+						<div class="mt-4 flex flex-col gap-4">
+							<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+								<li v-for="cartItem in cartItems" :key="cartItem.itemID">
+									<ShoppingCartReviewItemCard
+										:item-deal="
+											cartItem.Item.Deal
+												? {
+														actualCount: cartItem.Item.Deal.actualCount,
+														adjustedCount: cartItem.Item.Deal.adjustedCount,
+													}
+												: {}
+										"
+										class="w-full"
+										:count="cartItem.count"
+										:img-name="cartItem.Item.imgName"
+										:item-i-d="cartItem.itemID"
+										:name="cartItem.Item.name"
+										:count-adjustment="cartItem.countAdjustment"
+									/>
+								</li>
+							</ul>
+							<div class="flex flex-row justify-start gap-4">
+								<SharedButtonCancel text="Cancel Request" @click="cancelCart" />
+							</div>
+						</div>
 					</template>
 
 					<template #Confirmation>
@@ -122,6 +207,9 @@
 								</template>
 								<p>Reason: {{ cartVerificationReason }}</p>
 							</UCard>
+							<div class="flex flex-row justify-end">
+								<SharedButtonPositiveAction text="Back to Dashboard" @click="navigateTo('/student')" />
+							</div>
 						</template>
 					</template>
 				</UStepper>
@@ -154,11 +242,10 @@ const items: StepperItem[] = [
 		title: "Review Cart",
 		icon: icons["shopping"],
 	},
-
 	{
 		slot: "Verification" as const,
 		title: "Pending Verification",
-		icon: icons["verification"],
+		icon: icons["pending"],
 	},
 	{
 		slot: "Confirmation" as const,
@@ -172,22 +259,42 @@ const cartRejected = ref(false)
 const cartVerificationReason = ref("")
 const store = useCartStore()
 const { getCart } = store
-const { cartItems } = storeToRefs(store)
+const { cartItems, pending } = storeToRefs(store)
 
 const { onEvent } = useStudentEventStream()
 
-const unsubscribe = onEvent((event) => {
+onMounted(async () => {
+	await getCart()
+	if (pending.value) {
+		active.value = 3
+	}
+})
+
+const unsubscribe = onEvent(async (event) => {
 	switch (event.type) {
 		case "cart.verification.decision": {
 			cartVerificationReason.value = event.payload.reason || "No reason provided."
 			active.value = 4
 			cartRejected.value = event.payload.decision === "ACCEPT" ? false : true
+			await getCart()
 			break
 		}
 	}
 })
 
 const countAdjustments = ref<Record<string, number>>({})
+
+const combineCartAndTemporaryAdjustments = computed(() => {
+	return {
+		CartItems: cartItems.value.map((cartItem) => {
+			const adjustment = countAdjustments.value[cartItem.itemID] || 0
+			return {
+				...cartItem,
+				countAdjustment: adjustment,
+			}
+		}),
+	}
+})
 
 onBeforeUnmount(() => {
 	unsubscribe()
@@ -213,7 +320,7 @@ const submitCart = async () => {
 	const allCartItemAdjustments = cartItems.value.map((cartItem) => {
 		return {
 			itemID: cartItem.itemID,
-			countAdjustment: -1 * countAdjustments.value[cartItem.itemID] || 0,
+			countAdjustment: countAdjustments.value[cartItem.itemID] || 0,
 		}
 	})
 
@@ -224,6 +331,7 @@ const submitCart = async () => {
 			adjustments: allCartItemAdjustments,
 		},
 	})
+	await getCart() // refresh cart to get updated counts and lock the cart
 	incrementStepper()
 }
 

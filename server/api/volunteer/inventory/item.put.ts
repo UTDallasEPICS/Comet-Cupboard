@@ -1,42 +1,48 @@
 import { z } from "zod"
-import { unlink, writeFile } from "node:fs/promises"
 import { prisma } from "#server/utils/db"
-import { nanoid } from "nanoid"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateFormData } from "#server/utils/validation"
 import { Prisma } from "../../../../prisma/generated/prisma/client"
+import { imageSchema, deleteImage, uploadImage, processImage } from "#server/utils/image"
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024
-const uploadDirectory = process.env.IMAGE_UPLOAD_DIRECTORY
-
-const schema = z
-	.object({
+const schema = imageSchema
+	.extend({
 		itemID: z.string().default(""),
-		name: z.string(),
+		name: z.string().min(1, "Name cannot be empty"),
 		categoryName: z.string(),
-		image: z
-			.file()
-			.mime(["image/jpeg", "image/jpg", "image/png"], {
-				message: "Invalid image type (JPG/PNG only)",
-			})
-			.max(MAX_FILE_SIZE, { message: "Image is too large (max 2MB)" }),
+		archived: z.enum(["true", "false"]),
 	})
 	.strict()
-	.required()
-
-/*
-	Not providing itemID implies wanting to create a new item
-	Providing itemID implies wanting to edit an existing item
-*/
+	.partial({
+		name: true,
+		categoryName: true,
+		image: true,
+		archived: true,
+	})
+	.refine(
+		({ itemID, name, categoryName, image, archived }) => {
+			if (itemID === "") {
+				// creating a new item, so all fields are required
+				if (!name || !categoryName || !image || !archived) {
+					return false
+				}
+			}
+			return true
+		},
+		{
+			error: "name, categoryName, image, and archived are required when creating a new item",
+		}
+	)
 
 export default defineSafeHandler(async (event) => {
-	const { name, categoryName, image, itemID } = await validateFormData(event, schema)
-
+	const { name, categoryName, image, itemID, archived } = await validateFormData(event, schema)
 	await prisma.$transaction(async (tx) => {
-		const category = await tx.category.findUnique({ where: { name: categoryName } })
-		if (!category) {
-			throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Category does not exist" })
+		if (categoryName) {
+			const category = await tx.category.findUnique({ where: { name: categoryName } })
+			if (!category) {
+				throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Category does not exist" })
+			}
 		}
 
 		// store old item image to delete later if editing an item
@@ -48,24 +54,22 @@ export default defineSafeHandler(async (event) => {
 			}
 			oldImgName = existingItem.imgName
 		}
-
-		if (oldImgName) {
-			await unlink(`${uploadDirectory}/${oldImgName}`).catch(() => {})
+		let newImgName = undefined
+		if (image) {
+			newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
 		}
-		const newImageType = image.type.split("/")[1]
-		const newImgName = `${nanoid()}.${newImageType}`
-		const newPath = `${uploadDirectory}/${newImgName}`
-
-		// Convert Web File -> Buffer
-		const buffer = Buffer.from(await image.arrayBuffer())
-		await writeFile(newPath, buffer)
 
 		let item
 		if (itemID) {
 			try {
 				item = await tx.item.update({
 					where: { itemID },
-					data: { name, imgName: newImgName, categoryName, archived: false },
+					data: {
+						...(name !== undefined && { name: name }),
+						...(image !== undefined && { imgName: newImgName }),
+						...(categoryName !== undefined && { categoryName }),
+						...(archived !== undefined && { archived: archived === "true" }),
+					},
 				})
 			} catch (error: unknown) {
 				if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
@@ -75,8 +79,17 @@ export default defineSafeHandler(async (event) => {
 			}
 		} else {
 			item = await tx.item.create({
-				data: { name, imgName: newImgName, categoryName, archived: false },
+				data: {
+					name: name,
+					imgName: newImgName,
+					categoryName: categoryName,
+					archived: archived === "true",
+				},
 			})
+		}
+		// safest way to ensure we don't accidentally delete an image if something goes wrong during the transaction
+		if (oldImgName && newImgName) {
+			await deleteImage(oldImgName)
 		}
 		return item
 	})

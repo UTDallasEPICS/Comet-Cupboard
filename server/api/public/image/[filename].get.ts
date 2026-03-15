@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises"
 import { StatusCodes } from "http-status-codes"
 import { validateParams } from "#server/utils/validation"
 import { defineSafeHandler } from "#server/utils/handler"
+import mime from "mime-types"
 
 const schema = z
 	.object({
@@ -29,11 +30,8 @@ export default defineSafeHandler(async (event) => {
 	// PLEASE OH PLEASE KEEP THIS ASYNC
 	const contents = await readFile(resolvedPath)
 
-	const fileType = filename.split(".").pop()?.toLowerCase()
-	if (fileType === "jpg" || fileType === "jpeg") {
-		setResponseHeader(event, "Content-Type", "image/jpeg")
-	} else if (fileType === "png") {
-		setResponseHeader(event, "Content-Type", "image/png")
-	}
+	const mimeType = mime.lookup(filename) || "application/octet-stream"
+	setResponseHeader(event, "Content-Type", mimeType)
+	
 	return contents
 })

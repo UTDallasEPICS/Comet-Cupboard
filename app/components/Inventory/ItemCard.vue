@@ -87,7 +87,6 @@ const { getQuantityChange, updateQuantityChange } = inventoryStore
 const editMenuItems = ref<DropdownMenuItem[]>([
 	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/edit`) },
 	{ label: "Item Deal", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/deal`) },
-	{ label: "Delete", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/delete`) },
 ])
 
 const adjustAmount = ref(1)

@@ -32,10 +32,6 @@ export const useCartStore = defineStore("cart", () => {
 		}).reduce((a, b) => a + b, 0)
 	})
 
-	const cartAdjustedCount = computed(() => {
-		return cartCountAdjustment(cart.value)
-	})
-
 	const pending = computed(() => {
 		if (cart.value === null || "pending" in cart.value === false) {
 			return false
@@ -54,5 +50,5 @@ export const useCartStore = defineStore("cart", () => {
 		}
 	}
 
-	return { cart, cartView, cartItems, cartTotalCount, cartAdjustedCount, pending, getCart, resetCartView, handleCartEvent }
+	return { cart, cartView, cartItems, cartTotalCount, pending, getCart, resetCartView, handleCartEvent }
 })

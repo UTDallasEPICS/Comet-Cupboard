@@ -55,12 +55,12 @@ export const useInventoryStore = defineStore("inventory", () => {
 		quantityChanges.value = {}
 	}
 
-	const submitChanges = async (source: string, fieldMap?: Record<string, string>) => {
+	const submitChanges = async (sourceID: string, fieldMap?: Record<string, string>) => {
 		try {
 			await $fetch("/api/volunteer/inventory/itemCountChanges", {
 				method: "POST",
 				body: {
-					source: source,
+					sourceID: sourceID,
 					inventoryCountChanges: Object.entries(quantityChanges.value).map(([itemID, change]) => {
 						return {
 							itemID: itemID,

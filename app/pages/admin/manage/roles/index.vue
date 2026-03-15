@@ -3,7 +3,7 @@
 		<header class="flex items-center justify-between">
 			<SharedTextPageTitle>Manage Roles</SharedTextPageTitle>
 
-			<div class="flex items-center gap-3 text-sm text-gray-500">
+			<div class="flex items-center gap-3">
 				<SharedTextBaseSecondary>Auto refresh in {{ countdown }}</SharedTextBaseSecondary>
 
 				<UButton size="xs" variant="soft" :icon="icons['refresh']" @click="refreshNow"> Refresh now </UButton>

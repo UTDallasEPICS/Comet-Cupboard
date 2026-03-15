@@ -5,17 +5,17 @@ import { validateQuery } from "#server/utils/validation"
 
 const schema = z
 	.object({
-		source: z.string(),
+		sourceID: z.string(),
 	})
 	.strict()
 	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { source } = validateQuery(event, schema)
+	const { sourceID } = validateQuery(event, schema)
 
 	const fields = await prisma.field.findMany({
 		where: {
-			sourceName: source,
+			sourceID: sourceID,
 		},
 		orderBy: {
 			name: "asc",

@@ -5,10 +5,16 @@
 			<p v-else>Cart Preview</p>
 		</template>
 		<div v-if="validCartID" class="flex h-full flex-col gap-y-4">
-			<div class="flex flex-col items-center gap-x-4 gap-y-4">
-				<SharedBannerWarning v-for="(warning, index) in warnings" :key="index" :text="warning" class="w-full" />
+			<div class="flex flex-col gap-4">
+				<UAlert
+					v-for="warning in pendingCartWarnings(cart)"
+					:key="warning"
+					:icon="icons['warning']"
+					color="warning"
+					:title="warning"
+					class="text-black"
+				/>
 			</div>
-			<UCheckbox v-model="showDetailed" label="Show Detailed View" />
 			<div class="grid justify-items-center gap-4" :style="{ gridTemplateColumns: 'repeat(auto-fill, minmax(288px, 1fr))' }">
 				<UCollapsible v-for="category in Object.keys(categoryCartItems)" :key="category" class="w-full" :default-open="true">
 					<UButton
@@ -23,29 +29,32 @@
 						}"
 					/>
 					<template #content>
-						<div class="mt-1 grid place-items-center gap-4" style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))">
-							<VerifyCartItemCard
+						<div class="m-1 grid place-items-center gap-4" style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))">
+							<ShoppingCartReviewItemCard
 								v-for="cartItem in categoryCartItems[category]"
 								:key="cartItem.itemID"
-								:adjusted-q-t-y="cartItem.adjustedQTY"
-								:deal-count="cartItem.dealCount"
-								:expired-count="cartItem.expiredCount"
-								:img-name="cartItem.imgName"
 								:item-deal="
-									cartItem.itemDeal ? { actualCount: cartItem.itemDeal.actualCount, adjustedCount: cartItem.itemDeal.adjustedCount } : {}
+									cartItem.Item.Deal
+										? {
+												actualCount: cartItem.Item.Deal.actualCount,
+												adjustedCount: cartItem.Item.Deal.adjustedCount,
+											}
+										: {}
 								"
+								class="w-full"
+								:count="cartItem.count"
+								:img-name="cartItem.Item.imgName"
 								:item-i-d="cartItem.itemID"
-								:name="cartItem.name"
-								:total-q-t-y="cartItem.totalQTY"
-								:detailed="showDetailed"
+								:name="cartItem.Item.name"
+								:count-adjustment="cartItem.countAdjustment"
 							/>
 						</div>
 					</template>
 				</UCollapsible>
 			</div>
 			<div class="flex flex-col items-end">
-				<p class="text-right text-nowrap">Total Count {{ cartTotalCount }}</p>
-				<p class="text-right text-nowrap">Adjusted Count {{ cartAdjustedCount }}</p>
+				<p class="text-right text-nowrap">Total Count: {{ cartTotalCount }}</p>
+				<p class="text-right text-nowrap">Adjusted Count: {{ cartAdjustedCount }}</p>
 				<UTextarea v-model="reason" placeholder="Add a reason for declining or accepting the cart" class="w-full max-w-96" />
 			</div>
 			<div class="flex flex-row justify-center gap-x-4 sm:justify-end">
@@ -71,7 +80,6 @@ const props = defineProps({
 const emit = defineEmits(["cart-declined", "cart-accepted"])
 
 const reason = ref("")
-const showDetailed = ref(true)
 
 const validCartID = computed(() => {
 	return props.cartID !== ""
@@ -93,39 +101,12 @@ const { data: cart } = await useAsyncData(
 	}
 )
 
-const warnings: Array<string> = computed(() => {
-	if (!cart || !cart.value) {
-		return []
-	}
-	return pendingCartWarnings(cart.value)
-})
-
-const categoryCartItems = computed<
-	Record<
-		string,
-		Array<{ name: string; imgName: string; itemID: number; itemDeal: any; totalQTY: number; dealCount: number; expiredCount: number; adjustedQTY: number }>
-	>
->(() => {
+const categoryCartItems = computed(() => {
 	if (!cart || !cart.value || !cart.value.CartItems) {
 		return {}
 	}
 	const categoryCartItemsGrouped = Object.groupBy(cart.value.CartItems, (cartItem) => {
 		return cartItem.Item.categoryName
-	})
-	Object.keys(categoryCartItemsGrouped).forEach((category) => {
-		categoryCartItemsGrouped[category] = categoryCartItemsGrouped[category].map((cartItem) => {
-			const { count: adjustedCount, dealCount } = cartItemCountAdjustment(cartItem)
-			return {
-				name: cartItem.Item.name,
-				imgName: cartItem.Item.imgName,
-				itemID: cartItem.itemID,
-				itemDeal: cartItem.Item.Deal,
-				totalQTY: cartItem.count,
-				dealCount: dealCount,
-				expiredCount: cartItem.expiredCount,
-				adjustedQTY: adjustedCount,
-			}
-		})
 	})
 	return categoryCartItemsGrouped
 })
@@ -135,7 +116,7 @@ const cartAdjustedCount = computed(() => {
 	Object.keys(categoryCartItems.value).forEach((category) => {
 		adjCount += categoryCartItems.value[category]
 			.map((cartItem) => {
-				return cartItem.adjustedQTY
+				return cartItemCountAdjustment(cartItem).count
 			})
 			.reduce((a, b) => a + b, 0)
 	})
@@ -143,11 +124,14 @@ const cartAdjustedCount = computed(() => {
 })
 
 const cartTotalCount = computed(() => {
+	if (isEmptyObject(categoryCartItems.value)) {
+		return 0
+	}
 	let totCount = 0
 	Object.keys(categoryCartItems.value).forEach((category) => {
 		totCount += categoryCartItems.value[category]
 			.map((cartItem) => {
-				return cartItem.totalQTY
+				return cartItem.count
 			})
 			.reduce((a, b) => a + b, 0)
 	})
