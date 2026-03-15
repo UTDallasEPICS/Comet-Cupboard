@@ -23,12 +23,13 @@ model RoleRequest {
 }
 
 model User {
-    netID       String       @id @map("net_id")
-    role        RoleType     @map("role")
-    roleRequest RoleRequest?
-    Cart        Cart?
-    Orders      Order[]
-    QueueEntry  QueueEntry?
+    netID                  String                  @id @map("net_id")
+    role                   RoleType                @map("role")
+    roleRequest            RoleRequest?
+    Cart                   Cart?
+    Orders                 Order[]
+    QueueEntry             QueueEntry?
+    InventoryChangeSession InventoryChangeSession?
 
     @@map("user")
 }
@@ -44,18 +45,19 @@ model Category {
 }
 
 model Item {
-    itemID           String            @id @default(cuid()) @map("item_id")
-    name             String            @map("name")
-    Category         Category          @relation(fields: [categoryName], references: [name], onDelete: Restrict, onUpdate: Cascade)
-    categoryName     String            @map("category_name")
-    quantity         Int               @default(0) @map("quantity")
-    Deal             Deal?
-    imgName          String            @map("img_name")
-    ItemCountChanges ItemCountChange[]
-    CartItems        CartItem[]
-    OrderItems       OrderItem[]
-    archived         Boolean           @default(false) @map("archived")
-    createdAt        DateTime          @default(now()) @map("created_at")
+    itemID                      String                       @id @default(cuid()) @map("item_id")
+    name                        String                       @map("name")
+    Category                    Category                     @relation(fields: [categoryName], references: [name], onDelete: Restrict, onUpdate: Cascade)
+    categoryName                String                       @map("category_name")
+    quantity                    Int                          @default(0) @map("quantity")
+    Deal                        Deal?
+    imgName                     String                       @map("img_name")
+    ItemCountChanges            ItemCountChange[]
+    InventoryChangeSessionItems InventoryChangeSessionItem[]
+    CartItems                   CartItem[]
+    OrderItems                  OrderItem[]
+    archived                    Boolean                      @default(false) @map("archived")
+    createdAt                   DateTime                     @default(now()) @map("created_at")
 
     @@map("item")
 }
@@ -90,6 +92,25 @@ model Source {
     archived         Boolean           @default(false) @map("archived")
 
     @@map("source")
+}
+
+model InventoryChangeSession {
+    User                        User                         @relation(fields: [netID], references: [netID], onDelete: NoAction, onUpdate: Cascade)
+    netID                       String                       @id @map("net_id")
+    InventoryChangeSessionItems InventoryChangeSessionItem[]
+
+    @@map("inventory_change_session")
+}
+
+model InventoryChangeSessionItem {
+    InventoryChangeSession   InventoryChangeSession @relation(fields: [inventoryChangeSessionID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
+    inventoryChangeSessionID String                 @map("inventory_change_session_id")
+    Item                     Item                   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+    itemID                   String                 @map("item_id")
+    count                    Int                    @map("count")
+
+    @@id(name: "inventoryChangeSessionItemID", [inventoryChangeSessionID, itemID])
+    @@map("inventory_change_session_item")
 }
 
 model Cart {

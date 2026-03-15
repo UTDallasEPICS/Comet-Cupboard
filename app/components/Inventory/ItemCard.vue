@@ -82,7 +82,7 @@ const route = useRoute()
 const currentCategory = route.params.category as string
 
 const inventoryStore = useInventoryStore()
-const { getQuantityChange, updateQuantityChange } = inventoryStore
+const { changeInventorySessionItemCount } = inventoryStore
 
 const editMenuItems = ref<DropdownMenuItem[]>([
 	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/edit`) },
@@ -91,20 +91,12 @@ const editMenuItems = ref<DropdownMenuItem[]>([
 
 const adjustAmount = ref(1)
 
-const increment = () => {
-	updateQuantityChange({
-		itemID: props.itemID,
-		quantity: getQuantityChange(props.itemID).quantity,
-		countChange: getQuantityChange(props.itemID).countChange + adjustAmount.value,
-	})
+const increment = async () => {
+	await changeInventorySessionItemCount(props.itemID, adjustAmount.value)
 }
 
-const decrement = () => {
-	updateQuantityChange({
-		itemID: props.itemID,
-		quantity: getQuantityChange(props.itemID).quantity,
-		countChange: getQuantityChange(props.itemID).countChange - adjustAmount.value,
-	})
+const decrement = async () => {
+	await changeInventorySessionItemCount(props.itemID, -adjustAmount.value)
 }
 
 const displayChange = computed(() => {

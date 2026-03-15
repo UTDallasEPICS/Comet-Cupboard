@@ -1,58 +1,41 @@
-import { defineStore } from "pinia"
-
-interface QuantityChange {
-	quantity: number
-	countChange: number
-}
-
 export const useInventoryStore = defineStore("inventory", () => {
-	const quantityChanges = ref<Record<string, QuantityChange>>({})
+	const inventoryChanges = ref<Record<string, any> | null>(null)
 
-	const quantityItemsChanged = computed(() => {
-		return Object.keys(quantityChanges.value).length
+	const getInventoryChanges = async () => {
+		try {
+			inventoryChanges.value = await $fetch("/api/volunteer/inventory/inventoryChangeSession")
+		} catch (e) {
+			inventoryChanges.value = null
+		}
+	}
+
+	const inventoryChangesItems = computed(() => {
+		if (inventoryChanges.value === null || "InventoryChangeSessionItems" in inventoryChanges.value === false) {
+			return []
+		}
+		return inventoryChanges.value.InventoryChangeSessionItems
 	})
 
-	const reviewChangesView = ref(false)
-
-	const resetReviewChangesView = () => {
-		reviewChangesView.value = false
-	}
-
-	const getQuantityChange = (itemID: string) => {
-		if (!Object.keys(quantityChanges.value).includes(itemID)) {
-			return {
-				quantity: 0,
-				countChange: 0,
-			}
-		} else {
-			return quantityChanges.value[itemID]
+	const numberOfChanges = computed(() => {
+		if (inventoryChanges.value === null || "InventoryChangeSessionItems" in inventoryChanges.value === false) {
+			return 0
 		}
-	}
+		return inventoryChanges.value.InventoryChangeSessionItems.length
+	})
 
-	const updateQuantityChange = (payload: { itemID: string; quantity: number; countChange: number }) => {
-		const { itemID, quantity, countChange } = payload
-
-		if (!Object.keys(quantityChanges.value).includes(itemID)) {
-			quantityChanges.value[itemID] = {
-				quantity: quantity,
-				countChange: countChange,
-			}
-			return
+	const changeInventorySessionItemCount = async (itemID: string, increment: number) => {
+		try {
+			await $fetch("/api/volunteer/inventory/inventoryChangeSessionItem", {
+				method: "POST",
+				body: {
+					itemID: itemID,
+					incrementChange: increment,
+				},
+			})
+		} catch (e) {
+			// idk
 		}
-
-		if (countChange === 0) {
-			delete quantityChanges.value[itemID]
-			return
-		}
-
-		quantityChanges.value[itemID] = {
-			quantity: quantityChanges.value[itemID].quantity + countChange,
-			countChange: countChange,
-		}
-	}
-
-	const resetQuantityChanges = () => {
-		quantityChanges.value = {}
+		await getInventoryChanges()
 	}
 
 	const submitChanges = async (sourceID: string, fieldMap?: Record<string, string>) => {
@@ -61,30 +44,21 @@ export const useInventoryStore = defineStore("inventory", () => {
 				method: "POST",
 				body: {
 					sourceID: sourceID,
-					inventoryCountChanges: Object.entries(quantityChanges.value).map(([itemID, change]) => {
-						return {
-							itemID: itemID,
-							countChange: change.countChange,
-						}
-					}),
 					fieldMap: fieldMap,
 				},
 			})
-			resetQuantityChanges()
+			await getInventoryChanges()
 			await navigateTo("/volunteer/inventory")
 			reloadNuxtApp()
-			resetReviewChangesView()
 		} catch (e) {}
 	}
 
 	return {
-		quantityChanges,
-		quantityItemsChanged,
-		updateQuantityChange,
-		resetQuantityChanges,
+		inventoryChanges,
+		getInventoryChanges,
+		inventoryChangesItems,
+		numberOfChanges,
+		changeInventorySessionItemCount,
 		submitChanges,
-		reviewChangesView,
-		resetReviewChangesView,
-		getQuantityChange,
 	}
 })

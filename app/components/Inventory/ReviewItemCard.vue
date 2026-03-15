@@ -1,12 +1,27 @@
 <template>
 	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
-		<template #header-actions>
-			<!-- <UButton variant="ghost" :icon="icons['close']" class="shrink-0" size="xs" @click="removeCartItem" /> -->
-		</template>
 		<template #body>
-			<div class="mt-auto flex flex-col items-end gap-2">
-				<SharedTextBase>Current Qty: {{ quantity }}</SharedTextBase>
-				<SharedTextBase>Change: {{ changeCount }}</SharedTextBase>
+			<div class="flex flex-col justify-end">
+				<div class="flex flex-row justify-end gap-4">
+					<SharedTextBase>Current Qty:</SharedTextBase>
+					<div class="w-20">
+						<SharedTextBase class="text-center">{{ quantity }}</SharedTextBase>
+					</div>
+				</div>
+				<div class="flex flex-row justify-end gap-4">
+					<SharedTextBase>Change:</SharedTextBase>
+					<div class="w-20">
+						<SharedTextBase class="text-center">{{ changeCount }}</SharedTextBase>
+					</div>
+				</div>
+			</div>
+		</template>
+		<template #footer>
+			<div class="flex flex-row justify-end gap-4">
+				<SharedTextBase class="text-end">Final Qty:</SharedTextBase>
+				<div class="w-20">
+					<SharedTextBase class="text-center">{{ quantity + changeCount }}</SharedTextBase>
+				</div>
 			</div>
 		</template>
 	</SharedItemCard>

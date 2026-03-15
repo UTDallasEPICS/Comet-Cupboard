@@ -21,7 +21,7 @@
 			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 				<li v-for="item in filteredItems" :key="item.itemID">
 					<InventoryItemCard
-						:change-count="quantityChanges[item.itemID]?.countChange || 0"
+						:change-count="inventoryChangesItems.find((i) => i.itemID === item.itemID)?.count || 0"
 						:current-count="item.quantity"
 						:img-name="item.imgName"
 						:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
@@ -41,7 +41,7 @@ const searchQuery = ref("")
 const route = useRoute()
 const currentCategory = route.params.category as string
 const inventoryStore = useInventoryStore()
-const { quantityChanges } = storeToRefs(inventoryStore)
+const { inventoryChangesItems } = storeToRefs(inventoryStore)
 
 const { data: items } = await useFetch("/api/student/inventory/items")
 

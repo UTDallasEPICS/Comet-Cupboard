@@ -19,4 +19,10 @@
 <script setup lang="ts">
 const { getCategories } = useCategories()
 const categories = await getCategories()
+const inventoryStore = useInventoryStore()
+const { getInventoryChanges } = inventoryStore
+
+onMounted(async () => {
+	await getInventoryChanges()
+})
 </script>
