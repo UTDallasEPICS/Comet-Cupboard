@@ -37,7 +37,24 @@
                                 class="w-full md:w-72"
                             />
                         </div>
-                        View/Modify Bags content
+                        
+                        <UTable
+                        v-model:expanded="expanded"
+                        v-model="selected"
+                        :data="emergencyBags || []"
+                        :columns="columns"
+                        :ui="{
+                            td: 'py-2',
+                            th: 'py-2',
+                            tr: 'text-sm'
+                        }"
+                        >
+                            <template #expanded="{ row }">
+                                <div class="p-4">
+                                To Implement...
+                                </div>
+                            </template>
+                        </UTable>
                     </section>
                 </template>
                 <!--END OF VIEW/MODIFY BAG STUFF-->
@@ -47,6 +64,11 @@
 </template>
 
 <script lang="ts" setup>
+import type { TableColumn } from '@nuxt/ui'
+import { h, resolveComponent } from 'vue'
+
+const UButton = resolveComponent('UButton')
+const UCheckbox = resolveComponent('UCheckbox')
 
 //Tabs Setup
 const items = [
@@ -60,5 +82,91 @@ const manage_searchQuery = ref('')
 //Add Tab
 
 //View Tab
+const { data: emergencyBags } = await useFetch('/api/volunteer/emergency-bag/emergencyBags');
+const expanded = ref({})
+const selected = ref({})
+
+const categoryMap: Record<string, string> = {
+    'VEGETARIAN_AND_PEANUT_BUTTER' : 'Veg_PB',
+    'VEGETARIAN_AND_NON_PEANUT_BUTTER' : 'Veg_NoPB',
+    'NONVEGETARIAN_AND_PEANUT_BUTTER' : 'NonVeg_PB',
+    'NONVEGETARIAN_AND_NON_PEANUT_BUTTER' : 'NonVeg_NoPB'
+}
+
+const columns: TableColumn<any>[] = [
+  {
+    id: 'select',
+    header: ({ table }) =>
+      h(UCheckbox, {
+        modelValue: table.getIsAllRowsSelected(),
+        'onUpdate:modelValue': table.toggleAllRowsSelected
+      }),
+
+    cell: ({ row }) =>
+      h(UCheckbox, {
+        modelValue: row.getIsSelected(),
+        'onUpdate:modelValue': row.toggleSelected
+      })
+  },
+
+  {
+    accessorKey: 'label',
+    header: 'Bag ID'
+  },
+
+  {
+    accessorKey: 'locationName',
+    header: 'Location'
+  },
+
+  {
+    accessorKey: 'bagCategory',
+    header: 'Category',
+    cell: ({ row }) => {
+        const category = row.getValue('bagCategory') as string
+        return categoryMap[category] ?? category
+    }
+  },
+
+  {
+    id: 'edit',
+    meta: {
+        class: {
+        th: 'w-12 hidden md:table-cell',
+        td: 'w-12 hidden md:table-cell'
+        }
+    },
+    cell: ({ row }) =>
+      h(UButton, {
+        icon: icons['edit'],
+        square: true,
+        onClick: () => {
+          console.log('I need to implement this part...')
+        }
+      })
+  },
+
+  {
+    id: 'expand',
+    meta: {
+        class: {
+        th: 'w-12',
+        td: 'w-12'
+        }
+    },
+    cell: ({ row }) =>
+      h(UButton, {
+        icon: icons['chevronDown'],
+        square: true,
+        ui: {
+          leadingIcon: [
+            'transition-transform',
+            row.getIsExpanded() ? 'rotate-180 duration-200' : ''
+          ]
+        },
+        onClick: () => row.toggleExpanded()
+      })
+  }
+]
 
 </script>
