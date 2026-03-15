@@ -6,7 +6,7 @@ export default defineSafeHandler(async (event) => {
     // TODO: Implement emergency bag retrieval logic
     const emBags = [];
     /*
-    await prisma.TABLENAMEFORBAG.findMany({
+    await prisma.BAG.findMany({
         select: {
             //Whatever
         }
