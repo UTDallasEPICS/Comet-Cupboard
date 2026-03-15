@@ -48,20 +48,20 @@ model Category {
 }
 
 model Item {
-    itemID           String            @id @default(cuid()) @map("item_id")
-    name             String            @map("name")
-    Category         Category          @relation(fields: [categoryName], references: [name], onDelete: Restrict, onUpdate: Cascade)
-    categoryName     String            @map("category_name")
-    quantity         Int               @default(0) @map("quantity")
-    Deal             Deal?
-    imgName          String            @map("img_name")
-    ItemCountChanges ItemCountChange[]
-    CartItems        CartItem[]
-    OrderItems       OrderItem[]
-    archived         Boolean           @default(false)
-    createdAt        DateTime          @default(now()) @map("created_at")
-    EmergencyBagItems         EmergencyBagItem[]
-    IssuedBagItems           IssuedEmergencyBagItem[]
+    itemID            String                   @id @default(cuid()) @map("item_id")
+    name              String                   @map("name")
+    Category          Category                 @relation(fields: [categoryName], references: [name], onDelete: Restrict, onUpdate: Cascade)
+    categoryName      String                   @map("category_name")
+    quantity          Int                      @default(0) @map("quantity")
+    Deal              Deal?
+    imgName           String                   @map("img_name")
+    ItemCountChanges  ItemCountChange[]
+    CartItems         CartItem[]
+    OrderItems        OrderItem[]
+    archived          Boolean                  @default(false)
+    createdAt         DateTime                 @default(now()) @map("created_at")
+    EmergencyBagItems EmergencyBagItem[]
+    IssuedBagItems    IssuedEmergencyBagItem[]
 
     @@map("item")
 }
@@ -162,15 +162,15 @@ model QueueEntry {
 }
 
 model EmergencyBag {
-    bagID          String      @id @default(cuid()) @map("bag_id")
-    Location       Location?   @relation(fields: [locationName], references: [name], onDelete: Restrict, onUpdate: Cascade)
-    locationName   String?
-    bagCategory    BagCategory @map("bag_category")
-    EmergencybagItems       EmergencyBagItem[]
-    bagDescription String?      @map("bag_description")
-    expiryDate     DateTime     @map("expiry_date")
+    bagID             String             @id @default(cuid()) @map("bag_id")
+    Location          Location?          @relation(fields: [locationName], references: [name], onDelete: Restrict, onUpdate: Cascade)
+    locationName      String?
+    bagCategory       BagCategory        @map("bag_category")
+    EmergencyBagItems EmergencyBagItem[]
+    bagDescription    String?            @map("bag_description")
+    expiryDate        DateTime           @map("expiry_date")
     // 5 digit ID for volunteers/students
-    label          String      @unique
+    label             String             @unique
 
     @@map("emergency_bag")
 }
@@ -199,15 +199,15 @@ model EmergencyBagItem {
 //Table for Issued bags (archive)
 
 model IssuedEmergencyBag {
-    bagID          String          @id @default(cuid()) @map("bag_id")
-    Location       Location        @relation(fields: [location], references: [name], onDelete: Restrict, onUpdate: Cascade)
-    location       String
-    bagCategory    BagCategory     @map("bag_category")
-    EmergencyBagItems       IssuedEmergencyBagItem[]
-    bagDescription String?         @map("bag_description")
-    expiryDate     DateTime        @map("expiry_date")
+    bagID             String                   @id @default(cuid()) @map("bag_id")
+    Location          Location                 @relation(fields: [location], references: [name], onDelete: Restrict, onUpdate: Cascade)
+    location          String
+    bagCategory       BagCategory              @map("bag_category")
+    EmergencyBagItems IssuedEmergencyBagItem[]
+    bagDescription    String?                  @map("bag_description")
+    expiryDate        DateTime                 @map("expiry_date")
     //5 digit ID for volunteers/students
-    label          String          @unique
+    label             String                   @unique
 
     @@map("issued_emergency_bag")
 }
