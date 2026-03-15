@@ -48,20 +48,20 @@ model Category {
 }
 
 model Item {
-    itemID            String                   @id @default(cuid()) @map("item_id")
-    name              String                   @map("name")
-    Category          Category                 @relation(fields: [categoryName], references: [name], onDelete: Restrict, onUpdate: Cascade)
-    categoryName      String                   @map("category_name")
-    quantity          Int                      @default(0) @map("quantity")
-    Deal              Deal?
-    imgName           String                   @map("img_name")
-    ItemCountChanges  ItemCountChange[]
-    CartItems         CartItem[]
-    OrderItems        OrderItem[]
-    archived          Boolean                  @default(false)
-    createdAt         DateTime                 @default(now()) @map("created_at")
-    EmergencyBagItems EmergencyBagItem[]
-    IssuedBagItems    IssuedEmergencyBagItem[]
+    itemID                  String                   @id @default(cuid()) @map("item_id")
+    name                    String                   @map("name")
+    Category                Category                 @relation(fields: [categoryName], references: [name], onDelete: Restrict, onUpdate: Cascade)
+    categoryName            String                   @map("category_name")
+    quantity                Int                      @default(0) @map("quantity")
+    Deal                    Deal?
+    imgName                 String                   @map("img_name")
+    ItemCountChanges        ItemCountChange[]
+    CartItems               CartItem[]
+    OrderItems              OrderItem[]
+    archived                Boolean                  @default(false)
+    createdAt               DateTime                 @default(now()) @map("created_at")
+    EmergencyBagItems       EmergencyBagItem[]
+    IssuedEmergencyBagItems IssuedEmergencyBagItem[]
 
     @@map("item")
 }
@@ -167,7 +167,7 @@ model EmergencyBag {
     locationName      String?
     bagCategory       BagCategory        @map("bag_category")
     EmergencyBagItems EmergencyBagItem[]
-    bagDescription    String?            @map("bag_description")
+    bagDescription    String?            @default("") @map("bag_description")
     expiryDate        DateTime           @map("expiry_date")
     // 5 digit ID for volunteers/students
     label             String             @unique
@@ -175,25 +175,15 @@ model EmergencyBag {
     @@map("emergency_bag")
 }
 
-model Location {
-    name                String               @id @map("name")
-    EmergencyBags       EmergencyBag[]
-    IssuedEmergencyBags IssuedEmergencyBag[]
-    address             String               @map("address")
-    archived            Boolean              @default(false) @map("archived")
-
-    @@map("location")
-}
-
 model EmergencyBagItem {
     Item         Item         @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
     itemID       String       @map("item_id")
     bagID        String       @map("bag_id")
     EmergencyBag EmergencyBag @relation(fields: [bagID], references: [bagID], onDelete: Cascade, onUpdate: Cascade)
-    itemCount    Int          @map("count")
+    count        Int          @map("count")
 
     @@id(name: "emergencyBagItemID", [itemID, bagID])
-    @@map("bag_item")
+    @@map("emergency_bag_item")
 }
 
 //Table for Issued bags (archive)
@@ -204,7 +194,7 @@ model IssuedEmergencyBag {
     location          String
     bagCategory       BagCategory              @map("bag_category")
     EmergencyBagItems IssuedEmergencyBagItem[]
-    bagDescription    String?                  @map("bag_description")
+    bagDescription    String?                  @default("") @map("bag_description")
     expiryDate        DateTime                 @map("expiry_date")
     //5 digit ID for volunteers/students
     label             String                   @unique
@@ -218,8 +208,18 @@ model IssuedEmergencyBagItem {
     itemID             String             @map("item_id")
     bagID              String             @map("bag_id")
     IssuedEmergencyBag IssuedEmergencyBag @relation(fields: [bagID], references: [bagID], onDelete: Cascade, onUpdate: Cascade)
-    itemCount          Int                @map("count")
+    count              Int                @map("count")
 
     @@id(name: "emergencyBagItemID", [itemID, bagID])
-    @@map("issued_bag_item")
+    @@map("issued_emergency_bag_item")
+}
+
+model Location {
+    name                String               @id @map("name")
+    EmergencyBags       EmergencyBag[]
+    IssuedEmergencyBags IssuedEmergencyBag[]
+    address             String               @map("address")
+    archived            Boolean              @default(false) @map("archived")
+
+    @@map("location")
 }

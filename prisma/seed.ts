@@ -107,14 +107,14 @@ const createEmergencyBags = async () => {
 	})
 }
 
-const createBagItems = async () => {
+const createEmergencyBagItems = async () => {
 	const bags = await prisma.emergencyBag.findMany()
 
 	await prisma.emergencyBagItem.createMany({
 		data: [
-			{ itemID: items[0].itemID, bagID: bags[0].bagID, itemCount: 3 },
-			{ itemID: items[0].itemID, bagID: bags[1].bagID, itemCount: 5 },
-			{ itemID: items[2].itemID, bagID: bags[2].bagID, itemCount: 7 },
+			{ itemID: items[0].itemID, bagID: bags[0].bagID, count: 3 },
+			{ itemID: items[0].itemID, bagID: bags[1].bagID, count: 5 },
+			{ itemID: items[2].itemID, bagID: bags[2].bagID, count: 7 },
 		],
 	})
 }
@@ -132,9 +132,9 @@ const createIssuedEmergencyBagItems = async () => {
 
 	await prisma.issuedEmergencyBagItem.createMany({
 		data: [
-			{ itemID: items[0].itemID, bagID: bags[0].bagID, itemCount: 3 },
-			{ itemID: items[0].itemID, bagID: bags[1].bagID, itemCount: 5 },
-			{ itemID: items[2].itemID, bagID: bags[2].bagID, itemCount: 7 },
+			{ itemID: items[0].itemID, bagID: bags[0].bagID, count: 3 },
+			{ itemID: items[0].itemID, bagID: bags[1].bagID, count: 5 },
+			{ itemID: items[2].itemID, bagID: bags[2].bagID, count: 7 },
 		],
 	})
 }
@@ -247,7 +247,7 @@ const main = async () => {
 
 	await createLocations()
 	await createEmergencyBags()
-	await createBagItems()
+	await createEmergencyBagItems()
 
 	await createIssuedEmergencyBags()
 	await createIssuedEmergencyBagItems()
