@@ -180,7 +180,6 @@ model Location {
     EmergencyBags       EmergencyBag[]
     IssuedEmergencyBags IssuedEmergencyBag[]
     address             String               @map("address")
-    website             String               @map("website")
     archived            Boolean              @default(false) @map("archived")
 
     @@map("location")
