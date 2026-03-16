@@ -10,6 +10,9 @@
 				<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="horizontal" />
 			</div>
 			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				<li>
+					<SharedAllItemsCard variant="inventory" category-name="All Items" />
+				</li>
 				<li v-for="(category, i) in shownCategories" :key="i">
 					<SharedCategoryCard variant="inventory" :category-name="category.name" :img-name="category.imgName" />
 				</li>

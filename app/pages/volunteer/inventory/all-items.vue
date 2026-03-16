@@ -2,18 +2,17 @@
 	<UContainer class="py-8">
 		<header>
 			<SharedButtonNavigateBack text="Back to Categories" :to="{ path: '/volunteer/inventory' }" />
-			<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
+			<SharedTextPageTitle>All Items</SharedTextPageTitle>
 		</header>
 
 		<section class="mt-4">
-			<SharedTextSectionTitle class="sr-only">View {{ currentCategory }} Items</SharedTextSectionTitle>
+			<SharedTextSectionTitle class="sr-only">View Inventory Items</SharedTextSectionTitle>
 			<div class="mt-4 flex flex-row justify-end">
 				<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="horizontal" />
 			</div>
 			<div class="mx-auto mt-4 flex w-full flex-row flex-wrap gap-4 sm:items-center sm:justify-start">
 				<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search items" class="grow" />
 				<USelect v-model="sortOption" :items="sortOptions" class="max-w-md grow" />
-				<SharedButtonPositiveAction text="+ Add" :to="`/volunteer/inventory/${currentCategory}/add`" />
 			</div>
 			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 				<li v-for="item in filtered" :key="item.itemID">
@@ -33,8 +32,6 @@
 </template>
 
 <script lang="ts" setup>
-const route = useRoute()
-const currentCategory = route.params.category as string
 const inventoryStore = useInventoryStore()
 const { inventoryChangesItems } = storeToRefs(inventoryStore)
 
@@ -54,21 +51,11 @@ const shownItems = computed(() => {
 	})
 })
 
-const categoryItems = computed(() => {
-	return (
-		shownItems.value?.filter((item) => {
-			const itemCategory = item.categoryName?.trim().toLowerCase() || ""
-			const currentCategoryLower = currentCategory?.trim().toLowerCase() || ""
-			return itemCategory.includes(currentCategoryLower)
-		}) || []
-	)
-})
-
 const sortedItems = computed(() => {
-	if (!categoryItems.value) {
+	if (!shownItems.value) {
 		return []
 	}
-	const sorted = [...categoryItems.value]
+	const sorted = [...shownItems.value]
 	if (sortOption.value === "Alphabetical") {
 		sorted.sort((a, b) => a.name.localeCompare(b.name))
 	} else if (sortOption.value === "Quantity") {
