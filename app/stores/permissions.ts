@@ -28,5 +28,13 @@ export const usePermissionsStore = defineStore("permissions", () => {
 	const canVolunteerAccess = computed(() => canAdminAccess.value || !!access.value.VOLUNTEER)
 	const canStudentAccess = computed(() => canVolunteerAccess.value || !!access.value.STUDENT)
 
-	return { setPermissionsFromServer, clearPermissions, canStudentAccess, canVolunteerAccess, canAdminAccess, canHeadAdminAccess }
+	const roleText = computed(() => {
+		if (canHeadAdminAccess.value) return "Head Admin"
+		if (canAdminAccess.value) return "Admin"
+		if (canVolunteerAccess.value) return "Volunteer"
+		if (canStudentAccess.value) return "Student"
+		return "No Role"
+	})
+
+	return { setPermissionsFromServer, clearPermissions, canStudentAccess, canVolunteerAccess, canAdminAccess, canHeadAdminAccess, roleText }
 })

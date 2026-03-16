@@ -87,7 +87,25 @@
 						<ShoppingCartDrawer />
 					</template>
 				</USlideover>
-				<UButton v-if="canStudentAccess" variant="outline" :icon="icons['logout']" size="xl" @click="logout" />
+				<UPopover
+					:content="{
+						align: 'center',
+						side: 'bottom',
+						sideOffset: 8,
+					}"
+				>
+					<UButton v-if="canStudentAccess" variant="ghost" :icon="icons['profile']" size="xl" />
+
+					<template #content>
+						<div class="flex w-64 flex-col items-start gap-2 p-4">
+							<SharedTextBase>John Doe</SharedTextBase>
+							<SharedTextBase>John.Doe1@utdallas.edu</SharedTextBase>
+							<SharedTextBase class="text-final-utd-orange">{{ roleText }}</SharedTextBase>
+							<USeparator />
+							<UButton variant="outline" :icon="icons['logout']" class="w-full" @click="logout"> Logout </UButton>
+						</div>
+					</template>
+				</UPopover>
 			</div>
 		</template>
 	</UHeader>
@@ -100,7 +118,7 @@ const cartStore = useCartStore()
 const inventoryStore = useInventoryStore()
 const permissions = usePermissionsStore()
 const { cart, cartView, cartTotalCount } = storeToRefs(cartStore)
-const { canStudentAccess, canVolunteerAccess, canAdminAccess } = storeToRefs(permissions)
+const { canStudentAccess, canVolunteerAccess, canAdminAccess, roleText } = storeToRefs(permissions)
 const { inventoryChanges, numberOfChanges } = storeToRefs(inventoryStore)
 
 const { logout } = useLogout()
