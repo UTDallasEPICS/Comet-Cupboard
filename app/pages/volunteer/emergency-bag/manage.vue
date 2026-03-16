@@ -41,7 +41,7 @@
                         <UTable
                         v-model:expanded="expanded"
                         v-model="selected"
-                        :data="view_filteredBags"
+                        :data="filtered_viewData"
                         :columns="columns"
                         :ui="{
                             td: 'py-2',
@@ -64,11 +64,16 @@
 </template>
 
 <script lang="ts" setup>
-import type { TableColumn } from '@nuxt/ui'
-import { h, resolveComponent } from 'vue'
+import {resolveComponent } from 'vue'
 
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
+
+const resolvedComponents = {
+  UButton: resolveComponent('UButton'),
+  UCheckbox: resolveComponent('UCheckbox'),
+  UDropdownMenu: resolveComponent('UDropdownMenu')
+}
 
 //Tabs Setup
 const items = [
@@ -86,6 +91,21 @@ const { data: emergencyBags } = await useFetch('/api/volunteer/emergency-bag/eme
 const expanded = ref({})
 const selected = ref({})
 
+const columnsDef = [
+  {header: '', type: 'checkbox', accessorKey: 'selected'},
+  {header: 'Bag ID',accessorKey: 'label',type: 'text',sortable: true},
+  {header: 'Location',accessorKey: 'locationName',type: 'text'},
+  {header: 'Category',accessorKey: 'bagCategory',type: 'text'},
+  {
+    type: 'edit',icon: icons['edit'],
+    onClick: (row) => {  console.log('To implement...')},
+    meta: {class: {th: 'w-12 hidden md:table-cell', td: 'w-12 hidden md:table-cell'}}
+  },
+  {type: "expand", meta: {class: {th: "w-12", td: "w-12"}}}
+]
+
+const columns = buildNuxtUITable(columnsDef, resolvedComponents)
+
 const categoryMap: Record<string, string> = {
     'VEGETARIAN_AND_PEANUT_BUTTER' : 'Veg_PB',
     'VEGETARIAN_AND_NON_PEANUT_BUTTER' : 'Veg_NoPB',
@@ -93,95 +113,20 @@ const categoryMap: Record<string, string> = {
     'NONVEGETARIAN_AND_NON_PEANUT_BUTTER' : 'NonVeg_NoPB'
 }
 
-const columns: TableColumn<any>[] = [
-  {
-    id: 'select',
-    header: ({ table }) =>
-      h(UCheckbox, {
-        modelValue: table.getIsAllRowsSelected(),
-        'onUpdate:modelValue': table.toggleAllRowsSelected
-      }),
-
-    cell: ({ row }) =>
-      h(UCheckbox, {
-        modelValue: row.getIsSelected(),
-        'onUpdate:modelValue': row.toggleSelected
-      })
-  },
-
-  {
-    accessorKey: 'label',
-    header: 'Bag ID'
-  },
-
-  {
-    accessorKey: 'locationName',
-    header: 'Location'
-  },
-
-  {
-    accessorKey: 'bagCategory',
-    header: 'Category',
-    cell: ({ row }) => {
-        const category = row.getValue('bagCategory') as string
-        return categoryMap[category] ?? category
-    }
-  },
-
-  {
-    id: 'edit',
-    meta: {
-        class: {
-        th: 'w-12 hidden md:table-cell',
-        td: 'w-12 hidden md:table-cell'
-        }
-    },
-    cell: ({ row }) =>
-      h(UButton, {
-        icon: icons['edit'],
-        square: true,
-        onClick: () => {
-          console.log('I need to implement this part...')
-        }
-      })
-  },
-
-  {
-    id: 'expand',
-    meta: {
-        class: {
-        th: 'w-12',
-        td: 'w-12'
-        }
-    },
-    cell: ({ row }) =>
-      h(UButton, {
-        icon: icons['chevronDown'],
-        square: true,
-        ui: {
-          leadingIcon: [
-            'transition-transform',
-            row.getIsExpanded() ? 'rotate-180 duration-200' : ''
-          ]
-        },
-        onClick: () => row.toggleExpanded()
-      })
-  }
-]
-
-const view_filteredBags = computed(() => {
+const filtered_viewData = computed(() => {
   if (!emergencyBags.value) return []
 
   const view_query = manage_searchQuery.value.toLowerCase().trim()
 
-  if (!view_query) return emergencyBags.value
+  return emergencyBags.value.filter((bag) => {
+    const categoryShort =
+      categoryMap[bag.bagCategory] ?? bag.bagCategory
 
-  return emergencyBags.value.filter((bag: any) => {
-    const categoryShort = categoryMap[bag.bagCategory] ?? bag.bagCategory
+    if (!view_query) return true
+
     return (
       bag.label?.toLowerCase().includes(view_query) ||
       bag.locationName?.toLowerCase().includes(view_query) ||
-      bag.bagCategory?.toLowerCase().includes(view_query) ||
       categoryShort.toLowerCase().includes(view_query)
     )
   })

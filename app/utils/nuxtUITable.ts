@@ -11,6 +11,9 @@
 export const buildNuxtUITable = (columnsDef, resolvedComponents) => {
 	return columnsDef.map((col) => {
 		const columnObj = { ...col }
+		if (!columnObj.id) {
+			columnObj.id = col.accessorKey || col.type
+		}
 		// Only add sortable header if column is sortable
 		if (col.sortable && col.accessorKey) {
 			columnObj.header = ({ column }) => {
@@ -68,6 +71,20 @@ export const buildNuxtUITable = (columnsDef, resolvedComponents) => {
 								"aria-label": "Actions dropdown",
 							})
 					)
+
+				case "expand":
+                    return h(resolvedComponents.UButton, {
+                        icon: col.icon || icons["chevronDown"],
+                        color: col.color || "primary",
+                        variant: col.variant || "ghost",
+                        ui: {
+                        leadingIcon: [
+                            "transition-transform",
+                            row.getIsExpanded() ? "rotate-180 duration-200" : ""
+                        ]
+                        },
+                        onClick: () => row.toggleExpanded()
+                    })
 
 				default:
 					return h("span", row.original[col.accessorKey] || "")
