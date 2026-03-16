@@ -53,6 +53,7 @@ export default defineSafeHandler(async (event) => {
 				data: {
 					netID: pendingCart.cartID,
 					OrderItems: { create: orderItems },
+					cartCreatedAt: pendingCart.createdAt,
 				},
 			})
 

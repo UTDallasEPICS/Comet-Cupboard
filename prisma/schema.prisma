@@ -65,8 +65,8 @@ model Item {
     OrderItems                  OrderItem[]
     archived                    Boolean                      @default(false) @map("archived")
     createdAt                   DateTime                     @default(now()) @map("created_at")
-    EmergencyBagItems       EmergencyBagItem[]
-    IssuedEmergencyBagItems IssuedEmergencyBagItem[]
+    EmergencyBagItems           EmergencyBagItem[]
+    IssuedEmergencyBagItems     IssuedEmergencyBagItem[]
 
     @@map("item")
 }
@@ -125,7 +125,7 @@ model InventoryChangeSessionItem {
 model Cart {
     User      User       @relation(fields: [cartID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
     cartID    String     @id @map("cart_id")
-    joinedAt  DateTime   @default(now()) @map("joined_at")
+    createdAt DateTime   @default(now()) @map("created_at")
     CartItems CartItem[]
     pending   Boolean    @default(false) @map("pending")
 
@@ -146,11 +146,12 @@ model CartItem {
 }
 
 model Order {
-    orderID    String      @id @default(cuid()) @map("order_id")
-    User       User        @relation(fields: [netID], references: [netID], onDelete: NoAction, onUpdate: Cascade)
-    netID      String      @map("net_id")
-    date       DateTime    @default(now()) @map("date")
-    OrderItems OrderItem[]
+    orderID       String      @id @default(cuid()) @map("order_id")
+    User          User        @relation(fields: [netID], references: [netID], onDelete: NoAction, onUpdate: Cascade)
+    netID         String      @map("net_id")
+    cartCreatedAt DateTime    @map("cart_created_at")
+    createdAt     DateTime    @default(now()) @map("created_at")
+    OrderItems    OrderItem[]
 
     @@map("order")
 }

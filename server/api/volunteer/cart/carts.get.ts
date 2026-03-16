@@ -18,7 +18,7 @@ export default defineSafeHandler(async (event) => {
 			pending: pending === "true",
 		},
 		orderBy: {
-			joinedAt: "asc",
+			createdAt: "asc",
 		},
 	})
 	return carts
