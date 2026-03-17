@@ -235,7 +235,7 @@ const createOrders = async () => {
 
 			orders.push({
 				netID: randomUser,
-				date: new Date(tempDate),
+				cartCreatedAt: new Date(tempDate),
 			})
 
 			ordersItems.push(

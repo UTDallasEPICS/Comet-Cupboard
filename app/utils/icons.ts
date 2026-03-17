@@ -31,4 +31,5 @@ export const icons = {
 	search: "i-lucide-search",
 	instagram: "i-lucide-instagram",
 	information: "i-lucide-info",
+	profile: "i-lucide-circle-user"
 }

@@ -21,7 +21,7 @@ const getActionItems = (row) => {
 		{ type: "label", label: "Actions" },
 		{ type: "separator" },
 		{ label: "Approve", onClick: () => approveQueueEntry(row) },
-		{ label: "Start Timer", onClick: () => startQueueEntryTimer(row) },
+		{ label: "Ping Student", onClick: () => startQueueEntryTimer(row) },
 		{ label: "Remove", onClick: () => removeQueueEntry(row) },
 	]
 }

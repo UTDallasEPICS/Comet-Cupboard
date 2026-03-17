@@ -47,6 +47,9 @@ export const useCartStore = defineStore("cart", () => {
 					await getCart()
 				}
 				break
+			case "cart.verification.decision":
+				await getCart()
+				break
 		}
 	}
 

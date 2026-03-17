@@ -8,6 +8,9 @@
 			<SharedTextSectionTitle>Select a Category</SharedTextSectionTitle>
 
 			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				<li>
+					<SharedAllItemsCard variant="shopping" category-name="All Items" />
+				</li>
 				<li v-for="(category, i) in categories" :key="i">
 					<SharedCategoryCard variant="shopping" :category-name="category.name" :img-name="category.imgName" />
 				</li>

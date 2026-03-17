@@ -76,17 +76,18 @@ const props = defineProps({
 		type: Number,
 		default: 0,
 	},
+	category: {
+		type: String,
+		required: true,
+	},
 })
-
-const route = useRoute()
-const currentCategory = route.params.category as string
 
 const inventoryStore = useInventoryStore()
 const { changeInventorySessionItemCount } = inventoryStore
 
 const editMenuItems = ref<DropdownMenuItem[]>([
-	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/edit`) },
-	{ label: "Item Deal", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/deal`) },
+	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${props.category}/${props.itemID}/edit`) },
+	{ label: "Item Deal", onClick: () => navigateTo(`/volunteer/inventory/${props.category}/${props.itemID}/deal`) },
 ])
 
 const adjustAmount = ref(1)
