@@ -43,7 +43,7 @@
 		<template #right>
 			<div class="flex flex-row gap-4">
 				<USlideover
-					v-if="inventoryChanges && numberOfChanges > 0"
+					v-if="showInventoryChangesIcon"
 					side="right"
 					title="Preview Inventory Changes"
 					:overlay="false"
@@ -65,7 +65,7 @@
 					</template>
 				</USlideover>
 				<USlideover
-					v-if="cart"
+					v-if="showCartIcon"
 					v-model:open="cartView"
 					side="right"
 					title="Preview Cart"
@@ -120,6 +120,15 @@ const permissions = usePermissionsStore()
 const { cart, cartView, cartTotalCount } = storeToRefs(cartStore)
 const { canStudentAccess, canVolunteerAccess, canAdminAccess, roleText } = storeToRefs(permissions)
 const { inventoryChanges, numberOfChanges } = storeToRefs(inventoryStore)
+
+const route = useRoute()
+const showCartIcon = computed(() => {
+	return cart.value != null && route.path.startsWith("/student") && route.path !== "/student/shopping/checkout"
+})
+
+const showInventoryChangesIcon = computed(() => {
+	return route.path.startsWith("/volunteer/inventory")
+})
 
 const { logout } = useLogout()
 
