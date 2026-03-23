@@ -29,7 +29,7 @@
                 <!--START OF VIEW/MODIFY BAG STUFF-->
                 <template #view>
                     <section>
-                        <div class="p-2 bg-final-border-soft text-white flex flex-col gap-2 md:justify-between md:flex-row">
+                        <div class="p-2  text-white flex flex-col gap-2 md:justify-between md:flex-row">
                             <UInput
                                 v-model="manage_searchQuery"
                                 :icon="icons['search']"
@@ -47,13 +47,8 @@
                             </div>
                         </div>
                         
-                        <UTable 
-                        sticky
-                        v-model:expanded="expanded"
-                        v-model:rowSelection="selected"
-                        :getRowId="row => row.bagID"
-                        :data="filtered_viewData"
-                        :columns="columns"
+                        <UTable  sticky v-model:expanded="expanded" v-model:rowSelection="selected"
+                        :getRowId="row => row.bagID" :data="filtered_viewData" :columns="columns"
                         :ui="{
                             td: 'py-2',
                             th: 'py-2',
@@ -63,37 +58,33 @@
                             <template #expanded="{ row }">
                                 <div class="p-4 flex flex-col gap-2">
                                     <div>
-                                        <p class="text-gray-500">Internal ID:</p>
-                                        <p class="font-medium">{{ row.original.bagID }}</p>
+                                        <p class="">Internal ID:</p>
+                                        <p class="">{{ row.original.bagID }}</p>
                                     </div>
 
                                     <div>
-                                        <p class="text-gray-500">Category:</p>
-                                        <p class="font-medium">
+                                        <p class="">Category:</p>
+                                        <p class="">
                                         {{ row.original.bagCategory }}
                                         </p>
                                     </div>
 
                                     <div>
-                                        <p class="text-gray-500">Expiry Date:</p>
-                                        <p class="font-medium">
+                                        <p class="">Expiry Date:</p>
+                                        <p class="">
                                         {{ row.original.expiryDate || 'N/A' }}
                                         </p>
                                     </div>
 
                                     <div>
-                                        <p class="text-gray-500">Location:</p>
-                                        <p class="font-medium">
+                                        <p class="">Location:</p>
+                                        <p class="">
                                         {{ row.original.locationName || 'N/A' }}
                                         </p>
                                     </div>
 
                                     <div class="flex gap-2 items-center">
-                                        <UInputMenu
-                                        v-model="row.original._moveLocation"
-                                        :items="moveLocations"
-                                        class="w-48"
-                                        />
+                                        <UInputMenu v-model="row.original._moveLocation" :items="moveLocations" class="w-48"/>
 
                                         <UButton
                                         size="xs"
@@ -106,6 +97,7 @@
                                     </div>
 
                                     <UModal :dismissible="false">
+                                        <!--//Would have used SharedButtonCancel but I wanted it in red-->
                                         <UButton label="Delete Bag" size="xs" color="error" class="self-start"/>
 
                                         <template #content="{close}">
@@ -120,6 +112,7 @@
 
                                             <div class="flex justify-end gap-2 mt-4">
                                                 <UButton variant="ghost" @click="close">Cancel</UButton>
+                                                <!--//Would have used SharedButtonCancel but I wanted it in red-->
                                                 <UButton color="error" @click="deleteBag(row.original.bagID, close)">Delete</UButton>
                                             </div>
                                             </UCard>
@@ -130,9 +123,6 @@
                             </template>
                         </UTable>
                     </section>
-
-                    
-
                 </template>
                 <!--END OF VIEW/MODIFY BAG STUFF-->
             </UTabs>
@@ -169,8 +159,6 @@ const manage_searchQuery = ref('')
 const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch('/api/volunteer/emergency-bag/emergencyBags');
 const expanded = ref({})
 const selected = ref({})
-
-console.log(emergencyBags);
 
 const moveLocations = ref(['Activity Center', 'Police Station']) //Need to make it use Location get
 const moveLocation = ref('Activity Center')
