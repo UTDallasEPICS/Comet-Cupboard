@@ -123,12 +123,13 @@ const columnsDef = [
 },
   {header: 'Bag ID',accessorKey: 'label',type: 'text',sortable: true},
   {header: 'Location',accessorKey: 'locationName',type: 'text'},
-  {header: 'Category',accessorKey: 'bagCategory',type: 'text'},
-  {
+  {header: 'Category',accessorKey: 'bagCategory',type: 'text', 
+    cell: ({ row }) => categoryMap[row.original.bagCategory] ?? row.original.bagCategory},
+  /*{
     type: 'edit',icon: icons['edit'],
     onClick: (row) => {  console.log('To implement...')},
     meta: {class: {th: 'w-12 hidden md:table-cell', td: 'w-12 hidden md:table-cell'}}
-  },
+  },*/
   {type: "expand", meta: {class: {th: "w-12", td: "w-12"}}}
 ]
 

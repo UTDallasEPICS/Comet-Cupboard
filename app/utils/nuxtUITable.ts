@@ -29,6 +29,11 @@ export const buildNuxtUITable = (columnsDef, resolvedComponents) => {
 			}
 		}
 		columnObj.cell = ({ row }) => {
+			//For manual overrides
+			if (col.cell) {
+				return col.cell({ row })
+			}
+
 			switch (col.type) {
 				case "image":
 					return h("img", {
