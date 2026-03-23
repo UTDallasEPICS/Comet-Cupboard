@@ -36,7 +36,15 @@
                                 placeholder="Search items"
                                 class="w-full md:w-72"
                             />
-                            <UButton :disabled="selectedBagIDs.length === 0" :icon="icons['move']" size="xs" variant="solid">Move</UButton>
+                            <div class="flex justify-between">
+                                <UInputMenu :disabled="selectedBagIDs.length === 0" v-model="moveLocation" :items="moveLocations" />
+                                <UButton :disabled="selectedBagIDs.length === 0" 
+                                :icon="icons['move']" size="xs" variant="solid"
+                                @click="moveBags"
+                                >
+                                    Move
+                                </UButton>
+                            </div>
                         </div>
                         
                         <UTable 
@@ -91,11 +99,12 @@ const manage_searchQuery = ref('')
 //Add Tab
 
 //View Tab
-const { data: emergencyBags } = await useFetch('/api/volunteer/emergency-bag/emergencyBags');
+const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch('/api/volunteer/emergency-bag/emergencyBags');
 const expanded = ref({})
 const selected = ref({})
 
-console.log(emergencyBags);
+const moveLocations = ref(['Activity Center', 'Police Station']) //Need to make it use Location get
+const moveLocation = ref('Activity Center')
 
 const columnsDef = [
   {
@@ -152,8 +161,29 @@ const filtered_viewData = computed(() => {
 })
 
 const selectedBagIDs = computed(() => {
-  console.log( Object.keys(selected.value).filter(id => selected.value[id]));
   return Object.keys(selected.value).filter(id => selected.value[id]);
 })
+
+const moveBags = async() => {
+    for (const bagID of selectedBagIDs.value) {
+        try {
+            await fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
+                method: "PATCH",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                bagID,
+                location: moveLocation.value
+                })
+            })
+        } catch (err) {
+        console.error(`Failed for ${bagID}`, err)
+        }
+  }
+
+    await refreshEmergencyBags();
+    selected.value = {};
+}
 
 </script>
