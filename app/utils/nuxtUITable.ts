@@ -46,6 +46,16 @@ export const buildNuxtUITable = (columnsDef, resolvedComponents) => {
 						size: col.size || "md",
 					})
 
+				case "checkbox2":
+					return h(resolvedComponents.UCheckbox, {
+						modelValue: row.getIsSelected(),
+    					'onUpdate:modelValue': (val) => row.toggleSelected(val),
+						disabled: col.disabled ?? false,
+						variant: col.variant || "solid",
+						color: col.color || "primary",
+						size: col.size || "md",
+					})
+
 				case "edit":
 					return h(resolvedComponents.UButton, {
 						icon: col.icon || icons["edit"],

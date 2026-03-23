@@ -29,18 +29,22 @@
                 <!--START OF VIEW/MODIFY BAG STUFF-->
                 <template #view>
                     <section>
-                        <div class="p-2 bg-final-cancel-gray text-white">
+                        <div class="p-2 bg-final-cancel-gray text-white flex flex-col gap-2 md:justify-between md:flex-row">
                             <UInput
                                 v-model="manage_searchQuery"
                                 :icon="icons['search']"
                                 placeholder="Search items"
                                 class="w-full md:w-72"
                             />
+                            <UButton :disabled="selectedBagIDs.length === 0" :icon="icons['move']" size="xs" variant="solid">Move</UButton>
                         </div>
                         
-                        <UTable
+                        <UTable 
+                        sticky
                         v-model:expanded="expanded"
-                        v-model="selected"
+                        v-model:rowSelection="selected"
+                        selection="multiple"
+                        :getRowId="row => row.bagID"
                         :data="filtered_viewData"
                         :columns="columns"
                         :ui="{
@@ -91,8 +95,23 @@ const { data: emergencyBags } = await useFetch('/api/volunteer/emergency-bag/eme
 const expanded = ref({})
 const selected = ref({})
 
+console.log(emergencyBags);
+
 const columnsDef = [
-  {header: '', type: 'checkbox', accessorKey: 'selected'},
+  {
+    header: ({ table }) =>
+        h(resolvedComponents.UCheckbox, {
+            modelValue: table
+            ? table.getIsAllRowsSelected()
+                ? true
+                : table.getIsSomeRowsSelected()
+                ? 'indeterminate'
+                : false
+            : false,
+            'onUpdate:modelValue': (val) => table?.toggleAllRowsSelected(val),
+        }),
+    type: 'checkbox2'
+},
   {header: 'Bag ID',accessorKey: 'label',type: 'text',sortable: true},
   {header: 'Location',accessorKey: 'locationName',type: 'text'},
   {header: 'Category',accessorKey: 'bagCategory',type: 'text'},
@@ -130,6 +149,11 @@ const filtered_viewData = computed(() => {
       categoryShort.toLowerCase().includes(view_query)
     )
   })
+})
+
+const selectedBagIDs = computed(() => {
+  console.log( Object.keys(selected.value).filter(id => selected.value[id]));
+  return Object.keys(selected.value).filter(id => selected.value[id]);
 })
 
 </script>
