@@ -7,27 +7,47 @@ import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 const schema = z
 	.object({
-		source: z.string(),
-		inventoryCountChanges: z.array(z.object({ itemID: z.string(), countChange: z.number().int() })),
+		sourceID: z.string(),
 		fieldMap: z.record(z.string(), z.string()).optional(),
 	})
 	.strict()
 	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { source, inventoryCountChanges, fieldMap } = await validateBody(event, schema)
+	const { sourceID, fieldMap } = await validateBody(event, schema)
+	const netID = event.context.user.netID
 
-	await prisma.$transaction(async (tx) => {
-		const foundSource = await tx.source.findUnique({ where: { name: source } })
+	const transactionResult = await prisma.$transaction(async (tx) => {
+		const foundSource = await tx.source.findUnique({ where: { sourceID: sourceID } })
 		if (!foundSource) {
 			throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Source does not exist" })
 		}
 
-		for (const change of inventoryCountChanges) {
+		const inventoryChangeSession = await tx.inventoryChangeSession.findUnique({
+			where: {
+				netID: netID,
+			},
+			include: {
+				InventoryChangeSessionItems: {
+					include: {
+						Item: true,
+					},
+				},
+			},
+		})
+
+		if (!inventoryChangeSession) {
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "User does not have an inventory change session" })
+		}
+
+		for (const sessionItem of inventoryChangeSession.InventoryChangeSessionItems) {
+			if (sessionItem.count === 0) {
+				continue
+			}
 			try {
 				await tx.item.update({
-					where: { itemID: change.itemID },
-					data: { quantity: { increment: change.countChange } },
+					where: { itemID: sessionItem.itemID },
+					data: { quantity: { increment: sessionItem.count } },
 				})
 			} catch (error: unknown) {
 				if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
@@ -37,17 +57,25 @@ export default defineSafeHandler(async (event) => {
 			}
 		}
 
-		return await tx.itemCountChange.createMany({
-			data: inventoryCountChanges.map((inventoryCountChange) => {
+		await tx.itemCountChange.createMany({
+			data: inventoryChangeSession.InventoryChangeSessionItems.map((sessionItem) => {
 				return {
-					amountChanged: inventoryCountChange.countChange,
-					itemID: inventoryCountChange.itemID,
-					sourceName: source,
+					amountChanged: sessionItem.count,
+					itemID: sessionItem.itemID,
+					sourceID: sourceID,
 					fieldMap: fieldMap ?? {},
 				}
 			}),
 		})
+
+		await tx.inventoryChangeSession.delete({
+			where: {
+				netID: netID,
+			},
+		})
+
+		return "Successfully submitted inventory changes"
 	})
 
-	return "Successfully processed inventory count changes"
+	return transactionResult
 })

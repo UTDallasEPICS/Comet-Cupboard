@@ -3,7 +3,7 @@
 		<template #header>
 			<SharedTextSectionTitle> Cart Sessions </SharedTextSectionTitle>
 		</template>
-		<UTable :data="cartSessions" :columns="columns" empty="No cart sessions currently available" />
+		<UTable :data="cartSessions" :columns="tableColumns" empty="No cart sessions currently available" />
 	</UCard>
 </template>
 
@@ -12,7 +12,12 @@ const cartSessionsStore = useCartSessionsStore()
 const { cartSessions } = storeToRefs(cartSessionsStore)
 const { getCartSessions } = cartSessionsStore
 
-const columns = [{ accessorKey: "cartID", header: "Cart ID" }]
+const UButton = resolveComponent("UButton")
+const UCheckbox = resolveComponent("UCheckbox")
+const UDropdownMenu = resolveComponent("UDropdownMenu")
+
+const columnsDef = [{ header: "Cart ID", accessorKey: "cartID", type: "text" }]
+const tableColumns = buildNuxtUITable(columnsDef, { UButton, UCheckbox, UDropdownMenu })
 
 onMounted(async () => {
 	await getCartSessions()

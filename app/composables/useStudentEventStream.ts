@@ -18,7 +18,7 @@ export const useStudentEventStream = () => {
 	}
 
 	const dispatchCartEvent = async (event: AppEvent) => {
-		if (["queue.entryApproved"].includes(event.type)) {
+		if (["queue.entryApproved", "cart.verification.decision"].includes(event.type)) {
 			await handleCartEvent(event)
 		}
 	}

@@ -7,7 +7,7 @@
 			<p>{{ categoryName }}</p>
 		</div>
 		<div class="h-full w-48 min-w-20 shrink-0">
-			<img :alt="categoryName" :src="imageSrc" :style="clipStyle" class="h-full w-full object-cover" />
+			<img :alt="categoryName" :src="`/api/public/image/${imgName}`" :style="clipStyle" class="h-full w-full object-cover" />
 		</div>
 	</UButton>
 </template>
@@ -24,7 +24,7 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
-	imageSrc: {
+	imgName: {
 		type: String,
 		default: "",
 	},

@@ -5,26 +5,21 @@ import { validateBody } from "#server/utils/validation"
 
 const schema = z
 	.object({
-		source: z.string(),
+		sourceID: z.string(),
+		fieldName: z.string().min(1, "Field name cannot be empty"),
 	})
 	.strict()
 	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { source } = await validateBody(event, schema)
+	const { sourceID, fieldName } = await validateBody(event, schema)
 
-	await prisma.source.upsert({
-		where: {
-			name: source,
-		},
-		update: {
-			archived: false,
-		},
-		create: {
-			name: source,
-			archived: false,
+	await prisma.field.create({
+		data: {
+			name: fieldName,
+			sourceID: sourceID,
 		},
 	})
 
-	return "Successfully added/updated source"
+	return "Field added successfully"
 })

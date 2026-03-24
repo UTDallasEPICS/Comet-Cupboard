@@ -76,36 +76,28 @@ const props = defineProps({
 		type: Number,
 		default: 0,
 	},
+	category: {
+		type: String,
+		required: true,
+	},
 })
 
-const route = useRoute()
-const currentCategory = route.params.category as string
-
 const inventoryStore = useInventoryStore()
-const { getQuantityChange, updateQuantityChange } = inventoryStore
+const { changeInventorySessionItemCount } = inventoryStore
 
 const editMenuItems = ref<DropdownMenuItem[]>([
-	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/edit`) },
-	{ label: "Item Deal", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/deal`) },
-	{ label: "Delete", onClick: () => navigateTo(`/volunteer/inventory/${currentCategory}/${props.itemID}/delete`) },
+	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${props.category}/${props.itemID}/edit`) },
+	{ label: "Item Deal", onClick: () => navigateTo(`/volunteer/inventory/${props.category}/${props.itemID}/deal`) },
 ])
 
 const adjustAmount = ref(1)
 
-const increment = () => {
-	updateQuantityChange({
-		itemID: props.itemID,
-		quantity: getQuantityChange(props.itemID).quantity,
-		countChange: getQuantityChange(props.itemID).countChange + adjustAmount.value,
-	})
+const increment = async () => {
+	await changeInventorySessionItemCount(props.itemID, adjustAmount.value)
 }
 
-const decrement = () => {
-	updateQuantityChange({
-		itemID: props.itemID,
-		quantity: getQuantityChange(props.itemID).quantity,
-		countChange: getQuantityChange(props.itemID).countChange - adjustAmount.value,
-	})
+const decrement = async () => {
+	await changeInventorySessionItemCount(props.itemID, -adjustAmount.value)
 }
 
 const displayChange = computed(() => {

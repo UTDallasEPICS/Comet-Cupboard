@@ -34,15 +34,13 @@
 				<template #header>
 					<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
 				</template>
-				<UTable :data="queue" :columns="columns" :meta="meta" empty="No one currently in queue" />
+				<UTable :data="queue" :columns="tableColumns" :meta="meta" empty="No one currently in queue" />
 			</UCard>
 		</section>
 	</UContainer>
 </template>
 
 <script lang="ts" setup>
-import { isEmptyObject } from "#shared/utils/helper"
-
 const queueStore = useQueueStore()
 const { queue, queueStatus } = storeToRefs(queueStore)
 const { getQueue, updateQueueStatus } = queueStore
@@ -50,10 +48,11 @@ const { getQueue, updateQueueStatus } = queueStore
 const cartStore = useCartStore()
 const { cart } = storeToRefs(cartStore)
 
-const columns = [
-	{ accessorKey: "position", header: "Position" },
-	{ accessorKey: "publicCode", header: "Display Name" },
+const columnsDef = [
+	{ header: "Position", accessorKey: "position", type: "text" },
+	{ header: "Display Name", accessorKey: "publicCode", type: "text" },
 ]
+const tableColumns = buildNuxtUITable(columnsDef, {})
 
 const meta = {
 	class: {

@@ -22,6 +22,23 @@
 					>
 						<UInput v-model="state.itemName" placeholder="Enter item name" />
 					</UFormField>
+					<UCard
+						:ui="{
+							header: 'p-2 py-2 sm:p-2 sm:py-2',
+							body: 'p-2 py-2 sm:p-2 sm:py-2',
+						}"
+					>
+						<template #header>
+							<SharedTextBase class="mb-1"> Existing Items with Similar Names </SharedTextBase>
+						</template>
+						<template #default>
+							<ul class="space-y-1">
+								<li v-for="similarItem in mostSimilarItems" :key="similarItem.id">
+									<SharedTextBase>{{ similarItem.name }}</SharedTextBase>
+								</li>
+							</ul>
+						</template>
+					</UCard>
 					<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
 						<SharedButtonPositiveAction type="submit" text="Submit" />
 					</footer>
@@ -33,64 +50,11 @@
 
 <script lang="ts" setup>
 import * as z from "zod"
-import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui"
 
 const route = useRoute()
 const currentCategory = route.params.category as string
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024 // 2MB
-const MIN_DIMENSIONS = { width: 200, height: 200 }
-const MAX_DIMENSIONS = { width: 4096, height: 4096 }
-
-type Schema = {
-	image: File | undefined
-	itemName: string | undefined
-}
-const state = ref<Partial<Schema>>({
-	image: undefined,
-	itemName: undefined,
-})
-
-const checkImageDimensions = async (file: File): Promise<boolean> => {
-	const dataUrl = await new Promise<string>((resolve, reject) => {
-		const reader = new FileReader()
-		reader.onload = (e) => resolve(e.target?.result as string)
-		reader.onerror = reject
-		reader.readAsDataURL(file)
-	})
-
-	return await new Promise<boolean>((resolve, reject) => {
-		const img = new Image()
-		img.onload = () => {
-			const valid =
-				img.width >= MIN_DIMENSIONS.width &&
-				img.height >= MIN_DIMENSIONS.height &&
-				img.width <= MAX_DIMENSIONS.width &&
-				img.height <= MAX_DIMENSIONS.height
-			resolve(valid)
-		}
-		img.onerror = reject
-		img.src = dataUrl
-	})
-}
-
-const schema = z.object({
-	image: z
-		.file()
-		.mime(["image/jpeg", "image/jpg", "image/png"], {
-			message: "Invalid image type (JPG/PNG only)",
-		})
-		.max(MAX_FILE_SIZE, { message: "Image is too large (max 2MB)" })
-		.refine(
-			async (file) =>
-				checkImageDimensions(file).then(
-					(valid) => valid,
-					() => false
-				),
-			{
-				message: `Image dimensions must be between ${MIN_DIMENSIONS.width}x${MIN_DIMENSIONS.height} and ${MAX_DIMENSIONS.width}x${MAX_DIMENSIONS.height} pixels`,
-			}
-		),
+const formSchema = imageSchema.extend({
 	itemName: z
 		.string()
 		.min(1, "Item name is required")
@@ -98,27 +62,36 @@ const schema = z.object({
 		.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
 })
 
-const validate = async (state: Partial<Schema>): Promise<FormError[]> => {
-	const errors = []
-	const result = await schema.safeParseAsync(state)
-	if (!result.success) {
-		errors.push(...result.error.issues.map((err) => ({ name: String(err.path[0]), message: err.message })))
-	}
-	return errors
-}
+const { schema, state, validate, onError } = createFormBuilder(formSchema, () => ({
+	image: undefined,
+	itemName: undefined,
+}))
 
-const onError = async (event: FormErrorEvent) => {
-	if (event?.errors?.[0]?.id) {
-		const el = document.getElementById(event.errors[0].id)
-		el?.focus()
-		el?.scrollIntoView({ behavior: "smooth", block: "center" })
-	}
-}
-const onSubmit = async (event: FormSubmitEvent<Schema>) => {
+const { data: items } = await useFetch("/api/student/inventory/items", {
+	method: "GET",
+	query: {
+		checkAvailability: "false",
+		includeArchived: "true",
+	},
+})
+const { query, filtered } = useFuzzySearch(items ?? ref([]), { searchKeys: ["name"] })
+watch(
+	() => state.value.itemName,
+	(name) => {
+		query.value = name || ""
+	},
+	{ immediate: true }
+)
+const mostSimilarItems = computed(() => {
+	return filtered.value.slice(0, 5)
+})
+
+const onSubmit = async (event) => {
 	try {
 		const formData = new FormData()
 		formData.append("name", event.data.itemName || "")
 		formData.append("categoryName", currentCategory as string)
+		formData.append("archived", "false")
 		if (event.data.image) {
 			formData.append("image", event.data.image)
 		}

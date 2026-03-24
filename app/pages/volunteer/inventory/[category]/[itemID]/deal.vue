@@ -42,7 +42,6 @@
 
 <script lang="ts" setup>
 import * as z from "zod"
-import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui"
 
 const route = useRoute()
 const currentCategory = route.params.category as string
@@ -50,16 +49,6 @@ const itemID = route.params.itemID as string
 
 const dealOptions = ref(["No deal", "Deal is X for Y", "Free deal"])
 const selectedDealOption = ref("No deal")
-
-type Schema = {
-	newDealActualCount: number
-	newDealAdjustedCount: number
-}
-
-const state = ref<Partial<Schema>>({
-	newDealActualCount: 2,
-	newDealAdjustedCount: 1,
-})
 
 const { data: item } = await useFetch(`/api/student/inventory/item`, {
 	params: { itemID },
@@ -81,7 +70,7 @@ watchEffect(async () => {
 	}
 })
 
-const schema = z.object({
+const formSchema = z.object({
 	newDealActualCount: z.number().min(1, "Actual count must be at least 1"),
 	newDealAdjustedCount: z
 		.number()
@@ -97,22 +86,10 @@ const schema = z.object({
 		),
 })
 
-const validate = async (state: Partial<Schema>): Promise<FormError[]> => {
-	const errors = []
-	const result = await schema.safeParseAsync(state)
-	if (!result.success) {
-		errors.push(...result.error.issues.map((err) => ({ name: String(err.path[0]), message: err.message })))
-	}
-	return errors
-}
-
-const onError = async (event: FormErrorEvent) => {
-	if (event?.errors?.[0]?.id) {
-		const el = document.getElementById(event.errors[0].id)
-		el?.focus()
-		el?.scrollIntoView({ behavior: "smooth", block: "center" })
-	}
-}
+const { schema, state, validate, onError } = createFormBuilder(formSchema, () => ({
+	newDealActualCount: 2,
+	newDealAdjustedCount: 1,
+}))
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 	try {
