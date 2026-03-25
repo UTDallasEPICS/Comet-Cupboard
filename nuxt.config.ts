@@ -10,7 +10,7 @@ export default defineNuxtConfig({
 	},
 	vite: {
 		optimizeDeps: {
-			include: ["zod", "@vue/devtools-core", "@vue/devtools-kit", "@vueuse/core"],
+			include: ["zod", "fuse.js", "@vue/devtools-core", "@vue/devtools-kit", "@vueuse/core"],
 		},
 	},
 	nitro: {
