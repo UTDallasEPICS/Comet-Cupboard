@@ -3,7 +3,7 @@ import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateQuery } from "#server/utils/validation"
 
-// quanity and archived information are not sensitive information to students
+// quantity and archived information are not sensitive information to students
 const schema = z
 	.object({
 		checkAvailability: z.enum(["true", "false"]).default("false"),
