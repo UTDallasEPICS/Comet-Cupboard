@@ -1,4 +1,4 @@
-function generateRandomLabel(): string {
+export function generateRandomLabel(): string {
 	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' 
 	let result = ''
 
