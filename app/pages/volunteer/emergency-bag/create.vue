@@ -13,9 +13,9 @@
 				<template #add>
 					<section>
 						<div class="grid grid-cols-2 gap-6">
-							<!-- LEFT SIDE: SEARCH -->
+							<!-- LEFT SIDE: Search -->
 							<div class="bg-white rounded-lg shadow-lg overflow-hidden">
-								<!-- Orange Header -->
+								<!-- Header -->
 								<div class="bg-final-utd-green text-white text-center py-3">
 									<h2 class="text-2xl font-bold">Search Product</h2>
 								</div>
@@ -38,7 +38,7 @@
 									<div class="font-semibold  text-gray-700 text-right  ">Inventory</div>
 								</div>
 
-								<!-- Products List -->
+								<!-- Product List -->
 								<div class="overflow-y-auto max-h-96 px-6 py-4 space-y-3">
 									<div class="text-center text-gray-500 py-8">
 										Search results will appear here
@@ -46,14 +46,14 @@
 								</div>
 							</div>
 
-							<!-- RIGHT SIDE: BAG EDITOR -->
-							<div class="space-y-4">
+							<!-- RIGHT SIDE: Bag editor -->
+							<div class="grid grid-rows-2 space-y-4">
 								<!-- BUBBLE 1: Current Bag Items -->
-								<div class="bg-white rounded-lg shadow-lg overflow-hidden">
+								<div class="bg-white rounded-lg flex-1 shadow-lg overflow-hidden">
 									<div class="bg-final-utd-green text-white px-6 py-3 font-semibold">
 										Current Bag
 									</div>
-									<div class="overflow-y-auto max-h-40 p-6 space-y-3">
+									<div class="overflow-y-auto h-40 p-6 space-y-3">
 										<div class="text-center text-gray-500">
 											No items in bag yet
 										</div>
@@ -103,13 +103,13 @@
                                             <input
                                                 v-model="selectedExpiryDate"
                                                 type="text"
-                                                placeholder="date goes here"
+                                                placeholder="MM    /    DD    /    YY"
                                                 class="w-full border-b-2 border-gray-400 px-3 py-2 text-center text-gray-700 outline-none focus:border-orange-600"
                                             />
                                         </div>
                                     
                                         <!-- BUBBLE 4: Confirm Button -->
-                                        <div class="bg-white rounded-lg shadow-lg p-2">
+                                        <div class="bg-white rounded-lg shadow-lg p-2 h-17 items-center justify-center">
                                             <button class="w-full bg-orange-600 text-white text-xl font-bold py-3 rounded hover:bg-orange-700 transition">
                                             Confirm Bag
                                         </button>
