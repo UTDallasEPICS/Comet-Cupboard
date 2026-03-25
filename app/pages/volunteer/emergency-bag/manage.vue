@@ -21,7 +21,7 @@
                                 class="w-full md:w-72"
                             />
                         </div>
-                        Add New Bag content
+                        
                     </section>
                 </template>
                 <!--END OF ADD BAG STUFF-->
