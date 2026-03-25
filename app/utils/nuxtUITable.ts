@@ -29,6 +29,11 @@ export const buildNuxtUITable = (columnsDef, resolvedComponents) => {
 			}
 		}
 		columnObj.cell = ({ row }) => {
+			//For manual overrides
+			if (col.cell) {
+				return col.cell({ row })
+			}
+
 			switch (col.type) {
 				case "image":
 					return h("img", {
@@ -40,6 +45,16 @@ export const buildNuxtUITable = (columnsDef, resolvedComponents) => {
 				case "checkbox":
 					return h(resolvedComponents.UCheckbox, {
 						modelValue: row.original[col.accessorKey],
+						disabled: col.disabled ?? false,
+						variant: col.variant || "solid",
+						color: col.color || "primary",
+						size: col.size || "md",
+					})
+
+				case "checkbox2":
+					return h(resolvedComponents.UCheckbox, {
+						modelValue: row.getIsSelected(),
+    					'onUpdate:modelValue': (val) => row.toggleSelected(val),
 						disabled: col.disabled ?? false,
 						variant: col.variant || "solid",
 						color: col.color || "primary",
