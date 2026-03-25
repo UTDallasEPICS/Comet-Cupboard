@@ -8,6 +8,11 @@ export default defineNuxtConfig({
 	ui: {
 		colorMode: false,
 	},
+	vite: {
+		optimizeDeps: {
+			include: ["zod", "@vue/devtools-core", "@vue/devtools-kit", "@vueuse/core"],
+		},
+	},
 	nitro: {
 		experimental: {
 			tasks: true,
