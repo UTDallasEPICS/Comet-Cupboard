@@ -16,7 +16,7 @@
 							<!-- LEFT SIDE: SEARCH -->
 							<div class="bg-white rounded-lg shadow-lg overflow-hidden">
 								<!-- Orange Header -->
-								<div class="bg-orange-600 text-white text-center py-3">
+								<div class="bg-final-utd-green text-white text-center py-3">
 									<h2 class="text-2xl font-bold">Search Product</h2>
 								</div>
 
@@ -33,9 +33,9 @@
 								</div>
 
 								<!-- Product Table Header -->
-								<div class="grid grid-cols-2 bg-gray-500 text-white px-6 py-2">
-									<div class="font-semibold">Product</div>
-									<div class="font-semibold text-right">Inventory</div>
+								<div class="grid grid-cols-2 bg-final-page-bg text-white px-6 py-2">
+									<div class="font-semibold text-gray-700">Product</div>
+									<div class="font-semibold  text-gray-700 text-right  ">Inventory</div>
 								</div>
 
 								<!-- Products List -->
@@ -50,7 +50,7 @@
 							<div class="space-y-4">
 								<!-- BUBBLE 1: Current Bag Items -->
 								<div class="bg-white rounded-lg shadow-lg overflow-hidden">
-									<div class="bg-gray-500 text-white px-6 py-3 font-semibold">
+									<div class="bg-final-utd-green text-white px-6 py-3 font-semibold">
 										Current Bag
 									</div>
 									<div class="overflow-y-auto max-h-40 p-6 space-y-3">
@@ -60,9 +60,8 @@
 									</div>
 								</div>
 
-								<!-- BUBBLES 2 & 3: Category and Expiry Date side by side -->
-								<div class="grid grid-cols-2 gap-4">
-									<!-- BUBBLE 2: Category Selection -->
+                                <div class="grid grid-cols-2 gap-4">
+                                <!-- BUBBLE 2: Category Selection -->
 									<div class="bg-white rounded-lg shadow-lg p-6">
 										<div class="text-lg font-semibold text-gray-700 mb-3">Category</div>
 										<div class="space-y-2">
@@ -97,26 +96,28 @@
 										</div>
 									</div>
 
+                                    <div class="grid grid-rows-2 gap-4">
 									<!-- BUBBLE 3: Expiry Date -->
 									<div class="bg-white rounded-lg shadow-lg p-6">
-										<div class="text-lg font-semibold text-gray-700 mb-3">Expiry Date</div>
-										<input
-											v-model="selectedExpiryDate"
-											type="text"
-											placeholder="date goes here"
-											class="w-full border-b-2 border-gray-400 px-3 py-2 text-center text-gray-700 outline-none focus:border-orange-600"
-										/>
-									</div>
-								</div>
-
-								<!-- BUBBLE 4: Confirm Button -->
-								<div class="bg-white rounded-lg shadow-lg p-6">
-									<button class="w-full bg-orange-600 text-white text-xl font-bold py-3 rounded hover:bg-orange-700 transition">
-										Confirm Bag
-									</button>
-								</div>
-							</div>
-						</div>
+                                            <div class="text-lg font-semibold text-gray-700 mb-3">Expiry Date</div>
+                                            <input
+                                                v-model="selectedExpiryDate"
+                                                type="text"
+                                                placeholder="date goes here"
+                                                class="w-full border-b-2 border-gray-400 px-3 py-2 text-center text-gray-700 outline-none focus:border-orange-600"
+                                            />
+                                        </div>
+                                    
+                                        <!-- BUBBLE 4: Confirm Button -->
+                                        <div class="bg-white rounded-lg shadow-lg p-2">
+                                            <button class="w-full bg-orange-600 text-white text-xl font-bold py-3 rounded hover:bg-orange-700 transition">
+                                            Confirm Bag
+                                        </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 					</section>
 				</template>
 
