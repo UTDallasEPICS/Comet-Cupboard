@@ -232,7 +232,7 @@ model IssuedEmergencyBag {
     bagDescription    String?                  @default("") @map("bag_description")
     expiryDate        DateTime                 @map("expiry_date")
     //5 digit ID for volunteers/students
-    label             String                   @unique
+    label             String                   
 
     @@map("issued_emergency_bag")
 }
