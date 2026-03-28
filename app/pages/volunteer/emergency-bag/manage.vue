@@ -337,15 +337,12 @@ const selectedBagIDs = computed(() => {
 const moveBags = async() => {
     for (const bagID of selectedBagIDs.value) {
         try {
-            await fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
+            await $fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
                 method: "PATCH",
-                headers: {
-                "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                bagID,
-                location: moveLocation.value
-                })
+                body: {
+                    bagID,
+                    location: moveLocation.value
+                }
             })
         } catch (err) {
         console.error(`Failed for ${bagID}`, err)
@@ -358,15 +355,12 @@ const moveBags = async() => {
 
 const moveSingleBag = async(bagID, location) => {
     try {
-        await fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
+        await $fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
             method: "PATCH",
-            headers: {
-            "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
+            body: {
                 bagID,
                 location
-            })
+            }
         })
     } catch (err) {
     console.error(`Failed for ${bagID}`, err)
@@ -376,12 +370,9 @@ const moveSingleBag = async(bagID, location) => {
 
 const deleteBag = async(bagID,close) => {
     try {
-        await fetch('/api/volunteer/emergency-bag/emergencyBags', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ bagID })
+        await $fetch('/api/volunteer/emergency-bag/emergencyBags', {
+            method: 'DELETE',
+            body: { bagID }
         })
 
         await refreshEmergencyBags()
