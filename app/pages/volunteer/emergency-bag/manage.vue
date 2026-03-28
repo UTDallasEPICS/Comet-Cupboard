@@ -335,19 +335,21 @@ const selectedBagIDs = computed(() => {
 })
 
 const moveBags = async() => {
-    for (const bagID of selectedBagIDs.value) {
-        try {
-            await $fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
-                method: "PATCH",
-                body: {
-                    bagID,
-                    location: moveLocation.value
-                }
-            })
-        } catch (err) {
-        console.error(`Failed for ${bagID}`, err)
+    try {
+        await $fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
+        method: "PATCH",
+        body: {
+            bagIDs: selectedBagIDs.value,
+            location: moveLocation.value
         }
-  }
+        })
+
+        await refreshEmergencyBags()
+        selected.value = {}
+
+    } catch (err) {
+        console.error("Failed to move bags", err)
+    }
 
     await refreshEmergencyBags();
     selected.value = {};
@@ -356,21 +358,22 @@ const moveBags = async() => {
 const moveSingleBag = async(bagID, location) => {
     try {
         await $fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
-            method: "PATCH",
-            body: {
-                bagID,
-                location
-            }
+        method: "PATCH",
+        body: {
+            bagIDs: [bagID],
+            location
+        }
         })
+
     } catch (err) {
-    console.error(`Failed for ${bagID}`, err)
+        console.error(`Failed for ${bagID}`, err)
     }
     await refreshEmergencyBags();
 }
 
 const deleteBag = async(bagID,close) => {
     try {
-        await $fetch('/api/volunteer/emergency-bag/emergencyBags', {
+        await $fetch('/api/volunteer/emergency-bag/emergencyBag', {
             method: 'DELETE',
             body: { bagID }
         })

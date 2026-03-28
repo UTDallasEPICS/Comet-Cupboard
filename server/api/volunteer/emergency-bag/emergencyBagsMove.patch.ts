@@ -5,12 +5,12 @@ import { validateBody } from "#server/utils/validation"
 import { StatusCodes } from "http-status-codes"
 
 const schema = z.object({
-  bagID: z.string(),
+  bagIDs: z.array(z.string()).min(1),
   location: z.string()
 }).strict()
 
 export default defineSafeHandler(async (event) => {
-    const { bagID, location } = await validateBody(event, schema);
+    const { bagIDs, location } = await validateBody(event, schema);
 
     const locationExists = await prisma.location.findUnique({
       where: { name: location }
@@ -23,23 +23,29 @@ export default defineSafeHandler(async (event) => {
       });
     }
 
-    const bag = await prisma.emergencyBag.findUnique({
-      where: { bagID }
-    });
+    const bags = await prisma.emergencyBag.findMany({
+      where: {
+        bagID: { in: bagIDs }
+      },
+      select: { bagID: true }
+    })
 
-    if (!bag) {
+    if (bags.length !== bagIDs.length) {
       throw createError({
         statusCode: StatusCodes.NOT_FOUND,
-        statusMessage: "Emergency bag not found"
-      });
+        statusMessage: "One or more bags not found"
+      })
     }
-
-    await prisma.emergencyBag.update({
-      where: { bagID },
+    
+    await prisma.emergencyBag.updateMany({
+      where: {
+        bagID: { in: bagIDs }
+      },
       data: {
         locationName: location
       }
-    });
+    })
+
 
     return { success: true };
 })
