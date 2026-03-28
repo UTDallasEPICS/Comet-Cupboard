@@ -142,7 +142,9 @@
                                             <input
                                                 v-model="selectedExpiryDate"
                                                 type="text"
-                                                placeholder="MM    /    DD    /    YY"
+                                                placeholder="MM/DD/YY"
+                                                maxlength="8"
+                                                @input="formatExpiryDate"
                                                 class="w-full border-b-2 border-gray-400 px-3 py-2 text-center text-gray-700 outline-none focus:border-orange-600"
                                             />
                                         </div>
@@ -201,7 +203,7 @@
     </div>
 </template>
 
-<script lang="ts" setup>
+<<script lang="ts" setup>
 import {resolveComponent } from 'vue'
 
 const UButton = resolveComponent('UButton')
@@ -222,55 +224,11 @@ const items = [
 //Search Query
 const manage_searchQuery = ref('')
 
-//Add Tab
+// Get emergency bags data (used by both Add and View tabs)
+const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch('/api/volunteer/emergency-bag/emergencyBags');
 
-//View Tab
-const { data: emergencyBags } = await useFetch('/api/volunteer/emergency-bag/emergencyBags');
-const expanded = ref({})
-const selected = ref({})
+//===== ADD TAB =====
 
-const columnsDef = [
-  {header: '', type: 'checkbox', accessorKey: 'selected'},
-  {header: 'Bag ID',accessorKey: 'label',type: 'text',sortable: true},
-  {header: 'Location',accessorKey: 'locationName',type: 'text'},
-  {header: 'Category',accessorKey: 'bagCategory',type: 'text'},
-  {
-    type: 'edit',icon: icons['edit'],
-    onClick: (row) => {  console.log('To implement...')},
-    meta: {class: {th: 'w-12 hidden md:table-cell', td: 'w-12 hidden md:table-cell'}}
-  },
-  {type: "expand", meta: {class: {th: "w-12", td: "w-12"}}}
-]
-
-const columns = buildNuxtUITable(columnsDef, resolvedComponents)
-
-const categoryMap: Record<string, string> = {
-    'VEGETARIAN_AND_PEANUT_BUTTER' : 'Veg_PB',
-    'VEGETARIAN_AND_NON_PEANUT_BUTTER' : 'Veg_NoPB',
-    'NONVEGETARIAN_AND_PEANUT_BUTTER' : 'NonVeg_PB',
-    'NONVEGETARIAN_AND_NON_PEANUT_BUTTER' : 'NonVeg_NoPB'
-}
-
-const filtered_viewData = computed(() => {
-  if (!emergencyBags.value) return []
-
-  const view_query = manage_searchQuery.value.toLowerCase().trim()
-
-  return emergencyBags.value.filter((bag) => {
-    const categoryShort =
-      categoryMap[bag.bagCategory] ?? bag.bagCategory
-
-    if (!view_query) return true
-
-    return (
-      bag.label?.toLowerCase().includes(view_query) ||
-      bag.locationName?.toLowerCase().includes(view_query) ||
-      categoryShort.toLowerCase().includes(view_query)
-    )
-  })
-})
-
-//Add Tab
 // Category Selection
 const selectedCategory = ref<string | null>(null)
 const selectedExpiryDate = ref('')
@@ -332,27 +290,59 @@ const increaseItemCount = (itemID: string) => {
 	}
 }
 
+// Format expiry date input to MM/DD/YY
+const formatExpiryDate = () => {
+	let value = selectedExpiryDate.value.replace(/\D/g, '') // Remove non-digits
+	
+	if (value.length >= 2) {
+		value = value.slice(0, 2) + '/' + value.slice(2)
+	}
+	if (value.length >= 5) {
+		value = value.slice(0, 5) + '/' + value.slice(5, 7)
+	}
+	
+	selectedExpiryDate.value = value
+}
+
+// Validate expiry date format
+const isValidExpiryDate = (date: string): boolean => {
+	const regex = /^(0[1-9]|1[0-2])\/([0-2][0-9]|3[0-1])\/\d{2}$/
+	if (!regex.test(date)) return false
+	
+	const [month, day] = date.split('/')
+	return parseInt(month) >= 1 && parseInt(month) <= 12 && parseInt(day) >= 1 && parseInt(day) <= 31
+}
+
 // Submit bag to API
 const submitBag = async () => {
 	if (!selectedCategory.value) {
-		console.error('Please select a category')
+		alert('Please select a category')
 		return
 	}
 	if (!selectedExpiryDate.value) {
-		console.error('Please select an expiry date')
+		alert('Please enter an expiry date (MM/DD/YY)')
+		return
+	}
+	if (!isValidExpiryDate(selectedExpiryDate.value)) {
+		alert('Invalid date format. Use MM/DD/YY')
 		return
 	}
 	if (bagItems.value.length === 0) {
-		console.error('Please add items to the bag')
+		alert('Please add items to the bag')
 		return
 	}
 
 	try {
-		await $fetch('/api/volunteer/emergency-bag/createBag', {
+		// Convert MM/DD/YY to ISO 8601 datetime
+		const [month, day, year] = selectedExpiryDate.value.split('/')
+		const fullYear = `20${year}`
+		const isoDate = new Date(`${fullYear}-${month}-${day}T00:00:00Z`).toISOString()
+
+		const response = await $fetch('/api/volunteer/emergency-bag/emergencyBags', {
 			method: 'POST',
 			body: {
 				bagCategory: selectedCategory.value,
-				expiryDate: selectedExpiryDate.value,
+				expiryDate: isoDate,
 				items: bagItems.value.map(item => ({
 					itemID: item.itemID,
 					count: item.count
@@ -360,6 +350,8 @@ const submitBag = async () => {
 			}
 		})
 
+		console.log('Bag created successfully!', response)
+		
 		// Reset form
 		selectedCategory.value = null
 		selectedExpiryDate.value = ''
@@ -369,11 +361,58 @@ const submitBag = async () => {
 		// Refresh bags list
 		await refreshEmergencyBags()
 		
-		console.log('Bag created successfully!')
-	} catch (err) {
+		alert('Bag created successfully!')
+		
+	} catch (err: any) {
 		console.error('Failed to create bag:', err)
+		alert(`Error: ${err.message || 'Failed to create bag'}`)
 	}
 }
 
+//===== VIEW TAB =====
+
+const expanded = ref({})
+const selected = ref({})
+
+const columnsDef = [
+  {header: '', type: 'checkbox', accessorKey: 'selected'},
+  {header: 'Bag ID',accessorKey: 'label',type: 'text',sortable: true},
+  {header: 'Location',accessorKey: 'locationName',type: 'text'},
+  {header: 'Category',accessorKey: 'bagCategory',type: 'text'},
+  {
+    type: 'edit',icon: icons['edit'],
+    onClick: (row) => {  console.log('To implement...')},
+    meta: {class: {th: 'w-12 hidden md:table-cell', td: 'w-12 hidden md:table-cell'}}
+  },
+  {type: "expand", meta: {class: {th: "w-12", td: "w-12"}}}
+]
+
+const columns = buildNuxtUITable(columnsDef, resolvedComponents)
+
+const categoryMap: Record<string, string> = {
+    'VEGETARIAN_AND_PEANUT_BUTTER' : 'Veg_PB',
+    'VEGETARIAN_AND_NON_PEANUT_BUTTER' : 'Veg_NoPB',
+    'NONVEGETARIAN_AND_PEANUT_BUTTER' : 'NonVeg_PB',
+    'NONVEGETARIAN_AND_NON_PEANUT_BUTTER' : 'NonVeg_NoPB'
+}
+
+const filtered_viewData = computed(() => {
+  if (!emergencyBags.value) return []
+
+  const view_query = manage_searchQuery.value.toLowerCase().trim()
+
+  return emergencyBags.value.filter((bag) => {
+    const categoryShort =
+      categoryMap[bag.bagCategory] ?? bag.bagCategory
+
+    if (!view_query) return true
+
+    return (
+      bag.label?.toLowerCase().includes(view_query) ||
+      bag.locationName?.toLowerCase().includes(view_query) ||
+      categoryShort.toLowerCase().includes(view_query)
+    )
+  })
+})
 
 </script>
