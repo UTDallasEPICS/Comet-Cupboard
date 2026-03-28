@@ -49,5 +49,16 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
+    for (const item of items) {
+		await prisma.item.update({
+			where: { itemID: item.itemID },
+			data: {
+				quantity: {
+					decrement: item.count,
+				},
+			},
+		})
+	}
+
 	return newBag
 })

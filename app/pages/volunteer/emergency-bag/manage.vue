@@ -47,11 +47,14 @@
                                     <div v-for="item in filteredItems || []" :key="item.itemID" class="flex items-center justify-between bg-gray-100 p-3 rounded">
                                         <div>
                                             <p class="font-semibold">{{ item.name }}</p>
-                                            <p class="text-sm text-gray-600">Stock: {{ item.quantity }}</p>
+                                            <p class="text-sm text-gray-600">
+                                                Available: {{ getAvailableQuantity(item.itemID) }} / {{ item.quantity }}
+                                            </p>
                                         </div>
                                         <button
                                             @click="addItemToBag(item)"
-                                            class="bg-final-utd-green text-white px-3 py-1 rounded hover:opacity-80 transition text-sm"
+                                            :disabled="getAvailableQuantity(item.itemID) <= 0"
+                                            class="bg-final-utd-green text-white px-3 py-1 rounded hover:opacity-80 transition text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
                                             + Add
                                         </button>
@@ -203,7 +206,7 @@
     </div>
 </template>
 
-<<script lang="ts" setup>
+<script lang="ts" setup>
 import {resolveComponent } from 'vue'
 
 const UButton = resolveComponent('UButton')
@@ -247,6 +250,15 @@ const filteredItems = computed(() => {
 		item.name.toLowerCase().startsWith(query)
 	)
 })
+
+// Get available quantity for an item (inventory - what's in bag)
+const getAvailableQuantity = (itemID: string): number => {
+	const item = volunteerItems.value?.find(i => i.itemID === itemID)
+	const bagItem = bagItems.value.find(bi => bi.itemID === itemID)
+	
+	if (!item) return 0
+	return item.quantity - (bagItem?.count || 0)
+}
 
 // Current bag items with counts
 const bagItems = ref<Array<{ itemID: string; count: number; name: string }>>([])
@@ -359,9 +371,16 @@ const submitBag = async () => {
 		searchQuery.value = ''
 		
 		// Refresh bags list
-		await refreshEmergencyBags()
-		
-		alert('Bag created successfully!')
+        await refreshEmergencyBags()
+
+        // Force refresh items by using $fetch instead of useFetch
+        const updatedItems = await $fetch("/api/student/inventory/items")
+        volunteerItems.value = updatedItems
+
+        // Refetch items to get updated inventory
+        volunteerItems.value = await $fetch("/api/student/inventory/items")
+
+        alert('Bag created successfully!')
 		
 	} catch (err: any) {
 		console.error('Failed to create bag:', err)
