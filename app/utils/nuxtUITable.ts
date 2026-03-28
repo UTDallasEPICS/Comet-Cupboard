@@ -34,6 +34,8 @@ export const buildNuxtUITable = (columnsDef, resolvedComponents) => {
 				return col.cell({ row })
 			}
 
+			const hasExpand = columnsDef.some(col => col.type === "expand")
+
 			switch (col.type) {
 				case "image":
 					return h("img", {
@@ -102,7 +104,17 @@ export const buildNuxtUITable = (columnsDef, resolvedComponents) => {
                     })
 
 				default:
-					return h("span", row.original[col.accessorKey] || "")
+					return h(
+						"span",
+						{
+						class: hasExpand ? "block w-full h-full cursor-pointer" : "",
+						onClick: hasExpand ? (e) => {
+							e.stopPropagation();
+							row.toggleExpanded();
+						}: undefined
+						},
+						row.original[col.accessorKey] || ""
+					)
 			}
 		}
 

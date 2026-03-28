@@ -133,10 +133,9 @@
                                 placeholder="Search items"
                                 class="w-full md:w-72"
                             />
-                            <div class="flex justify-between">
-                                <UInputMenu :disabled="selectedBagIDs.length === 0" v-model="moveLocation" :items="moveLocations" />
-                                <UButton :disabled="selectedBagIDs.length === 0" 
-                                :icon="icons['move']" size="xs" variant="solid"
+                            <div v-if="selectedBagIDs.length > 0" class="flex justify-between">
+                                <UInputMenu v-model="moveLocation" :items="moveLocations" />
+                                <UButton  :icon="icons['move']" size="xs" variant="solid"
                                 @click="moveBags"
                                 >
                                     Move
@@ -172,13 +171,6 @@
                                         {{ row.original.expiryDate || 'N/A' }}
                                         </p>
                                     </div>
-
-                                    <div>
-                                        <p class="">Location:</p>
-                                        <p class="">
-                                        {{ row.original.locationName || 'N/A' }}
-                                        </p>
-                                    </div>
                                     
                                     <div>
                                         <p>Items:</p>
@@ -192,7 +184,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
+                                    <div>
+                                        <p class="">Location:</p>
+                                        <p class="">
+                                        {{ row.original.locationName || 'N/A' }}
+                                        </p>
+                                    </div>
 
                                     <div class="flex gap-2 items-center">
                                         <UInputMenu v-model="row.original._moveLocation" :items="moveLocations" class="w-48"/>
