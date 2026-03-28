@@ -26,25 +26,37 @@
 									<div class="flex items-center bg-gray-100 rounded-lg px-4 py-3">
 										<UIcon name="i-lucide-search" class="w-5 h-5 text-gray-400" />
 										<input
-											type="text"
-											placeholder="Search items"
-											class="bg-gray-100 ml-3 flex-1 outline-none text-gray-700"
-										/>
+                                            v-model="searchQuery"
+                                            type="text"
+                                            placeholder="Search items"
+                                            class="bg-gray-100 ml-3 flex-1 outline-none text-gray-700"
+                                        />
 									</div>
 								</div>
 
 								<!-- Product Table Header -->
 								<div class="grid grid-cols-2 bg-final-page-bg text-white px-6 py-2">
 									<div class="font-semibold text-gray-700">Product</div>
-									<div class="font-semibold  text-gray-700 text-right  ">Inventory</div>
 								</div>
 
 								<!-- Product List -->
 								<div class="overflow-y-auto max-h-96 px-6 py-4 space-y-3">
-									<div class="text-center text-gray-500 py-8">
-										Search results will appear here
-									</div>
-								</div>
+                                    <div v-if="!filteredItems?.length" class="text-center text-gray-500 py-8">
+                                        Search results will appear here
+                                    </div>
+                                    <div v-for="item in filteredItems || []" :key="item.itemID" class="flex items-center justify-between bg-gray-100 p-3 rounded">
+                                        <div>
+                                            <p class="font-semibold">{{ item.name }}</p>
+                                            <p class="text-sm text-gray-600">Stock: {{ item.quantity }}</p>
+                                        </div>
+                                        <button
+                                            @click="addItemToBag(item)"
+                                            class="bg-final-utd-green text-white px-3 py-1 rounded hover:opacity-80 transition text-sm"
+                                        >
+                                            + Add
+                                        </button>
+                                    </div>
+                                </div>
 							</div>
 
 							<!-- RIGHT SIDE: Bag editor -->
@@ -55,10 +67,36 @@
 										Current Bag
 									</div>
 									<div class="overflow-y-auto h-40 p-6 space-y-3">
-										<div class="text-center text-gray-500">
-											No items in bag yet
-										</div>
-									</div>
+                                        <div v-if="bagItems.length === 0" class="text-center text-gray-500">
+                                            No items in bag yet
+                                        </div>
+                                        <div v-for="item in bagItems" :key="item.itemID" class="flex items-center justify-between bg-gray-100 p-3 rounded">
+                                            <div>
+                                                <p class="font-semibold text-sm">{{ item.name }}</p>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <button
+                                                    @click="decreaseItemCount(item.itemID)"
+                                                    class="bg-gray-400 text-white px-2 py-1 rounded hover:bg-gray-500 transition"
+                                                >
+                                                    −
+                                                </button>
+                                                <span class="w-6 text-center font-semibold">{{ item.count }}</span>
+                                                <button
+                                                    @click="increaseItemCount(item.itemID)"
+                                                    class="bg-gray-400 text-white px-2 py-1 rounded hover:bg-gray-500 transition"
+                                                >
+                                                    +
+                                                </button>
+                                                <button
+                                                    @click="removeItemFromBag(item.itemID)"
+                                                    class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition"
+                                                >
+                                                    ✕
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
 								</div>
 
                                 <div class="grid grid-cols-2 gap-4">
@@ -111,9 +149,12 @@
                                     
                                         <!-- BUBBLE 4: Confirm Button -->
                                         <div class="bg-white rounded-lg shadow-lg p-2 h-17 items-center justify-center">
-                                            <button class="w-full bg-orange-600 text-white text-xl font-bold py-3 rounded hover:bg-orange-700 transition">
-                                            Confirm Bag
-                                        </button>
+                                            <button 
+                                                @click="submitBag"
+                                                class="w-full bg-orange-600 text-white text-xl font-bold py-3 rounded hover:bg-orange-700 transition"
+                                            >
+                                                Confirm Bag
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -126,26 +167,20 @@
                 <!--START OF VIEW/MODIFY BAG STUFF-->
                 <template #view>
                     <section>
-                        <div class="p-2 flex flex-col gap-2 md:justify-between md:flex-row">
+                        <div class="p-2 bg-final-cancel-gray text-white">
                             <UInput
                                 v-model="manage_searchQuery"
                                 :icon="icons['search']"
                                 placeholder="Search items"
                                 class="w-full md:w-72"
                             />
-                            <div class="flex justify-between">
-                                <UInputMenu :disabled="selectedBagIDs.length === 0" v-model="moveLocation" :items="moveLocations" />
-                                <UButton :disabled="selectedBagIDs.length === 0" 
-                                :icon="icons['move']" size="xs" variant="solid"
-                                @click="moveBags"
-                                >
-                                    Move
-                                </UButton>
-                            </div>
                         </div>
                         
-                        <UTable  sticky v-model:expanded="expanded" v-model:rowSelection="selected"
-                        :getRowId="row => row.bagID" :data="filtered_viewData" :columns="columns"
+                        <UTable
+                        v-model:expanded="expanded"
+                        v-model="selected"
+                        :data="filtered_viewData"
+                        :columns="columns"
                         :ui="{
                             td: 'py-2',
                             th: 'py-2',
@@ -153,69 +188,8 @@
                         }"
                         >
                             <template #expanded="{ row }">
-                                <div class="p-4 flex flex-col gap-2">
-                                    <div>
-                                        <p class="">Internal ID:</p>
-                                        <p class="">{{ row.original.bagID }}</p>
-                                    </div>
-
-                                    <div>
-                                        <p class="">Category:</p>
-                                        <p class="">
-                                        {{ row.original.bagCategory }}
-                                        </p>
-                                    </div>
-
-                                    <div>
-                                        <p class="">Expiry Date:</p>
-                                        <p class="">
-                                        {{ row.original.expiryDate || 'N/A' }}
-                                        </p>
-                                    </div>
-
-                                    <div>
-                                        <p class="">Location:</p>
-                                        <p class="">
-                                        {{ row.original.locationName || 'N/A' }}
-                                        </p>
-                                    </div>
-
-                                    <div class="flex gap-2 items-center">
-                                        <UInputMenu v-model="row.original._moveLocation" :items="moveLocations" class="w-48"/>
-
-                                        <UButton
-                                        size="xs"
-                                        :icon="icons['move']"
-                                        variant="solid"
-                                        @click="moveSingleBag(row.original.bagID, row.original._moveLocation)"
-                                        >
-                                        Move
-                                        </UButton>
-                                    </div>
-
-                                    <UModal :dismissible="false">
-                                        <!--//Would have used SharedButtonCancel but I wanted it in red-->
-                                        <UButton label="Delete Bag" size="xs" color="error" class="self-start"/>
-
-                                        <template #content="{close}">
-                                            <UCard>
-                                            <h3 class="text-lg font-semibold text-red-600">
-                                                Confirm Delete
-                                            </h3>
-
-                                            <p class="text-sm text-gray-600 mt-2">
-                                                Are you sure you want to delete this bag?
-                                            </p>
-
-                                            <div class="flex justify-end gap-2 mt-4">
-                                                <UButton variant="ghost" @click="close">Cancel</UButton>
-                                                <!--//Would have used SharedButtonCancel but I wanted it in red-->
-                                                <UButton color="error" @click="deleteBag(row.original.bagID, close)">Delete</UButton>
-                                            </div>
-                                            </UCard>
-                                        </template>
-                                    </UModal>
-
+                                <div class="p-4">
+                                To Implement...
                                 </div>
                             </template>
                         </UTable>
@@ -224,9 +198,7 @@
                 <!--END OF VIEW/MODIFY BAG STUFF-->
             </UTabs>
         </UContainer>
-
     </div>
-
 </template>
 
 <script lang="ts" setup>
@@ -251,42 +223,22 @@ const items = [
 const manage_searchQuery = ref('')
 
 //Add Tab
-// Category Selection
-const selectedCategory = ref<string | null>(null)
-const selectedExpiryDate = ref('')
 
 //View Tab
-const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch('/api/volunteer/emergency-bag/emergencyBags');
+const { data: emergencyBags } = await useFetch('/api/volunteer/emergency-bag/emergencyBags');
 const expanded = ref({})
 const selected = ref({})
 
-const moveLocations = ref(['Activity Center', 'Police Station']) //Need to make it use Location get
-const moveLocation = ref('Activity Center')
-
 const columnsDef = [
-  {
-    header: ({ table }) =>
-        h(resolvedComponents.UCheckbox, {
-            modelValue: table
-            ? table.getIsAllRowsSelected()
-                ? true
-                : table.getIsSomeRowsSelected()
-                ? 'indeterminate'
-                : false
-            : false,
-            'onUpdate:modelValue': (val) => table?.toggleAllRowsSelected(val),
-        }),
-    type: 'checkbox2'
-},
+  {header: '', type: 'checkbox', accessorKey: 'selected'},
   {header: 'Bag ID',accessorKey: 'label',type: 'text',sortable: true},
   {header: 'Location',accessorKey: 'locationName',type: 'text'},
-  {header: 'Category',accessorKey: 'bagCategory',type: 'text', 
-    cell: ({ row }) => categoryMap[row.original.bagCategory] ?? row.original.bagCategory},
-  /*{
+  {header: 'Category',accessorKey: 'bagCategory',type: 'text'},
+  {
     type: 'edit',icon: icons['edit'],
     onClick: (row) => {  console.log('To implement...')},
     meta: {class: {th: 'w-12 hidden md:table-cell', td: 'w-12 hidden md:table-cell'}}
-  },*/
+  },
   {type: "expand", meta: {class: {th: "w-12", td: "w-12"}}}
 ]
 
@@ -318,67 +270,110 @@ const filtered_viewData = computed(() => {
   })
 })
 
-const selectedBagIDs = computed(() => {
-  return Object.keys(selected.value).filter(id => selected.value[id]);
+//Add Tab
+// Category Selection
+const selectedCategory = ref<string | null>(null)
+const selectedExpiryDate = ref('')
+
+// Search functionality
+const searchQuery = ref('')
+const { data: volunteerItems } = await useFetch("/api/student/inventory/items")
+
+// Starts with matching - only show items that start with search term
+const filteredItems = computed(() => {
+	if (!volunteerItems.value) return []
+	if (!searchQuery.value) return volunteerItems.value
+	
+	const query = searchQuery.value.toLowerCase()
+	return volunteerItems.value.filter(item => 
+		item.name.toLowerCase().startsWith(query)
+	)
 })
 
-const moveBags = async() => {
-    for (const bagID of selectedBagIDs.value) {
-        try {
-            await fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
-                method: "PATCH",
-                headers: {
-                "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                bagID,
-                location: moveLocation.value
-                })
-            })
-        } catch (err) {
-        console.error(`Failed for ${bagID}`, err)
-        }
-  }
+// Current bag items with counts
+const bagItems = ref<Array<{ itemID: string; count: number; name: string }>>([])
 
-    await refreshEmergencyBags();
-    selected.value = {};
+// Add item to bag or increase count
+const addItemToBag = (item: any) => {
+	const existingItem = bagItems.value.find(bi => bi.itemID === item.itemID)
+	if (existingItem) {
+		existingItem.count++
+	} else {
+		bagItems.value.push({
+			itemID: item.itemID,
+			count: 1,
+			name: item.name
+		})
+	}
 }
 
-const moveSingleBag = async(bagID, location) => {
-    try {
-        await fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
-            method: "PATCH",
-            headers: {
-            "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                bagID,
-                location
-            })
-        })
-    } catch (err) {
-    console.error(`Failed for ${bagID}`, err)
-    }
-    await refreshEmergencyBags();
+// Remove item from bag
+const removeItemFromBag = (itemID: string) => {
+	bagItems.value = bagItems.value.filter(item => item.itemID !== itemID)
 }
 
-const deleteBag = async(bagID,close) => {
-    try {
-        await fetch('/api/volunteer/emergency-bag/emergencyBags', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ bagID })
-        })
-
-        await refreshEmergencyBags()
-        close()
-
-    } catch (err) {
-        console.error(err)
-    }
-    selected.value = {};
+// Decrease count or remove if count reaches 0
+const decreaseItemCount = (itemID: string) => {
+	const item = bagItems.value.find(bi => bi.itemID === itemID)
+	if (item) {
+		if (item.count === 1) {
+			removeItemFromBag(itemID)
+		} else {
+			item.count--
+		}
+	}
 }
+
+// Increase item count
+const increaseItemCount = (itemID: string) => {
+	const item = bagItems.value.find(bi => bi.itemID === itemID)
+	if (item) {
+		item.count++
+	}
+}
+
+// Submit bag to API
+const submitBag = async () => {
+	if (!selectedCategory.value) {
+		console.error('Please select a category')
+		return
+	}
+	if (!selectedExpiryDate.value) {
+		console.error('Please select an expiry date')
+		return
+	}
+	if (bagItems.value.length === 0) {
+		console.error('Please add items to the bag')
+		return
+	}
+
+	try {
+		await $fetch('/api/volunteer/emergency-bag/createBag', {
+			method: 'POST',
+			body: {
+				bagCategory: selectedCategory.value,
+				expiryDate: selectedExpiryDate.value,
+				items: bagItems.value.map(item => ({
+					itemID: item.itemID,
+					count: item.count
+				}))
+			}
+		})
+
+		// Reset form
+		selectedCategory.value = null
+		selectedExpiryDate.value = ''
+		bagItems.value = []
+		searchQuery.value = ''
+		
+		// Refresh bags list
+		await refreshEmergencyBags()
+		
+		console.log('Bag created successfully!')
+	} catch (err) {
+		console.error('Failed to create bag:', err)
+	}
+}
+
 
 </script>
