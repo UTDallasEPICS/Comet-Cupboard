@@ -22,6 +22,17 @@
 		<section class="py-20">
 			<UContainer>
 				<div class="mx-auto max-w-2xl text-center">
+					<SharedTextSectionTitle> Upcoming Restocks jyuguyguguy Notices </SharedTextSectionTitle>
+					<SharedTextBase class="mt-4"> I'm going to put a calendar here :) </SharedTextBase>
+				</div>
+			</UContainer>
+		</section>
+
+		<USeparator />
+
+		<section class="py-20">
+			<UContainer>
+				<div class="mx-auto max-w-2xl text-center">
 					<SharedTextSectionTitle> Upcoming Restocks and Notices </SharedTextSectionTitle>
 					<SharedTextBase class="mt-4"> I'm going to put a calendar here :) </SharedTextBase>
 				</div>
