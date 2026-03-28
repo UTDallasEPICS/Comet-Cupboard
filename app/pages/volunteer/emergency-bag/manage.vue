@@ -13,7 +13,7 @@
                 <!--START OF ADD BAG STUFF-->
                 <template #add>
                     <section>
-						<div class="grid grid-cols-2 gap-6">
+						<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 							<!-- LEFT SIDE: Search -->
 							<div class="bg-white rounded-lg shadow-lg overflow-hidden">
 								<!-- Header -->
@@ -22,7 +22,7 @@
 								</div>
 
 								<!-- Search Bar -->
-								<div class="p-6">
+								<div class="p-3 sm:p-4 md:p-6">
 									<div class="flex items-center bg-gray-100 rounded-lg px-4 py-3">
 										<UIcon name="i-lucide-search" class="w-5 h-5 text-gray-400" />
 										<input
@@ -44,17 +44,31 @@
                                     <div v-if="!filteredItems?.length" class="text-center text-gray-500 py-8">
                                         Search results will appear here
                                     </div>
-                                    <div v-for="item in filteredItems || []" :key="item.itemID" class="flex items-center justify-between bg-gray-100 p-3 rounded">
-                                        <div>
+                                    <div v-for="item in filteredItems || []" :key="item.itemID" class="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gray-100 p-3 rounded gap-3">
+                                        <!-- Image -->
+                                            <img  
+                                                v-if="item.imgName && item.categoryName"
+                                                :src="`/test-images/${encodeURIComponent(item.categoryName)}/${item.imgName}`"
+                                                :alt="item.name"
+                                                class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded"
+                                            />
+                                            <div v-else class="w-12 h-12 bg-gray-300 rounded flex items-center justify-center">
+                                                <span class="text-gray-500 text-xs">No Img</span>
+                                            </div>
+                                        
+                                        <!-- Item Info -->
+                                        <div class="flex-1">
                                             <p class="font-semibold">{{ item.name }}</p>
                                             <p class="text-sm text-gray-600">
                                                 Available: {{ getAvailableQuantity(item.itemID) }} / {{ item.quantity }}
                                             </p>
                                         </div>
+                                        
+                                        <!-- Add Button -->
                                         <button
                                             @click="addItemToBag(item)"
                                             :disabled="getAvailableQuantity(item.itemID) <= 0"
-                                            class="bg-final-utd-green text-white px-3 py-1 rounded hover:opacity-80 transition text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                            class="bg-final-utd-green text-white px-3 py-1 rounded hover:opacity-80 transition text-sm disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                                         >
                                             + Add
                                         </button>
@@ -63,13 +77,13 @@
 							</div>
 
 							<!-- RIGHT SIDE: Bag editor -->
-							<div class="grid grid-rows-2 space-y-4">
+							<div class="grid grid-rows-2 gap-4 auto-rows-max">
 								<!-- BUBBLE 1: Current Bag Items -->
 								<div class="bg-white rounded-lg flex-1 shadow-lg overflow-hidden">
 									<div class="bg-final-utd-green text-white px-6 py-3 font-semibold">
 										Current Bag
 									</div>
-									<div class="overflow-y-auto h-40 p-6 space-y-3">
+									<div class="overflow-y-auto h-40 p-3 sm:p-4 md:p-6 space-y-3">
                                         <div v-if="bagItems.length === 0" class="text-center text-gray-500">
                                             No items in bag yet
                                         </div>
@@ -102,7 +116,7 @@
                                     </div>
 								</div>
 
-                                <div class="grid grid-cols-2 gap-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <!-- BUBBLE 2: Category Selection -->
 									<div class="bg-white rounded-lg shadow-lg p-6">
 										<div class="text-lg font-semibold text-gray-700 mb-3">Category</div>
