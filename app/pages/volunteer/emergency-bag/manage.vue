@@ -179,6 +179,20 @@
                                         {{ row.original.locationName || 'N/A' }}
                                         </p>
                                     </div>
+                                    
+                                    <div>
+                                        <p>Items:</p>
+                                        <div class="flex gap-2 flex-wrap">
+                                            <div v-for="item in row.original.EmergencyBagItems" :key="item.itemID">
+                                                <EmergencyBagItemCard
+                                                    :name="item.Item.name"
+                                                    :imgName="item.Item.imgName"
+                                                    :qty="item.count"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
 
                                     <div class="flex gap-2 items-center">
                                         <UInputMenu v-model="row.original._moveLocation" :items="moveLocations" class="w-48"/>
