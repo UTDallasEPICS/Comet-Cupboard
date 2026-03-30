@@ -117,41 +117,11 @@
 								</div>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                <!-- BUBBLE 2: Category Selection -->
+                                    <!-- BUBBLE 2: Category Selection -->
 									<div class="bg-white rounded-lg shadow-lg p-6">
 										<div class="text-lg font-semibold text-gray-700 mb-3">Category</div>
-										<div class="space-y-2">
-											<button 
-												@click="selectedCategory = 'VEGETARIAN_AND_NON_PEANUT_BUTTER'"
-												:class="selectedCategory === 'VEGETARIAN_AND_NON_PEANUT_BUTTER' ? 'bg-orange-600 text-white font-semibold' : 'bg-gray-300 text-gray-700'"
-												class="w-full py-2 rounded hover:opacity-80 transition text-sm"
-											>
-												Vegetarian + Nut-Free*
-											</button>
-											<button 
-												@click="selectedCategory = 'NONVEGETARIAN_AND_NON_PEANUT_BUTTER'"
-												:class="selectedCategory === 'NONVEGETARIAN_AND_NON_PEANUT_BUTTER' ? 'bg-orange-600 text-white font-semibold' : 'bg-gray-300 text-gray-700'"
-												class="w-full py-2 rounded hover:opacity-80 transition text-sm"
-											>
-												Non-Vegetarian + Nut-Free*
-											</button>
-											<button 
-												@click="selectedCategory = 'VEGETARIAN_AND_PEANUT_BUTTER'"
-												:class="selectedCategory === 'VEGETARIAN_AND_PEANUT_BUTTER' ? 'bg-orange-600 text-white font-semibold' : 'bg-gray-300 text-gray-700'"
-												class="w-full py-2 rounded hover:opacity-80 transition text-sm"
-											>
-												Vegetarian + Not Nut-Free*
-											</button>
-											<button 
-												@click="selectedCategory = 'NONVEGETARIAN_AND_PEANUT_BUTTER'"
-												:class="selectedCategory === 'NONVEGETARIAN_AND_PEANUT_BUTTER' ? 'bg-orange-600 text-white font-semibold' : 'bg-gray-300 text-gray-700'"
-												class="w-full py-2 rounded hover:opacity-80 transition text-sm"
-											>
-												Non-Vegetarian + Not Nut-Free*
-											</button>
-										</div>
+										<URadioGroup v-model="value" :items="categories" />
 									</div>
-
                                     <div class="grid grid-rows-2 gap-4">
 									<!-- BUBBLE 3: Expiry Date -->
 									<div class="bg-white rounded-lg shadow-lg p-6">
@@ -241,8 +211,8 @@ const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch('/
 //===== ADD TAB =====
 
 // Category Selection
-const selectedCategory = ref<string | null>(null)
-const selectedExpiryDate = ref('')
+const categories = ref(['System', 'Light', 'Dark'])
+const value = ref(['System'])
 
 // Search functionality
 const searchQuery = ref('')
