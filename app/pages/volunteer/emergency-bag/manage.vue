@@ -22,17 +22,17 @@
 								</div>
 
 								<!-- Search Bar -->
-								<div class="p-3 sm:p-4 md:p-6">
 									<div class="flex items-center bg-gray-100 rounded-lg px-4 py-3">
-										<UIcon name="i-lucide-search" class="w-5 h-5 text-gray-400" />
-										<input
+										<UInput
                                             v-model="searchQuery"
+                                            icon="i-lucide-search"
                                             type="text"
                                             placeholder="Search items"
-                                            class="bg-gray-100 ml-3 flex-1 outline-none text-gray-700"
+                                            color="bg-gray-100"
+                                            variant="outline"
+                                            class="w-full"
                                         />
 									</div>
-								</div>
 
 								<!-- Product Table Header -->
 								<div class="grid grid-cols-2 bg-final-page-bg text-white px-6 py-2">
