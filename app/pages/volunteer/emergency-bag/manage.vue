@@ -156,14 +156,7 @@
 									<!-- BUBBLE 3: Expiry Date -->
 									<div class="bg-white rounded-lg shadow-lg p-6">
                                             <div class="text-lg font-semibold text-gray-700 mb-3">Expiry Date</div>
-                                            <input
-                                                v-model="selectedExpiryDate"
-                                                type="text"
-                                                placeholder="MM/DD/YY"
-                                                maxlength="8"
-                                                @input="formatExpiryDate"
-                                                class="w-full border-b-2 border-gray-400 px-3 py-2 text-center text-gray-700 outline-none focus:border-orange-600"
-                                            />
+                                                <UInputDate v-model="modelValue" :min-value="minDate" :max-value="maxDate" />
                                         </div>
                                     
                                         <!-- BUBBLE 4: Confirm Button -->
@@ -222,6 +215,7 @@
 
 <script lang="ts" setup>
 import {resolveComponent } from 'vue'
+import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date'
 
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
@@ -316,28 +310,10 @@ const increaseItemCount = (itemID: string) => {
 	}
 }
 
-// Format expiry date input to MM/DD/YY
-const formatExpiryDate = () => {
-	let value = selectedExpiryDate.value.replace(/\D/g, '') // Remove non-digits
-	
-	if (value.length >= 2) {
-		value = value.slice(0, 2) + '/' + value.slice(2)
-	}
-	if (value.length >= 5) {
-		value = value.slice(0, 5) + '/' + value.slice(5, 7)
-	}
-	
-	selectedExpiryDate.value = value
-}
+// Expiry Date - Minimum 1 week after current date
+const modelValue = shallowRef(new CalendarDate(2023, 9, 10))
+const minDate = today(getLocalTimeZone()).add({ days: 7 })
 
-// Validate expiry date format
-const isValidExpiryDate = (date: string): boolean => {
-	const regex = /^(0[1-9]|1[0-2])\/([0-2][0-9]|3[0-1])\/\d{2}$/
-	if (!regex.test(date)) return false
-	
-	const [month, day] = date.split('/')
-	return parseInt(month) >= 1 && parseInt(month) <= 12 && parseInt(day) >= 1 && parseInt(day) <= 31
-}
 
 // Submit bag to API
 const submitBag = async () => {
