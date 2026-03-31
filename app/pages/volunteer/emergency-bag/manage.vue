@@ -105,13 +105,13 @@
                                     <!-- BUBBLE 2: Category Selection -->
 									<div class="bg-white rounded-lg shadow-lg p-6">
 										<div class="text-lg font-semibold text-gray-700 mb-3">Category</div>
-										<URadioGroup v-model="value" :items="categories" />
+										<URadioGroup v-model="selectedCategory" :items="categories" />
 									</div>
                                     <div class="grid grid-rows-2 gap-4">
 									<!-- BUBBLE 3: Expiry Date -->
 									<div class="bg-white rounded-lg shadow-lg p-6">
                                             <div class="text-lg font-semibold text-gray-700 mb-3">Expiry Date</div>
-                                                <UInputDate v-model="modelValue" :min-value="minDate"/>
+                                                <UInputDate v-model="expiryDate" :min-value="minDate"/>
                                         </div>
                                     
                                         <!-- BUBBLE 4: Confirm Button -->
@@ -193,8 +193,13 @@ const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch('/
 //===== ADD TAB =====
 
 // Category Selection
-const categories = ref(['System', 'Light', 'Dark'])
-const value = ref(['System'])
+const categories = [
+    {label:"Vegetarian + Peanut Butter", value: "VEGETARIAN_AND_PEANUT_BUTTER"},
+    {label:"Vegetarian + Non-Peanut Butter" , value: "VEGETARIAN_AND_NON_PEANUT_BUTTER"},
+    {label:"Non-Vegetarian + Peanut Butter" , value: "NONVEGETARIAN_AND_PEANUT_BUTTER"},
+    {label:"Non-Vegetarian + Non-Peanut Butter", value: "NONVEGETARIAN_AND_NON_PEANUT_BUTTER"}
+]
+const selectedCategory = ref<string | null>(null)
 
 // Search functionality
 const searchQuery = ref('')
@@ -263,34 +268,35 @@ const increaseItemCount = (itemID: string) => {
 }
 
 // Expiry Date - Minimum 1 week after current date
-const modelValue = shallowRef(new CalendarDate(2023, 9, 10))
 const minDate = today(getLocalTimeZone()).add({ days: 7 })
+const expiryDate = shallowRef(minDate)
+
 
 
 // Submit bag to API
 const submitBag = async () => {
-	if (!selectedCategory.value) {
-		alert('Please select a category')
-		return
-	}
-	if (!selectedExpiryDate.value) {
-		alert('Please enter an expiry date (MM/DD/YY)')
-		return
-	}
-	if (!isValidExpiryDate(selectedExpiryDate.value)) {
-		alert('Invalid date format. Use MM/DD/YY')
-		return
-	}
-	if (bagItems.value.length === 0) {
-		alert('Please add items to the bag')
-		return
-	}
+    if (!selectedCategory.value) {
+        alert('Please select a category')
+        return
+    }
+
+    if (!expiryDate.value) {
+        alert('Please select an expiry date')
+        return
+    }
+
+    if (bagItems.value.length === 0) {
+        alert('Please add items to the bag')
+        return
+    }
+
+  // Convert CalendarDate -> ISO string (midnight UTC)
+  const y = expiryDate.value.year
+  const m = String(expiryDate.value.month).padStart(2, '0')
+  const d = String(expiryDate.value.day).padStart(2, '0')
+  const isoDate = new Date(`${y}-${m}-${d}T00:00:00Z`).toISOString()
 
 	try {
-		// Convert MM/DD/YY to ISO 8601 datetime
-		const [month, day, year] = selectedExpiryDate.value.split('/')
-		const fullYear = `20${year}`
-		const isoDate = new Date(`${fullYear}-${month}-${day}T00:00:00Z`).toISOString()
 
 		const response = await $fetch('/api/volunteer/emergency-bag/emergencyBags', {
 			method: 'POST',
@@ -308,18 +314,13 @@ const submitBag = async () => {
 		
 		// Reset form
 		selectedCategory.value = null
-		selectedExpiryDate.value = ''
 		bagItems.value = []
+        expiryDate.value = minDate
 		searchQuery.value = ''
 		
 		// Refresh bags list
         await refreshEmergencyBags()
 
-        // Force refresh items by using $fetch instead of useFetch
-        const updatedItems = await $fetch("/api/student/inventory/items")
-        volunteerItems.value = updatedItems
-
-        // Refetch items to get updated inventory
         volunteerItems.value = await $fetch("/api/student/inventory/items")
 
         alert('Bag created successfully!')
