@@ -2,8 +2,6 @@ import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
 import { StatusCodes } from "http-status-codes"
-import { BagCategory } from "~~/prisma/generated/prisma/enums"  
-import { IssuedEmergencyBagItemScalarFieldEnum } from "~~/prisma/generated/prisma/internal/prismaNamespace"
 
 const schema = z
     .object({
@@ -15,7 +13,7 @@ const schema = z
 export default defineSafeHandler(async (event) => {
     const { label } = await validateBody(event, schema)
 
-    return await prisma.$transaction(async (tx) => {
+    const transactionResult = await prisma.$transaction(async (tx) => {
         const bag = await tx.emergencyBag.findUnique({
             where: { label: label },
             include: { EmergencyBagItems: true }
@@ -27,13 +25,20 @@ export default defineSafeHandler(async (event) => {
                 statusMessage: `This bag with ${label} does not exist.`
             })
         }
-        const issudedBag = await tx.issuedEmergencyBag.create({
+        if (!bag.locationName) {
+            throw createError({
+                statusCode: StatusCodes.BAD_REQUEST,
+                statusMessage: "Bag does not have a location assigned yet."
+            })
+        }
+
+        await tx.issuedEmergencyBag.create({
             data: {
                 label: bag.label,
                 bagCategory: bag.bagCategory,
-               location: bag.locationName || "Police Station",
+                location: bag.locationName!,
                 bagDescription: bag.bagDescription || "",
-                expiryDate: new Date(Number(bag.expiryDate) * 1000),
+                expiryDate: bag.expiryDate,
 
                 EmergencyBagItems: {
                     create: bag.EmergencyBagItems.map((item) => ({
@@ -52,5 +57,7 @@ export default defineSafeHandler(async (event) => {
             success: true,
             message: `Bag with label ${label} has been taken successfully.`,
         }
-    })          
+    }) 
+    
+    return transactionResult         
 })
