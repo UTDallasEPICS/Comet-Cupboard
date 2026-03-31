@@ -139,7 +139,7 @@ const items = ref<NavigationMenuItem[]>(
 			label: "Student",
 			icon: icons["student"],
 			open: true,
-			children: [...roleLinks["student"]],
+			children: roleLinks["student"],
 		},
 
 		// Volunteer Group
@@ -147,7 +147,7 @@ const items = ref<NavigationMenuItem[]>(
 			label: "Volunteer",
 			icon: icons["volunteer"],
 			open: true,
-			children: [...roleLinks["volunteer"]],
+			children: roleLinks["volunteer"],
 		},
 
 		// Admin Group
