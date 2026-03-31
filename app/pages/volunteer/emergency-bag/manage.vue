@@ -22,17 +22,15 @@
 								</div>
 
 								<!-- Search Bar -->
-									<div class="flex items-center bg-gray-100 rounded-lg px-4 py-3">
-										<UInput
-                                            v-model="searchQuery"
-                                            icon="i-lucide-search"
-                                            type="text"
-                                            placeholder="Search items"
-                                            color="bg-gray-100"
-                                            variant="outline"
-                                            class="w-full"
-                                        />
-									</div>
+									<div class="bg-gray-100 rounded-lg px-4 py-3">
+                                    <UInput
+                                        v-model="searchQuery"
+                                        icon="i-lucide-search"
+                                        placeholder="Search items"
+                                        variant="outline"
+                                        class="w-full"
+                                    />
+                                    </div>
 
 								<!-- Product Table Header -->
 								<div class="grid grid-cols-2 bg-final-page-bg text-white px-6 py-2">
@@ -65,13 +63,15 @@
                                         </div>
                                         
                                         <!-- Add Button -->
-                                        <button
-                                            @click="addItemToBag(item)"
-                                            :disabled="getAvailableQuantity(item.itemID) <= 0"
-                                            class="bg-final-utd-green text-white px-3 py-1 rounded hover:opacity-80 transition text-sm disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                                        <UButton
+                                        size="sm"
+                                        :disabled="getAvailableQuantity(item.itemID) <= 0"
+                                        class="bg-final-utd-green text-white px-3 py-1 text-sm"
+                                        @click="addItemToBag(item)"
                                         >
-                                            + Add
-                                        </button>
+                                        + Add
+                                        </UButton>
+
                                     </div>
                                 </div>
 							</div>
@@ -92,25 +92,10 @@
                                                 <p class="font-semibold text-sm">{{ item.name }}</p>
                                             </div>
                                             <div class="flex items-center gap-2">
-                                                <button
-                                                    @click="decreaseItemCount(item.itemID)"
-                                                    class="bg-gray-400 text-white px-2 py-1 rounded hover:bg-gray-500 transition"
-                                                >
-                                                    −
-                                                </button>
+                                                <UButton class="bg-gray-400 px-2 py-1 rounded hover:bg-gray-500" @click="decreaseItemCount(item.itemID)">−</UButton>
                                                 <span class="w-6 text-center font-semibold">{{ item.count }}</span>
-                                                <button
-                                                    @click="increaseItemCount(item.itemID)"
-                                                    class="bg-gray-400 text-white px-2 py-1 rounded hover:bg-gray-500 transition"
-                                                >
-                                                    +
-                                                </button>
-                                                <button
-                                                    @click="removeItemFromBag(item.itemID)"
-                                                    class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition"
-                                                >
-                                                    ✕
-                                                </button>
+                                                <UButton class="bg-gray-400 px-2 py-1 rounded hover:bg-gray-500" @click="increaseItemCount(item.itemID)">+</UButton>
+                                                <UButton class="bg-orange-600 px-2 py-1 rounded hover:bg-gray-500" @click="removeItemFromBag(item.itemID)">✕</UButton>
                                             </div>
                                         </div>
                                     </div>
@@ -126,17 +111,17 @@
 									<!-- BUBBLE 3: Expiry Date -->
 									<div class="bg-white rounded-lg shadow-lg p-6">
                                             <div class="text-lg font-semibold text-gray-700 mb-3">Expiry Date</div>
-                                                <UInputDate v-model="modelValue" :min-value="minDate" :max-value="maxDate" />
+                                                <UInputDate v-model="modelValue" :min-value="minDate"/>
                                         </div>
                                     
                                         <!-- BUBBLE 4: Confirm Button -->
                                         <div class="bg-white rounded-lg shadow-lg p-2 h-17 items-center justify-center">
-                                            <button 
-                                                @click="submitBag"
-                                                class="w-full bg-orange-600 text-white text-xl font-bold py-3 rounded hover:bg-orange-700 transition"
-                                            >
-                                                Confirm Bag
-                                            </button>
+                                            <UButton
+                                            label="Confirm Bag"
+                                            block
+                                            class="bg-orange-600 text-xl font-bold py-3 rounded hover:bg-orange-700 transition"
+                                            @click="submitBag"
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -186,9 +171,6 @@
 <script lang="ts" setup>
 import {resolveComponent } from 'vue'
 import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date'
-
-const UButton = resolveComponent('UButton')
-const UCheckbox = resolveComponent('UCheckbox')
 
 const resolvedComponents = {
   UButton: resolveComponent('UButton'),
