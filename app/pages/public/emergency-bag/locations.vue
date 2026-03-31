@@ -7,7 +7,7 @@
 
     <section class="mt-4">
       <div class="space-y-12">
-        <section v-for="location in locations" :key="location.name" class="space-y-4">
+        <section v-for="location in activeLocations" :key="location.name" class="space-y-4">
           <div class="flex justify-between items-end px-1">
             <div>
               <SharedTextCardTitle>{{ location.name }}</SharedTextCardTitle>
@@ -47,6 +47,7 @@
 interface LocationData {
   name: string
   address: string
+  archived: boolean
   emergencyBags: number
   categoryCounts: Record<string, number>
 }
@@ -71,6 +72,10 @@ const columnsDef = [
 	{ header: "Bag Category", accessorKey: "category", type: "text"},
 	{ header: "Quantity Available", accessorKey: "count", type: "text"},
 ]
+
+const activeLocations = computed(() => {
+  return locations.value?.filter(loc => !loc.archived) ?? []
+})
 
 const tableColumns = buildNuxtUITable(columnsDef, {})
 

@@ -26,70 +26,65 @@ const schema = z
 export default defineSafeHandler(async (event) => {
 	const { originalName, name, address, archived } = await validateBody(event, schema)
 
-	await prisma.$transaction(async (tx) => {
-		const existingLocation = await tx.location.findUnique({
-			where: { name: originalName },
-		})
+	const existingLocation = await prisma.location.findUnique({
+		where: { name: originalName },
+	})
 
-		if (!existingLocation) {
-			throw createError({
-				statusCode: StatusCodes.NOT_FOUND,
-				statusMessage: "Location does not exist",
+	if (!existingLocation) {
+		throw createError({
+			statusCode: StatusCodes.NOT_FOUND,
+			statusMessage: "Location does not exist",
+		})
+	}
+	try {
+		let location
+			//Handle primary key change
+		if (name && name !== originalName) {
+			await prisma.location.delete({
+				where: { name: originalName },
+			})
+
+			location = await prisma.location.create({
+				data: {
+					name,
+					address: address ?? existingLocation.address,
+					archived: archived ?? existingLocation.archived,
+				},
+			})
+		} else {
+			location = await prisma.location.update({
+				where: { name: originalName },
+				data: {
+					...(name !== undefined && { name }),
+					...(address !== undefined && { address }),
+					...(archived !== undefined && { archived }),
+				},
 			})
 		}
 
-		try {
-			let location
+		return location
+	} catch (error: unknown) {
+		if (
+			error instanceof Prisma.PrismaClientKnownRequestError &&
+			error.code === "P2025"
+		) {
+			throw createError({
+			statusCode: StatusCodes.NOT_FOUND,
+				statusMessage: "Location not found",
+			})
+		}
 
-			//Handle primary key change
-			if (name && name !== originalName) {
-				await tx.location.delete({
-					where: { name: originalName },
-				})
-
-				location = await tx.location.create({
-					data: {
-						name,
-						address: address ?? existingLocation.address,
-						archived: archived ?? existingLocation.archived,
-					},
-				})
-			} else {
-				location = await tx.location.update({
-					where: { name: originalName },
-					data: {
-						...(name !== undefined && { name }),
-						...(address !== undefined && { address }),
-						...(archived !== undefined && { archived }),
-					},
-				})
-			}
-
-			return location
-		} catch (error: unknown) {
-			if (
-				error instanceof Prisma.PrismaClientKnownRequestError &&
-				error.code === "P2025"
-			) {
-				throw createError({
-					statusCode: StatusCodes.NOT_FOUND,
-					statusMessage: "Location not found",
-				})
-			}
-
-			if (
-				error instanceof Prisma.PrismaClientKnownRequestError &&
-				error.code === "P2002"
-			) {
-				throw createError({
-					statusCode: StatusCodes.CONFLICT,
-					statusMessage: "Location with this name already exists",
-				})
-			}
+		if (
+			error instanceof Prisma.PrismaClientKnownRequestError &&
+			error.code === "P2002"
+		) {
+			throw createError({
+				statusCode: StatusCodes.CONFLICT,
+				statusMessage: "Location with this name already exists",
+			})
+		}
 
 			throw error
-		}
-	})
+		}	
 
-	return "Successfully updated location"
 })

@@ -3,9 +3,9 @@ import { defineSafeHandler } from "#server/utils/handler"
 
 export default defineSafeHandler(async () => {
   try {
-    //Get all locations first
+
+    //Apply conditional filtering
     const locations = await prisma.location.findMany({
-      where: { archived: false },
       orderBy: { name: "asc" },
     })
 
@@ -32,6 +32,7 @@ export default defineSafeHandler(async () => {
         name: loc.name,
         address: loc.address,
         emergencyBags: totalBags,
+        archived: loc.archived, 
         categoryCounts,
       }
     })
