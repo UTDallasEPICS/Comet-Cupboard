@@ -93,6 +93,12 @@ export const roleLinks: Record<Role, AppLink[]> = {
 					icon: icons["sources"],
 					to: "/admin/manage/sources",
 				},
+				{
+					label: "Manage Locations",
+					description: "Add or edit locations",
+					icon: icons["locations"],
+					to: "/admin/manage/locations",
+				}
 			],
 		},
 	],

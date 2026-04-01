@@ -48,14 +48,14 @@ const validUsers = [
 ]
 
 const locations = [
-	{ name: "Police Station", address: "100 N Floyd Road" },
-	{ name: "Activity Center", address: "800 Campbell Rd" },
+	{ name: "Police Station", address: "100 N Floyd Road", archived: false },
+	{ name: "Activity Center", address: "800 Campbell Rd", archived: false },
 ]
 
 const emergencyBags = [
 	{ bagCategory: BagCategory.NONVEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2026-07-28"), label: "12345", locationName: "Police Station" },
 	{ bagCategory: BagCategory.VEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2027-01-01"), label: "15453" },
-	{ bagCategory: BagCategory.NONVEGETARIAN_AND_PEANUT_BUTTER, expiryDate: new Date("2026-09-31"), label: "54321" },
+	{ bagCategory: BagCategory.NONVEGETARIAN_AND_PEANUT_BUTTER, expiryDate: new Date("2026-09-30"), label: "54321" },
 ]
 
 const createUsers = async () => {
