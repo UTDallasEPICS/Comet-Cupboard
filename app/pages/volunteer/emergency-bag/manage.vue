@@ -13,108 +13,125 @@
                 <!--START OF ADD BAG STUFF-->
                 <template #add>
                     <section>
-						<div class="grid grid-cols-2 gap-6">
-							<!-- LEFT SIDE: Search -->
-							<div class="bg-white rounded-lg shadow-lg overflow-hidden">
+						<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+							
+                            <!-- LEFT SIDE: Search -->
+							<UCard>
 								<!-- Header -->
-								<div class="bg-final-utd-green text-white text-center py-3">
-									<h2 class="text-2xl font-bold">Search Product</h2>
-								</div>
-
+								<template #header>
+                                    <div class="bg-final-utd-green text-white text-center px-6 py-3 rounded">
+                                        <h2 class="text-xl font-bold">Search Product</h2>
+                                    </div>
+                                </template>
 								<!-- Search Bar -->
-								<div class="p-6">
-									<div class="flex items-center bg-gray-100 rounded-lg px-4 py-3">
-										<UIcon name="i-lucide-search" class="w-5 h-5 text-gray-400" />
-										<input
-											type="text"
-											placeholder="Search items"
-											class="bg-gray-100 ml-3 flex-1 outline-none text-gray-700"
-										/>
-									</div>
-								</div>
-
-								<!-- Product Table Header -->
-								<div class="grid grid-cols-2 bg-final-page-bg text-white px-6 py-2">
-									<div class="font-semibold text-gray-700">Product</div>
-									<div class="font-semibold  text-gray-700 text-right  ">Inventory</div>
-								</div>
+									<div class="bg-gray-100 rounded-lg px-4 py-3">
+                                    <UInput
+                                        v-model="searchQuery"
+                                        icon="i-lucide-search"
+                                        placeholder="Search items"
+                                        variant="outline"
+                                        class="w-full"
+                                    />
+                                    </div>
 
 								<!-- Product List -->
-								<div class="overflow-y-auto max-h-96 px-6 py-4 space-y-3">
-									<div class="text-center text-gray-500 py-8">
-										Search results will appear here
-									</div>
-								</div>
-							</div>
+								<div class="overflow-y-auto h-fit max-h-124 px-3 py-3 space-y-3">
+                                    <div v-if="!filteredItems?.length" class="text-center text-gray-500 py-8">
+                                        Search results will appear here
+                                    </div>
+                                    <div v-for="item in filteredItems || []" :key="item.itemID" class="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gray-100 p-3 rounded gap-3">
+                                        <!-- Image -->
+                                            <img  
+                                                v-if="item.imgName && item.categoryName"
+                                                :src="`/test-images/${encodeURIComponent(item.categoryName)}/${item.imgName}`"
+                                                :alt="item.name"
+                                                class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded"
+                                            />
+                                            <div v-else class="w-12 h-12 bg-gray-300 rounded flex items-center justify-center">
+                                                <span class="text-gray-500 text-xs">No Img</span>
+                                            </div>
+                                        
+                                        <!-- Item Info -->
+                                        <div class="flex-1">
+                                            <p class="font-semibold">{{ item.name }}</p>
+                                            <p class="text-sm text-gray-600">
+                                                Available: {{ getAvailableQuantity(item.itemID) }} / {{ item.quantity }}
+                                            </p>
+                                        </div>
+                                        
+                                        <!-- Add Button -->
+                                        <UButton
+                                        size="sm"
+                                        :disabled="getAvailableQuantity(item.itemID) <= 0"
+                                        class="bg-final-utd-green text-white px-3 py-1 text-sm"
+                                        @click="addItemToBag(item)"
+                                        >
+                                        + Add
+                                        </UButton>
+
+                                    </div>
+                                </div>
+							</UCard>
 
 							<!-- RIGHT SIDE: Bag editor -->
-							<div class="grid grid-rows-2 space-y-4">
-								<!-- BUBBLE 1: Current Bag Items -->
-								<div class="bg-white rounded-lg flex-1 shadow-lg overflow-hidden">
-									<div class="bg-final-utd-green text-white px-6 py-3 font-semibold">
-										Current Bag
-									</div>
-									<div class="overflow-y-auto h-40 p-6 space-y-3">
-										<div class="text-center text-gray-500">
-											No items in bag yet
-										</div>
-									</div>
-								</div>
-
-                                <div class="grid grid-cols-2 gap-4">
-                                <!-- BUBBLE 2: Category Selection -->
-									<div class="bg-white rounded-lg shadow-lg p-6">
-										<div class="text-lg font-semibold text-gray-700 mb-3">Category</div>
-										<div class="space-y-2">
-											<button 
-												@click="selectedCategory = 'VEGETARIAN_AND_NON_PEANUT_BUTTER'"
-												:class="selectedCategory === 'VEGETARIAN_AND_NON_PEANUT_BUTTER' ? 'bg-orange-600 text-white font-semibold' : 'bg-gray-300 text-gray-700'"
-												class="w-full py-2 rounded hover:opacity-80 transition text-sm"
-											>
-												Vegetarian + Nut-Free*
-											</button>
-											<button 
-												@click="selectedCategory = 'NONVEGETARIAN_AND_NON_PEANUT_BUTTER'"
-												:class="selectedCategory === 'NONVEGETARIAN_AND_NON_PEANUT_BUTTER' ? 'bg-orange-600 text-white font-semibold' : 'bg-gray-300 text-gray-700'"
-												class="w-full py-2 rounded hover:opacity-80 transition text-sm"
-											>
-												Non-Vegetarian + Nut-Free*
-											</button>
-											<button 
-												@click="selectedCategory = 'VEGETARIAN_AND_PEANUT_BUTTER'"
-												:class="selectedCategory === 'VEGETARIAN_AND_PEANUT_BUTTER' ? 'bg-orange-600 text-white font-semibold' : 'bg-gray-300 text-gray-700'"
-												class="w-full py-2 rounded hover:opacity-80 transition text-sm"
-											>
-												Vegetarian + Not Nut-Free*
-											</button>
-											<button 
-												@click="selectedCategory = 'NONVEGETARIAN_AND_PEANUT_BUTTER'"
-												:class="selectedCategory === 'NONVEGETARIAN_AND_PEANUT_BUTTER' ? 'bg-orange-600 text-white font-semibold' : 'bg-gray-300 text-gray-700'"
-												class="w-full py-2 rounded hover:opacity-80 transition text-sm"
-											>
-												Non-Vegetarian + Not Nut-Free*
-											</button>
-										</div>
-									</div>
-
-                                    <div class="grid grid-rows-2 gap-4">
-									<!-- BUBBLE 3: Expiry Date -->
-									<div class="bg-white rounded-lg shadow-lg p-6">
-                                            <div class="text-lg font-semibold text-gray-700 mb-3">Expiry Date</div>
-                                            <input
-                                                v-model="selectedExpiryDate"
-                                                type="text"
-                                                placeholder="MM    /    DD    /    YY"
-                                                class="w-full border-b-2 border-gray-400 px-3 py-2 text-center text-gray-700 outline-none focus:border-orange-600"
-                                            />
+							<div class="flex flex-col gap-4">
+								
+                                <!-- Current Bag Items -->
+								<UCard class="flex-1 min-h-0">
+									<template #header>
+                                        <div class="bg-final-utd-green flex-1 text-white text-center px-6 py-3 rounded">
+										    <h2 class="text-xl font-bold">Current Bag</h2>
                                         </div>
+									</template>
+                                    <div class="overflow-y-auto h-54 space-y-3">
+                                        <div v-if="bagItems.length === 0" class="text-center text-gray-500">
+                                            No items in bag yet
+                                        </div>
+                                        <div v-for="item in bagItems" :key="item.itemID" class="flex items-center justify-between bg-gray-100 p-3 rounded">
+                                            <div>
+                                                <p class="font-semibold text-sm">{{ item.name }}</p>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <UButton class="bg-gray-400 px-2 py-1 rounded hover:bg-gray-500" @click="decreaseItemCount(item.itemID)">−</UButton>
+                                                <span class="w-6 text-center font-semibold">{{ item.count }}</span>
+                                                <UButton class="bg-gray-400 px-2 py-1 rounded hover:bg-gray-500" @click="increaseItemCount(item.itemID)">+</UButton>
+                                                <UButton class="bg-orange-600 px-2 py-1 rounded hover:bg-gray-500" @click="removeItemFromBag(item.itemID)">✕</UButton>
+                                            </div>
+                                        </div>
+                                    </div>
+								</UCard>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                     
-                                        <!-- BUBBLE 4: Confirm Button -->
-                                        <div class="bg-white rounded-lg shadow-lg p-2 h-17 items-center justify-center">
-                                            <button class="w-full bg-orange-600 text-white text-xl font-bold py-3 rounded hover:bg-orange-700 transition">
-                                            Confirm Bag
-                                        </button>
-                                        </div>
+                                    <!--Category Selection -->
+									<UCard>
+										<template #header>
+                                            <div class="text-xl font-bold text-center text-gray-700">Category</div>
+                                        </template>
+										<URadioGroup v-model="selectedCategory" size="md" variant="card" :items="categories" />
+                                    </UCard>
+                                    
+                                    <div class="flex flex-col gap-4 h-full">
+                                       
+                                        <!--Expiry Date -->
+                                        <UCard class="h-50 flex-1">
+                                            <template #header>
+                                                <div class="text-xl font-bold text-center flex-1 text-gray-700">Expiry Date</div>
+                                            </template>
+                                            <div class="flex h-full items-center justify-center">
+                                                <UInputDate v-model="expiryDate" size="xl" icon="i-lucide-calendar" :min-value="minDate"/>
+                                            </div>
+                                        </UCard>
+                                        
+                                            <!--Confirm Button -->
+                                            <UCard class="flex-none">
+                                                <UButton
+                                                label="Confirm Bag"
+                                                block
+                                                class="bg-orange-600 text-xl font-bold py-3 rounded hover:bg-orange-700 transition"
+                                                @click="submitBag"
+                                                />
+                                            </UCard>
                                     </div>
                                 </div>
                             </div>
@@ -133,10 +150,9 @@
                                 placeholder="Search items"
                                 class="w-full md:w-72"
                             />
-                            <div class="flex justify-between">
-                                <UInputMenu :disabled="selectedBagIDs.length === 0" v-model="moveLocation" :items="moveLocations" />
-                                <UButton :disabled="selectedBagIDs.length === 0" 
-                                :icon="icons['move']" size="xs" variant="solid"
+                            <div v-if="selectedBagIDs.length > 0" class="flex justify-between">
+                                <UInputMenu v-model="moveLocation" :items="moveLocations" />
+                                <UButton  :icon="icons['move']" size="xs" variant="solid"
                                 @click="moveBags"
                                 >
                                     Move
@@ -171,6 +187,19 @@
                                         <p class="">
                                         {{ row.original.expiryDate || 'N/A' }}
                                         </p>
+                                    </div>
+                                    
+                                    <div>
+                                        <p>Items:</p>
+                                        <div class="flex gap-2 flex-wrap">
+                                            <div v-for="item in row.original.EmergencyBagItems" :key="item.itemID">
+                                                <EmergencyBagItemCard
+                                                    :name="item.Item.name"
+                                                    :imgName="item.Item.imgName"
+                                                    :qty="item.count"
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div>
@@ -231,6 +260,7 @@
 
 <script lang="ts" setup>
 import {resolveComponent } from 'vue'
+import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date'
 
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
@@ -251,9 +281,141 @@ const items = [
 const manage_searchQuery = ref('')
 
 //Add Tab
-// Category Selection
+const categories = [
+    {label:"Veg + PB", value: "VEGETARIAN_AND_PEANUT_BUTTER"},
+    {label:"Veg + Non-PB" , value: "VEGETARIAN_AND_NON_PEANUT_BUTTER"},
+    {label:"Non-Veg + PB" , value: "NONVEGETARIAN_AND_PEANUT_BUTTER"},
+    {label:"Non-Veg + Non-PB", value: "NONVEGETARIAN_AND_NON_PEANUT_BUTTER"}
+]
 const selectedCategory = ref<string | null>(null)
-const selectedExpiryDate = ref('')
+
+//Search
+const searchQuery = ref('')
+const { data: volunteerItems } = await useFetch("/api/student/inventory/items")
+
+const filteredItems = computed(() => {
+	if (!volunteerItems.value) return []
+	if (!searchQuery.value) return volunteerItems.value
+	
+	const query = searchQuery.value.toLowerCase()
+	return volunteerItems.value.filter(item => 
+		item.name.toLowerCase().startsWith(query)
+	)
+})
+
+// Get available count for an item in inventory
+const getAvailableQuantity = (itemID: string): number => {
+	const item = volunteerItems.value?.find(i => i.itemID === itemID)
+	const bagItem = bagItems.value.find(bi => bi.itemID === itemID)
+	
+	if (!item) return 0
+	return item.quantity - (bagItem?.count || 0)
+}
+
+// Current bag items with counts
+const bagItems = ref<Array<{ itemID: string; count: number; name: string }>>([])
+
+// Add item to bag or increase count
+const addItemToBag = (item: any) => {
+	const existingItem = bagItems.value.find(bi => bi.itemID === item.itemID)
+	if (existingItem) {
+		existingItem.count++
+	} else {
+		bagItems.value.push({
+			itemID: item.itemID,
+			count: 1,
+			name: item.name
+		})
+	}
+}
+
+// Remove item from bag
+const removeItemFromBag = (itemID: string) => {
+	bagItems.value = bagItems.value.filter(item => item.itemID !== itemID)
+}
+
+// Decrease count or remove if count reaches 0
+const decreaseItemCount = (itemID: string) => {
+	const item = bagItems.value.find(bi => bi.itemID === itemID)
+	if (item) {
+		if (item.count === 1) {
+			removeItemFromBag(itemID)
+		} else {
+			item.count--
+		}
+	}
+}
+
+//Increase item count
+const increaseItemCount = (itemID: string) => {
+	const item = bagItems.value.find(bi => bi.itemID === itemID)
+	if (item) {
+		item.count++
+	}
+}
+
+// Expiry Date - Minimum 1 week after current date
+const minDate = today(getLocalTimeZone()).add({ days: 7 })
+const expiryDate = shallowRef(minDate)
+
+
+//Submit bag
+const submitBag = async () => {
+    if (!selectedCategory.value) {
+        alert('Please select a category')
+        return
+    }
+
+    if (!expiryDate.value) {
+        alert('Please select an expiry date')
+        return
+    }
+
+    if (bagItems.value.length === 0) {
+        alert('Please add items to the bag')
+        return
+    }
+
+  //Convert CalendarDate -> ISO string (midnight UTC)
+  const y = expiryDate.value.year
+  const m = String(expiryDate.value.month).padStart(2, '0')
+  const d = String(expiryDate.value.day).padStart(2, '0')
+  const isoDate = new Date(`${y}-${m}-${d}T00:00:00Z`).toISOString()
+
+	try {
+
+		const response = await $fetch('/api/volunteer/emergency-bag/emergencyBags', {
+			method: 'POST',
+			body: {
+				bagCategory: selectedCategory.value,
+				expiryDate: isoDate,
+				items: bagItems.value.map(item => ({
+					itemID: item.itemID,
+					count: item.count
+				}))
+			}
+		})
+
+		console.log('Bag created successfully!', response)
+		
+		// Reset form
+		selectedCategory.value = null
+		bagItems.value = []
+        expiryDate.value = minDate
+		searchQuery.value = ''
+		
+		// Refresh bags list
+        await refreshEmergencyBags()
+
+        volunteerItems.value = await $fetch("/api/student/inventory/items")
+
+        alert('Bag created successfully!')
+		
+	} catch (err: any) {
+		console.error('Failed to create bag:', err)
+		alert(`Error: ${err.message || 'Failed to create bag'}`)
+	}
+}
 
 //View Tab
 const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch('/api/volunteer/emergency-bag/emergencyBags');
@@ -323,22 +485,21 @@ const selectedBagIDs = computed(() => {
 })
 
 const moveBags = async() => {
-    for (const bagID of selectedBagIDs.value) {
-        try {
-            await fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
-                method: "PATCH",
-                headers: {
-                "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                bagID,
-                location: moveLocation.value
-                })
-            })
-        } catch (err) {
-        console.error(`Failed for ${bagID}`, err)
+    try {
+        await $fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
+        method: "PATCH",
+        body: {
+            bagIDs: selectedBagIDs.value,
+            location: moveLocation.value
         }
-  }
+        })
+
+        await refreshEmergencyBags()
+        selected.value = {}
+
+    } catch (err) {
+        console.error("Failed to move bags", err)
+    }
 
     await refreshEmergencyBags();
     selected.value = {};
@@ -346,30 +507,25 @@ const moveBags = async() => {
 
 const moveSingleBag = async(bagID, location) => {
     try {
-        await fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
-            method: "PATCH",
-            headers: {
-            "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                bagID,
-                location
-            })
+        await $fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
+        method: "PATCH",
+        body: {
+            bagIDs: [bagID],
+            location
+        }
         })
+
     } catch (err) {
-    console.error(`Failed for ${bagID}`, err)
+        console.error(`Failed for ${bagID}`, err)
     }
     await refreshEmergencyBags();
 }
 
 const deleteBag = async(bagID,close) => {
     try {
-        await fetch('/api/volunteer/emergency-bag/emergencyBags', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ bagID })
+        await $fetch('/api/volunteer/emergency-bag/emergencyBag', {
+            method: 'DELETE',
+            body: { bagID }
         })
 
         await refreshEmergencyBags()
