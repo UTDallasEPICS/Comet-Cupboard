@@ -33,5 +33,5 @@ export const icons = {
 	instagram: "i-lucide-instagram",
 	information: "i-lucide-info",
 	profile: "i-lucide-circle-user",
-	move: "i-heroicons-arrows-right-left"
+	move: "i-lucide-arrow-left-right"
 }
