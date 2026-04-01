@@ -15,12 +15,13 @@
                     <section>
 						<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 							<!-- LEFT SIDE: Search -->
-							<div class="bg-white rounded-lg shadow-lg overflow-hidden">
+							<UCard>
 								<!-- Header -->
-								<div class="bg-final-utd-green text-white text-center py-3">
-									<h2 class="text-2xl font-bold">Search Product</h2>
-								</div>
-
+								<template #header>
+                                    <div class="bg-final-utd-green text-white text-center px-6 py-3 rounded">
+                                        <h2 class="text-xl font-bold">Search Product</h2>
+                                    </div>
+                                </template>
 								<!-- Search Bar -->
 									<div class="bg-gray-100 rounded-lg px-4 py-3">
                                     <UInput
@@ -31,11 +32,6 @@
                                         class="w-full"
                                     />
                                     </div>
-
-								<!-- Product Table Header -->
-								<div class="grid grid-cols-2 bg-final-page-bg text-white px-6 py-2">
-									<div class="font-semibold text-gray-700">Product</div>
-								</div>
 
 								<!-- Product List -->
 								<div class="overflow-y-auto max-h-96 px-6 py-4 space-y-3">
@@ -74,16 +70,18 @@
 
                                     </div>
                                 </div>
-							</div>
+							</UCard>
 
 							<!-- RIGHT SIDE: Bag editor -->
-							<div class="grid grid-rows-2 gap-4 auto-rows-max">
+							<div class="flex flex-col gap-4">
 								<!-- BUBBLE 1: Current Bag Items -->
-								<div class="bg-white rounded-lg flex-1 shadow-lg overflow-hidden">
-									<div class="bg-final-utd-green text-white px-6 py-3 font-semibold">
-										Current Bag
-									</div>
-									<div class="overflow-y-auto h-40 p-3 sm:p-4 md:p-6 space-y-3">
+								<UCard>
+									<template #header>
+                                        <div class="bg-final-utd-green flex-1 text-white text-center px-6 py-3 rounded">
+										    <h2 class="text-xl font-bold">Current Bag</h2>
+                                        </div>
+									</template>
+									<div class="overflow-y-auto h-40 sm:p-4 md:p-6 space-y-3">
                                         <div v-if="bagItems.length === 0" class="text-center text-gray-500">
                                             No items in bag yet
                                         </div>
@@ -99,30 +97,34 @@
                                             </div>
                                         </div>
                                     </div>
-								</div>
+								</Ucard>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                     <!-- BUBBLE 2: Category Selection -->
-									<div class="bg-white rounded-lg shadow-lg p-6">
-										<div class="text-lg font-semibold text-gray-700 mb-3">Category</div>
+									<UCard :ui="{ body: {} }">
+										<template #header>
+                                            <div class="text-xl font-bold text-center text-gray-700">Category</div>
+                                        </template>
 										<URadioGroup v-model="selectedCategory" :items="categories" />
-									</div>
+                                    </Ucard>
                                     <div class="grid grid-rows-2 gap-4">
 									<!-- BUBBLE 3: Expiry Date -->
-									<div class="bg-white rounded-lg shadow-lg p-6">
-                                            <div class="text-lg font-semibold text-gray-700 mb-3">Expiry Date</div>
-                                                <UInputDate v-model="expiryDate" :min-value="minDate"/>
-                                        </div>
+									<UCard>
+                                        <template #header>
+                                            <div class="text-xl font-bold text-center text-gray-700">Expiry Date</div>
+                                        </template>
+                                        <UInputDate v-model="expiryDate" :min-value="minDate"/>
+                                    </Ucard>
                                     
                                         <!-- BUBBLE 4: Confirm Button -->
-                                        <div class="bg-white rounded-lg shadow-lg p-2 h-17 items-center justify-center">
+                                        <UCard class="h-26 ">
                                             <UButton
                                             label="Confirm Bag"
                                             block
                                             class="bg-orange-600 text-xl font-bold py-3 rounded hover:bg-orange-700 transition"
                                             @click="submitBag"
                                             />
-                                        </div>
+                                        </UCard>
                                     </div>
                                 </div>
                             </div>
