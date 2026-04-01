@@ -150,6 +150,14 @@
                                 placeholder="Search items"
                                 class="w-full md:w-72"
                             />
+                            <div v-if="selectedBagIDs.length > 0" class="flex justify-between">
+                                <UInputMenu v-model="moveLocation" :items="moveLocations" />
+                                <UButton  :icon="icons['move']" size="xs" variant="solid"
+                                @click="moveBags"
+                                >
+                                    Move
+                                </UButton>
+                            </div>
                         </div>
                         
                         <UTable
@@ -164,8 +172,82 @@
                         }"
                         >
                             <template #expanded="{ row }">
-                                <div class="p-4">
-                                To Implement...
+                                <div class="p-4 flex flex-col gap-2">
+                                    <div>
+                                        <p class="">Internal ID:</p>
+                                        <p class="">{{ row.original.bagID }}</p>
+                                    </div>
+
+                                    <div>
+                                        <p class="">Category:</p>
+                                        <p class="">
+                                        {{ row.original.bagCategory }}
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <p class="">Expiry Date:</p>
+                                        <p class="">
+                                        {{ row.original.expiryDate || 'N/A' }}
+                                        </p>
+                                    </div>
+                                    
+                                    <div>
+                                        <p>Items:</p>
+                                        <div class="flex gap-2 flex-wrap">
+                                            <div v-for="item in row.original.EmergencyBagItems" :key="item.itemID">
+                                                <EmergencyBagItemCard
+                                                    :name="item.Item.name"
+                                                    :imgName="item.Item.imgName"
+                                                    :qty="item.count"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <p class="">Location:</p>
+                                        <p class="">
+                                        {{ row.original.locationName || 'N/A' }}
+                                        </p>
+                                    </div>
+
+                                    <div class="flex gap-2 items-center">
+                                        <UInputMenu v-model="row.original._moveLocation" :items="moveLocations" class="w-48"/>
+
+                                        <UButton
+                                        size="xs"
+                                        :icon="icons['move']"
+                                        variant="solid"
+                                        @click="moveSingleBag(row.original.bagID, row.original._moveLocation)"
+                                        >
+                                        Move
+                                        </UButton>
+                                    </div>
+
+                                    <UModal :dismissible="false">
+                                        <!--//Would have used SharedButtonCancel but I wanted it in red-->
+                                        <UButton label="Delete Bag" size="xs" color="error" class="self-start"/>
+
+                                        <template #content="{close}">
+                                            <UCard>
+                                            <h3 class="text-lg font-semibold text-red-600">
+                                                Confirm Delete
+                                            </h3>
+
+                                            <p class="text-sm text-gray-600 mt-2">
+                                                Are you sure you want to delete this bag?
+                                            </p>
+
+                                            <div class="flex justify-end gap-2 mt-4">
+                                                <UButton variant="ghost" @click="close">Cancel</UButton>
+                                                <!--//Would have used SharedButtonCancel but I wanted it in red-->
+                                                <UButton color="error" @click="deleteBag(row.original.bagID, close)">Delete</UButton>
+                                            </div>
+                                            </UCard>
+                                        </template>
+                                    </UModal>
+
                                 </div>
                             </template>
                         </UTable>
@@ -382,5 +464,62 @@ const filtered_viewData = computed(() => {
     )
   })
 })
+
+const selectedBagIDs = computed(() => {
+  return Object.keys(selected.value).filter(id => selected.value[id]);
+})
+
+const moveBags = async() => {
+    try {
+        await $fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
+        method: "PATCH",
+        body: {
+            bagIDs: selectedBagIDs.value,
+            location: moveLocation.value
+        }
+        })
+
+        await refreshEmergencyBags()
+        selected.value = {}
+
+    } catch (err) {
+        console.error("Failed to move bags", err)
+    }
+
+    await refreshEmergencyBags();
+    selected.value = {};
+}
+
+const moveSingleBag = async(bagID, location) => {
+    try {
+        await $fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
+        method: "PATCH",
+        body: {
+            bagIDs: [bagID],
+            location
+        }
+        })
+
+    } catch (err) {
+        console.error(`Failed for ${bagID}`, err)
+    }
+    await refreshEmergencyBags();
+}
+
+const deleteBag = async(bagID,close) => {
+    try {
+        await $fetch('/api/volunteer/emergency-bag/emergencyBag', {
+            method: 'DELETE',
+            body: { bagID }
+        })
+
+        await refreshEmergencyBags()
+        close()
+
+    } catch (err) {
+        console.error(err)
+    }
+    selected.value = {};
+}
 
 </script>
