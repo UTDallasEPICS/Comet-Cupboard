@@ -34,7 +34,7 @@
                                     </div>
 
 								<!-- Product List -->
-								<div class="overflow-y-auto max-h-96 px-6 py-4 space-y-3">
+								<div class="overflow-y-auto h-fit max-h-124 px-3 py-3 space-y-3">
                                     <div v-if="!filteredItems?.length" class="text-center text-gray-500 py-8">
                                         Search results will appear here
                                     </div>
@@ -75,13 +75,13 @@
 							<!-- RIGHT SIDE: Bag editor -->
 							<div class="flex flex-col gap-4">
 								<!-- BUBBLE 1: Current Bag Items -->
-								<UCard>
+								<UCard class="flex-1 min-h-0">
 									<template #header>
                                         <div class="bg-final-utd-green flex-1 text-white text-center px-6 py-3 rounded">
 										    <h2 class="text-xl font-bold">Current Bag</h2>
                                         </div>
 									</template>
-									<div class="overflow-y-auto h-40 sm:p-4 md:p-6 space-y-3">
+                                    <div class="overflow-y-auto h-54 space-y-3">
                                         <div v-if="bagItems.length === 0" class="text-center text-gray-500">
                                             No items in bag yet
                                         </div>
@@ -101,30 +101,33 @@
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                     <!-- BUBBLE 2: Category Selection -->
-									<UCard :ui="{ body: {} }">
+									<UCard>
 										<template #header>
                                             <div class="text-xl font-bold text-center text-gray-700">Category</div>
                                         </template>
-										<URadioGroup v-model="selectedCategory" :items="categories" />
-                                    </Ucard>
-                                    <div class="grid grid-rows-2 gap-4">
-									<!-- BUBBLE 3: Expiry Date -->
-									<UCard>
-                                        <template #header>
-                                            <div class="text-xl font-bold text-center text-gray-700">Expiry Date</div>
-                                        </template>
-                                        <UInputDate v-model="expiryDate" :min-value="minDate"/>
+										<URadioGroup v-model="selectedCategory" size="md" variant="card" :items="categories" />
                                     </Ucard>
                                     
-                                        <!-- BUBBLE 4: Confirm Button -->
-                                        <UCard class="h-26 ">
-                                            <UButton
-                                            label="Confirm Bag"
-                                            block
-                                            class="bg-orange-600 text-xl font-bold py-3 rounded hover:bg-orange-700 transition"
-                                            @click="submitBag"
-                                            />
+                                    <div class="flex flex-col gap-4 h-full">
+                                        <!-- BUBBLE 3: Expiry Date -->
+                                        <UCard class="h-50 flex-1">
+                                            <template #header>
+                                                <div class="text-xl font-bold text-center flex-1 text-gray-700">Expiry Date</div>
+                                            </template>
+                                            <div class="flex h-full items-center justify-center">
+                                                <UInputDate v-model="expiryDate" size="xl" icon="i-lucide-calendar" :min-value="minDate"/>
+                                            </div>
                                         </UCard>
+                                        
+                                            <!-- BUBBLE 4: Confirm Button -->
+                                            <UCard class="flex-none">
+                                                <UButton
+                                                label="Confirm Bag"
+                                                block
+                                                class="bg-orange-600 text-xl font-bold py-3 rounded hover:bg-orange-700 transition"
+                                                @click="submitBag"
+                                                />
+                                            </UCard>
                                     </div>
                                 </div>
                             </div>
@@ -196,10 +199,10 @@ const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch('/
 
 // Category Selection
 const categories = [
-    {label:"Vegetarian + Peanut Butter", value: "VEGETARIAN_AND_PEANUT_BUTTER"},
-    {label:"Vegetarian + Non-Peanut Butter" , value: "VEGETARIAN_AND_NON_PEANUT_BUTTER"},
-    {label:"Non-Vegetarian + Peanut Butter" , value: "NONVEGETARIAN_AND_PEANUT_BUTTER"},
-    {label:"Non-Vegetarian + Non-Peanut Butter", value: "NONVEGETARIAN_AND_NON_PEANUT_BUTTER"}
+    {label:"Veg + PB", value: "VEGETARIAN_AND_PEANUT_BUTTER"},
+    {label:"Veg + Non-PB" , value: "VEGETARIAN_AND_NON_PEANUT_BUTTER"},
+    {label:"Non-Veg + PB" , value: "NONVEGETARIAN_AND_PEANUT_BUTTER"},
+    {label:"Non-Veg + Non-PB", value: "NONVEGETARIAN_AND_NON_PEANUT_BUTTER"}
 ]
 const selectedCategory = ref<string | null>(null)
 
