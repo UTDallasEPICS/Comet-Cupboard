@@ -1,41 +1,90 @@
-import { createEvent } from "#server/utils/eventsFactory"
-import { publishEvent } from "#server/utils/eventBus"
+import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
+import { validateBody } from "#server/utils/validation"
 import { Prisma } from "../../../../prisma/generated/prisma/client"
 
+const schema = z
+	.object({
+		originalName: z.string().min(1, "Original name is required"),
+		name: z.string().min(1, "Location name cannot be empty").optional(),
+		address: z.string().min(1, "Address cannot be empty").optional(),
+		archived: z.boolean().optional(),
+	})
+	.strict()
+	.refine(
+		({ name, address, archived }) => {
+			//must update at least one field
+			return name !== undefined || address !== undefined || archived !== undefined
+		},
+		{
+			message: "categoryName, archived, and image are required when creating a new category",
+		}
+	)
+
 export default defineSafeHandler(async (event) => {
-	const name = event.context.location.name
+	const { originalName, name, address, archived } = await validateBody(event, schema)
 
-	const updateLocation = await prisma.$transaction(async (tx) => {
-		const location = await tx.location.findUnique({
-			where: {
-				name: name,
-				archived: false,
-			},
-		})
-		if (!location) {
-			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Location not found" })
-		}
-
-		try {
-			const updateLocation = await tx.location.update({
-				where: {
-					name: location.name,
-				},
-				data: {
-					archived: true,
-				},
-			})
-			return updateLocation
-		} catch (error: unknown) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
-				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Location not found" })
-			}
-			throw error
-		}
+	const existingLocation = await prisma.location.findUnique({
+		where: { name: originalName },
 	})
 
-	return "Successfully archived location"
+	if (!existingLocation) {
+		throw createError({
+			statusCode: StatusCodes.NOT_FOUND,
+			statusMessage: "Location does not exist",
+		})
+	}
+	try {
+		let location
+			//Handle primary key change
+		if (name && name !== originalName) {
+			await prisma.location.delete({
+				where: { name: originalName },
+			})
+
+			location = await prisma.location.create({
+				data: {
+					name,
+					address: address ?? existingLocation.address,
+					archived: archived ?? existingLocation.archived,
+				},
+			})
+		} else {
+			location = await prisma.location.update({
+				where: { name: originalName },
+				data: {
+					...(name !== undefined && { name }),
+					...(address !== undefined && { address }),
+					...(archived !== undefined && { archived }),
+				},
+			})
+		}
+
+		return location
+	} catch (error: unknown) {
+		if (
+			error instanceof Prisma.PrismaClientKnownRequestError &&
+			error.code === "P2025"
+		) {
+			throw createError({
+			statusCode: StatusCodes.NOT_FOUND,
+				statusMessage: "Location not found",
+			})
+		}
+
+		if (
+			error instanceof Prisma.PrismaClientKnownRequestError &&
+			error.code === "P2002"
+		) {
+			throw createError({
+				statusCode: StatusCodes.CONFLICT,
+				statusMessage: "Location with this name already exists",
+			})
+		}
+
+			throw error
+		}	
+
 })

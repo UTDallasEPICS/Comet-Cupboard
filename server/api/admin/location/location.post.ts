@@ -18,32 +18,30 @@ const schema = z
 export default defineSafeHandler(async (event) => {
     const { name, address } = await validateBody(event, schema)
 
-    const transactionResult = await prisma.$transaction(async (tx) => {
-        let location
+    let location
 
-        try {
-            location = await tx.location.create({
-                data: {
-                    name,
-                    address,
-                },
-            })
-        } catch (error: unknown) {
-            if (
-                error instanceof Prisma.PrismaClientKnownRequestError &&
-                error.code === "P2002"
-            ) {
-                throw createError({
-                    statusCode: StatusCodes.CONFLICT,
-                    statusMessage: "Location with this name already exists",
-                })
-            }
-            throw error
+    try {
+           location = await prisma.location.create({
+               data: {
+                   name,
+                   address,
+               },
+           })
+    } catch (error: unknown) {
+           if (
+               error instanceof Prisma.PrismaClientKnownRequestError &&
+               error.code === "P2002"
+           ) {
+               throw createError({
+                   statusCode: StatusCodes.CONFLICT,
+                   statusMessage: "Location with this name already exists",
+               })
+           }
+           throw error
         }
 
         return "Location added successfully"
-    })
+    
 
-    return transactionResult
     
 })

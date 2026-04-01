@@ -19,6 +19,7 @@ export const icons = {
 	queue: "i-lucide-clock",
 	shopping: "i-lucide-shopping-cart",
 	inventory: "i-lucide-box",
+	locations: "i-lucide-map-pin-search",
 	verifyCart: "i-lucide-check-circle",
 	data: "i-lucide-chart-column-big",
 	management: "i-lucide-settings",
