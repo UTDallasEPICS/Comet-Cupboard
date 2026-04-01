@@ -14,7 +14,8 @@
                 <template #add>
                     <section>
 						<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-							<!-- LEFT SIDE: Search -->
+							
+                            <!-- LEFT SIDE: Search -->
 							<UCard>
 								<!-- Header -->
 								<template #header>
@@ -74,7 +75,8 @@
 
 							<!-- RIGHT SIDE: Bag editor -->
 							<div class="flex flex-col gap-4">
-								<!-- BUBBLE 1: Current Bag Items -->
+								
+                                <!-- Current Bag Items -->
 								<UCard class="flex-1 min-h-0">
 									<template #header>
                                         <div class="bg-final-utd-green flex-1 text-white text-center px-6 py-3 rounded">
@@ -97,19 +99,21 @@
                                             </div>
                                         </div>
                                     </div>
-								</Ucard>
+								</UCard>
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                    <!-- BUBBLE 2: Category Selection -->
+                                    
+                                    <!--Category Selection -->
 									<UCard>
 										<template #header>
                                             <div class="text-xl font-bold text-center text-gray-700">Category</div>
                                         </template>
 										<URadioGroup v-model="selectedCategory" size="md" variant="card" :items="categories" />
-                                    </Ucard>
+                                    </UCard>
                                     
                                     <div class="flex flex-col gap-4 h-full">
-                                        <!-- BUBBLE 3: Expiry Date -->
+                                       
+                                        <!--Expiry Date -->
                                         <UCard class="h-50 flex-1">
                                             <template #header>
                                                 <div class="text-xl font-bold text-center flex-1 text-gray-700">Expiry Date</div>
@@ -119,7 +123,7 @@
                                             </div>
                                         </UCard>
                                         
-                                            <!-- BUBBLE 4: Confirm Button -->
+                                            <!--Confirm Button -->
                                             <UCard class="flex-none">
                                                 <UButton
                                                 label="Confirm Bag"
@@ -197,7 +201,6 @@ const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch('/
 
 //===== ADD TAB =====
 
-// Category Selection
 const categories = [
     {label:"Veg + PB", value: "VEGETARIAN_AND_PEANUT_BUTTER"},
     {label:"Veg + Non-PB" , value: "VEGETARIAN_AND_NON_PEANUT_BUTTER"},
@@ -206,11 +209,10 @@ const categories = [
 ]
 const selectedCategory = ref<string | null>(null)
 
-// Search functionality
+//Search
 const searchQuery = ref('')
 const { data: volunteerItems } = await useFetch("/api/student/inventory/items")
 
-// Starts with matching - only show items that start with search term
 const filteredItems = computed(() => {
 	if (!volunteerItems.value) return []
 	if (!searchQuery.value) return volunteerItems.value
@@ -221,7 +223,7 @@ const filteredItems = computed(() => {
 	)
 })
 
-// Get available quantity for an item (inventory - what's in bag)
+// Get available count for an item in inventory
 const getAvailableQuantity = (itemID: string): number => {
 	const item = volunteerItems.value?.find(i => i.itemID === itemID)
 	const bagItem = bagItems.value.find(bi => bi.itemID === itemID)
@@ -264,7 +266,7 @@ const decreaseItemCount = (itemID: string) => {
 	}
 }
 
-// Increase item count
+//Increase item count
 const increaseItemCount = (itemID: string) => {
 	const item = bagItems.value.find(bi => bi.itemID === itemID)
 	if (item) {
@@ -277,8 +279,7 @@ const minDate = today(getLocalTimeZone()).add({ days: 7 })
 const expiryDate = shallowRef(minDate)
 
 
-
-// Submit bag to API
+//Submit bag
 const submitBag = async () => {
     if (!selectedCategory.value) {
         alert('Please select a category')
@@ -295,7 +296,7 @@ const submitBag = async () => {
         return
     }
 
-  // Convert CalendarDate -> ISO string (midnight UTC)
+  //Convert CalendarDate -> ISO string (midnight UTC)
   const y = expiryDate.value.year
   const m = String(expiryDate.value.month).padStart(2, '0')
   const d = String(expiryDate.value.day).padStart(2, '0')
