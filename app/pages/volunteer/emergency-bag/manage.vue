@@ -43,7 +43,7 @@
                                         <!-- Image -->
                                             <img  
                                                 v-if="item.imgName && item.categoryName"
-                                                :src="`/test-images/${encodeURIComponent(item.categoryName)}/${item.imgName}`"
+                                                :src="`/api/public/image/${item.imgName}`"
                                                 :alt="item.name"
                                                 class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded"
                                             />
