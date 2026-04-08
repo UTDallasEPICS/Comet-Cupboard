@@ -6,10 +6,8 @@ export default defineSafeHandler(async () => {
     const locations = await prisma.location.findMany({
       orderBy: { name: "asc" },
     })
-
     return locations
   } catch (err) {
-      console.error("API ERROR:", err)
       throw err
   }
 })
