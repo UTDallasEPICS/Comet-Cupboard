@@ -12,40 +12,48 @@ const schema = z.object({
 export default defineSafeHandler(async (event) => {
     const { bagIDs, location } = await validateBody(event, schema);
 
-    const locationExists = await prisma.location.findUnique({
-      where: { name: location }
-    });
-
-    if (!locationExists) {
-      throw createError({
-        statusCode: StatusCodes.NOT_FOUND,
-        statusMessage: "Location not found"
+    await prisma.$transaction(async (tx) => {
+      const locationExists = await tx.location.findUnique({
+        where: { name: location }
       });
-    }
 
-    const bags = await prisma.emergencyBag.findMany({
-      where: {
-        bagID: { in: bagIDs }
-      },
-      select: { bagID: true }
-    })
+      if (!locationExists) {
+        throw createError({
+          statusCode: StatusCodes.NOT_FOUND,
+          statusMessage: "Location not found"
+        });
+      }
 
-    if (bags.length !== bagIDs.length) {
-      throw createError({
-        statusCode: StatusCodes.NOT_FOUND,
-        statusMessage: "One or more bags not found"
+      const bags = await tx.emergencyBag.findMany({
+        where: {
+          bagID: { in: bagIDs }
+        },
+        select: { bagID: true }
       })
-    }
-    
-    await prisma.emergencyBag.updateMany({
-      where: {
-        bagID: { in: bagIDs }
-      },
-      data: {
-        locationName: location
+
+      if (bags.length !== bagIDs.length) {
+        throw createError({
+          statusCode: StatusCodes.NOT_FOUND,
+          statusMessage: "One or more bags not found"
+        })
+      }
+      
+      const result = await tx.emergencyBag.updateMany({
+        where: {
+          bagID: { in: bagIDs }
+        },
+        data: {
+          locationName: location
+        }
+      })
+
+      if (result.count !== bagIDs.length){
+        throw createError({
+          statusCode: StatusCodes.CONFLICT,
+          statusMessage: "Unable to update bags"
+        })
       }
     })
-
 
     return { success: true };
 })
