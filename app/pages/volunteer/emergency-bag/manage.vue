@@ -523,8 +523,8 @@ const moveSingleBag = async(bagID, location) => {
 
 const deleteBag = async(bagID,close) => {
     try {
-        await $fetch('/api/volunteer/emergency-bag/emergencyBag', {
-            method: 'DELETE',
+        await $fetch('/api/volunteer/emergency-bag/emergencyBagArchive', {
+            method: 'POST',
             body: { bagID }
         })
 
