@@ -46,7 +46,7 @@
                                         <!-- Image -->
                                             <img  
                                                 v-if="item.imgName && item.categoryName"
-                                                :src="`/test-images/${encodeURIComponent(item.categoryName)}/${item.imgName}`"
+                                                :src="`/api/public/image/${item.imgName}`"
                                                 :alt="item.name"
                                                 class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded"
                                             />
@@ -425,8 +425,12 @@ const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch('/
 const expanded = ref({})
 const selected = ref({})
 
-const moveLocations = ref(['Activity Center', 'Police Station']) //Need to make it use Location get
-const moveLocation = ref('Activity Center')
+const {data: _moveLocations} = await useFetch('/api/volunteer/location');
+const moveLocations = computed(() => {
+  return _moveLocations.value?.map(loc => loc.name) ?? []
+})
+const moveLocation = ref('')
+
 
 const columnsDef = [
   {
