@@ -1,8 +1,15 @@
 <template>
   <div>
   <UContainer class="py-8">
-    <header>
+    <header class="flex items-center justify-between">
+			<SharedButtonNavigateBack text="Back to Home" :to="{ path: '/' }" />
 			<SharedTextPageTitle>Locations</SharedTextPageTitle>
+
+			<div class="flex items-center gap-3">
+				<SharedTextBaseSecondary>Auto refresh in {{ countdown }}</SharedTextBaseSecondary>
+
+				<UButton size="xs" variant="soft" :icon="icons['refresh']" @click="refreshNow"> Refresh now </UButton>
+			</div>
 		</header>
 
     <section class="mt-4">
@@ -32,10 +39,6 @@
             </div>
         </footer>
       </div>
-
-    <footer class="mt-8 flex justify-end">
-      <SharedButtonPositiveAction text="Refresh Data" @click="refresh" />
-    </footer>
     
   </section>
   </UContainer>
@@ -78,5 +81,27 @@ const activeLocations = computed(() => {
 })
 
 const tableColumns = buildNuxtUITable(columnsDef, {})
+
+const countdown = ref(180)
+let interval
+
+const refreshNow = () => {
+	reloadNuxtApp()
+}
+
+onMounted(() => {
+	interval = setInterval(() => {
+		countdown.value--
+
+		if (countdown.value <= 0) {
+			refreshNow()
+			countdown.value = 60
+		}
+	}, 1000)
+})
+
+onBeforeUnmount(() => {
+	clearInterval(interval)
+})
 
 </script>

@@ -1,6 +1,7 @@
 <template>
 	<UContainer class="py-8">
 		<header class="flex items-center justify-between">
+			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/admin' }" />
 			<SharedTextPageTitle>Manage Roles</SharedTextPageTitle>
 
 			<div class="flex items-center gap-3">

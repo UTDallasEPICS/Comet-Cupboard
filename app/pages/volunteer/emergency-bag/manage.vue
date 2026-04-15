@@ -1,4 +1,7 @@
 <template>
+    <header>
+			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
+	</header>
     <div class="w-full flex items-center justify-center p-6">
         <!--Tabs-->
         <UContainer>
