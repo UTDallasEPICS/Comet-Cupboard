@@ -188,6 +188,8 @@ model QueueEntry {
 
 model Location {
     name                String               @id @map("name")
+    imgName             String               @map("img_name")
+    description         String               @default("") @map("bag_description")
     EmergencyBags       EmergencyBag[]
     IssuedEmergencyBags IssuedEmergencyBag[]
     address             String               @map("address")

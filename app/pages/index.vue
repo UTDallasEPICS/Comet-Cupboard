@@ -33,7 +33,7 @@
 					size="xl" 
 					variant="solid" 
 					to="/public/emergency-bag/locations"
-					class="px-10 py-4 text-lg font-semibold rounded-xl shadow-lg transition-transform hover:scale-105"
+					class="px-10 py-4 text-lg font-semibold rounded-xl shadow-lg"
 					trailing
 					> 
 					View All Locations 

@@ -48,8 +48,8 @@ const validUsers = [
 ]
 
 const locations = [
-	{ name: "Police Station", address: "100 N Floyd Road", archived: false },
-	{ name: "Activity Center", address: "800 Campbell Rd", archived: false },
+	{ name: "Police Station", address: "100 N Floyd Road", imgName: "police_station.jpg", description: "https://police.utdallas.edu",archived: false },
+	{ name: "Activity Center", address: "800 Campbell Rd", imgName: "activity_center.jpg", description: "https://urec.utdallas.edu", archived: false },
 ]
 
 const emergencyBags = [
