@@ -39,7 +39,17 @@
                                     <div v-if="!filteredItems?.length" class="text-center text-gray-500 py-8">
                                         Search results will appear here
                                     </div>
-                                    <div v-for="item in filteredItems || []" :key="item.itemID" class="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gray-100 p-3 rounded gap-3">
+
+                                    <div
+                                        v-for="item in filteredItems || []"
+                                        :key="item.itemID"
+                                        :class="[
+                                        'flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 rounded gap-3 transition',
+                                        getAvailableQuantity(item.itemID) <= 0
+                                            ? 'bg-gray-200 opacity-60 grayscale cursor-not-allowed'
+                                            : 'bg-gray-100'
+                                        ]"
+                                    >
                                         <!-- Image -->
                                             <img  
                                                 v-if="item.imgName && item.categoryName"
@@ -88,15 +98,36 @@
                                             No items in bag yet
                                         </div>
                                         <div v-for="item in bagItems" :key="item.itemID" class="flex items-center justify-between bg-gray-100 p-3 rounded">
+                                            <div class="flex items-center gap-3">
+                                            <!-- Image -->
+                                            <img
+                                                v-if="item.imgName"
+                                                :src="`/api/public/image/${item.imgName}`"
+                                                :alt="item.name"
+                                                class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded"
+                                            />
+                                            <div v-else class="w-12 h-12 bg-gray-300 rounded flex items-center justify-center">
+                                                <span class="text-gray-500 text-xs">No Img</span>
+                                            </div>
+
+                                            <!-- Name -->
                                             <div>
                                                 <p class="font-semibold text-sm">{{ item.name }}</p>
                                             </div>
-                                            <div class="flex items-center gap-2">
-                                                <UButton class="bg-gray-400 px-2 py-1 rounded hover:bg-gray-500" @click="decreaseItemCount(item.itemID)">−</UButton>
-                                                <span class="w-6 text-center font-semibold">{{ item.count }}</span>
-                                                <UButton class="bg-gray-400 px-2 py-1 rounded hover:bg-gray-500" @click="increaseItemCount(item.itemID)">+</UButton>
-                                                <UButton class="bg-orange-600 px-2 py-1 rounded hover:bg-gray-500" @click="removeItemFromBag(item.itemID)">✕</UButton>
                                             </div>
+                                            <div class="flex items-center gap-2">
+                                                <UButton
+                                                    class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500" @click="decreaseItemCount(item.itemID)"
+                                                > − </UButton>
+                                                <span class="w-8 text-center font-semibold tabular-nums">{{ item.count }}</span>
+                                                <UButton
+                                                    class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500" @click="increaseItemCount(item.itemID)"
+                                                > + </UButton>
+
+                                                <UButton
+                                                    class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-orange-600 text-white hover:bg-orange-700" @click="removeItemFromBag(item.itemID)"
+                                                > ✕ </UButton>
+                                                </div>
                                         </div>
                                     </div>
 								</UCard>
@@ -128,7 +159,7 @@
                                                 <UButton
                                                 label="Confirm Bag"
                                                 block
-                                                class="bg-orange-600 text-xl font-bold py-3 rounded hover:bg-orange-700 transition"
+                                                class="bg-final-utd-green text-xl font-bold py-3 rounded hover:bg-orange-700 transition"
                                                 @click="submitBag"
                                                 />
                                             </UCard>
@@ -313,7 +344,7 @@ const getAvailableQuantity = (itemID: string): number => {
 }
 
 // Current bag items with counts
-const bagItems = ref<Array<{ itemID: string; count: number; name: string }>>([])
+const bagItems = ref<Array<{ itemID: string; count: number; name: string; imgName?: string }>>([])
 
 // Add item to bag or increase count
 const addItemToBag = (item: any) => {
@@ -324,7 +355,8 @@ const addItemToBag = (item: any) => {
 		bagItems.value.push({
 			itemID: item.itemID,
 			count: 1,
-			name: item.name
+			name: item.name,
+            imgName: item.imgName
 		})
 	}
 }
