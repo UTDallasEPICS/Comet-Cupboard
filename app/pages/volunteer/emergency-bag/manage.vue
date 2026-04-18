@@ -207,6 +207,11 @@
                                     </div>
 
                                     <div>
+                                        <p class="">Private Bag:</p>
+                                        <p class="">{{ row.original.private }}</p>
+                                    </div>
+
+                                    <div>
                                         <p class="">Category:</p>
                                         <p class="">
                                         {{ row.original.bagCategory }}
@@ -216,7 +221,14 @@
                                     <div>
                                         <p class="">Expiry Date:</p>
                                         <p class="">
-                                        {{ row.original.expiryDate || 'N/A' }}
+                                        {{ row.original.expiryDate ?
+                                            new Date(row.original.expiryDate).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric'
+                                            })
+                                        : 'N/A'
+                                        }}
                                         </p>
                                     </div>
                                     
@@ -450,7 +462,16 @@ const submitBag = async () => {
 }
 
 //View Tab
-const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch('/api/volunteer/emergency-bag/emergencyBags');
+const permissions = usePermissionsStore()
+const { canAdminAccess } = storeToRefs(permissions)
+
+const emergencyBagsEndpoint = computed(() =>
+  canAdminAccess.value
+    ? '/api/admin/emergency-bag/emergencyBags'
+    : '/api/volunteer/emergency-bag/emergencyBags'
+)
+
+const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch(emergencyBagsEndpoint);
 const expanded = ref({})
 const selected = ref({})
 
@@ -485,6 +506,9 @@ const columnsDef = [
     onClick: (row) => {  console.log('To implement...')},
     meta: {class: {th: 'w-12 hidden md:table-cell', td: 'w-12 hidden md:table-cell'}}
   },*/
+  {header: 'Private',accessorKey: 'private',type: 'text',sortable: true,
+    cell: ({ row }) => row.original.private ? 'Yes' : 'No'
+  },
   {type: "expand", meta: {class: {th: "w-12", td: "w-12"}}}
 ]
 

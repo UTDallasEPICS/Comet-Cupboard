@@ -38,7 +38,8 @@ export default defineSafeHandler(async (event) => {
                     bagCategory: bag.bagCategory,
                     bagDescription: bag.bagDescription,
                     expiryDate: bag.expiryDate,
-                    label: bag.label
+                    label: bag.label,
+                    private: bag.private
                 }
             });
 
