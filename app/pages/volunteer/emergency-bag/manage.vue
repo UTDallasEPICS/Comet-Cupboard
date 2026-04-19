@@ -47,36 +47,67 @@
                         >
                             <template #expanded="{ row }">
                                 <div class="p-4 flex flex-col gap-2">
-                                    <div>
-                                        <p class="">Internal ID:</p>
-                                        <p class="">{{ row.original.bagID }}</p>
-                                    </div>
+                                    <div class="flex flex-col md:flex-row">
+                                        <div class="flex flex-col gap-2 md:w-1/2">
+                                            <div>
+                                                <p class="">Internal ID:</p>
+                                                <p class="">{{ row.original.bagID }}</p>
+                                            </div>
 
-                                    <div>
-                                        <p class="">Private Bag:</p>
-                                        <p class="">{{ row.original.private }}</p>
-                                    </div>
+                                            <div>
+                                                <p class="">Private Bag:</p>
+                                                <p class="">{{ row.original.private }}</p>
+                                            </div>
 
-                                    <div>
-                                        <p class="">Category:</p>
-                                        <p class="">
-                                        {{ row.original.bagCategory }}
-                                        </p>
-                                    </div>
+                                            <div>
+                                                <p class="">Category:</p>
+                                                <p class="">
+                                                {{ row.original.bagCategory }}
+                                                </p>
+                                            </div>
+                                        </div>
 
-                                    <div>
-                                        <p class="">Expiry Date:</p>
-                                        <p class="">
-                                        {{ row.original.expiryDate ?
-                                            new Date(row.original.expiryDate).toLocaleDateString('en-US', {
-                                                year: 'numeric',
-                                                month: 'short',
-                                                day: 'numeric'
-                                            })
-                                        : 'N/A'
-                                        }}
-                                        </p>
+                                        <div class="flex flex-col gap-2 md:w-1/2">
+                                            <div>
+                                                <p class="">Expiry Date:</p>
+                                                <p class="">
+                                                {{ row.original.expiryDate ?
+                                                    new Date(row.original.expiryDate).toLocaleDateString('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'short',
+                                                        day: 'numeric'
+                                                    })
+                                                : 'N/A'
+                                                }}
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <div>
+                                                    <p class="">Location:</p>
+                                                    <p class="">
+                                                    {{ row.original.locationName || 'N/A' }}
+                                                    </p>
+                                                </div>
+
+                                                <div class="flex gap-2 items-center">
+                                                    <UInputMenu v-model="row.original._moveLocation" :items="moveLocations" class="w-48"/>
+
+                                                    <UButton
+                                                    size="xs"
+                                                    :icon="icons['move']"
+                                                    variant="solid"
+                                                    @click="moveSingleBag(row.original.bagID, row.original._moveLocation)"
+                                                    >
+                                                    Move
+                                                    </UButton>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
+                                    
+                                    
                                     
                                     <div>
                                         <p>Items:</p>
@@ -89,37 +120,16 @@
                                                 />
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div>
-                                        <UButton
-                                        size="xs"
-                                        :icon="icons['edit']"
-                                        variant="solid"
-                                        @click="editBag(row.original)"
-                                        >
-                                        Edit Bag Contents
-                                        </UButton>
-                                    </div>
-
-                                    <div>
-                                        <p class="">Location:</p>
-                                        <p class="">
-                                        {{ row.original.locationName || 'N/A' }}
-                                        </p>
-                                    </div>
-
-                                    <div class="flex gap-2 items-center">
-                                        <UInputMenu v-model="row.original._moveLocation" :items="moveLocations" class="w-48"/>
-
-                                        <UButton
-                                        size="xs"
-                                        :icon="icons['move']"
-                                        variant="solid"
-                                        @click="moveSingleBag(row.original.bagID, row.original._moveLocation)"
-                                        >
-                                        Move
-                                        </UButton>
+                                        <div class="mt-2">
+                                            <UButton
+                                            size="xs"
+                                            :icon="icons['edit']"
+                                            variant="solid"
+                                            @click="editBag(row.original)"
+                                            >
+                                            Edit Bag Contents
+                                            </UButton>
+                                        </div>
                                     </div>
 
                                     <UModal :dismissible="false">
