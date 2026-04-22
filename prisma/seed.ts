@@ -53,9 +53,9 @@ const locations = [
 ]
 
 const emergencyBags = [
-	{ bagCategory: BagCategory.NONVEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2026-07-28"), label: "12345", locationName: "Police Station" },
-	{ bagCategory: BagCategory.VEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2027-01-01"), label: "15453" },
-	{ bagCategory: BagCategory.NONVEGETARIAN_AND_PEANUT_BUTTER, expiryDate: new Date("2026-09-30"), label: "54321" },
+	{ bagCategory: BagCategory.NONVEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2026-07-28"), label: "12345", locationName: "Police Station", private: true },
+	{ bagCategory: BagCategory.VEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2027-01-01"), label: "15453", private: false },
+	{ bagCategory: BagCategory.NONVEGETARIAN_AND_PEANUT_BUTTER, expiryDate: new Date("2026-09-30"), label: "54321", private: false },
 ]
 
 const createUsers = async () => {
