@@ -276,11 +276,11 @@ const main = async () => {
 	await createOrders()
 
 	await createLocations()
-	await createEmergencyBags()
-	await createEmergencyBagItems()
+	// await createEmergencyBags()
+	// await createEmergencyBagItems()
 
-	await createIssuedEmergencyBags()
-	await createIssuedEmergencyBagItems()
+	// await createIssuedEmergencyBags()
+	// await createIssuedEmergencyBagItems()
 
 	console.log(`Database has been seeded. 🌱`)
 }
