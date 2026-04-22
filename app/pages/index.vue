@@ -19,6 +19,18 @@
 			</UContainer>
 		</section>
 
+
+		<section class="py-20">
+			<UContainer>
+				<div class="mx-auto max-w-2xl text-center">
+					<SharedTextSectionTitle> Upcoming Restocks and Notices </SharedTextSectionTitle>
+					<SharedTextBase class="mt-4"> I'm going to put a calendar here :) </SharedTextBase>
+				</div>
+			</UContainer>
+		</section>
+
+		<USeparator />
+
 		<section class="py-24 bg-gray-50/50 relative overflow-hidden">
 			<UContainer class="flex flex-col items-center text-center relative z-10">
 				<SharedTextSectionTitle class="mb-4"> 
@@ -38,17 +50,6 @@
 					> 
 					View All Locations 
 				</UButton>
-			</UContainer>
-		</section>
-
-		<USeparator />
-
-		<section class="py-20">
-			<UContainer>
-				<div class="mx-auto max-w-2xl text-center">
-					<SharedTextSectionTitle> Upcoming Restocks and Notices </SharedTextSectionTitle>
-					<SharedTextBase class="mt-4"> I'm going to put a calendar here :) </SharedTextBase>
-				</div>
 			</UContainer>
 		</section>
 	</div>
