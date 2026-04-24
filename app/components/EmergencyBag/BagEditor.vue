@@ -84,7 +84,7 @@
                         <div v-if="bagItems.length === 0 && currentBagItems.length === 0" class="text-center text-gray-500">
                             No items in bag yet
                         </div>
-                        <!--GIVEN TIME THIS CAN BE MODULARIZED!! but for now i left it-->
+
                         <div
                         v-if="currentBagItems.length > 0 && bagItems.length > 0"
                         class="text-xs"
