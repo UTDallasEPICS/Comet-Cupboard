@@ -13,7 +13,7 @@
                 >
                 <!--Tab Trigger-->
                 <template #default="{ item }">
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2" :data-tour="`tab-${item.value}`">
                         <span>{{ item.label }}</span>
                         <button
                             v-if="item.value === 'edit'"
