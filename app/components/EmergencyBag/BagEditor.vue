@@ -92,36 +92,12 @@
                         New Items:
                         </div>
                         <div v-for="item in bagItems" :key="item.itemID" class="flex items-center justify-between bg-gray-100 p-3 rounded">
-                            <div class="flex items-center gap-3">
-                            <!-- Image -->
-                            <img
-                                v-if="item.imgName"
-                                :src="`/api/public/image/${item.imgName}`"
-                                :alt="item.name"
-                                class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded"
+                            <BagItems
+                                :item="item"
+                                @increase="increaseItemCount"
+                                @decrease="decreaseItemCount"
+                                @remove="removeItemFromBag"
                             />
-                            <div v-else class="w-12 h-12 bg-gray-300 rounded flex items-center justify-center">
-                                <span class="text-gray-500 text-xs">No Img</span>
-                            </div>
-
-                            <!-- Name -->
-                            <div>
-                                <p class="font-semibold text-sm">{{ item.name }}</p>
-                            </div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <UButton
-                                    class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500" @click="decreaseItemCount(item.itemID)"
-                                > − </UButton>
-                                <span class="w-8 text-center font-semibold tabular-nums">{{ item.count }}</span>
-                                <UButton
-                                    class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500" @click="increaseItemCount(item.itemID)"
-                                > + </UButton>
-
-                                <UButton
-                                    class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-orange-600 text-white hover:bg-orange-700" @click="removeItemFromBag(item.itemID)"
-                                > ✕ </UButton>
-                                </div>
                         </div>
 
                         <!--For Current Bag Items-->
@@ -132,36 +108,12 @@
                         Current Emergency Bag Items:
                         </div>
                         <div v-for="item in currentBagItems" :key="item.itemID" class="flex items-center justify-between bg-gray-100 p-3 rounded">
-                            <div class="flex items-center gap-3">
-                            <!-- Image -->
-                            <img
-                                v-if="item.imgName"
-                                :src="`/api/public/image/${item.imgName}`"
-                                :alt="item.name"
-                                class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded"
+                            <BagItems
+                                :item="item"
+                                @increase="(id) => increaseItemCount(id, true)"
+                                @decrease="(id) => decreaseItemCount(id, true)"
+                                @remove="(id) => removeItemFromBag(id, true)"
                             />
-                            <div v-else class="w-12 h-12 bg-gray-300 rounded flex items-center justify-center">
-                                <span class="text-gray-500 text-xs">No Img</span>
-                            </div>
-
-                            <!-- Name -->
-                            <div>
-                                <p class="font-semibold text-sm">{{ item.name }}</p>
-                            </div>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <UButton
-                                    class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500" @click="decreaseItemCount(item.itemID, true)"
-                                > − </UButton>
-                                <span class="w-8 text-center font-semibold tabular-nums">{{ item.count }}</span>
-                                <UButton
-                                    class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500" @click="increaseItemCount(item.itemID, true)"
-                                > + </UButton>
-
-                                <UButton
-                                    class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-orange-600 text-white hover:bg-orange-700" @click="removeItemFromBag(item.itemID, true)"
-                                > ✕ </UButton>
-                                </div>
                         </div>
                     </div>
                 </UCard>
@@ -206,6 +158,7 @@
 
 <script setup lang="ts">
 import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date'
+import BagItems from '~/components/EmergencyBag/BagItems.vue'
 
 const props = defineProps<{
   initialData?: any
