@@ -11,6 +11,20 @@
                 content: 'rounded-b-lg p-0'
                 }"
                 >
+                <!--Tab Trigger-->
+                <template #default="{ item }">
+                    <div class="flex items-center gap-2">
+                        <span>{{ item.label }}</span>
+                        <button
+                            v-if="item.value === 'edit'"
+                            class="hover:cursor-pointer"
+                            @click.stop="closeEditTab"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </template>
+
                 <!--START OF ADD BAG STUFF-->
                 <template #add>
                     <BagEditor @submit="submitBag" />
@@ -197,8 +211,8 @@ const activeTab = ref('add')
 
 const items = computed(() => {
   const base = [
-    { label: 'Add New Bag', slot: 'add', value: 'add' },
-    { label: 'View/Modify Bags', slot: 'view', value: 'view' }
+    { label: 'Add Bag', slot: 'add', value: 'add' },
+    { label: 'View Bags', slot: 'view', value: 'view' }
   ]
 
   if (editingBag.value) {
@@ -212,13 +226,18 @@ const items = computed(() => {
   return base
 })
 
+const closeEditTab = () => {
+  editingBag.value = null
+  activeTab.value = 'view'
+}
+
 //Search Query
 const manage_searchQuery = ref('')
 
 //Add Tab
 //Submit bag
 const submitBag = async (data) => {
-    const { _bagCategory, _expiryDate, _items } = data
+    const { _bagCategory, _expiryDate, _items, _oldItems } = data
     if (!_bagCategory) {
         alert('Please select a category')
         return
@@ -229,7 +248,7 @@ const submitBag = async (data) => {
         return
     }
 
-    if (!_items.length) {
+    if (!_items.length && activeTab.value === 'add') {
         alert('Please add items to the bag')
         return
     }
@@ -240,21 +259,28 @@ const submitBag = async (data) => {
     const d = String(_expiryDate.day).padStart(2, '0')
     const isoDate = new Date(`${y}-${m}-${d}T00:00:00Z`).toISOString()
 
-    const payload = {
-        bagCategory: _bagCategory,
-        expiryDate: isoDate,
-        items: _items.map(item => ({
-            itemID: item.itemID,
-            count: item.count
-        }))
-    }
-
 	try {
         let response
         let message
 
         if (activeTab.value === 'edit'){
             //console.log("EDITING BAGG");
+            response = await $fetch('/api/volunteer/emergency-bag/emergencyBagEdit', {
+                method: 'PUT',
+                body: {
+                    bagID: editingBag.value?.bagID,
+                    bagCategory: _bagCategory,
+                    expiryDate: isoDate,
+                    items: _items.map(item => ({
+                        itemID: item.itemID,
+                        count: item.count
+                    })),
+                    oldItems: _oldItems.map(item => ({
+                        itemID: item.itemID,
+                        count: item.count
+                    }))
+                }
+            })
             message = "Bag updated successfully!"
             editingBag.value = null;
             activeTab.value = "view"

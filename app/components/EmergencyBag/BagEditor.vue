@@ -81,8 +81,15 @@
                         </div>
                     </template>
                     <div class="overflow-y-auto h-54 space-y-3">
-                        <div v-if="bagItems.length === 0" class="text-center text-gray-500">
+                        <div v-if="bagItems.length === 0 && currentBagItems.length === 0" class="text-center text-gray-500">
                             No items in bag yet
+                        </div>
+                        <!--GIVEN TIME THIS CAN BE MODULARIZED!! but for now i left it-->
+                        <div
+                        v-if="currentBagItems.length > 0 && bagItems.length > 0"
+                        class="text-xs"
+                        >
+                        New Items:
                         </div>
                         <div v-for="item in bagItems" :key="item.itemID" class="flex items-center justify-between bg-gray-100 p-3 rounded">
                             <div class="flex items-center gap-3">
@@ -113,6 +120,46 @@
 
                                 <UButton
                                     class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-orange-600 text-white hover:bg-orange-700" @click="removeItemFromBag(item.itemID)"
+                                > ✕ </UButton>
+                                </div>
+                        </div>
+
+                        <!--For Current Bag Items-->
+                        <div
+                        v-if="currentBagItems.length > 0"
+                        class="text-xs"
+                        >
+                        Current Emergency Bag Items:
+                        </div>
+                        <div v-for="item in currentBagItems" :key="item.itemID" class="flex items-center justify-between bg-gray-100 p-3 rounded">
+                            <div class="flex items-center gap-3">
+                            <!-- Image -->
+                            <img
+                                v-if="item.imgName"
+                                :src="`/api/public/image/${item.imgName}`"
+                                :alt="item.name"
+                                class="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded"
+                            />
+                            <div v-else class="w-12 h-12 bg-gray-300 rounded flex items-center justify-center">
+                                <span class="text-gray-500 text-xs">No Img</span>
+                            </div>
+
+                            <!-- Name -->
+                            <div>
+                                <p class="font-semibold text-sm">{{ item.name }}</p>
+                            </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <UButton
+                                    class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500" @click="decreaseItemCount(item.itemID, true)"
+                                > − </UButton>
+                                <span class="w-8 text-center font-semibold tabular-nums">{{ item.count }}</span>
+                                <UButton
+                                    class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500" @click="increaseItemCount(item.itemID, true)"
+                                > + </UButton>
+
+                                <UButton
+                                    class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-orange-600 text-white hover:bg-orange-700" @click="removeItemFromBag(item.itemID, true)"
                                 > ✕ </UButton>
                                 </div>
                         </div>
@@ -191,18 +238,17 @@ const filteredItems = computed(() => {
 // Get available count for an item in inventory
 const getAvailableQuantity = (itemID: string): number => {
 	const item = volunteerItems.value?.find(i => i.itemID === itemID)
-	const bagItem = bagItems.value.find(bi => bi.itemID === itemID)
-	
-	if (!item) return 0
+    if (!item) return 0
 
-    const originalCount =
-    props.initialData?.EmergencyBagItems?.find(i => i.itemID === itemID)?.count ?? 0
+    const newItem = bagItems.value.find(i => i.itemID === itemID)
 
-    return item.quantity + originalCount - (bagItem?.count || 0)
+    return item.quantity - (newItem?.count || 0)
 }
 
 // Current bag items with counts
 const bagItems = ref<Array<{ itemID: string; count: number; name: string; imgName?: string }>>([])
+//currentBagItems refers to current Emergency Bag Items. bagItems only refer to the newer items being added.
+const currentBagItems = ref<Array<{ itemID: string; count: number; name: string; imgName?: string }>>([])
 
 // Add item to bag or increase count
 const addItemToBag = (item: any) => {
@@ -220,28 +266,58 @@ const addItemToBag = (item: any) => {
 }
 
 // Remove item from bag
-const removeItemFromBag = (itemID: string) => {
-	bagItems.value = bagItems.value.filter(item => item.itemID !== itemID)
+const removeItemFromBag = (itemID: string, isCurrentBag: boolean = false) => {
+    if(isCurrentBag){
+        currentBagItems.value = currentBagItems.value.filter(item => item.itemID !== itemID)
+    }else{
+        bagItems.value = bagItems.value.filter(item => item.itemID !== itemID)
+    }
+	
 }
 
 // Decrease count or remove if count reaches 0
-const decreaseItemCount = (itemID: string) => {
-	const item = bagItems.value.find(bi => bi.itemID === itemID)
-	if (item) {
-		if (item.count === 1) {
-			removeItemFromBag(itemID)
-		} else {
-			item.count--
-		}
-	}
+const decreaseItemCount = (itemID: string, isCurrentBag: boolean = false) => {
+    if(isCurrentBag){
+        const item = currentBagItems.value.find(i => i.itemID === itemID)
+        if (!item) return
+
+        if (item.count === 1) {
+            currentBagItems.value = currentBagItems.value.filter(i => i.itemID !== itemID)
+        } else {
+            item.count--
+        }
+    }else{
+        const item = bagItems.value.find(bi => bi.itemID === itemID)
+        if (item) {
+            if (item.count === 1) {
+                removeItemFromBag(itemID)
+            } else {
+                item.count--
+            }
+        }
+    }
+	
 }
 
 //Increase item count
-const increaseItemCount = (itemID: string) => {
-	const item = bagItems.value.find(bi => bi.itemID === itemID)
-	if (item) {
-		item.count++
-	}
+const increaseItemCount = (itemID: string, isCurrentBag: boolean = false) => {
+    if(isCurrentBag){
+        const item = currentBagItems.value.find(i => i.itemID === itemID)
+        if (!item) return
+
+        const original =
+        props.initialData?.EmergencyBagItems?.find(i => i.itemID === itemID)?.count ?? 0
+
+        if (item.count < original) {
+        item.count++
+        }
+    }else{
+        const item = bagItems.value.find(bi => bi.itemID === itemID)
+        if (item) {
+            item.count++
+        }
+    }
+	
 }
 
 // Expiry Date - Minimum 1 week after current date
@@ -262,7 +338,7 @@ watchEffect(() => {
     d.getDate()
   )
 
-  bagItems.value = bag.EmergencyBagItems.map(item => ({
+  currentBagItems.value = bag.EmergencyBagItems.map(item => ({
     itemID: item.itemID,
     count: item.count,
     name: item.Item.name,
@@ -274,11 +350,13 @@ const handleSubmit = async () => {
   await emit('submit', {
     _bagCategory: selectedCategory.value,
     _expiryDate: expiryDate.value,
-    _items: bagItems.value
+    _items: bagItems.value,
+    _oldItems: currentBagItems.value
   })
 
   selectedCategory.value = null
   bagItems.value = []
+  currentBagItems.value = []
   expiryDate.value = minDate
   searchQuery.value = ''
 
