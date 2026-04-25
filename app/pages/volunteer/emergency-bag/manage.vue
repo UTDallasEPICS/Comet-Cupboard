@@ -11,6 +11,20 @@
                 content: 'rounded-b-lg p-0'
                 }"
                 >
+                <!--Tab Trigger-->
+                <template #default="{ item }">
+                    <div class="flex items-center gap-2" :data-tour="`tab-${item.value}`">
+                        <span>{{ item.label }}</span>
+                        <button
+                            v-if="item.value === 'edit'"
+                            class="hover:cursor-pointer"
+                            @click.stop="closeEditTab"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </template>
+
                 <!--START OF ADD BAG STUFF-->
                 <template #add>
                     <BagEditor @submit="submitBag" />
@@ -46,116 +60,16 @@
                         }"
                         >
                             <template #expanded="{ row }">
-                                <div class="p-4 flex flex-col gap-2">
-                                    <div class="flex flex-col md:flex-row">
-                                        <div class="flex flex-col gap-2 md:w-1/2">
-                                            <div>
-                                                <p class="">Internal ID:</p>
-                                                <p class="">{{ row.original.bagID }}</p>
-                                            </div>
+                                <ExpandedRow
+                                    :key="row.original.bagID"
+                                    :bag="row.original"
+                                    :moveLocations="moveLocations"
+                                    :icons="icons"
 
-                                            <div>
-                                                <p class="">Private Bag:</p>
-                                                <p class="">{{ row.original.private }}</p>
-                                            </div>
-
-                                            <div>
-                                                <p class="">Category:</p>
-                                                <p class="">
-                                                {{ row.original.bagCategory }}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="flex flex-col gap-2 md:w-1/2">
-                                            <div>
-                                                <p class="">Expiry Date:</p>
-                                                <p class="">
-                                                {{ row.original.expiryDate ?
-                                                    new Date(row.original.expiryDate).toLocaleDateString('en-US', {
-                                                        year: 'numeric',
-                                                        month: 'short',
-                                                        day: 'numeric'
-                                                    })
-                                                : 'N/A'
-                                                }}
-                                                </p>
-                                            </div>
-
-                                            <div>
-                                                <div>
-                                                    <p class="">Location:</p>
-                                                    <p class="">
-                                                    {{ row.original.locationName || 'N/A' }}
-                                                    </p>
-                                                </div>
-
-                                                <div class="flex gap-2 items-center">
-                                                    <UInputMenu v-model="row.original._moveLocation" :items="moveLocations" class="w-48"/>
-
-                                                    <UButton
-                                                    size="xs"
-                                                    :icon="icons['move']"
-                                                    variant="solid"
-                                                    @click="moveSingleBag(row.original.bagID, row.original._moveLocation)"
-                                                    >
-                                                    Move
-                                                    </UButton>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    
-                                    
-                                    
-                                    <div>
-                                        <p>Items:</p>
-                                        <div class="flex gap-2 flex-wrap">
-                                            <div v-for="item in row.original.EmergencyBagItems" :key="item.itemID">
-                                                <EmergencyBagItemCard
-                                                    :name="item.Item.name"
-                                                    :imgName="item.Item.imgName"
-                                                    :qty="item.count"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div class="mt-2">
-                                            <UButton
-                                            size="xs"
-                                            :icon="icons['edit']"
-                                            variant="solid"
-                                            @click="editBag(row.original)"
-                                            >
-                                            Edit Bag Contents
-                                            </UButton>
-                                        </div>
-                                    </div>
-
-                                    <UModal :dismissible="false">
-                                        <!--//Would have used SharedButtonCancel but I wanted it in red-->
-                                        <UButton label="Delete Bag" size="xs" color="error" class="self-start"/>
-
-                                        <template #content="{close}">
-                                            <UCard>
-                                            <h3 class="text-lg font-semibold text-red-600">
-                                                Confirm Delete
-                                            </h3>
-
-                                            <p class="text-sm text-gray-600 mt-2">
-                                                Are you sure you want to delete this bag?
-                                            </p>
-
-                                            <div class="flex justify-end gap-2 mt-4">
-                                                <UButton variant="ghost" @click="close">Cancel</UButton>
-                                                <!--//Would have used SharedButtonCancel but I wanted it in red-->
-                                                <UButton color="error" @click="deleteBag(row.original.bagID, close)">Delete</UButton>
-                                            </div>
-                                            </UCard>
-                                        </template>
-                                    </UModal>
-
-                                </div>
+                                    @move="moveSingleBag"
+                                    @edit="editBag"
+                                    @delete="deleteBag"
+                                />
                             </template>
                         </UTable>
                     </section>
@@ -180,8 +94,8 @@
 
 <script lang="ts" setup>
 import {resolveComponent } from 'vue'
-import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date'
 import BagEditor from '~/components/EmergencyBag/BagEditor.vue'
+import ExpandedRow from '~/components/EmergencyBag/ExpandedRow.vue'
 
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
@@ -197,8 +111,8 @@ const activeTab = ref('add')
 
 const items = computed(() => {
   const base = [
-    { label: 'Add New Bag', slot: 'add', value: 'add' },
-    { label: 'View/Modify Bags', slot: 'view', value: 'view' }
+    { label: 'Add Bag', slot: 'add', value: 'add' },
+    { label: 'View Bags', slot: 'view', value: 'view' }
   ]
 
   if (editingBag.value) {
@@ -212,13 +126,18 @@ const items = computed(() => {
   return base
 })
 
+const closeEditTab = () => {
+  editingBag.value = null
+  activeTab.value = 'view'
+}
+
 //Search Query
 const manage_searchQuery = ref('')
 
 //Add Tab
 //Submit bag
 const submitBag = async (data) => {
-    const { _bagCategory, _expiryDate, _items } = data
+    const { _bagCategory, _expiryDate, _items, _oldItems } = data
     if (!_bagCategory) {
         alert('Please select a category')
         return
@@ -229,7 +148,7 @@ const submitBag = async (data) => {
         return
     }
 
-    if (!_items.length) {
+    if (!_items.length && activeTab.value === 'add') {
         alert('Please add items to the bag')
         return
     }
@@ -240,21 +159,28 @@ const submitBag = async (data) => {
     const d = String(_expiryDate.day).padStart(2, '0')
     const isoDate = new Date(`${y}-${m}-${d}T00:00:00Z`).toISOString()
 
-    const payload = {
-        bagCategory: _bagCategory,
-        expiryDate: isoDate,
-        items: _items.map(item => ({
-            itemID: item.itemID,
-            count: item.count
-        }))
-    }
-
 	try {
         let response
         let message
 
         if (activeTab.value === 'edit'){
             //console.log("EDITING BAGG");
+            response = await $fetch('/api/volunteer/emergency-bag/emergencyBagEdit', {
+                method: 'PUT',
+                body: {
+                    bagID: editingBag.value?.bagID,
+                    bagCategory: _bagCategory,
+                    expiryDate: isoDate,
+                    items: _items.map(item => ({
+                        itemID: item.itemID,
+                        count: item.count
+                    })),
+                    oldItems: _oldItems.map(item => ({
+                        itemID: item.itemID,
+                        count: item.count
+                    }))
+                }
+            })
             message = "Bag updated successfully!"
             editingBag.value = null;
             activeTab.value = "view"
