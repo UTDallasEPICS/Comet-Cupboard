@@ -2,6 +2,15 @@
 	<UContainer class="py-8">
 		<header>
 			<SharedButtonNavigateBack text="Back to Categories" :to="{ path: '/volunteer/inventory' }" />
+
+			<UButton 
+				icon="i-heroicons-question-mark-circle" 
+				color="gray" 
+				variant="ghost" 
+				label="Take a Tour" 
+				@click="startTour" 
+			/>
+
 			<SharedTextPageTitle>All Items</SharedTextPageTitle>
 		</header>
 
@@ -14,7 +23,7 @@
 				<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search items" class="grow" />
 				<USelect v-model="sortOption" :items="sortOptions" class="max-w-md grow" />
 			</div>
-			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id = "tour-item-list">
 				<li v-for="item in filtered" :key="item.itemID">
 					<InventoryItemCard
 						:change-count="inventoryChangesItems.find((i) => i.itemID === item.itemID)?.count || 0"
@@ -32,6 +41,10 @@
 </template>
 
 <script lang="ts" setup>
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { onMounted } from "vue"; 
+
 const inventoryStore = useInventoryStore()
 const { inventoryChangesItems } = storeToRefs(inventoryStore)
 
@@ -65,4 +78,18 @@ const sortedItems = computed(() => {
 })
 
 const { query, filtered } = useFuzzySearch(sortedItems, { searchKeys: ["name"] })
+
+const startTour = () => {
+  driverObj.drive();
+};
+
+const driverObj = driver({
+  showProgress: true,
+  steps: [
+    { element: '.tour-edit', popover: { title: 'Edit', description: 'Edit this item or manage its deal.'}},
+	{ element: '.tour-decrement', popover: { title: 'Decrease', description: 'Reduce the quantity.'}},
+	{ element: '.tour-increment', popover: { title: 'Increase', description: 'Increase the quantity.'}}
+  ]
+});
+
 </script>

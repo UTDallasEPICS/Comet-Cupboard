@@ -50,6 +50,7 @@
                         size="xs"
                         :icon="icons['move']"
                         variant="solid"
+                        id = "move-bag"
                         @click="$emit('move', bag.bagID, localMoveLocation)"
                         >
                         Move
@@ -64,7 +65,7 @@
         
         <div>
             <p>Items:</p>
-            <div class="flex gap-2 flex-wrap">
+            <div class="flex gap-2 flex-wrap" id="bag-items">
                 <div v-for="item in bag.EmergencyBagItems" :key="item.itemID">
                     <EmergencyBagItemCard
                         :name="item.Item.name"
@@ -78,6 +79,7 @@
                 size="xs"
                 :icon="icons['edit']"
                 variant="solid"
+                id="edit-trigger"
                 @click="$emit('edit', bag)"
                 >
                 Edit Bag Contents

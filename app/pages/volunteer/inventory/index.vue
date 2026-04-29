@@ -2,10 +2,19 @@
 	<UContainer class="py-8">
 		<header>
 		    <SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
+
+			<UButton 
+				icon="i-heroicons-question-mark-circle" 
+				color="gray" 
+				variant="ghost" 
+				label="Take a Tour" 
+				@click="startTour" 
+			/>
+
 			<SharedTextPageTitle>Inventory Categories</SharedTextPageTitle>
 		</header>
 
-		<section class="mt-4">
+		<section class="mt-4" id = "tour-category-selection">
 			<SharedTextSectionTitle>Select a Category</SharedTextSectionTitle>
 			<div class="mt-4 flex flex-row justify-end">
 				<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="horizontal" />
@@ -23,6 +32,10 @@
 </template>
 
 <script setup lang="ts">
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { onMounted } from "vue"; 
+
 const { data: categories } = await useFetch("/api/student/inventory/categories", {
 	query: { includeArchived: true },
 })
@@ -40,4 +53,16 @@ const { getInventoryChanges } = inventoryStore
 onMounted(async () => {
 	await getInventoryChanges()
 })
+
+const startTour = () => {
+  driverObj.drive();
+};
+
+const driverObj = driver({
+  showProgress: true,
+  steps: [
+    { element: '#tour-category-selection', popover: { title: 'Category Selection', description: 'Select a category to view its items.' } },
+  ]
+});
+
 </script>
