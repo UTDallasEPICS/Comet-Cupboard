@@ -5,6 +5,10 @@
         text="Back to Manage Locations"
         :to="{ path: '/admin/manage/locations' }"
       />
+
+      <UButton icon="i-heroicons-question-mark-circle" color="gray" variant="ghost" label="Take a Tour"
+				@click="startTour" />
+
       <SharedTextPageTitle>Manage Locations</SharedTextPageTitle>
     </header>
 
@@ -21,7 +25,7 @@
           @submit="onSubmit"
           @error="onError"
         >
-          <UFormField name="image" label="Location Image" description="JPG or PNG. Max 2MB.">
+          <UFormField id="image" name="image" label="Location Image" description="JPG or PNG. Max 2MB.">
             <div class="flex flex-col gap-2">
 							<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
 						</div>
@@ -31,8 +35,8 @@
             <UInput v-model="state.name" placeholder="Enter location name" />
           </UFormField>
 
-          <UFormField id="description" name="description" label="Description">
-            <UInput v-model="state.description" placeholder="Enter description" />
+          <UFormField id="link" name="description" label="Link">
+            <UInput v-model="state.description" placeholder="Enter link" />
           </UFormField>
 
           <UFormField id="address" name="address" label="Address">
@@ -44,7 +48,7 @@
               <SharedTextBase>Existing Locations with Similar Names</SharedTextBase>
             </template>
             <template #default>
-              <ul class="space-y-1">
+              <ul class="space-y-1" id="similar">
                 <li v-for="item in mostSimilarItems" :key="item.name">
                   <SharedTextBase>{{ item.name }}</SharedTextBase>
                 </li>
@@ -57,7 +61,7 @@
           </UFormField>
 
           <footer class="flex justify-end mt-4">
-            <SharedButtonPositiveAction type="submit" text="Submit" />
+            <SharedButtonPositiveAction id="submit" type="submit" text="Submit" />
           </footer>
         </UForm>
       </div>
@@ -67,6 +71,9 @@
 
 <script setup lang="ts">
 import * as z from "zod"
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { onMounted } from "vue";
 
 const route = useRoute()
 // Ensure we use the correct param name from your router configuration
@@ -142,4 +149,67 @@ const onSubmit = async (event: any) => {
     console.error("Update failed:", error)
   }
 }
+
+const startTour = () => {
+	driverObj.drive();
+};
+
+const driverObj = driver({
+	showProgress: true,
+	steps: [
+		{
+			element: '#image',
+			popover: {
+				title: 'Upload Image',
+				description: 'Edit uploaded image for the location.'
+			}
+		},
+		{
+			element: '#name',
+			popover: {
+				title: 'Location Name',
+				description: 'Change the name of the location.'
+			}
+		},
+		{
+			element: '#link',
+			popover: {
+				title: 'Link',
+				description: 'Change the link to the website of the location.'
+			}
+		},
+		{
+			element: '#address',
+			popover: {
+				title: 'Address',
+				description: 'Change the address of the location.'
+			}
+		},
+		{
+			element: '#similar',
+			popover: {
+				title: 'Similar Locations',
+				description: 'View and avoid creating duplicates.'
+			}
+		},
+    {
+			element: '#archived',
+			popover: {
+				title: 'Archived',
+				description: 'Check this box to archive the location.'
+			}
+		},
+		{
+			element: '#submit',
+			popover: {
+				title: 'Submit',
+				description: 'Click here to save changes to the location.'
+			}
+		}
+	]
+})
+
+onMounted(() => {
+	//diverObj.drive();
+});
 </script>

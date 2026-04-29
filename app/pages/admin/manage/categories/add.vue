@@ -2,6 +2,10 @@
 	<UContainer class="py-8">
 		<header>
 			<SharedButtonNavigateBack text="Back to Manage Categories" :to="{ path: '/admin/manage/categories' }" />
+
+			<UButton icon="i-heroicons-question-mark-circle" color="gray" variant="ghost" label="Take a Tour"
+				@click="startTour" />
+
 			<SharedTextPageTitle>Manage Categories</SharedTextPageTitle>
 		</header>
 
@@ -37,7 +41,7 @@
 							<SharedTextBase class="mb-1"> Existing Categories with Similar Names </SharedTextBase>
 						</template>
 						<template #default>
-							<ul class="space-y-1">
+							<ul class="space-y-1" id="similar">
 								<li v-for="similarItem in mostSimilarItems" :key="similarItem.id">
 									<SharedTextBase>{{ similarItem.name }}</SharedTextBase>
 								</li>
@@ -45,7 +49,7 @@
 						</template>
 					</UCard>
 					<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
-						<SharedButtonPositiveAction type="submit" text="Submit" />
+						<SharedButtonPositiveAction id="submit" type="submit" text="Submit" />
 					</footer>
 				</UForm>
 			</div>
@@ -55,6 +59,9 @@
 
 <script lang="ts" setup>
 import * as z from "zod"
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { onMounted } from "vue";
 
 const formSchema = imageSchema.extend({
 	categoryName: z
@@ -107,4 +114,46 @@ const onSubmit = async (event) => {
 		// idk for now
 	}
 }
+
+const startTour = () => {
+	driverObj.drive();
+};
+
+const driverObj = driver({
+	showProgress: true,
+	steps: [
+		{
+			element: '#image',
+			popover: {
+				title: 'Upload Image',
+				description: 'Start by uploading an image for the category.'
+			}
+		},
+		{
+			element: '#categoryName',
+			popover: {
+				title: 'Category Name',
+				description: 'Enter a clear and recognizable name.'
+			}
+		},
+		{
+			element: '#similar',
+			popover: {
+				title: 'Similar Categories',
+				description: 'These help you avoid creating duplicates.'
+			}
+		},
+		{
+			element: '#submit',
+			popover: {
+				title: 'Submit',
+				description: 'Click here to create the new category.'
+			}
+		}
+	]
+})
+
+onMounted(() => {
+	//diverObj.drive();
+});
 </script>

@@ -22,7 +22,7 @@
                     </div>
 
                 <!-- Product List -->
-                <div class="overflow-y-auto h-fit max-h-124 px-3 py-3 space-y-3">
+                <div class="overflow-y-auto h-fit max-h-124 px-3 py-3 space-y-3" id="product-list">
                     <div v-if="!filteredItems?.length" class="text-center text-gray-500 py-8">
                         Search results will appear here
                     </div>
@@ -74,7 +74,7 @@
             <div class="flex flex-col gap-4">
                 
                 <!-- Current Bag Items -->
-                <UCard class="flex-1 min-h-0">
+                <UCard class="flex-1 min-h-0" id="current-bag">
                     <template #header>
                         <div class="bg-final-utd-green flex-1 text-white text-center px-6 py-3 rounded">
                             <h2 class="text-xl font-bold">Current Bag</h2>
@@ -125,7 +125,7 @@
                         <template #header>
                             <div class="text-xl font-bold text-center text-gray-700">Category</div>
                         </template>
-                        <URadioGroup v-model="selectedCategory" size="md" variant="card" :items="categories" />
+                        <URadioGroup v-model="selectedCategory" id="category-selection" size="md" variant="card" :items="categories" />
                     </UCard>
                     
                     <div class="flex flex-col gap-4 h-full">
@@ -135,13 +135,13 @@
                             <template #header>
                                 <div class="text-xl font-bold text-center flex-1 text-gray-700">Expiry Date</div>
                             </template>
-                            <div class="flex h-full items-center justify-center">
+                            <div class="flex h-full items-center justify-center" id="expiry-date">
                                 <UInputDate v-model="expiryDate" size="xl" icon="i-lucide-calendar" :min-value="minDate"/>
                             </div>
                         </UCard>
                         
                             <!--Confirm Button -->
-                            <UCard class="flex-none">
+                            <UCard class="flex-none" id="confirm-button">
                                 <UButton
                                 :label="props.initialData ? 'Update Bag' : 'Confirm Bag'"
                                 block
@@ -313,7 +313,7 @@ const handleSubmit = async () => {
   expiryDate.value = minDate
   searchQuery.value = ''
 
-  await refreshItems() // 🔥 refresh inventory
+  await refreshItems() 
 }
 
 </script>
