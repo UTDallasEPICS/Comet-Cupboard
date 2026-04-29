@@ -1,6 +1,7 @@
 <template>
 	<UContainer class="py-8">
 		<header>
+			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/admin' }" />
 			<SharedTextPageTitle>Manage Locations</SharedTextPageTitle>
 		</header>
 
@@ -38,8 +39,10 @@ const UCheckbox = resolveComponent("UCheckbox")
 const UDropdownMenu = resolveComponent("UDropdownMenu")
 
 const columnsDef = [
+	{ header: "Image", accessorKey: "imgName", type: "image" },
 	{ header: "Name", accessorKey: "name", type: "text", sortable: true },
 	{ header: "Address", accessorKey: "address", type: "text", sortable: true },
+	{ header: "Description", accessorKey: "description", type: "text" },
 	{
 		header: "Archived",
 		accessorKey: "archived",
