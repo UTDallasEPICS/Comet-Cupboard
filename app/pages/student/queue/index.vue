@@ -4,7 +4,7 @@
 			<SharedTextPageTitle>Queue</SharedTextPageTitle>
 		</header>
 
-		<section class="mt-4">
+		<section class="mt-4" id="status">
 			<UCard>
 				<template #header>
 					<SharedTextSectionTitle> Current Status </SharedTextSectionTitle>
@@ -29,7 +29,7 @@
 			</UCard>
 		</section>
 
-		<section class="mt-4">
+		<section class="mt-4" id="queue">
 			<UCard>
 				<template #header>
 					<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
@@ -41,6 +41,38 @@
 </template>
 
 <script lang="ts" setup>
+import { driver } from 'driver.js'
+import 'driver.js/dist/driver.css'
+
+onMounted(async () => {
+	await getQueue()
+	await updateQueueStatus()
+
+	const driverObj = driver({
+		showProgress: false,
+		steps: [
+			{
+				element: '#status',
+				popover: {
+					title: 'Current Status',
+					description: 'Click Join Queue to get in line. Once joined you can see your position and public display name.',
+                    side: 'bottom',
+				}
+			},
+			{
+				element: '#queue',
+                popover: {
+                    title: 'Current Queue',
+                    description: 'See everyone currently waiting in the queue. Your row will be highlighted when you join.',
+                    side: 'bottom',
+				}
+			}
+		]
+	})
+
+	driverObj.drive()
+})
+
 const queueStore = useQueueStore()
 const { queue, queueStatus } = storeToRefs(queueStore)
 const { getQueue, updateQueueStatus } = queueStore

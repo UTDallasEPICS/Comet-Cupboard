@@ -1,0 +1,83 @@
+[33mbe9e74c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/QRcode[m[33m, [m[1;31morigin/feature/QRcode[m[33m)[m Merge remote-tracking branch 'origin/stage' into feature/QRcode
+[33m37b35fc[m added initial qr code ui
+[33m6f531ba[m[33m ([m[1;31morigin/stage[m[33m, [m[1;31morigin/feature/create-bag-api-calls[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #251 from UTDallasEPICS/feature/location-api-calls
+[33m1e8131e[m[33m ([m[1;31morigin/feature/location-api-calls[m[33m)[m Post, Put, Get Functions for Location
+[33m479af1c[m Display role throughout website and an "All Items" category card (#245)
+[33m5d83cfc[m Merge pull request #243 from UTDallasEPICS/feature-emergency-bag-get
+[33m4a457ae[m Utilized Util Table
+[33mec39dab[m Basic search functionality
+[33m6ecdc3a[m Displays basic data on the frontend
+[33md2f5ea6[m Added get endpoint for emergency bags
+[33m48b2a73[m Renaming emergencyBag.get file to emergencyBags.get
+[33m5c84506[m Save feature for inventory management, fuzzy search, and ability to see archived items/categories and toggle for deals (#242)
+[33m6f2f9cf[m Merge branch 'stage' into feature-emergency-bag-get
+[33ma367b8d[m Empty Helper Function
+[33m7f7e2fd[m Added schema for Emergency Bags feature (#236)
+[33m153ec3a[m fixed shopping checkout and verification functionality (#240)
+[33m0e03d96[m Manage categories, utilities for making Nuxt UI tables and forms, builder pattern for updates, image compression and upload refactor (#238)
+[33m2c2faa3[m Adding the files and a helper function
+[33m49c7092[m[33m ([m[1;32mstage[m[33m)[m scheduled task to clear old data from the database at midnight every day (#233)
+[33m478cc89[m Merge pull request #215 from UTDallasEPICS/feature/eb-manage-tabs
+[33m378dd6b[m 201 feature manage volunteer flow (#229)
+[33m0f9b269[m Changed content div to a section
+[33m975a0f9[m standardized icons in eb-manage
+[33mc377474[m Cleaned up eb-Manage
+[33mb3b8237[m 222 backend cleanup like really good cleanup (#227)
+[33mcd39d3c[m Merge remote-tracking branch 'origin/stage' into feature/eb-manage-tabs
+[33m84259e2[m minimized styling
+[33m3223b57[m Removed hardcoded colors
+[33m814ce6c[m Removed redundant tailwind tags
+[33m6f1ef72[m standardize status codes with http status codes for readability (#220)
+[33m87acaf6[m centralized icons in a single file and standardized icon usage across the app (#219)
+[33m88a84fa[m update to prisma 7 (#217)
+[33m2415d4f[m starter code for both tabs
+[33mb5f7ef0[m Initial Tab Design
+[33m707e618[m Big clean up (#200)
+[33ma4dd4f0[m some data stuff (#186)
+[33mcab9069[m Components shopping (#181)
+[33m58db731[m Inventory management finalization (#182)
+[33m9f46447[m Revised Admin Dashboard and Queue Pages (#175)
+[33ma602da7[m verify cart (#178)
+[33m892f669[m Inventory Management Core  (#170)
+[33m10ee472[m componentize and template code (#167)
+[33mab16fde[m nuxt v4 reorganization (#140)
+[33mf56fc24[m Queue backend and inter user functionality (#137)
+[33m5d365c8[m allow multiple cart eventsources to be created for the same netid (#139)
+[33m318008b[m 125 additional source fields (#136)
+[33m37ebaed[m Elements in review change removed on zero (#134)
+[33m0ede924[m update pinia and turn off inline styling from nuxt
+[33m09c74ca[m close event sources when page redirects (#130)
+[33m5bf3863[m export relevant tables to excel sheet and expose api route for it (#128)
+[33mc9f4335[m Makes the search components reactive to inputs (#124)
+[33m40484f1[m Dropdown in InventoryReviewChange scaled to modal (#114)
+[33m1b4cd7b[m Carts with no items cannot be submitted (#116)
+[33mb8e1a91[m Data page (#117)
+[33m4180762[m Merge pull request #122 from UTDallasEPICS/Inventory-Managment-Add-button-and-z-index-fixes
+[33m3362e59[m Fixed z-index for inventory management, and changed add items button
+[33mde3622d[m Fixed z-index for inventory management, and changed add items button
+[33m9c12203[m added z value to accepted rejected and statement of understanding so … (#113)
+[33mef5046f[m Merge pull request #103 from UTDallasEPICS/Delete-localhost3000
+[33m1b74e23[m Fixed api call and runtimeconfig code
+[33m064a7f4[m Replaced runtimeconfig code, added API call. Updated env.example
+[33mbf3584b[m Adding sources (#105)
+[33md08e76c[m Replaced conformation popup with terms and cond. (#101)
+[33m5294b4a[m Added on click effects to buttons (#107)
+[33me24f483[m Hamburger (#106)
+[33mba2f599[m Merge pull request #108 from UTDallasEPICS/Issue-#4-Cart-items-to-0-or-null
+[33med0deed[m Fix cart on zero issue Now checks for zero or invalid chars on the enter key or clickoff Additonally removed the limit on the input field for how many characters can be added at a time
+[33m15c5c46[m Merge pull request #102 from UTDallasEPICS/Shopping-cart-numbers
+[33ma34a58a[m Deleted places where localhost was used and added environment variable for localhost3000
+[33m7e220c7[m added message for when no cart is available (#100)
+[33m87c5973[m Changed cart count indicator to total count instead of adjusted count.
+[33m5283ea7[m Changed shopping bag icon to cart and added a count
+[33m6dc1921[m Changed shopping bag icon to cart, and added a count
+[33m38668a8[m Move cart modal to shopping page, fix category item grid transition hydration, and fix edit item image placeholder (#98)
+[33mcd9ad8d[m Merge pull request #97 from UTDallasEPICS/refactor-from-merge-conflicts
+[33m3eb5441[m fix cart store reactivity with storeToRefs
+[33mc427a7f[m fix modals on shopping
+[33mf5f2a4d[m fix modal typo and fix source on review changes
+[33m3fc40fe[m modal changes
+[33me34b96c[m fix parenthesized multiple attributes on the same line
+[33med58ae1[m Merge pull request #96 from UTDallasEPICS/catch-all
+[33m18acf44[m ignore migrations in .gitignore and remove some console.logs
+[33ma93d1c3[m[33m ([m[1;31morigin/main[m[33m)[m deleted git history, hello world!
