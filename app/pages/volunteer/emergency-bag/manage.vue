@@ -1,28 +1,23 @@
 <template>
     <header>
-			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
-	</header>
+        <SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
+
+        <UButton icon="i-heroicons-question-mark-circle" color="gray" variant="ghost" label="Take a Tour"
+            @click="startTour" />
+    </header>
     <div class="w-full flex items-center justify-center p-6">
         <!--Tabs-->
         <UContainer>
-            <UTabs
-                v-model="activeTab"
-                :items="items"
-                :ui="{
+            <UTabs v-model="activeTab" :items="items" :ui="{
                 root: 'gap-0 border-2 border-final-border-soft rounded-lg',
                 trigger: 'rounded-t-lg',
                 content: 'rounded-b-lg p-0'
-                }"
-                >
+            }">
                 <!--Tab Trigger-->
                 <template #default="{ item }">
-                    <div class="flex items-center gap-2" :data-tour="`tab-${item.value}`">
+                    <div class="flex items-center gap-2" :id="`tab-${item.value}`">
                         <span>{{ item.label }}</span>
-                        <button
-                            v-if="item.value === 'edit'"
-                            class="hover:cursor-pointer"
-                            @click.stop="closeEditTab"
-                        >
+                        <button v-if="item.value === 'edit'" class="hover:cursor-pointer" @click.stop="closeEditTab">
                             ✕
                         </button>
                     </div>
@@ -38,41 +33,26 @@
                 <template #view>
                     <section>
                         <div class="p-2 flex flex-col gap-2 md:justify-between md:flex-row">
-                            <UInput
-                                v-model="manage_searchQuery"
-                                :icon="icons['search']"
-                                placeholder="Search items"
-                                class="w-full md:w-72"
-                            />
+                            <UInput v-model="manage_searchQuery" :icon="icons['search']" placeholder="Search items"
+                                id="manage-search" class="w-full md:w-72" />
                             <div v-if="selectedBagIDs.length > 0" class="flex justify-between">
                                 <UInputMenu v-model="moveLocation" :items="moveLocations" />
-                                <UButton  :icon="icons['move']" size="xs" variant="solid"
-                                @click="moveBags"
-                                >
+                                <UButton :icon="icons['move']" size="xs" variant="solid" @click="moveBags">
                                     Move
                                 </UButton>
                             </div>
                         </div>
-                        
-                        <UTable  sticky v-model:expanded="expanded" v-model:rowSelection="selected"
-                        :getRowId="row => row.bagID" :data="filtered_viewData" :columns="columns"
-                        :ui="{
-                            td: 'py-2',
-                            th: 'py-2',
-                            tr: 'text-sm'
-                        }"
-                        >
-                            <template #expanded="{ row }">
-                                <ExpandedRow
-                                    :key="row.original.bagID"
-                                    :bag="row.original"
-                                    :moveLocations="moveLocations"
-                                    :icons="icons"
 
-                                    @move="moveSingleBag"
-                                    @edit="editBag"
-                                    @delete="deleteBag"
-                                />
+                        <UTable sticky v-model:expanded="expanded" v-model:rowSelection="selected" id="open-bag"
+                            :getRowId="row => row.bagID" :data="filtered_viewData" :columns="columns" :ui="{
+                                td: 'py-2',
+                                th: 'py-2',
+                                tr: 'text-sm'
+                            }">
+                            <template #expanded="{ row }" id="click-to-open">
+                                <ExpandedRow :key="row.original.bagID" :bag="row.original"
+                                    :moveLocations="moveLocations" :icons="icons" @move="moveSingleBag" @edit="editBag"
+                                    @delete="deleteBag" />
                             </template>
                         </UTable>
                     </section>
@@ -81,12 +61,9 @@
 
                 <!--START OF EDIT BAG-->
                 <template #edit>
-                    <BagEditor
-                    :initialData="editingBag"
-                    @submit="submitBag"
-                    />
+                    <BagEditor :initialData="editingBag" @submit="submitBag" />
                 </template>
-                
+
                 <!--END OF EDIT BAG-->
             </UTabs>
         </UContainer>
@@ -96,42 +73,46 @@
 </template>
 
 <script lang="ts" setup>
-import {resolveComponent } from 'vue'
+import { resolveComponent } from 'vue'
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { onMounted } from "vue";
 import BagEditor from '~/components/EmergencyBag/BagEditor.vue'
 import ExpandedRow from '~/components/EmergencyBag/ExpandedRow.vue'
+import { BagCategory } from '~~/prisma/generated/prisma/enums';
 
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
 
 const resolvedComponents = {
-  UButton: resolveComponent('UButton'),
-  UCheckbox: resolveComponent('UCheckbox'),
-  UDropdownMenu: resolveComponent('UDropdownMenu')
+    UButton: resolveComponent('UButton'),
+    UCheckbox: resolveComponent('UCheckbox'),
+    UDropdownMenu: resolveComponent('UDropdownMenu')
 }
 
 //Tabs Setup
 const activeTab = ref('add')
 
 const items = computed(() => {
-  const base = [
-    { label: 'Add Bag', slot: 'add', value: 'add' },
-    { label: 'View Bags', slot: 'view', value: 'view' }
-  ]
+    const base = [
+        { label: 'Add Bag', slot: 'add', value: 'add' },
+        { label: 'View Bags', slot: 'view', value: 'view' }
+    ]
 
-  if (editingBag.value) {
-    base.push({
-      label: `Edit ${editingBag.value.label}`,
-      slot: 'edit',
-      value: 'edit'
-    })
-  }
+    if (editingBag.value) {
+        base.push({
+            label: `Edit ${editingBag.value.label}`,
+            slot: 'edit',
+            value: 'edit'
+        })
+    }
 
-  return base
+    return base
 })
 
 const closeEditTab = () => {
-  editingBag.value = null
-  activeTab.value = 'view'
+    editingBag.value = null
+    activeTab.value = 'view'
 }
 
 //Search Query
@@ -162,11 +143,11 @@ const submitBag = async (data) => {
     const d = String(_expiryDate.day).padStart(2, '0')
     const isoDate = new Date(`${y}-${m}-${d}T00:00:00Z`).toISOString()
 
-	try {
+    try {
         let response
         let message
 
-        if (activeTab.value === 'edit'){
+        if (activeTab.value === 'edit') {
             //console.log("EDITING BAGG");
             response = await $fetch('/api/volunteer/emergency-bag/emergencyBagEdit', {
                 method: 'PUT',
@@ -187,7 +168,7 @@ const submitBag = async (data) => {
             message = "Bag updated successfully!"
             editingBag.value = null;
             activeTab.value = "view"
-        }else{
+        } else {
             response = await $fetch('/api/volunteer/emergency-bag/emergencyBags', {
                 method: 'POST',
                 body: {
@@ -201,23 +182,23 @@ const submitBag = async (data) => {
             })
             message = "Bag created successfully!"
         }
-		 
 
-		//console.log(message, response)
-		
-		// Refresh bags list
+
+        //console.log(message, response)
+
+        // Refresh bags list
         await refreshEmergencyBags()
         //volunteerItems.value = await $fetch("/api/student/inventory/items")
 
         alert(message)
-        
-		
-	} catch (err: any) {
-		console.error('Failed to create bag:', err)
-		alert(`Error: ${err.message || 'Failed to create bag'}`)
-	}
 
-    
+
+    } catch (err: any) {
+        console.error('Failed to create bag:', err)
+        alert(`Error: ${err.message || 'Failed to create bag'}`)
+    }
+
+
 }
 
 //View Tab
@@ -225,92 +206,95 @@ const permissions = usePermissionsStore()
 const { canAdminAccess } = storeToRefs(permissions)
 
 const emergencyBagsEndpoint = computed(() =>
-  canAdminAccess.value
-    ? '/api/admin/emergency-bag/emergencyBags'
-    : '/api/volunteer/emergency-bag/emergencyBags'
+    canAdminAccess.value
+        ? '/api/admin/emergency-bag/emergencyBags'
+        : '/api/volunteer/emergency-bag/emergencyBags'
 )
 
 const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch(emergencyBagsEndpoint);
 const expanded = ref({})
 const selected = ref({})
 
-const {data: _moveLocations} = await useFetch('/api/volunteer/location');
+const { data: _moveLocations } = await useFetch('/api/volunteer/location');
 const moveLocations = computed(() => {
-  return _moveLocations.value?.map(loc => loc.name) ?? []
+    return _moveLocations.value?.map(loc => loc.name) ?? []
 })
 const moveLocation = ref('')
 
 
 const columnsDef = [
-  {
-    header: ({ table }) =>
-        h(resolvedComponents.UCheckbox, {
-            modelValue: table
-            ? table.getIsAllRowsSelected()
-                ? true
-                : table.getIsSomeRowsSelected()
-                ? 'indeterminate'
-                : false
-            : false,
-            'onUpdate:modelValue': (val) => table?.toggleAllRowsSelected(val),
-        }),
-    type: 'checkbox2'
-},
-  {header: 'Bag ID',accessorKey: 'label',type: 'text',sortable: true},
-  {header: 'Location',accessorKey: 'locationName',type: 'text'},
-  {header: 'Category',accessorKey: 'bagCategory',type: 'text', 
-    cell: ({ row }) => categoryMap[row.original.bagCategory] ?? row.original.bagCategory},
-  /*{
-    type: 'edit',icon: icons['edit'],
-    onClick: (row) => {  console.log('To implement...')},
-    meta: {class: {th: 'w-12 hidden md:table-cell', td: 'w-12 hidden md:table-cell'}}
-  },*/
-  {header: 'Private',accessorKey: 'private',type: 'text',sortable: true,
-    cell: ({ row }) => row.original.private ? 'Yes' : 'No'
-  },
-  {type: "expand", meta: {class: {th: "w-12", td: "w-12"}}}
+    {
+        header: ({ table }) =>
+            h(resolvedComponents.UCheckbox, {
+                modelValue: table
+                    ? table.getIsAllRowsSelected()
+                        ? true
+                        : table.getIsSomeRowsSelected()
+                            ? 'indeterminate'
+                            : false
+                    : false,
+                'onUpdate:modelValue': (val) => table?.toggleAllRowsSelected(val),
+            }),
+        type: 'checkbox2'
+    },
+    { header: 'Bag ID', accessorKey: 'label', type: 'text', sortable: true },
+    { header: 'Location', accessorKey: 'locationName', type: 'text' },
+    {
+        header: 'Category', accessorKey: 'bagCategory', type: 'text',
+        cell: ({ row }) => categoryMap[row.original.bagCategory] ?? row.original.bagCategory
+    },
+    /*{
+      type: 'edit',icon: icons['edit'],
+      onClick: (row) => {  console.log('To implement...')},
+      meta: {class: {th: 'w-12 hidden md:table-cell', td: 'w-12 hidden md:table-cell'}}
+    },*/
+    {
+        header: 'Private', accessorKey: 'private', type: 'text', sortable: true,
+        cell: ({ row }) => row.original.private ? 'Yes' : 'No'
+    },
+    { type: "expand", meta: { class: { th: "w-12", td: "w-12" } } }
 ]
 
 const columns = buildNuxtUITable(columnsDef, resolvedComponents)
 
 const categoryMap: Record<string, string> = {
-    'VEGETARIAN_AND_PEANUT_BUTTER' : 'Veg_PB',
-    'VEGETARIAN_AND_NON_PEANUT_BUTTER' : 'Veg_NoPB',
-    'NONVEGETARIAN_AND_PEANUT_BUTTER' : 'NonVeg_PB',
-    'NONVEGETARIAN_AND_NON_PEANUT_BUTTER' : 'NonVeg_NoPB'
+    'VEGETARIAN_AND_PEANUT_BUTTER': 'Veg_PB',
+    'VEGETARIAN_AND_NON_PEANUT_BUTTER': 'Veg_NoPB',
+    'NONVEGETARIAN_AND_PEANUT_BUTTER': 'NonVeg_PB',
+    'NONVEGETARIAN_AND_NON_PEANUT_BUTTER': 'NonVeg_NoPB'
 }
 
 const filtered_viewData = computed(() => {
-  if (!emergencyBags.value) return []
+    if (!emergencyBags.value) return []
 
-  const view_query = manage_searchQuery.value.toLowerCase().trim()
+    const view_query = manage_searchQuery.value.toLowerCase().trim()
 
-  return emergencyBags.value.filter((bag) => {
-    const categoryShort =
-      categoryMap[bag.bagCategory] ?? bag.bagCategory
+    return emergencyBags.value.filter((bag) => {
+        const categoryShort =
+            categoryMap[bag.bagCategory] ?? bag.bagCategory
 
-    if (!view_query) return true
+        if (!view_query) return true
 
-    return (
-      bag.label?.toLowerCase().includes(view_query) ||
-      bag.locationName?.toLowerCase().includes(view_query) ||
-      categoryShort.toLowerCase().includes(view_query)
-    )
-  })
+        return (
+            bag.label?.toLowerCase().includes(view_query) ||
+            bag.locationName?.toLowerCase().includes(view_query) ||
+            categoryShort.toLowerCase().includes(view_query)
+        )
+    })
 })
 
 const selectedBagIDs = computed(() => {
-  return Object.keys(selected.value).filter(id => selected.value[id]);
+    return Object.keys(selected.value).filter(id => selected.value[id]);
 })
 
-const moveBags = async() => {
+const moveBags = async () => {
     try {
         await $fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
-        method: "PATCH",
-        body: {
-            bagIDs: selectedBagIDs.value,
-            location: moveLocation.value
-        }
+            method: "PATCH",
+            body: {
+                bagIDs: selectedBagIDs.value,
+                location: moveLocation.value
+            }
         })
 
         await refreshEmergencyBags()
@@ -324,14 +308,14 @@ const moveBags = async() => {
     selected.value = {};
 }
 
-const moveSingleBag = async(bagID, location) => {
+const moveSingleBag = async (bagID, location) => {
     try {
         await $fetch("/api/volunteer/emergency-bag/emergencyBagsMove", {
-        method: "PATCH",
-        body: {
-            bagIDs: [bagID],
-            location
-        }
+            method: "PATCH",
+            body: {
+                bagIDs: [bagID],
+                location
+            }
         })
 
     } catch (err) {
@@ -340,7 +324,7 @@ const moveSingleBag = async(bagID, location) => {
     await refreshEmergencyBags();
 }
 
-const deleteBag = async(bagID,close) => {
+const deleteBag = async (bagID, close) => {
     try {
         await $fetch('/api/volunteer/emergency-bag/emergencyBagArchive', {
             method: 'POST',
@@ -359,8 +343,57 @@ const deleteBag = async(bagID,close) => {
 const editingBag = ref(null)
 
 const editBag = (bag) => {
-  editingBag.value = bag
-  activeTab.value = 'edit'
+    editingBag.value = bag
+    activeTab.value = 'edit'
 }
+
+const addSteps = [
+    { element: '#tab-view', popover: { title: 'View', description: 'View the details of the selected emergency bag.' } },
+    { element: '#tab-add', popover: { title: 'Add', description: 'Add a new emergency bag to the system.' } },
+    { element: '#product-list', popover: { title: 'Edit', description: 'Edit the details of the selected emergency bag.' } },
+    { element: '#current-bag', popover: { title: 'Current Bag', description: 'View the current items in the emergency bag.' } },
+    { element: '#category-selection', popover: { title: 'Category Selection', description: 'Select the category for the emergency bag.' } },
+    { element: '#expiry-date', popover: { title: 'Expiry Date', description: 'Set the expiry date for the emergency bag.' } },
+    { element: '#confirm-button', popover: { title: 'Confirm Button', description: 'Click to confirm and save the emergency bag details.' } },
+]
+
+const viewSteps = [
+    { element: '#manage-search', popover: { title: 'Search', description: 'Search for emergency bags by ID, location, or category.' } },
+    { element: '#open-bag', popover: { title: 'Open a Bag', description: 'Let’s open a bag to see more options.' } },
+    {
+        element: 'button:has(.i-lucide\\:chevron-down)',
+        popover: {
+            title: 'Open Bag',
+            description: 'Click here to expand the bag and see more options.'
+        },
+        onNext: async () => {
+            document.querySelector('button:has(.i-lucide\\:chevron-down)')?.click()
+            await nextTick()
+        },
+    },
+    { element: '#move-bag', popover: { title: 'Move Options', description: 'Select one or more bags and choose a location to move them to.' } },
+    { element: '#bag-items', popover: { title: 'Bag Items', description: 'View the items contained in the emergency bag.' } },
+    { element: '#edit-trigger', popover: { title: 'Edit Bag', description: 'Click to edit the contents and details of the emergency bag.' } },
+]
+
+const startTour = async () => {
+    let steps = []
+
+    if (activeTab.value === 'add') {
+        steps = addSteps
+    } else if (activeTab.value === 'view') {
+        steps = viewSteps
+    }
+
+    const driverObj = driver({
+        showProgress: true,
+        steps
+    })
+
+    await nextTick() // ensure DOM is ready
+    driverObj.drive()
+}
+
+
 
 </script>
