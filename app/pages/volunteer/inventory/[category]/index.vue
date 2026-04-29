@@ -2,6 +2,15 @@
 	<UContainer class="py-8">
 		<header>
 			<SharedButtonNavigateBack text="Back to Categories" :to="{ path: '/volunteer/inventory' }" />
+
+			<UButton 
+				icon="i-heroicons-question-mark-circle" 
+				color="gray" 
+				variant="ghost" 
+				label="Take a Tour" 
+				@click="startTour" 
+			/>
+			
 			<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
 		</header>
 
@@ -33,6 +42,10 @@
 </template>
 
 <script lang="ts" setup>
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { onMounted } from "vue"; 
+
 const route = useRoute()
 const currentCategory = route.params.category as string
 const inventoryStore = useInventoryStore()
@@ -78,4 +91,17 @@ const sortedItems = computed(() => {
 })
 
 const { query, filtered } = useFuzzySearch(sortedItems, { searchKeys: ["name"] })
+
+const startTour = () => {
+  driverObj.drive();
+};
+
+const driverObj = driver({
+  showProgress: true,
+  steps: [
+    { element: '.tour-edit', popover: { title: 'Edit', description: 'Edit this item or manage its deal.'}},
+	{ element: '.tour-decrement', popover: { title: 'Decrease', description: 'Reduce the quantity.'}},
+	{ element: '.tour-increment', popover: { title: 'Increase', description: 'Increase the quantity.'}}
+  ]
+});
 </script>

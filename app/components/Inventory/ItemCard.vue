@@ -8,7 +8,7 @@
 					side: 'bottom',
 				}"
 			>
-				<UButton :icon="icons['edit']" size="xs" variant="ghost" />
+				<UButton :icon="icons['edit']" class="tour-edit" size="xs" variant="ghost" />
 			</UDropdownMenu>
 		</template>
 		<template #body>
@@ -27,7 +27,7 @@
 				</div>
 				<div>
 					<div class="flex items-center gap-1">
-						<UButton :icon="icons['subtract']" size="xs" variant="soft" @click="decrement" />
+						<UButton :icon="icons['subtract']" class = "tour-decrement" size="xs" variant="soft" @click="decrement" />
 						<UInputNumber
 							v-model="adjustAmount"
 							class="w-12"
@@ -40,7 +40,7 @@
 							}"
 							@blur="ensureValid"
 						/>
-						<UButton :icon="icons['add']" size="xs" variant="soft" @click="increment" />
+						<UButton :icon="icons['add']" class = "tour-increment" size="xs" variant="soft" @click="increment" />
 					</div>
 				</div>
 			</div>

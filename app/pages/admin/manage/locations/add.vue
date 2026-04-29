@@ -1,10 +1,11 @@
 <template>
 	<UContainer class="py-8">
 		<header>
-			<SharedButtonNavigateBack
-				text="Back to Manage Locations"
-				:to="{ path: '/admin/manage/locations' }"
-			/>
+			<SharedButtonNavigateBack text="Back to Manage Locations" :to="{ path: '/admin/manage/locations' }" />
+
+			<UButton icon="i-heroicons-question-mark-circle" color="gray" variant="ghost" label="Take a Tour"
+				@click="startTour" />
+
 			<SharedTextPageTitle>Manage Locations</SharedTextPageTitle>
 		</header>
 
@@ -12,21 +13,12 @@
 			<SharedTextSectionTitle>Add Location</SharedTextSectionTitle>
 
 			<div class="mx-auto w-min">
-				<UForm
-					:validate="validate"
-					:state="state"
-					class="w-96 space-y-4"
-					@submit="onSubmit"
-					@error="onError"
-				>
-					<UFormField
-						id="image"
-						name="image"
-						label="Category Image"
-						description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels"
-					>
+				<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
+					<UFormField id="image" name="image" label="Category Image"
+						description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels">
 						<div class="flex flex-col gap-2">
-							<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
+							<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image"
+								accept=".jpg,.jpeg,.png" />
 						</div>
 					</UFormField>
 
@@ -34,7 +26,7 @@
 						<UInput v-model="state.name" />
 					</UFormField>
 
-					<UFormField id="description" name="description" label="Description">
+					<UFormField id="link" name="description" label="Link">
 						<UInput v-model="state.description" />
 					</UFormField>
 
@@ -49,15 +41,15 @@
 							</SharedTextBase>
 						</template>
 
-						<ul class="space-y-1">
+						<ul class="space-y-1" id="similar">
 							<li v-for="item in mostSimilarItems" :key="item.name">
 								<SharedTextBase>{{ item.name }}</SharedTextBase>
 							</li>
 						</ul>
 					</UCard>
 
-					<footer class="flex justify-end mt-4">
-						<SharedButtonPositiveAction type="submit" text="Submit" />
+					<footer class="flex justify-end mt-4" >
+						<SharedButtonPositiveAction id="submit" type="submit" text="Submit" />
 					</footer>
 				</UForm>
 			</div>
@@ -67,19 +59,22 @@
 
 <script setup lang="ts">
 import * as z from "zod"
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { onMounted } from "vue";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Location name is required"),
-  address: z.string().min(1, "Address is required"),
-  description: z.string().url("Must be a valid URL").or(z.literal("")),
-  image: z.any().refine((file) => file, "An image is required"),
+	name: z.string().min(1, "Location name is required"),
+	address: z.string().min(1, "Address is required"),
+	description: z.string().url("Must be a valid URL").or(z.literal("")),
+	image: z.any().refine((file) => file, "An image is required"),
 })
 
 const { state, validate, onError } = createFormBuilder(formSchema, () => ({
-  name: '',
-  address: '',
-  description: '',
-  image: undefined,
+	name: '',
+	address: '',
+	description: '',
+	image: undefined,
 }))
 
 const { data: locations } = await useFetch("/api/public/location/locations", {
@@ -99,29 +94,86 @@ watch(
 const mostSimilarItems = computed(() => filtered.value.slice(0, 5))
 
 const onSubmit = async (event: any) => {
-  try {
-    const formData = new FormData()
+	try {
+		const formData = new FormData()
 
-    formData.append("originalName", "") 
-    
-    formData.append("name", event.data.name)
-    formData.append("address", event.data.address)
-    formData.append("description", event.data.description || "")
-    formData.append("archived", "false")
+		formData.append("originalName", "")
 
-    if (event.data.image) {
-      formData.append("image", event.data.image)
-    }
+		formData.append("name", event.data.name)
+		formData.append("address", event.data.address)
+		formData.append("description", event.data.description || "")
+		formData.append("archived", "false")
 
-    await $fetch("/api/admin/location/location", {
-      method: "PUT", 
-      body: formData,
-    })
+		if (event.data.image) {
+			formData.append("image", event.data.image)
+		}
 
-    await navigateTo("/admin/manage/locations")
-    
-  } catch (error: any) {
-    //Something
-  }
+		await $fetch("/api/admin/location/location", {
+			method: "PUT",
+			body: formData,
+		})
+
+		await navigateTo("/admin/manage/locations")
+
+	} catch (error: any) {
+		//Something
+	}
+
 }
+
+const startTour = () => {
+	driverObj.drive();
+};
+
+const driverObj = driver({
+	showProgress: true,
+	steps: [
+		{
+			element: '#image',
+			popover: {
+				title: 'Upload Image',
+				description: 'Start by uploading an image for the location.'
+			}
+		},
+		{
+			element: '#name',
+			popover: {
+				title: 'Location Name',
+				description: 'Enter a clear and recognizable name.'
+			}
+		},
+		{
+			element: '#link',
+			popover: {
+				title: 'Link',
+				description: 'Provide a link to the website of the location.'
+			}
+		},
+		{
+			element: '#address',
+			popover: {
+				title: 'Address',
+				description: 'Provide the full address of the location.'
+			}
+		},
+		{
+			element: '#similar',
+			popover: {
+				title: 'Similar Locations',
+				description: 'These help you avoid creating duplicates.'
+			}
+		},
+		{
+			element: '#submit',
+			popover: {
+				title: 'Submit',
+				description: 'Click here to create the new location.'
+			}
+		}
+	]
+})
+
+onMounted(() => {
+	//diverObj.drive();
+});
 </script>

@@ -2,6 +2,15 @@
 	<UContainer class="py-8">
 		<header>
 			<SharedButtonNavigateBack :text="'Back to ' + currentCategory" :to="{ path: `/volunteer/inventory/${currentCategory}` }" />
+
+			<UButton 
+				icon="i-heroicons-question-mark-circle" 
+				color="gray" 
+				variant="ghost" 
+				label="Take a Tour" 
+				@click="startTour" 
+			/>
+
 			<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
 		</header>
 
@@ -14,7 +23,7 @@
 					class="border-final-border-soft aspect-square h-full rounded-lg border object-cover"
 				/>
 
-				<URadioGroup v-model="selectedDealOption" class="mt-4" :items="dealOptions" />
+				<URadioGroup v-model="selectedDealOption" class="mt-4" id="deal-options" :items="dealOptions" />
 
 				<UForm :validate="validate" :state="state" class="mt-4 w-96 space-y-4" @submit="onSubmit" @error="onError">
 					<div v-if="selectedDealOption == 'Deal is X for Y'">
@@ -42,6 +51,9 @@
 
 <script lang="ts" setup>
 import * as z from "zod"
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+import { onMounted } from "vue"; 
 
 const route = useRoute()
 const currentCategory = route.params.category as string
@@ -126,4 +138,15 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 		navigateTo(`/volunteer/inventory/${currentCategory}`)
 	}
 }
+
+const startTour = () => {
+  driverObj.drive();
+};
+
+const driverObj = driver({
+  showProgress: true,
+  steps: [
+    { element: '#deal-options', popover: { title: 'Deal', description: 'Edit the deal for this item here. You can choose to have no deal, a free deal, or a custom deal.' } },
+  ]
+});
 </script>
