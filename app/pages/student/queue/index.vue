@@ -1,6 +1,7 @@
 <template>
 	<UContainer class="py-8">
 		<header>
+			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/student' }" />
 			<SharedTextPageTitle>Queue</SharedTextPageTitle>
 		</header>
 

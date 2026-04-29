@@ -1,4 +1,7 @@
 <template>
+	<header>
+			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
+	</header>
 	<div class="p-4">
 		<div class="flex grow">
 			<div class="flex grow flex-row flex-wrap justify-center md:my-8 md:flex-nowrap md:justify-normal">

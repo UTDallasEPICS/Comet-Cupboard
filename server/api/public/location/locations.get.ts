@@ -31,6 +31,8 @@ export default defineSafeHandler(async () => {
       return {
         name: loc.name,
         address: loc.address,
+        imgName: loc.imgName,       
+        description: loc.description, 
         emergencyBags: totalBags,
         archived: loc.archived, 
         categoryCounts,

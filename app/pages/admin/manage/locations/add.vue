@@ -19,8 +19,23 @@
 					@submit="onSubmit"
 					@error="onError"
 				>
+					<UFormField
+						id="image"
+						name="image"
+						label="Category Image"
+						description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels"
+					>
+						<div class="flex flex-col gap-2">
+							<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
+						</div>
+					</UFormField>
+
 					<UFormField id="name" name="name" label="Location Name">
 						<UInput v-model="state.name" />
+					</UFormField>
+
+					<UFormField id="description" name="description" label="Description">
+						<UInput v-model="state.description" />
 					</UFormField>
 
 					<UFormField id="address" name="address" label="Address">
@@ -54,13 +69,17 @@
 import * as z from "zod"
 
 const formSchema = z.object({
-	name: z.string().min(1, "Location name required"),
-	address: z.string().min(1, "Address required"),
+  name: z.string().min(1, "Location name is required"),
+  address: z.string().min(1, "Address is required"),
+  description: z.string().url("Must be a valid URL").or(z.literal("")),
+  image: z.any().refine((file) => file, "An image is required"),
 })
 
 const { state, validate, onError } = createFormBuilder(formSchema, () => ({
-	name: undefined,
-	address: undefined,
+  name: '',
+  address: '',
+  description: '',
+  image: undefined,
 }))
 
 const { data: locations } = await useFetch("/api/public/location/locations", {
@@ -79,16 +98,30 @@ watch(
 
 const mostSimilarItems = computed(() => filtered.value.slice(0, 5))
 
-const onSubmit = async (event) => {
+const onSubmit = async (event: any) => {
+  try {
+    const formData = new FormData()
 
-	await $fetch("/api/admin/location/location", {
-		method: "POST",
-		body: {
-		name: event.data.name,
-		address: event.data.address,
-	    }
-	})
+    formData.append("originalName", "") 
+    
+    formData.append("name", event.data.name)
+    formData.append("address", event.data.address)
+    formData.append("description", event.data.description || "")
+    formData.append("archived", "false")
 
-	navigateTo("/admin/manage/locations")
+    if (event.data.image) {
+      formData.append("image", event.data.image)
+    }
+
+    await $fetch("/api/admin/location/location", {
+      method: "PUT", 
+      body: formData,
+    })
+
+    await navigateTo("/admin/manage/locations")
+    
+  } catch (error: any) {
+    //Something
+  }
 }
 </script>
