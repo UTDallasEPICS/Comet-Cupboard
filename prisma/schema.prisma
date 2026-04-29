@@ -208,6 +208,7 @@ model EmergencyBag {
     expiryDate        DateTime           @map("expiry_date")
     // 5 digit ID for volunteers/students
     label             String             @unique
+    private           Boolean            @default(false)
 
     @@map("emergency_bag")
 }
@@ -234,7 +235,8 @@ model IssuedEmergencyBag {
     bagDescription    String?                  @default("") @map("bag_description")
     expiryDate        DateTime                 @map("expiry_date")
     //5 digit ID for volunteers/students
-    label             String                   
+    label             String                  
+    private           Boolean            @default(false) 
 
     @@map("issued_emergency_bag")
 }

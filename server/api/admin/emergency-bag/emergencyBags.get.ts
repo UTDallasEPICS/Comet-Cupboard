@@ -4,9 +4,6 @@ import { defineSafeHandler } from "#server/utils/handler"
 
 export default defineSafeHandler(async (event) => {
     const emBags = await prisma.emergencyBag.findMany({
-        where: {
-            private: false
-        },
         include: {
             EmergencyBagItems: {
                 include: {
