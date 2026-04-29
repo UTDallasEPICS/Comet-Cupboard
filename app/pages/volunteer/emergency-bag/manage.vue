@@ -1,98 +1,150 @@
 <template>
-    <header>
-			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
-	</header>
-    <div class="w-full flex items-center justify-center p-6">
-        <!--Tabs-->
-        <UContainer>
-            <UTabs
-                v-model="activeTab"
-                :items="items"
-                :ui="{
-                root: 'gap-0 border-2 border-final-border-soft rounded-lg',
-                trigger: 'rounded-t-lg',
-                content: 'rounded-b-lg p-0'
-                }"
-                >
-                <!--Tab Trigger-->
-                <template #default="{ item }">
-                    <div class="flex items-center gap-2" :data-tour="`tab-${item.value}`">
-                        <span>{{ item.label }}</span>
-                        <button
-                            v-if="item.value === 'edit'"
-                            class="hover:cursor-pointer"
-                            @click.stop="closeEditTab"
-                        >
-                            ✕
-                        </button>
-                    </div>
-                </template>
-
-                <!--START OF ADD BAG STUFF-->
-                <template #add>
-                    <BagEditor @submit="submitBag" />
-                </template>
-                <!--END OF ADD BAG STUFF-->
-
-                <!--START OF VIEW/MODIFY BAG STUFF-->
-                <template #view>
-                    <section>
-                        <div class="p-2 flex flex-col gap-2 md:justify-between md:flex-row">
-                            <UInput
-                                v-model="manage_searchQuery"
-                                :icon="icons['search']"
-                                placeholder="Search items"
-                                class="w-full md:w-72"
-                            />
-                            <div v-if="selectedBagIDs.length > 0" class="flex justify-between">
-                                <UInputMenu v-model="moveLocation" :items="moveLocations" />
-                                <UButton  :icon="icons['move']" size="xs" variant="solid"
-                                @click="moveBags"
-                                >
-                                    Move
-                                </UButton>
-                            </div>
+    <div>
+        <header>
+            <SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
+        </header>
+        <div class="w-full flex items-center justify-center p-6">
+            <!--Tabs-->
+            <UContainer>
+                <UTabs
+                    v-model="activeTab"
+                    :items="items"
+                    :ui="{
+                    root: 'gap-0 border-2 border-final-border-soft rounded-lg',
+                    trigger: 'rounded-t-lg',
+                    content: 'rounded-b-lg p-0'
+                    }"
+                    >
+                    <!--Tab Trigger-->
+                    <template #default="{ item }">
+                        <div class="flex items-center gap-2" :data-tour="`tab-${item.value}`">
+                            <span>{{ item.label }}</span>
+                            <button
+                                v-if="item.value === 'edit'"
+                                class="hover:cursor-pointer"
+                                @click.stop="closeEditTab"
+                            >
+                                ✕
+                            </button>
                         </div>
-                        
-                        <UTable  sticky v-model:expanded="expanded" v-model:rowSelection="selected"
-                        :getRowId="row => row.bagID" :data="filtered_viewData" :columns="columns"
-                        :ui="{
-                            td: 'py-2',
-                            th: 'py-2',
-                            tr: 'text-sm'
-                        }"
-                        >
-                            <template #expanded="{ row }">
-                                <ExpandedRow
-                                    :key="row.original.bagID"
-                                    :bag="row.original"
-                                    :moveLocations="moveLocations"
-                                    :icons="icons"
+                    </template>
 
-                                    @move="moveSingleBag"
-                                    @edit="editBag"
-                                    @delete="deleteBag"
+                    <!--START OF ADD BAG STUFF-->
+                    <template #add>
+                        <BagEditor @submit="submitBag" />
+                    </template>
+                    <!--END OF ADD BAG STUFF-->
+
+                    <!--START OF VIEW/MODIFY BAG STUFF-->
+                    <template #view>
+                        <section>
+                            <div class="p-2 flex flex-col gap-2 md:justify-between md:flex-row">
+                                <UInput
+                                    v-model="manage_searchQuery"
+                                    :icon="icons['search']"
+                                    placeholder="Search items"
+                                    class="w-full md:w-72"
                                 />
-                            </template>
-                        </UTable>
-                    </section>
-                </template>
-                <!--END OF VIEW/MODIFY BAG STUFF-->
+                                <div v-if="selectedBagIDs.length > 0" class="flex justify-between">
+                                    <UInputMenu v-model="moveLocation" :items="moveLocations" />
+                                    <UButton :icon="icons['move']" size="xs" variant="solid"
+                                    @click="moveBags"
+                                    >
+                                        Move
+                                    </UButton>
+                                </div>
+                            </div>
 
-                <!--START OF EDIT BAG-->
-                <template #edit>
-                    <BagEditor
-                    :initialData="editingBag"
-                    @submit="submitBag"
-                    />
-                </template>
-                
-                <!--END OF EDIT BAG-->
-            </UTabs>
-        </UContainer>
+                            <UTable sticky v-model:expanded="expanded" v-model:rowSelection="selected"
+                            :getRowId="row => row.bagID" :data="filtered_viewData" :columns="columns"
+                            :ui="{
+                                td: 'py-2',
+                                th: 'py-2',
+                                tr: 'text-sm'
+                            }"
+                            >
+                                <template #expanded="{ row }">
+                                    <ExpandedRow
+                                        :key="row.original.bagID"
+                                        :bag="row.original"
+                                        :moveLocations="moveLocations"
+                                        :icons="icons"
 
+                                        @move="moveSingleBag"
+                                        @edit="editBag"
+                                        @delete="deleteBag"
+                                    />
+                                </template>
+                            </UTable>
+                        </section>
+                    </template>
+                    <!--END OF VIEW/MODIFY BAG STUFF-->
+
+                    <!--START OF EDIT BAG-->
+                    <template #edit>
+                        <BagEditor
+                        :initialData="editingBag"
+                        @submit="submitBag"
+                        />
+                    </template>
+                    <!--END OF EDIT BAG-->
+                </UTabs>
+            </UContainer>
+        </div>
+
+        <!-- Alert Modal -->
+        <UModal v-model:open="alertModal.open" :dismissible="false">
+            <template #content>
+                <div class="rounded-xl overflow-hidden shadow-2xl">
+                    <!-- Colored header bar -->
+                    <div
+                        class="px-6 py-4 flex items-center gap-3"
+                        :class="{
+                            'bg-final-utd-green': alertModal.type === 'success',
+                            'bg-final-negative-red': alertModal.type === 'error',
+                            'bg-final-utd-orange': alertModal.type === 'validation',
+                        }"
+                    >
+                        <span class="text-2xl text-white font-bold">
+                            <span v-if="alertModal.type === 'success'">✓</span>
+                            <span v-else-if="alertModal.type === 'error'">✕</span>
+                            <span v-else>⚠</span>
+                        </span>
+                        <h3 class="text-lg font-bold text-white tracking-wide">{{ alertModal.title }}</h3>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="bg-white px-6 py-5 flex flex-col gap-4">
+                        <p class="text-final-cancel-gray text-sm leading-relaxed">{{ alertModal.message }}</p>
+
+                        <!-- Bag ID highlight (only on successful creation) -->
+                        <div
+                            v-if="alertModal.bagLabel"
+                            class="rounded-lg border-2 border-final-utd-green bg-green-50 px-4 py-3 flex flex-col gap-1"
+                        >
+                            <span class="text-xs font-semibold text-final-utd-green uppercase tracking-widest">Assigned Bag ID</span>
+                            <span class="text-2xl font-bold text-final-utd-green tracking-wide">{{ alertModal.bagLabel }}</span>
+                        </div>
+
+                        <div class="flex justify-end">
+                            <UButton
+                                size="md"
+                                class="font-semibold px-8 text-white"
+                                :class="{
+                                    'bg-final-utd-green hover:brightness-90': alertModal.type === 'success',
+                                    'bg-final-negative-red hover:brightness-90': alertModal.type === 'error',
+                                    'bg-final-utd-orange hover:brightness-90': alertModal.type === 'validation',
+                                }"
+                                @click="alertModal.open = false"
+                            >
+                                OK
+                            </UButton>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </UModal>
     </div>
-
 </template>
 
 <script lang="ts" setup>
@@ -137,22 +189,35 @@ const closeEditTab = () => {
 //Search Query
 const manage_searchQuery = ref('')
 
+// Alert modal state
+const alertModal = ref({
+  open: false,
+  type: 'success' as 'success' | 'error' | 'validation',
+  title: '',
+  message: '',
+  bagLabel: null as string | null
+})
+
+const showAlert = (type: 'success' | 'error' | 'validation', title: string, message: string, bagLabel: string | null = null) => {
+  alertModal.value = { open: true, type, title, message, bagLabel }
+}
+
 //Add Tab
 //Submit bag
 const submitBag = async (data) => {
     const { _bagCategory, _expiryDate, _items, _oldItems } = data
     if (!_bagCategory) {
-        alert('Please select a category')
+        showAlert('validation', 'Missing Category', 'Please select a category.')
         return
     }
 
     if (!_expiryDate) {
-        alert('Please select an expiry date')
+        showAlert('validation', 'Missing Expiry Date', 'Please select an expiry date.')
         return
     }
 
     if (!_items.length && activeTab.value === 'add') {
-        alert('Please add items to the bag')
+        showAlert('validation', 'No Items Added', 'Please add at least one item to the bag.')
         return
     }
 
@@ -162,12 +227,12 @@ const submitBag = async (data) => {
     const d = String(_expiryDate.day).padStart(2, '0')
     const isoDate = new Date(`${y}-${m}-${d}T00:00:00Z`).toISOString()
 
-	try {
+    try {
         let response
         let message
+        let bagLabel: string | null = null
 
         if (activeTab.value === 'edit'){
-            //console.log("EDITING BAGG");
             response = await $fetch('/api/volunteer/emergency-bag/emergencyBagEdit', {
                 method: 'PUT',
                 body: {
@@ -184,10 +249,10 @@ const submitBag = async (data) => {
                     }))
                 }
             })
-            message = "Bag updated successfully!"
+            message = "The bag has been updated successfully."
             editingBag.value = null;
             activeTab.value = "view"
-        }else{
+        } else {
             response = await $fetch('/api/volunteer/emergency-bag/emergencyBags', {
                 method: 'POST',
                 body: {
@@ -199,25 +264,19 @@ const submitBag = async (data) => {
                     }))
                 }
             })
-            message = "Bag created successfully!"
+            message = "The bag has been created and is ready for use."
+            bagLabel = response?.label ?? null
         }
-		 
 
-		//console.log(message, response)
-		
-		// Refresh bags list
+        // Refresh bags list
         await refreshEmergencyBags()
-        //volunteerItems.value = await $fetch("/api/student/inventory/items")
 
-        alert(message)
-        
-		
-	} catch (err: any) {
-		console.error('Failed to create bag:', err)
-		alert(`Error: ${err.message || 'Failed to create bag'}`)
-	}
+        showAlert('success', activeTab.value === 'view' ? 'Bag Updated' : 'Bag Created', message, bagLabel)
 
-    
+    } catch (err: any) {
+        console.error('Failed to submit bag:', err)
+        showAlert('error', 'Something Went Wrong', err.message || 'Failed to save the bag. Please try again.')
+    }
 }
 
 //View Tab
@@ -258,7 +317,7 @@ const columnsDef = [
 },
   {header: 'Bag ID',accessorKey: 'label',type: 'text',sortable: true},
   {header: 'Location',accessorKey: 'locationName',type: 'text'},
-  {header: 'Category',accessorKey: 'bagCategory',type: 'text', 
+  {header: 'Category',accessorKey: 'bagCategory',type: 'text',
     cell: ({ row }) => categoryMap[row.original.bagCategory] ?? row.original.bagCategory},
   /*{
     type: 'edit',icon: icons['edit'],
