@@ -1,13 +1,62 @@
-<script>
+<template>
+	<div>
+		<canvas ref="barContainer"></canvas>
+	</div>
+</template>
+
+<script lang='ts' setup>
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, elements } from 'chart.js'
+import { Chart, RadialLinearScale, PointElement, LineElement, Filler,} from "chart.js/auto"
+import {ref} from 'vue'
+import { date, object } from 'zod'
+import type itemCountChangesPost from '~~/server/api/volunteer/inventory/itemCountChanges.post'
+import { ca } from 'zod/v4/locales'
+import categoryPut from '~~/server/api/admin/inventory/category.put'
+import categoriesGet from '~~/server/api/student/inventory/categories.get'
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
 const { data: sources} = await useFetch('/api/head-admin/data/source')
 
 const chartContainer = useTemplateRef("barContainer")
 
-const sourceNames = computed(() => {
-	if (sources.value){
-		return sources.value.map(s => s.name)
-	} else {
-		return []
+const chart = shallowRef(null)
+
+const chartData = computed(() => {
+	if (!sources.value) return []
+
+	const data = sources.value.flatMap(source => {
+		return source.ItemCountChanges.map(change => ({
+			sourceName: source.name,
+			categoryName: change.Item.categoryName,
+			amountChanged: change.amountChanged,
+		}))
+	})
+
+	let total = {}
+	for (const dict of data){
+		if(!(dict.sourceName in total)){
+			total[dict.sourceName] = {}
+		}
+		if(!(dict.categoryName in total[dict.sourceName])){
+				total[dict.sourceName][dict.categoryName] = dict.amountChanged
+		} else {
+			total[dict.sourceName][dict.categoryName] += dict.amountChanged
+		}
+	}
+
+	const categories = [...new Set(
+		Object.values(total).flatMap(obj => Object.keys(obj))
+	)]
+
+	const datasets = Object.entries(total).map(([sourceNames, categoryMap]) => ({
+		label: sourceNames,
+		data: categories.map(cat => categoryMap[cat] || 0)
+	}))
+
+	return {
+		labels: categories,
+		datasets
 	}
 })
 
@@ -15,9 +64,24 @@ onMounted(() => {
 	chart.value = new Chart(chartContainer.value!, {
 		type: 'bar',
 		data: {
-			labels: sourceNames.value,
-			datasets: {
-				data: [12, 9, 3, 5, 4]
+			labels: chartData.value.labels,
+			datasets: chartData.value.datasets,
+		},
+		options: {
+			plugins: {
+				title: {
+					display: true,
+					text: 'Source Contributions'
+				},
+			},
+			responsive:true,
+			scales: {
+				x: {
+					stacked: true
+				},
+				y:{
+					stacked: true
+				}
 			}
 		}
 	})

@@ -8,7 +8,19 @@ export default defineSafeHandler(async (event) => {
         },
 
         include: {
-            ItemCountChanges: true,
+            ItemCountChanges: {
+                select: {
+                    date: true,
+                    amountChanged: true,
+                    Item: {
+                        select: {
+                            name: true,
+                            categoryName: true,
+                            quantity: true,
+                        }
+                    },
+                },
+            }
         }
     })
 
