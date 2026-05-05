@@ -22,9 +22,18 @@
 
 		<section class="py-20">
 			<UContainer>
-				<div class="mx-auto max-w-2xl text-center">
+				<div class="mx-auto max-w-4xl text-center">
 					<SharedTextSectionTitle> Upcoming Restocks and Notices </SharedTextSectionTitle>
-					<SharedTextBase class="mt-4"> I'm going to put a calendar here :) </SharedTextBase>
+					<div class="mt-8 overflow-hidden rounded-lg shadow">
+						<iframe
+							src="https://calendar.google.com/calendar/embed?src=utdcometcupboard%40gmail.com&ctz=America%2FChicago&showTitle=0"
+							style="border: 0"
+							width="100%"
+							height="600"
+							frameborder="0"
+							scrolling="no"
+						/>
+					</div>
 				</div>
 			</UContainer>
 		</section>
