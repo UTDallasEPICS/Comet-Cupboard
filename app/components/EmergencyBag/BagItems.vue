@@ -16,7 +16,7 @@
             <p class="font-semibold text-sm">{{ item.name }}</p>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 ml-auto">
             <UButton
                 class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500" @click="$emit('decrease', item.itemID)"
             > − </UButton>
@@ -26,7 +26,7 @@
             > + </UButton>
 
             <UButton
-                class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-orange-600 text-white hover:bg-orange-700" @click="$emit('remove', item.itemID)"
+                class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-final-utd-orange text-white hover:brightness-90" @click="$emit('remove', item.itemID)"
             > ✕ </UButton>
         </div>
     </div>

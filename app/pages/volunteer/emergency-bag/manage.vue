@@ -1,11 +1,11 @@
 <template>
-    <div>
+    <UContainer class="py-8">
         <header>
             <SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
+            <SharedTextPageTitle>Emergency Bag Management</SharedTextPageTitle>
         </header>
-        <div class="w-full flex items-center justify-center p-6">
+        <div class="mt-6">
             <!--Tabs-->
-            <UContainer>
                 <UTabs
                     v-model="activeTab"
                     :items="items"
@@ -89,7 +89,6 @@
                     </template>
                     <!--END OF EDIT BAG-->
                 </UTabs>
-            </UContainer>
         </div>
 
         <!-- Alert Modal -->
@@ -144,7 +143,7 @@
                 </div>
             </template>
         </UModal>
-    </div>
+    </UContainer>
 </template>
 
 <script lang="ts" setup>
