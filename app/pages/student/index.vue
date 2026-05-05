@@ -5,7 +5,17 @@
 		</header>
 
 		<section class="mt-4">
-			<SharedTextSectionTitle>Student Actions</SharedTextSectionTitle>
+			<div class="flex items-baseline gap-2">
+				<SharedTextSectionTitle>Student Actions</SharedTextSectionTitle>
+			 	<UButton 
+            		icon="i-heroicons-question-mark-circle" 
+            		color="gray" 
+            		variant="ghost" 
+            		label="Take a Tour" 
+            		@click="startTour" 
+					class="self-end"
+        		/>
+    		</div>
 
 			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 				<li v-for="link in studentLinks" :key="link.label" :id="link.label.toLowerCase()">
@@ -25,9 +35,6 @@
 </template>
 
 <script setup lang="ts">
-import { driver } from 'driver.js'
-import 'driver.js/dist/driver.css'
-import { onMounted } from 'vue'
 
 const studentLinks = roleLinks["student"]
 	.flatMap((link) => {
@@ -40,29 +47,9 @@ const studentLinks = roleLinks["student"]
 		return link.label != "Dashboard"
 	})
 
-onMounted(() => {
-	const driverObj = driver({
-		showProgress: false, //turn off the 1 of 2 box
-		steps: [
-			{
-				element: '#queue',
-				popover: {
-					title: 'Queue',
-					description: 'Join the queue here to get access to the food pantry. You can also check your current position in the queue.',
-					side: 'bottom',
-				}
-			},
-			{
-				element: '#shopping',
-				popover: {
-					title: 'Shopping',
-					description: 'Browse available food and household items here. Add items to your cart and submit your order.',
-					side: 'bottom',
-				}
-			},
-		]
-	})
+const { startTour } = StudentDashboardTour()
 
-	driverObj.drive()
+onMounted(() => {
+	startTour()
 })
 </script>

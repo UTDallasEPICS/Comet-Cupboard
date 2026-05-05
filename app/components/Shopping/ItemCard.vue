@@ -2,8 +2,10 @@
 	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
 		<template #body>
 			<div class="mt-auto flex flex-row items-center gap-2">
-				<SharedTextBase>QTY: {{ quantity }}</SharedTextBase>
-				<SharedButtonPositiveAction text="+ Add" @click="addToCart" />
+				<SharedTextBase class="tour-qty" >QTY: {{ quantity }}</SharedTextBase>
+				<div class="tour-add">
+					<SharedButtonPositiveAction text="+ Add" @click="addToCart" />
+				</div>
 			</div>
 		</template>
 	</SharedItemCard>

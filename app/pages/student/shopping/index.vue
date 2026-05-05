@@ -5,9 +5,19 @@
 		</header>
 
 		<section class="mt-4">
-			<SharedTextSectionTitle>Select a Category</SharedTextSectionTitle>
-
-			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+			<div class="flex items-center gap-4">
+				<SharedTextSectionTitle class="inline">Select a Category</SharedTextSectionTitle>
+				<UButton
+					icon="i-heroicons-question-mark-circle"
+					color="gray"
+					variant="ghost"
+					label="Take a Tour"
+					@click="startTour"
+					class="self-end"
+				/>
+			</div>
+			
+			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="category-grid">
 				<li>
 					<SharedAllItemsCard variant="shopping" category-name="All Items" />
 				</li>
@@ -21,4 +31,10 @@
 
 <script setup lang="ts">
 const { data: categories } = await useFetch("/api/student/inventory/categories")
+
+const { startTour } = StudentShoppingTour()
+
+onMounted(() => {
+	startTour()
+})
 </script>
