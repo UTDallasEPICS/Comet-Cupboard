@@ -11,7 +11,7 @@
                     </div>
                 </template>
                 <!-- Search Bar -->
-                    <div class="bg-gray-100 rounded-lg px-4 py-3">
+                    <div class="bg-gray-100 rounded-t-lg px-4 py-3">
                     <UInput
                         v-model="searchQuery"
                         icon="i-lucide-search"
@@ -22,7 +22,7 @@
                     </div>
 
                 <!-- Product List -->
-                <div class="overflow-y-auto h-fit max-h-124 px-3 py-3 space-y-3">
+                <div class="overflow-y-auto h-fit max-h-150 px-3 py-3 space-y-3">
                     <div v-if="!filteredItems?.length" class="text-center text-gray-500 py-8">
                         Search results will appear here
                     </div>
@@ -119,37 +119,44 @@
                 </UCard>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    
-                    <!--Category Selection -->
+
+                    <!-- Category -->
                     <UCard>
                         <template #header>
                             <div class="text-xl font-bold text-center text-gray-700">Category</div>
                         </template>
                         <URadioGroup v-model="selectedCategory" size="md" variant="card" :items="categories" />
                     </UCard>
-                    
-                    <div class="flex flex-col gap-4 h-full">
-                        
-                        <!--Expiry Date -->
-                        <UCard class="h-50 flex-1">
+
+                    <!-- Right column: Expiry Date + Privacy stacked -->
+                    <div class="flex flex-col gap-2">
+                        <UCard>
                             <template #header>
-                                <div class="text-xl font-bold text-center flex-1 text-gray-700">Expiry Date</div>
+                                <div class="text-xl font-bold text-center text-gray-700">Expiry Date</div>
                             </template>
-                            <div class="flex h-full items-center justify-center">
+                            <div class="flex items-center justify-center py-2">
                                 <UInputDate v-model="expiryDate" size="xl" icon="i-lucide-calendar" :min-value="minDate"/>
                             </div>
                         </UCard>
-                        
-                            <!--Confirm Button -->
-                            <UCard class="flex-none">
-                                <UButton
-                                :label="props.initialData ? 'Update Bag' : 'Confirm Bag'"
-                                block
-                                class="bg-final-utd-green text-xl font-bold py-3 rounded hover:bg-orange-700 transition"
-                                @click="handleSubmit"
-                                />
-                            </UCard>
+
+                        <UCard v-if="canAdminAccess">
+                            <template #header>
+                                <div class="text-xl font-bold text-center text-gray-700">Privacy</div>
+                            </template>
+                            <URadioGroup v-model="selectedPrivacy" size="md" variant="card" :items="privacyOptions" />
+                        </UCard>
                     </div>
+
+                    <!-- Confirm Button-->
+                    <UCard class="sm:col-span-2">
+                        <UButton
+                            :label="props.initialData ? 'Update Bag' : 'Confirm Bag'"
+                            block
+                            class="bg-final-utd-green text-xl font-bold py-3 rounded hover:bg-orange-700 transition"
+                            @click="handleSubmit"
+                        />
+                    </UCard>
+
                 </div>
             </div>
         </div>
@@ -165,6 +172,11 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['submit'])
+
+const { canAdminAccess } = storeToRefs(usePermissionsStore())
+
+const privacyOptions = [{ label: 'Private', value: 'private' }]
+const selectedPrivacy = ref<string | null>('private')
 
 const categories = [
     {label:"Veg + PB", value: "VEGETARIAN_AND_PEANUT_BUTTER"},
@@ -283,6 +295,7 @@ watchEffect(() => {
   const bag = props.initialData
 
   selectedCategory.value = bag.bagCategory
+  selectedPrivacy.value = bag.private ? 'private' : null
 
   const d = new Date(bag.expiryDate)
   expiryDate.value = new CalendarDate(
@@ -304,7 +317,8 @@ const handleSubmit = async () => {
     _bagCategory: selectedCategory.value,
     _expiryDate: expiryDate.value,
     _items: bagItems.value,
-    _oldItems: currentBagItems.value
+    _oldItems: currentBagItems.value,
+    _isPrivate: selectedPrivacy.value === 'private'
   })
 
   selectedCategory.value = null
@@ -312,6 +326,7 @@ const handleSubmit = async () => {
   currentBagItems.value = []
   expiryDate.value = minDate
   searchQuery.value = ''
+  selectedPrivacy.value = 'private'
 
   await refreshItems() // 🔥 refresh inventory
 }

@@ -205,7 +205,7 @@ const showAlert = (type: 'success' | 'error' | 'validation', title: string, mess
 //Add Tab
 //Submit bag
 const submitBag = async (data) => {
-    const { _bagCategory, _expiryDate, _items, _oldItems } = data
+    const { _bagCategory, _expiryDate, _items, _oldItems, _isPrivate } = data
     if (!_bagCategory) {
         showAlert('validation', 'Missing Category', 'Please select a category.')
         return
@@ -246,7 +246,8 @@ const submitBag = async (data) => {
                     oldItems: _oldItems.map(item => ({
                         itemID: item.itemID,
                         count: item.count
-                    }))
+                    })),
+                    isPrivate: _isPrivate ?? false
                 }
             })
             message = "The bag has been updated successfully."
@@ -261,7 +262,8 @@ const submitBag = async (data) => {
                     items: _items.map(item => ({
                         itemID: item.itemID,
                         count: item.count
-                    }))
+                    })),
+                    isPrivate: _isPrivate ?? false
                 }
             })
             message = "The bag has been created and is ready for use."
@@ -300,37 +302,45 @@ const moveLocations = computed(() => {
 const moveLocation = ref('')
 
 
-const columnsDef = [
-  {
-    header: ({ table }) =>
-        h(resolvedComponents.UCheckbox, {
-            modelValue: table
-            ? table.getIsAllRowsSelected()
-                ? true
-                : table.getIsSomeRowsSelected()
-                ? 'indeterminate'
-                : false
-            : false,
-            'onUpdate:modelValue': (val) => table?.toggleAllRowsSelected(val),
-        }),
-    type: 'checkbox2'
-},
-  {header: 'Bag ID',accessorKey: 'label',type: 'text',sortable: true},
-  {header: 'Location',accessorKey: 'locationName',type: 'text'},
-  {header: 'Category',accessorKey: 'bagCategory',type: 'text',
-    cell: ({ row }) => categoryMap[row.original.bagCategory] ?? row.original.bagCategory},
-  /*{
-    type: 'edit',icon: icons['edit'],
-    onClick: (row) => {  console.log('To implement...')},
-    meta: {class: {th: 'w-12 hidden md:table-cell', td: 'w-12 hidden md:table-cell'}}
-  },*/
-  {header: 'Private',accessorKey: 'private',type: 'text',sortable: true,
-    cell: ({ row }) => row.original.private ? 'Yes' : 'No'
-  },
-  {type: "expand", meta: {class: {th: "w-12", td: "w-12"}}}
-]
+const columnsDef = computed(() => {
+  const base: any[] = [
+    {
+      header: ({ table }) =>
+          h(resolvedComponents.UCheckbox, {
+              modelValue: table
+              ? table.getIsAllRowsSelected()
+                  ? true
+                  : table.getIsSomeRowsSelected()
+                  ? 'indeterminate'
+                  : false
+              : false,
+              'onUpdate:modelValue': (val) => table?.toggleAllRowsSelected(val),
+          }),
+      type: 'checkbox2'
+    },
+    {header: 'Bag ID',accessorKey: 'label',type: 'text',sortable: true},
+    {header: 'Location',accessorKey: 'locationName',type: 'text'},
+    {header: 'Category',accessorKey: 'bagCategory',type: 'text',
+      cell: ({ row }) => categoryMap[row.original.bagCategory] ?? row.original.bagCategory},
+    /*{
+      type: 'edit',icon: icons['edit'],
+      onClick: (row) => {  console.log('To implement...')},
+      meta: {class: {th: 'w-12 hidden md:table-cell', td: 'w-12 hidden md:table-cell'}}
+    },*/
+  ]
 
-const columns = buildNuxtUITable(columnsDef, resolvedComponents)
+  if (canAdminAccess.value) {
+    base.push({header: 'Private',accessorKey: 'private',type: 'text',sortable: true,
+      cell: ({ row }) => row.original.private ? 'Yes' : 'No'
+    })
+  }
+
+  base.push({type: "expand", meta: {class: {th: "w-12", td: "w-12"}}})
+
+  return base
+})
+
+const columns = computed(() => buildNuxtUITable(columnsDef.value, resolvedComponents))
 
 const categoryMap: Record<string, string> = {
     'VEGETARIAN_AND_PEANUT_BUTTER' : 'Veg_PB',
