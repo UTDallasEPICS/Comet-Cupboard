@@ -35,7 +35,7 @@
                     </p>
                 </div>
 
-                <div>
+                <div id = "move-bag">
                     <div>
                         <p class="">Location:</p>
                         <p class="">
@@ -43,14 +43,13 @@
                         </p>
                     </div>
 
-                    <div class="flex gap-2 items-center">
+                    <div class="flex gap-2 items-center" >
                         <UInputMenu v-model="localMoveLocation" :items="moveLocations" class="w-48"/>
 
                         <UButton
                         size="xs"
                         :icon="icons['move']"
                         variant="solid"
-                        id = "move-bag"
                         @click="$emit('move', bag.bagID, localMoveLocation)"
                         >
                         Move

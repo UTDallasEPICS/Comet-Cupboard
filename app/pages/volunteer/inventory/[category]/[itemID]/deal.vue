@@ -51,8 +51,6 @@
 
 <script lang="ts" setup>
 import * as z from "zod"
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 import { onMounted } from "vue"; 
 
 const route = useRoute()
@@ -139,14 +137,10 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 	}
 }
 
-const startTour = () => {
-  driverObj.drive();
-};
+const { startTour } = DealTour()
 
-const driverObj = driver({
-  showProgress: true,
-  steps: [
-    { element: '#deal-options', popover: { title: 'Deal', description: 'Edit the deal for this item here. You can choose to have no deal, a free deal, or a custom deal.' } },
-  ]
-});
+onMounted(() => {
+	startTour()
+})
+
 </script>

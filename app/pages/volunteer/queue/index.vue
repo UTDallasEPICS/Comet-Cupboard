@@ -26,23 +26,11 @@
 </template>
 
 <script setup lang="ts">
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 import { onMounted } from "vue"; 
 
-const startTour = () => {
-  driverObj.drive();
-};
-
-const driverObj = driver({
-  showProgress: true,
-  steps: [
-	{ element: '#queue-cart-sessions', popover: { title: 'Cart Sessions', description: 'View active cart sessions here.' } },
-    { element: '#volunteer-queue', popover: { title: 'Add', description: 'Add a student to the queue, ping them, or remove them by clicking the three dots.' } },
-  ]
-});
+const { startTour } = ManageQueueTour()
 
 onMounted(() => {
-        //diverObj.drive();
+    startTour();
 });
 </script>

@@ -41,8 +41,6 @@
 </template>
 
 <script lang="ts" setup>
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 import { onMounted } from "vue"; 
 
 const inventoryStore = useInventoryStore()
@@ -79,17 +77,10 @@ const sortedItems = computed(() => {
 
 const { query, filtered } = useFuzzySearch(sortedItems, { searchKeys: ["name"] })
 
-const startTour = () => {
-  driverObj.drive();
-};
+const { startTour } = AllItemsInventoryTour()
 
-const driverObj = driver({
-  showProgress: true,
-  steps: [
-    { element: '.tour-edit', popover: { title: 'Edit', description: 'Edit this item or manage its deal.'}},
-	{ element: '.tour-decrement', popover: { title: 'Decrease', description: 'Reduce the quantity.'}},
-	{ element: '.tour-increment', popover: { title: 'Increase', description: 'Increase the quantity.'}}
-  ]
-});
+onMounted(() => {
+	startTour()
+})
 
 </script>

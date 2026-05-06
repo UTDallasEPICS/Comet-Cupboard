@@ -6,9 +6,17 @@
 
 		<section class="mt-4">
 			<SharedTextSectionTitle>Volunteer Actions</SharedTextSectionTitle>
+			<UButton 
+            		icon="i-heroicons-question-mark-circle" 
+            		color="gray" 
+            		variant="ghost" 
+            		label="Take a Tour" 
+            		@click="startTour" 
+					class="self-end"
+        		/>
 
 			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-				<li v-for="link in volunteerLinks" :key="link.label">
+				<li v-for="link in volunteerLinks" :key="link.label" :id="link.label.toLowerCase().replace(/\s+/g,'-')">
 					<UButton :to="link.to" class="border-final-border-soft w-full border bg-white p-4 shadow-md">
 						<div class="flex items-center gap-4">
 							<UIcon :name="link.icon" class="text-final-text-soft h-8 w-8" />
@@ -35,4 +43,10 @@ const volunteerLinks = roleLinks["volunteer"]
 	.filter((link) => {
 		return link.label != "Dashboard"
 	})
+
+const { startTour } = VolunteerDashboardTour()
+
+onMounted(() => {
+	startTour()
+})
 </script>

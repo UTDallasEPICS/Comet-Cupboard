@@ -71,8 +71,6 @@
 
 <script setup lang="ts">
 import * as z from "zod"
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 import { onMounted } from "vue";
 
 const route = useRoute()
@@ -101,11 +99,10 @@ const { state, validate, onError } = createFormBuilder(formSchema, () => ({
   name: currentLocation.value?.name,
   address: currentLocation.value?.address,
   description: currentLocation.value?.description,
-  image: undefined,
+  image: currentLocation.value ? new File([], currentLocation.value.imgName) : undefined, 
   archived: currentLocation.value?.archived ?? false,
 }))
 
-// Fuzzy search logic remains the same...
 const { query, filtered } = useFuzzySearch(locations ?? ref([]), {
   searchKeys: ["name"],
 })
@@ -118,20 +115,16 @@ watch(
 
 const mostSimilarItems = computed(() => filtered.value.slice(0, 5))
 
-// 2. Updated onSubmit to use FormData
 const onSubmit = async (event: any) => {
   try {
     const formData = new FormData()
 
-    // Required for the backend to identify which record to update
     formData.append("originalName", locationName)
 
-    // Append text fields from the validated event data
     if (event.data.name) formData.append("name", event.data.name.trim())
     if (event.data.address) formData.append("address", event.data.address.trim())
     if (event.data.description) formData.append("description", event.data.description.trim())
     
-    // Convert boolean to string "true"/"false" to match backend z.enum
     formData.append("archived", event.data.archived ? "true" : "false")
 
     // Append the image file if a new one was selected
@@ -150,66 +143,10 @@ const onSubmit = async (event: any) => {
   }
 }
 
-const startTour = () => {
-	driverObj.drive();
-};
-
-const driverObj = driver({
-	showProgress: true,
-	steps: [
-		{
-			element: '#image',
-			popover: {
-				title: 'Upload Image',
-				description: 'Edit uploaded image for the location.'
-			}
-		},
-		{
-			element: '#name',
-			popover: {
-				title: 'Location Name',
-				description: 'Change the name of the location.'
-			}
-		},
-		{
-			element: '#link',
-			popover: {
-				title: 'Link',
-				description: 'Change the link to the website of the location.'
-			}
-		},
-		{
-			element: '#address',
-			popover: {
-				title: 'Address',
-				description: 'Change the address of the location.'
-			}
-		},
-		{
-			element: '#similar',
-			popover: {
-				title: 'Similar Locations',
-				description: 'View and avoid creating duplicates.'
-			}
-		},
-    {
-			element: '#archived',
-			popover: {
-				title: 'Archived',
-				description: 'Check this box to archive the location.'
-			}
-		},
-		{
-			element: '#submit',
-			popover: {
-				title: 'Submit',
-				description: 'Click here to save changes to the location.'
-			}
-		}
-	]
-})
+const { startTour } = EditLocationTour()
 
 onMounted(() => {
-	//diverObj.drive();
+	startTour();
 });
+
 </script>

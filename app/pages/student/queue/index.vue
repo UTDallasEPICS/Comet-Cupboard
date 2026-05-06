@@ -5,6 +5,20 @@
 			<SharedTextPageTitle>Queue</SharedTextPageTitle>
 		</header>
 
+		<section class="mt-4">
+			<div class="flex items-baseline gap-4">
+				<SharedTextSectionTitle>Queue Actions</SharedTextSectionTitle>
+				<UButton 
+					icon="i-heroicons-question-mark-circle" 
+					color="gray" 
+					variant="ghost" 
+					label="Take a Tour" 
+					@click="startTour"
+					class="self-end"
+				/>
+			</div>
+		</section>
+		
 		<section class="mt-4" id="status">
 			<UCard>
 				<template #header>
@@ -42,37 +56,6 @@
 </template>
 
 <script lang="ts" setup>
-import { driver } from 'driver.js'
-import 'driver.js/dist/driver.css'
-
-onMounted(async () => {
-	await getQueue()
-	await updateQueueStatus()
-
-	const driverObj = driver({
-		showProgress: false,
-		steps: [
-			{
-				element: '#status',
-				popover: {
-					title: 'Current Status',
-					description: 'Click Join Queue to get in line. Once joined you can see your position and public display name.',
-                    side: 'bottom',
-				}
-			},
-			{
-				element: '#queue',
-                popover: {
-                    title: 'Current Queue',
-                    description: 'See everyone currently waiting in the queue. Your row will be highlighted when you join.',
-                    side: 'bottom',
-				}
-			}
-		]
-	})
-
-	driverObj.drive()
-})
 
 const queueStore = useQueueStore()
 const { queue, queueStatus } = storeToRefs(queueStore)
@@ -98,9 +81,12 @@ const meta = {
 	},
 }
 
+const { startTour } = StudentQueueTour()
+
 onMounted(async () => {
 	await getQueue()
 	await updateQueueStatus()
+	startTour()
 })
 
 const joinQueue = async () => {

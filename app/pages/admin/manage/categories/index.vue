@@ -29,8 +29,6 @@
 </template>
 
 <script setup lang="ts">
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 import { onMounted } from "vue"; 
 
 const { data: categories } = await useFetch("/api/student/inventory/categories", {
@@ -48,19 +46,11 @@ const columnsDef = [
 ]
 const tableColumns = buildNuxtUITable(columnsDef, { UButton, UCheckbox, UDropdownMenu })
 
-const startTour = () => {
-  driverObj.drive();
-};
+const { startTour } = ManageCategoryTour()
 
-const driverObj = driver({
-  showProgress: true,
-  steps: [
-    { element: '#add-categories', popover: { title: 'Add Category', description: 'Click here to add a new category.' } },
-	{ element: 'table td:last-child button', popover: { title: 'Edit Category', description: 'Click the edit button to modify category details.' } },
-  ]
-});
 
 onMounted(() => {
-        //diverObj.drive();
+    startTour();
 });
+
 </script>

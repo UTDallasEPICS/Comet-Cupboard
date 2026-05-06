@@ -2,13 +2,23 @@
 	<UContainer class="py-8">
 		<header>
 			<SharedButtonNavigateBack text="Back to Categories" :to="{ path: '/student/shopping' }" />
-			<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
+			<div class="flex items-center gap-4">
+				<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
+				<UButton
+            		icon="i-heroicons-question-mark-circle"
+            		color="gray"
+            		variant="ghost"
+            		label="Take a Tour"
+            		@click="startTour"
+            		class="self-end"
+        		/>
+			</div>
 		</header>
 
 		<section class="mt-4">
 			<SharedTextSectionTitle class="sr-only">Add Items to Your Cart</SharedTextSectionTitle>
 			<div class="mt-4 flex flex-row justify-end">
-				<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="horizontal" />
+				<UCheckboxGroup id="tour-deal" v-model="toggleItems" :items="toggleOptions" orientation="horizontal" />
 			</div>
 			<div class="mx-auto mt-4 flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-start">
 				<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search items" class="grow" />
@@ -73,4 +83,10 @@ const sortedItems = computed(() => {
 })
 
 const { query, filtered } = useFuzzySearch(sortedItems, { searchKeys: ["name"] })
+
+const { startTour } = StudentItemsTour()
+
+onMounted(() => {
+	startTour()
+})
 </script>
