@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3 w-full">
         <!-- Image -->
         <img
             v-if="item.imgName"
