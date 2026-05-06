@@ -1,21 +1,18 @@
 <template>
 	<UContainer class="py-8">
 		<header>
-		    <SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
-
-			<UButton 
-				icon="i-heroicons-question-mark-circle" 
-				color="gray" 
-				variant="ghost" 
-				label="Take a Tour" 
-				@click="startTour" 
-			/>
-
+			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
 			<SharedTextPageTitle>Inventory Categories</SharedTextPageTitle>
 		</header>
 
-		<section class="mt-4" id = "tour-category-selection">
-			<SharedTextSectionTitle>Select a Category</SharedTextSectionTitle>
+		<section class="mt-4" id="tour-category-selection">
+			<div class="flex items-center gap-4">
+
+				<SharedTextSectionTitle>Select a Category</SharedTextSectionTitle>
+				<UButton icon="i-heroicons-question-mark-circle" color="gray" variant="ghost" label="Take a Tour"
+					@click="startTour" />
+			</div>
+
 			<div class="mt-4 flex flex-row justify-end">
 				<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="horizontal" />
 			</div>
@@ -24,7 +21,8 @@
 					<SharedAllItemsCard variant="inventory" category-name="All Items" />
 				</li>
 				<li v-for="(category, i) in shownCategories" :key="i">
-					<SharedCategoryCard variant="inventory" :category-name="category.name" :img-name="category.imgName" />
+					<SharedCategoryCard variant="inventory" :category-name="category.name"
+						:img-name="category.imgName" />
 				</li>
 			</ul>
 		</section>
@@ -32,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue"; 
+import { onMounted } from "vue";
 
 const { data: categories } = await useFetch("/api/student/inventory/categories", {
 	query: { includeArchived: true },
@@ -55,7 +53,7 @@ onMounted(async () => {
 const { startTour } = InventoryTour()
 
 onMounted(() => {
-  startTour();
+	startTour();
 });
 
 </script>
