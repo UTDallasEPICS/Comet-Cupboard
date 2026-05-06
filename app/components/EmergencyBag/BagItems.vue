@@ -16,18 +16,11 @@
             <p class="font-semibold text-sm">{{ item.name }}</p>
         </div>
 
-        <div class="flex items-center gap-2 ml-auto">
-            <UButton
-                class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500" @click="$emit('decrease', item.itemID)"
-            > − </UButton>
+        <div class="flex items-center gap-1 ml-auto">
+            <UButton icon="i-lucide-minus" size="md" variant="soft" color="neutral" @click="$emit('decrease', item.itemID)" />
             <span class="w-8 text-center font-semibold tabular-nums">{{ item.count }}</span>
-            <UButton
-                class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-gray-400 text-white hover:bg-gray-500" @click="$emit('increase', item.itemID)"
-            > + </UButton>
-
-            <UButton
-                class="h-8 w-8 min-w-8 flex items-center justify-center rounded bg-final-utd-orange text-white hover:brightness-90" @click="$emit('remove', item.itemID)"
-            > ✕ </UButton>
+            <UButton icon="i-lucide-plus" size="md" variant="soft" color="neutral" @click="$emit('increase', item.itemID)" />
+            <UButton icon="i-lucide-x" size="md" variant="soft" color="error" @click="$emit('remove', item.itemID)" />
         </div>
     </div>
 </template>
