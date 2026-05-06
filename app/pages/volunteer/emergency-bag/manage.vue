@@ -34,8 +34,8 @@
                     <section>
                         <div class="p-2 flex flex-col gap-2 md:justify-between md:flex-row">
                             <UInput v-model="manage_searchQuery" :icon="icons['search']" placeholder="Search items"
-                                id="manage-search" class="w-full md:w-72" />
-                            <div v-if="selectedBagIDs.length > 0" class="flex justify-between">
+                                id="manage-search" class="w-full md:w-72"/>
+                            <div v-if="selectedBagIDs.length > 0" class="flex justify-between" id = "bulk-move">
                                 <UInputMenu v-model="moveLocation" :items="moveLocations" />
                                 <UButton :icon="icons['move']" size="xs" variant="solid" @click="moveBags">
                                     Move
@@ -74,12 +74,9 @@
 
 <script lang="ts" setup>
 import { resolveComponent } from 'vue'
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
-import { onMounted } from "vue";
+import { ref, computed } from 'vue'
 import BagEditor from '~/components/EmergencyBag/BagEditor.vue'
 import ExpandedRow from '~/components/EmergencyBag/ExpandedRow.vue'
-import { BagCategory } from '~~/prisma/generated/prisma/enums';
 
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
@@ -226,6 +223,7 @@ const columnsDef = [
     {
         header: ({ table }) =>
             h(resolvedComponents.UCheckbox, {
+                id: 'select-bags',
                 modelValue: table
                     ? table.getIsAllRowsSelected()
                         ? true
@@ -347,53 +345,10 @@ const editBag = (bag) => {
     activeTab.value = 'edit'
 }
 
-const addSteps = [
-    { element: '#tab-view', popover: { title: 'View', description: 'View the details of the selected emergency bag.' } },
-    { element: '#tab-add', popover: { title: 'Add', description: 'Add a new emergency bag to the system.' } },
-    { element: '#product-list', popover: { title: 'Edit', description: 'Edit the details of the selected emergency bag.' } },
-    { element: '#current-bag', popover: { title: 'Current Bag', description: 'View the current items in the emergency bag.' } },
-    { element: '#category-selection', popover: { title: 'Category Selection', description: 'Select the category for the emergency bag.' } },
-    { element: '#expiry-date', popover: { title: 'Expiry Date', description: 'Set the expiry date for the emergency bag.' } },
-    { element: '#confirm-button', popover: { title: 'Confirm Button', description: 'Click to confirm and save the emergency bag details.' } },
-]
+const existingBags = computed(() => {
+    return Array.isArray(emergencyBags.value) ? emergencyBags.value.length : 0
+})
 
-const viewSteps = [
-    { element: '#manage-search', popover: { title: 'Search', description: 'Search for emergency bags by ID, location, or category.' } },
-    { element: '#open-bag', popover: { title: 'Open a Bag', description: 'Let’s open a bag to see more options.' } },
-    {
-        element: 'button:has(.i-lucide\\:chevron-down)',
-        popover: {
-            title: 'Open Bag',
-            description: 'Click here to expand the bag and see more options.'
-        },
-        onNext: async () => {
-            document.querySelector('button:has(.i-lucide\\:chevron-down)')?.click()
-            await nextTick()
-        },
-    },
-    { element: '#move-bag', popover: { title: 'Move Options', description: 'Select one or more bags and choose a location to move them to.' } },
-    { element: '#bag-items', popover: { title: 'Bag Items', description: 'View the items contained in the emergency bag.' } },
-    { element: '#edit-trigger', popover: { title: 'Edit Bag', description: 'Click to edit the contents and details of the emergency bag.' } },
-]
-
-const startTour = async () => {
-    let steps = []
-
-    if (activeTab.value === 'add') {
-        steps = addSteps
-    } else if (activeTab.value === 'view') {
-        steps = viewSteps
-    }
-
-    const driverObj = driver({
-        showProgress: true,
-        steps
-    })
-
-    await nextTick() // ensure DOM is ready
-    driverObj.drive()
-}
-
-
+const { startTour } = EmergencyBagsTour(activeTab, existingBags)
 
 </script>

@@ -43,8 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 import { onMounted } from "vue"; 
 
 const { data: locations } = await useFetch("/api/public/location/locations", {
@@ -82,19 +80,9 @@ const tableColumns = buildNuxtUITable(columnsDef, {
 	UDropdownMenu,
 })
 
-const startTour = () => {
-  driverObj.drive();
-};
-
-const driverObj = driver({
-  showProgress: true,
-  steps: [
-    { element: '#tour-add-locations', popover: { title: 'Add', description: 'Add a new location here.' } },
-	{ element: 'table td:last-child button', popover: { title: 'Edit', description: 'Click the edit button to modify location details.' } },
-  ]
-});
+const { startTour } = ManageLocationsTour()
 
 onMounted(() => {
-        //diverObj.drive();
+        startTour();
 });
 </script>

@@ -37,6 +37,8 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted, ref } from "vue";
+
 const toast = useToast()
 
 const currentCartIDPreview = ref<string>("")
@@ -70,19 +72,9 @@ const acceptToastMessage = (cartID: string) => {
 	resetCartIDPreview()
 }
 
-const startTour = () => {
-  driverObj.drive();
-};
-
-const driverObj = driver({
-  showProgress: true,
-  steps: [
-    { element: '#tour-back-to-carts', popover: { title: 'Back to Carts', description: 'Return to the list of carts.' } },
-	{ element: '#tour-cart-preview', popover: { title: 'Cart Preview', description: 'View the details of the selected cart.' } },
-  ]
-});
+const { startTour } = VerifyCartTour()
 
 onMounted(() => {
-        //diverObj.drive();
+    startTour();
 });
 </script>

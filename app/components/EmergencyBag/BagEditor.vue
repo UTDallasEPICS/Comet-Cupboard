@@ -121,21 +121,21 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     
                     <!--Category Selection -->
-                    <UCard>
+                    <UCard id="category-selection">
                         <template #header>
                             <div class="text-xl font-bold text-center text-gray-700">Category</div>
                         </template>
-                        <URadioGroup v-model="selectedCategory" id="category-selection" size="md" variant="card" :items="categories" />
+                        <URadioGroup v-model="selectedCategory"  size="md" variant="card" :items="categories" />
                     </UCard>
                     
                     <div class="flex flex-col gap-4 h-full">
                         
                         <!--Expiry Date -->
-                        <UCard class="h-50 flex-1">
+                        <UCard class="h-50 flex-1" id="expiry-date">
                             <template #header>
                                 <div class="text-xl font-bold text-center flex-1 text-gray-700">Expiry Date</div>
                             </template>
-                            <div class="flex h-full items-center justify-center" id="expiry-date">
+                            <div class="flex h-full items-center justify-center" >
                                 <UInputDate v-model="expiryDate" size="xl" icon="i-lucide-calendar" :min-value="minDate"/>
                             </div>
                         </UCard>

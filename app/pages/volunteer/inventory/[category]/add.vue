@@ -59,9 +59,8 @@
 
 <script lang="ts" setup>
 import * as z from "zod"
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 import { onMounted } from "vue"; 
+import { AddInventoryItemTour } from "../../../../utils/demo";
 
 const route = useRoute()
 const currentCategory = route.params.category as string
@@ -119,45 +118,9 @@ const onSubmit = async (event) => {
 	}
 }
 
-const startTour = () => {
-  driverObj.drive();
-};
-
-const driverObj = driver({
-	showProgress: true,
-	steps: [
-		{
-			element: '#image',
-			popover: {
-				title: 'Upload Image',
-				description: 'Start by uploading an image for the item.'
-			}
-		},
-		{
-			element: '#itemName',
-			popover: {
-				title: 'Item Name',
-				description: 'Enter a clear and recognizable name.'
-			}
-		},
-		{
-			element: '#similar',
-			popover: {
-				title: 'Similar Items',
-				description: 'These help you avoid creating duplicates.'
-			}
-		},
-		{
-			element: '#submit',
-			popover: {
-				title: 'Submit',
-				description: 'Click here to create the new item.'
-			}
-		}
-	]
-})
+const { startTour } = AddInventoryItemTour()
 
 onMounted(() => {
-	//diverObj.drive();
+	startTour();
 });
 </script>

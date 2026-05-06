@@ -32,8 +32,6 @@
 </template>
 
 <script setup lang="ts">
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 import { onMounted } from "vue"; 
 
 const { data: categories } = await useFetch("/api/student/inventory/categories", {
@@ -54,15 +52,10 @@ onMounted(async () => {
 	await getInventoryChanges()
 })
 
-const startTour = () => {
-  driverObj.drive();
-};
+const { startTour } = InventoryTour()
 
-const driverObj = driver({
-  showProgress: true,
-  steps: [
-    { element: '#tour-category-selection', popover: { title: 'Category Selection', description: 'Select a category to view its items.' } },
-  ]
+onMounted(() => {
+  startTour();
 });
 
 </script>

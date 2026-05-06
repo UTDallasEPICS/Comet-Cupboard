@@ -37,8 +37,6 @@
 </template>
 
 <script lang="ts" setup>
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 import { onMounted } from "vue"; 
 
 const countdown = ref(60)
@@ -63,20 +61,10 @@ onBeforeUnmount(() => {
 	clearInterval(interval)
 })
 
-const startTour = () => {
-  driverObj.drive();
-};
+const { startTour } = ManageRolesTour()
 
-const driverObj = driver({
-  showProgress: true,
-  steps: [
-    { element: '#refresh', popover: { title: 'Refresh', description: 'Click to refresh the page.' } },
-	{ element: '#manage-pending-requests', popover: { title: 'Pending Requests', description: 'Review and manage pending volunteer requests.' } },
-	{ element: '#manage-roles', popover: { title: 'Manage Roles', description: 'Edit roles.' } },
-  ]
-});
 
 onMounted(() => {
-        //diverObj.drive();
+	startTour();
 });
 </script>

@@ -59,8 +59,6 @@
 
 <script setup lang="ts">
 import * as z from "zod"
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 import { onMounted } from "vue";
 
 const formSchema = z.object({
@@ -121,59 +119,9 @@ const onSubmit = async (event: any) => {
 
 }
 
-const startTour = () => {
-	driverObj.drive();
-};
-
-const driverObj = driver({
-	showProgress: true,
-	steps: [
-		{
-			element: '#image',
-			popover: {
-				title: 'Upload Image',
-				description: 'Start by uploading an image for the location.'
-			}
-		},
-		{
-			element: '#name',
-			popover: {
-				title: 'Location Name',
-				description: 'Enter a clear and recognizable name.'
-			}
-		},
-		{
-			element: '#link',
-			popover: {
-				title: 'Link',
-				description: 'Provide a link to the website of the location.'
-			}
-		},
-		{
-			element: '#address',
-			popover: {
-				title: 'Address',
-				description: 'Provide the full address of the location.'
-			}
-		},
-		{
-			element: '#similar',
-			popover: {
-				title: 'Similar Locations',
-				description: 'These help you avoid creating duplicates.'
-			}
-		},
-		{
-			element: '#submit',
-			popover: {
-				title: 'Submit',
-				description: 'Click here to create the new location.'
-			}
-		}
-	]
-})
+const { startTour } = AddLocationsTour()
 
 onMounted(() => {
-	//diverObj.drive();
+	startTour();
 });
 </script>

@@ -57,9 +57,8 @@
 
 <script lang="ts" setup>
 import * as z from "zod"
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 import { onMounted } from "vue";
+import { EditCategoryTour } from "../../../../../utils/demo";
 
 const route = useRoute()
 const categoryID = route.params.categoryID as string
@@ -149,52 +148,10 @@ const onSubmit = async (event) => {
 	}
 }
 
-const startTour = () => {
-	driverObj.drive();
-};
+const { startTour } = EditCategoryTour()
 
-const driverObj = driver({
-	showProgress: true,
-	steps: [
-		{
-			element: '#image',
-			popover: {
-				title: 'Upload Image',
-				description: 'Edit uploaded image for the category.'
-			}
-		},
-		{
-			element: '#categoryName',
-			popover: {
-				title: 'Category Name',
-				description: 'Change the name of the category.'
-			}
-		},
-		{
-			element: '#similar',
-			popover: {
-				title: 'Similar Categories',
-				description: 'View and avoid duplicates.'
-			}
-		},
-    {
-			element: '#archived',
-			popover: {
-				title: 'Archived',
-				description: 'Check this box to archive the category.'
-			}
-		},
-		{
-			element: '#submit',
-			popover: {
-				title: 'Submit',
-				description: 'Click here to save changes to the category.'
-			}
-		}
-	]
-})
 
 onMounted(() => {
-	//diverObj.drive();
+	startTour();
 });
 </script>
