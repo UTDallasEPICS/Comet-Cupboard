@@ -151,9 +151,6 @@ import {resolveComponent } from 'vue'
 import BagEditor from '~/components/EmergencyBag/BagEditor.vue'
 import ExpandedRow from '~/components/EmergencyBag/ExpandedRow.vue'
 
-const UButton = resolveComponent('UButton')
-const UCheckbox = resolveComponent('UCheckbox')
-
 const resolvedComponents = {
   UButton: resolveComponent('UButton'),
   UCheckbox: resolveComponent('UCheckbox'),
@@ -204,7 +201,7 @@ const showAlert = (type: 'success' | 'error' | 'validation', title: string, mess
 //Add Tab
 //Submit bag
 const submitBag = async (data) => {
-    const { _bagCategory, _expiryDate, _items, _oldItems, _isPrivate } = data
+    const { _bagCategory, _expiryDate, _items, _oldItems, _isPrivate, _onSuccess } = data
     if (!_bagCategory) {
         showAlert('validation', 'Missing Category', 'Please select a category.')
         return
@@ -230,8 +227,9 @@ const submitBag = async (data) => {
         let response
         let message
         let bagLabel: string | null = null
+        const isEdit = activeTab.value === 'edit'
 
-        if (activeTab.value === 'edit'){
+        if (isEdit){
             response = await $fetch('/api/volunteer/emergency-bag/emergencyBagEdit', {
                 method: 'PUT',
                 body: {
@@ -250,6 +248,7 @@ const submitBag = async (data) => {
                 }
             })
             message = "The bag has been updated successfully."
+            await _onSuccess?.()
             editingBag.value = null;
             activeTab.value = "view"
         } else {
@@ -267,12 +266,13 @@ const submitBag = async (data) => {
             })
             message = "The bag has been created and is ready for use."
             bagLabel = response?.label ?? null
+            await _onSuccess?.()
         }
 
         // Refresh bags list
         await refreshEmergencyBags()
 
-        showAlert('success', activeTab.value === 'view' ? 'Bag Updated' : 'Bag Created', message, bagLabel)
+        showAlert('success', isEdit ? 'Bag Updated' : 'Bag Created', message, bagLabel)
 
     } catch (err: any) {
         console.error('Failed to submit bag:', err)
@@ -387,9 +387,6 @@ const moveBags = async() => {
     } catch (err) {
         console.error("Failed to move bags", err)
     }
-
-    await refreshEmergencyBags();
-    selected.value = {};
 }
 
 const moveSingleBag = async(bagID, location) => {

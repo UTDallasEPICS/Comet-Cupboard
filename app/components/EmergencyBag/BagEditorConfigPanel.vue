@@ -8,7 +8,7 @@
                 <SharedTextCardTitle>Category</SharedTextCardTitle>
             </template>
             <URadioGroup
-                :model-value="selectedCategory"
+                :model-value="selectedCategory ?? undefined"
                 size="md"
                 variant="card"
                 :items="categories"
@@ -28,7 +28,7 @@
                         size="xl"
                         icon="i-lucide-calendar"
                         :min-value="minDate"
-                        @update:model-value="emit('update:expiryDate', $event)"
+                        @update:model-value="$event && emit('update:expiryDate', $event as CalendarDate)"
                     />
                 </div>
             </UCard>
@@ -37,12 +37,10 @@
                 <template #header>
                     <SharedTextCardTitle>Privacy</SharedTextCardTitle>
                 </template>
-                <URadioGroup
-                    :model-value="selectedPrivacy"
-                    size="md"
-                    variant="card"
-                    :items="privacyOptions"
-                    @update:model-value="emit('update:selectedPrivacy', $event)"
+                <UCheckbox
+                    :model-value="selectedPrivacy === 'private'"
+                    label="Private"
+                    @update:model-value="emit('update:selectedPrivacy', $event ? 'private' : null)"
                 />
             </UCard>
 
@@ -100,5 +98,4 @@ const categories = [
     { label: 'Non-Veg + Non-PB', value: 'NONVEGETARIAN_AND_NON_PEANUT_BUTTER' }
 ]
 
-const privacyOptions = [{ label: 'Private', value: 'private' }]
 </script>

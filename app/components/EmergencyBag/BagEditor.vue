@@ -192,15 +192,18 @@ interface SearchPanelExpose { resetSearch: () => void }
 const mobileSearchPanelRef = ref<SearchPanelExpose | null>(null)
 const desktopSearchPanelRef = ref<SearchPanelExpose | null>(null)
 
-const handleSubmit = async () => {
-  await emit('submit', {
+const handleSubmit = () => {
+  emit('submit', {
     _bagCategory: selectedCategory.value,
     _expiryDate: expiryDate.value,
     _items: bagItems.value,
     _oldItems: currentBagItems.value,
-    _isPrivate: selectedPrivacy.value === 'private'
+    _isPrivate: selectedPrivacy.value === 'private',
+    _onSuccess: resetForm
   })
+}
 
+const resetForm = async () => {
   selectedCategory.value = null
   resetItems()
   expiryDate.value = minDate
@@ -208,7 +211,6 @@ const handleSubmit = async () => {
   desktopSearchPanelRef.value?.resetSearch()
   selectedPrivacy.value = 'private'
   mobileActiveTab.value = 'items'
-
   await refreshItems()
 }
 </script>
