@@ -7,6 +7,7 @@
 		<div>
 			<InventoryGraph v-if="currentView === 'inventory'"></InventoryGraph>
 			<SourceContributionGraph v-else-if="currentView === 'sourceContribution'"></SourceContributionGraph>
+			<VisitorsGraph v-else-if="currentView === 'visitors'"></VisitorsGraph>
 		</div>
 
 	</div>
@@ -16,11 +17,8 @@
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, elements } from 'chart.js'
 import { Chart, RadialLinearScale, PointElement, LineElement, Filler,} from "chart.js/auto"
-import {ref} from 'vue'
-import InventoryGraph from './components/InventoryGraph.vue'
-import SourceContributionGraph from './components/SourceContributionGraph.vue'
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const currentView = 'sourceContribution'
+const currentView = 'visitors'
 
 </script>

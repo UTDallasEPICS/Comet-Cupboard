@@ -7,13 +7,11 @@
 </template>
 
 <script lang='ts' setup>
-import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, elements } from 'chart.js'
 import { Chart, RadialLinearScale, PointElement, LineElement, Filler,} from "chart.js/auto"
-import {ref} from 'vue'
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const { data: categories} = await useFetch('/api/head-admin/data/category')
+const { data: categories } = await useFetch('/api/head-admin/data/category')
 
 const chartContainer = useTemplateRef("barContainer")
 

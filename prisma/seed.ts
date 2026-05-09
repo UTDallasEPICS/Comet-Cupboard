@@ -213,7 +213,7 @@ const createOrders = async () => {
 	const currentDate = new Date()
 	const tempDate = new Date()
 	// go back 3 months
-	tempDate.setMonth(tempDate.getMonth() - 3)
+	tempDate.setMonth(tempDate.getMonth() - 6)
 
 	const orders = []
 	const ordersItems = []
@@ -236,6 +236,7 @@ const createOrders = async () => {
 			orders.push({
 				netID: randomUser,
 				cartCreatedAt: new Date(tempDate),
+				createdAt: new Date(tempDate),
 			})
 
 			ordersItems.push(

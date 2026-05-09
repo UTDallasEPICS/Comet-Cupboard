@@ -5,18 +5,11 @@
 </template>
 
 <script lang='ts' setup>
-import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, elements } from 'chart.js'
 import { Chart, RadialLinearScale, PointElement, LineElement, Filler,} from "chart.js/auto"
-import {ref} from 'vue'
-import { date, object } from 'zod'
-import type itemCountChangesPost from '~~/server/api/volunteer/inventory/itemCountChanges.post'
-import { ca } from 'zod/v4/locales'
-import categoryPut from '~~/server/api/admin/inventory/category.put'
-import categoriesGet from '~~/server/api/student/inventory/categories.get'
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const { data: sources} = await useFetch('/api/head-admin/data/source')
+const { data: sources } = await useFetch('/api/head-admin/data/source')
 
 const chartContainer = useTemplateRef("barContainer")
 
