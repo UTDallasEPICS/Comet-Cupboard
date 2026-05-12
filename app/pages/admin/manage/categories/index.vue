@@ -1,15 +1,12 @@
 <template>
 	<UContainer class="py-8">
 		<header>
-			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/admin' }" />
-
-			<UButton 
-				icon="i-heroicons-question-mark-circle" 
-				color="gray" 
-				variant="ghost" 
-				label="Take a Tour" 
-				@click="startTour" 
-			/>
+			<div class="flex items-center justify-between w-full">
+				<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/admin' }" />
+				
+				<UButton icon="i-heroicons-question-mark-circle" color="gray" variant="ghost" label="Take a Tour"
+					@click="startTour" />
+			</div>
 
 			<SharedTextPageTitle>Manage Categories</SharedTextPageTitle>
 		</header>

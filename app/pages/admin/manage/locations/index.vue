@@ -1,18 +1,18 @@
 <template>
 	<UContainer class="py-8">
 		<header>
-			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/admin' }" />
+			
+<div class="flex items-center justify-between w-full">
 
-			<UButton 
-				icon="i-heroicons-question-mark-circle" 
-				color="gray" 
-				variant="ghost" 
-				label="Take a Tour" 
-				@click="startTour" 
-			/>
-			
+				<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/admin' }" />
+
+				<UButton icon="i-heroicons-question-mark-circle" color="gray" variant="ghost" label="Take a Tour"
+					@click="startTour" />
+			</div>
 			<SharedTextPageTitle>Manage Locations</SharedTextPageTitle>
+
 			
+
 		</header>
 
 		<section class="mt-4">
@@ -22,20 +22,12 @@
 				</template>
 
 				<div class="w-full">
-					<SharedButtonPositiveAction
-						id="tour-add-locations"
-						class="ml-auto block"
-						text="Add Location"
-						@click="navigateTo('/admin/manage/locations/add')"
-					/>
+					<SharedButtonPositiveAction id="tour-add-locations" class="ml-auto block" text="Add Location"
+						@click="navigateTo('/admin/manage/locations/add')" />
 				</div>
-				
-				<div id = "tour-edit-location">
-				<UTable
-					:data="locations"
-					:columns="tableColumns"
-					empty="No locations currently available"
-				/>
+
+				<div id="tour-edit-location">
+					<UTable :data="locations" :columns="tableColumns" empty="No locations currently available" />
 				</div>
 			</UCard>
 		</section>
@@ -43,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue"; 
+import { onMounted } from "vue";
 
 const { data: locations } = await useFetch("/api/public/location/locations", {
 	query: { includeArchived: true },
@@ -83,6 +75,6 @@ const tableColumns = buildNuxtUITable(columnsDef, {
 const { startTour } = ManageLocationsTour()
 
 onMounted(() => {
-        startTour();
+	startTour();
 });
 </script>
