@@ -21,12 +21,14 @@ const schema = z
 				count: z.number().int().min(1),
 			})
 		).min(1, "At least one item required"),
+		isPrivate: z.boolean().optional().default(false),
+		bagDescription: z.string().optional().default(''),
 	})
 	.strict()
 	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { bagCategory, expiryDate, items } = await validateBody(event, schema)
+	const { bagCategory, expiryDate, items, isPrivate, bagDescription } = await validateBody(event, schema)
 
 	const label = generateRandomLabel()
 
@@ -35,6 +37,8 @@ export default defineSafeHandler(async (event) => {
 			bagCategory,
 			expiryDate: new Date(expiryDate),
 			label,
+			private: isPrivate,
+			bagDescription,
 			EmergencyBagItems: {
 				createMany: {
 					data: items.map((item) => ({
