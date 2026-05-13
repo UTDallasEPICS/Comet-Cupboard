@@ -5,7 +5,7 @@
 		</header>
 
 		<section class="mt-4">
-			<div class="flex items-center gap-4">
+			<div class="flex items-baseline justify-between">
 				<SharedTextSectionTitle class="inline">Select a Category</SharedTextSectionTitle>
 				<UButton
 					icon="i-heroicons-question-mark-circle"

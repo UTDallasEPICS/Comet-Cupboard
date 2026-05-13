@@ -6,7 +6,7 @@
 		</header>
 
 		<section class="mt-4">
-			<div class="flex items-baseline gap-4">
+			<div class="flex items-baseline justify-between">
 				<SharedTextSectionTitle>Queue Actions</SharedTextSectionTitle>
 				<UButton 
 					icon="i-heroicons-question-mark-circle" 

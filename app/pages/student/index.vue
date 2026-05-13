@@ -5,7 +5,7 @@
 		</header>
 
 		<section class="mt-4">
-			<div class="flex items-baseline gap-2">
+			<div class="flex items-baseline justify-between">
 				<SharedTextSectionTitle>Student Actions</SharedTextSectionTitle>
 			 	<UButton 
             		icon="i-heroicons-question-mark-circle" 

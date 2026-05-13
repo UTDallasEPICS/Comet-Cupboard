@@ -2,7 +2,7 @@
 	<UContainer class="py-8">
 		<header>
 			<SharedButtonNavigateBack text="Back to Categories" :to="{ path: '/student/shopping' }" />
-			<div class="flex items-center gap-4">
+			<div class="flex items-baseline justify-between">
 				<SharedTextPageTitle>All Items</SharedTextPageTitle>
 				<UButton
 					icon="i-heroicons-question-mark-circle"
