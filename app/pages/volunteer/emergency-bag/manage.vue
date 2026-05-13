@@ -31,7 +31,9 @@
 
                     <!--START OF ADD BAG STUFF-->
                     <template #add>
-                        <BagEditor @submit="submitBag" />
+                        <div class="pt-4 pl-4">
+                            <BagEditor @submit="submitBag" />
+                        </div>
                     </template>
                     <!--END OF ADD BAG STUFF-->
 
@@ -201,7 +203,7 @@ const showAlert = (type: 'success' | 'error' | 'validation', title: string, mess
 //Add Tab
 //Submit bag
 const submitBag = async (data) => {
-    const { _bagCategory, _expiryDate, _items, _oldItems, _isPrivate, _onSuccess } = data
+    const { _bagCategory, _expiryDate, _items, _oldItems, _isPrivate, _description } = data
     if (!_bagCategory) {
         showAlert('validation', 'Missing Category', 'Please select a category.')
         return
@@ -244,7 +246,8 @@ const submitBag = async (data) => {
                         itemID: item.itemID,
                         count: item.count
                     })),
-                    isPrivate: _isPrivate ?? false
+                    isPrivate: _isPrivate ?? false,
+                    bagDescription: _description ?? ''
                 }
             })
             message = "The bag has been updated successfully."
@@ -261,7 +264,8 @@ const submitBag = async (data) => {
                         itemID: item.itemID,
                         count: item.count
                     })),
-                    isPrivate: _isPrivate ?? false
+                    isPrivate: _isPrivate ?? false,
+                    bagDescription: _description ?? ''
                 }
             })
             message = "The bag has been created and is ready for use."

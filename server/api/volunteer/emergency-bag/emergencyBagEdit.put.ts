@@ -32,12 +32,13 @@ const schema = z
     ),
 
     isPrivate: z.boolean().optional().default(false),
+    bagDescription: z.string().optional().default(''),
   })
   .strict()
   .required()
 
 export default defineSafeHandler(async (event) => {
-  const { bagID, bagCategory, expiryDate, items, oldItems, isPrivate } =
+  const { bagID, bagCategory, expiryDate, items, oldItems, isPrivate, bagDescription } =
     await validateBody(event, schema)
 
   return await prisma.$transaction(async (tx) => {
@@ -130,7 +131,8 @@ export default defineSafeHandler(async (event) => {
       data: {
         bagCategory,
         expiryDate: new Date(expiryDate),
-        private: isPrivate
+        private: isPrivate,
+        bagDescription,
       },
       include: {
         EmergencyBagItems: true
