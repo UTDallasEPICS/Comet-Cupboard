@@ -16,26 +16,28 @@ if (!existsSync(uploadDirectory)) {
 }
 
 const sources = []
-
-const categories: Array<string> = readdirSync("./test-images").filter((file) => {
-	return !(file === "_category_banners")
-})
 const items = []
 
-categories.forEach((category) => {
-	const categoryItems: Array<string> = readdirSync("./test-images/" + category)
-	categoryItems.forEach(async (categoryItem) => {
-		const imgBuffer = await processImage(await readFile("./test-images/" + category + "/" + categoryItem))
-		const imgName = await uploadImage(imgBuffer)
-		items.push({
-			itemID: nanoid(),
-			name: categoryItem.split(".")[0],
-			quantity: Math.floor(Math.random() * 20),
-			imgName: imgName,
-			categoryName: category,
+const populateItems = async () => {
+	const categories: Array<string> = readdirSync("./test-images").filter((file) => {
+		return !(file === "_category_banners") && !(file === "Locations")
+	})
+	const promises = categories.flatMap((category) => {
+		const categoryItems: Array<string> = readdirSync("./test-images/" + category)
+		return categoryItems.map(async (categoryItem) => {
+			const imgBuffer = await processImage(await readFile("./test-images/" + category + "/" + categoryItem))
+			const imgName = await uploadImage(imgBuffer)
+			items.push({
+				itemID: nanoid(),
+				name: categoryItem.split(".")[0],
+				quantity: Math.floor(Math.random() * 20),
+				imgName: imgName,
+				categoryName: category,
+			})
 		})
 	})
-})
+	await Promise.all(promises)
+}
 
 const validUsers = [
 	{ netID: "stu000000", role: RoleType.STUDENT },
@@ -163,8 +165,6 @@ const createIssuedEmergencyBagItems = async () => {
 	await prisma.issuedEmergencyBagItem.createMany({
 		data: [
 			{ itemID: items[0].itemID, bagID: bags[0].bagID, count: 3 },
-			{ itemID: items[0].itemID, bagID: bags[1].bagID, count: 5 },
-			{ itemID: items[2].itemID, bagID: bags[2].bagID, count: 7 },
 		],
 	})
 }
@@ -267,6 +267,7 @@ const createOrders = async () => {
 }
 
 const main = async () => {
+	await populateItems()
 	await createSources()
 	await createCategories()
 	await createUsers()
