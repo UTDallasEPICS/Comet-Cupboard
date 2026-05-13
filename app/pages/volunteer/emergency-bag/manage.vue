@@ -203,7 +203,7 @@ const showAlert = (type: 'success' | 'error' | 'validation', title: string, mess
 //Add Tab
 //Submit bag
 const submitBag = async (data) => {
-    const { _bagCategory, _expiryDate, _items, _oldItems, _isPrivate, _description } = data
+    const { _bagCategory, _expiryDate, _items, _oldItems, _isPrivate, _description, _onSuccess } = data
     if (!_bagCategory) {
         showAlert('validation', 'Missing Category', 'Please select a category.')
         return
