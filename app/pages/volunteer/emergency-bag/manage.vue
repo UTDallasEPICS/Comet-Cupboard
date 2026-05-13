@@ -1,9 +1,12 @@
 <template>
     <header>
-        <SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
+        <div class="flex items-center justify-between w-full">
 
-        <UButton icon="i-heroicons-question-mark-circle" color="gray" variant="ghost" label="Take a Tour"
-            @click="startTour" />
+			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
+
+			<UButton icon="i-heroicons-question-mark-circle" color="gray" variant="ghost" label="Take a Tour"
+				@click="startTour" />
+		</div>
     </header>
     <div class="w-full flex items-center justify-center p-6">
         <!--Tabs-->
