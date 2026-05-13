@@ -273,16 +273,7 @@ const validateAndAdvanceBagDetails = () => {
     incrementStepper()
 }
 
-const handleSubmit = async () => {
-    await emit('submit', {
-        _bagCategory: selectedCategory.value,
-        _expiryDate: expiryDate.value,
-        _items: bagItems.value,
-        _oldItems: currentBagItems.value,
-        _isPrivate: selectedPrivacy.value === 'private',
-        _description: description.value,
-    })
-
+const resetForm = async () => {
     active.value = 0
     selectedCategory.value = null
     selectedPrivacy.value = 'public'
@@ -292,5 +283,17 @@ const handleSubmit = async () => {
     expiryDate.value = minDate
     searchPanelRef.value?.resetSearch()
     await refreshItems()
+}
+
+const handleSubmit = () => {
+    emit('submit', {
+        _bagCategory: selectedCategory.value,
+        _expiryDate: expiryDate.value,
+        _items: bagItems.value,
+        _oldItems: currentBagItems.value,
+        _isPrivate: selectedPrivacy.value === 'private',
+        _description: description.value,
+        _onSuccess: resetForm,
+    })
 }
 </script>
