@@ -1,33 +1,44 @@
 <template>
     <div>
 		<div class="flex items-center justify-end">
-			<USelect v-model="grouping" :items="['Day', 'Week', 'Month']" class="w-28" />
+			<div class="flex flex-col justify-center gap-1 mr-auto">
+				<p class="text-sm">Visitor Type</p>
+				<USelect v-model="type" :items="['Total', 'Unique']" class="w-28" />
+			</div>
 
-			<UPopover :content="{ align: 'center' }">
-				<UButton color="neutral" variant="subtle" icon="i-lucide-calendar">
-				{{ label }}
-				</UButton>
+			<div class="flex flex-col justify-left gap-1 mr-2">
+				<p class="text-sm text-right">Time Level</p>
+				<USelect v-model="grouping" :items="['Day', 'Week', 'Month']" class="w-28" />
+			</div>
 
-			<template #content>
-				<div class="flex items-stretch divide-x divide-(--ui-border)">
-					<div class="hidden sm:flex flex-col justify-center py-2">
-					<UButton
-						v-for="(range, index) in ranges"
-						:key="index"
-						:label="range.label"
-						color="neutral"
-						variant="ghost"
-						class="rounded-none px-4"
-						:class="[isRangeSelected(range) ? 'bg-elevated' : 'hover:bg-elevated/50']"
-						truncate
-						@click="selectRange(range)"
-					/>
+			<div class="flex flex-col justify-center gap-1">
+				<p class="text-sm text-right">Time Range</p>
+				<UPopover :content="{ align: 'center' }">
+					<UButton color="neutral" variant="subtle" icon="i-lucide-calendar">
+					{{ label }}
+					</UButton>
+
+				<template #content>
+					<div class="flex items-stretch divide-x divide-(--ui-border)">
+						<div class="hidden sm:flex flex-col justify-center py-2">
+						<UButton
+							v-for="(range, index) in ranges"
+							:key="index"
+							:label="range.label"
+							color="neutral"
+							variant="ghost"
+							class="rounded-none px-4"
+							:class="[isRangeSelected(range) ? 'bg-elevated' : 'hover:bg-elevated/50']"
+							truncate
+							@click="selectRange(range)"
+						/>
+						</div>
+
+						<UCalendar v-model="modelValue" class="p-2" :number-of-months="isDesktop ? 2 : 1" range />
 					</div>
-
-					<UCalendar v-model="modelValue" class="p-2" :number-of-months="isDesktop ? 2 : 1" range />
-				</div>
-			</template>
-		</UPopover>
+				</template>
+			</UPopover>
+		</div>
 	</div>
 		<canvas ref="lineContainer"></canvas>
 	</div>
@@ -50,7 +61,7 @@ const orders = computed(() => {
 	return user.value.flatMap(user => 
 		user.Orders.map(order => ({
 			orderID: order.orderID,
-			createdAt: order.createdAt,
+			createdAt: new Date(order.createdAt),
 			netID: user.netID,
 		}))
 	)
@@ -114,6 +125,8 @@ const filtered = computed(() => {
 
 const grouping = ref('Day')
 
+const type = ref('Total')
+
 watch(modelValue, () => {
 	const start = modelValue.value.start.toDate(tz)
 	const end = modelValue.value.end.toDate(tz)
@@ -126,39 +139,165 @@ watch(modelValue, () => {
 	} else {
 		grouping.value = 'Month'
 	}
+
 })
 
 const countedDates = computed(() => {
 	const dateCount: Record<string, number> = {}
 
-	for (const order of filtered.value){
-		let dateKey = ''
-		console.log(order)
+	const currentDate = new Date(modelValue.value.start.toDate(tz))
+	currentDate.setHours(0, 0, 0)
 
+	const endDate = new Date(modelValue.value.end.toDate(tz))
+	endDate.setHours(0, 0, 0)
+
+	if (type.value === 'Total'){
 		if (grouping.value === 'Day'){
-			dateKey = order.createdAt.split("T")[0]
+			while (currentDate <= endDate){
+				const dateKey = currentDate.toLocaleDateString('en-US')
+				dateCount[dateKey] = 0
+				
+				currentDate.setDate(currentDate.getDate() + 1)
+			}
 
-		}else if (grouping.value === 'Week'){
-			const date = new Date(order.createdAt)
-			date.setDate(date.getDate() - date.getDay())
-			const startWeek = date.toISOString().split("T")[0]
-			date.setDate(date.getDate() + 6)
-			const endWeek = date.toISOString().split("T")[0]
-			dateKey = `${startWeek} - ${endWeek}`
+			for (const order of filtered.value){
+				const dateKey = new Date(order.createdAt).toLocaleDateString('en-US')
 
-		}else if (grouping.value === 'Month'){
-			dateKey = order.createdAt.split("-").slice(0,2).join("-")
-		}
+				if (dateKey in dateCount){
+					dateCount[dateKey] += 1
+				}
+			}
+		} else if (grouping.value === 'Week'){
+			while (currentDate <= endDate) {
+				const weekStart = new Date(currentDate)
+				weekStart.setDate(weekStart.getDate() - weekStart.getDay())
 
-		if (!(dateKey in dateCount)){
-			dateCount[dateKey] = 1
-		} else if (dateKey in dateCount){
-			dateCount[dateKey] += 1
-		} else {
-			dateCount[dateKey] = 0
+				const weekEnd = new Date(weekStart)
+				weekEnd.setDate(weekEnd.getDate() + 6)
+
+				const dateKey = `${weekStart.toLocaleDateString('en-US')} - ${weekEnd.toLocaleDateString('en-US')}`
+
+				dateCount[dateKey] = 0
+
+				currentDate.setDate(currentDate.getDate() + 7)
+			}
+
+			for (const order of filtered.value){
+				const weekStart = new Date(order.createdAt)
+				weekStart.setDate(weekStart.getDate() - weekStart.getDay())
+
+				const weekEnd = new Date(weekStart)
+				weekEnd.setDate(weekEnd.getDate() + 6)
+
+				const dateKey = `${weekStart.toLocaleDateString('en-US')} - ${weekEnd.toLocaleDateString('en-US')}`
+
+				if (dateKey in dateCount){
+					dateCount[dateKey] += 1
+				}
+			}
+		} else if (grouping.value === 'Month') {
+			while (currentDate <= endDate){
+				const dateKey = currentDate.toLocaleDateString('en-US', {month: 'short', year: 'numeric'})
+
+				dateCount[dateKey] = 0
+
+				currentDate.setMonth(currentDate.getMonth() + 1)
+			}
+
+			for (const order of filtered.value){
+				const dateKey = new Date(order.createdAt).toLocaleDateString('en-US', {month: 'short', year: 'numeric'})
+
+				if (dateKey in dateCount){
+					dateCount[dateKey] += 1
+				}
+			}
 		}
 	}
 
+	if (type.value === 'Unique'){
+		const uniqueVisitors: Record<string, Set<string>> = {}
+
+		if (grouping.value === 'Day'){
+			while (currentDate <= endDate){
+				const dateKey = currentDate.toLocaleDateString('en-US')
+				dateCount[dateKey] = 0
+				
+				currentDate.setDate(currentDate.getDate() + 1)
+			}
+
+			for (const order of filtered.value){
+				const dateKey = new Date(order.createdAt).toLocaleDateString('en-US')
+				const orderID = order.netID
+
+				if (!(dateKey in uniqueVisitors)){
+					uniqueVisitors[dateKey] = new Set()
+				}
+
+				if (!(uniqueVisitors[dateKey]?.has(orderID))){
+					dateCount[dateKey] += 1
+					uniqueVisitors[dateKey]?.add(orderID)
+				}
+			}
+		} else if (grouping.value === 'Week'){
+			while (currentDate <= endDate) {
+				const weekStart = new Date(currentDate)
+				weekStart.setDate(weekStart.getDate() - weekStart.getDay())
+
+				const weekEnd = new Date(weekStart)
+				weekEnd.setDate(weekEnd.getDate() + 6)
+
+				const dateKey = `${weekStart.toLocaleDateString('en-US')} - ${weekEnd.toLocaleDateString('en-US')}`
+
+				dateCount[dateKey] = 0
+
+				currentDate.setDate(currentDate.getDate() + 7)
+			}
+
+			for (const order of filtered.value){
+				const weekStart = new Date(order.createdAt)
+				weekStart.setDate(weekStart.getDate() - weekStart.getDay())
+
+				const weekEnd = new Date(weekStart)
+				weekEnd.setDate(weekEnd.getDate() + 6)
+
+				const dateKey = `${weekStart.toLocaleDateString('en-US')} - ${weekEnd.toLocaleDateString('en-US')}`
+
+				const orderID = order.netID
+
+				if (!(dateKey in uniqueVisitors)){
+					uniqueVisitors[dateKey] = new Set()
+				}
+
+				if (!(uniqueVisitors[dateKey]?.has(orderID))){
+					dateCount[dateKey] += 1
+					uniqueVisitors[dateKey]?.add(orderID)
+				}
+			}
+		} else if (grouping.value === 'Month') {
+			while (currentDate <= endDate){
+				const dateKey = currentDate.toLocaleDateString('en-US', {month: 'short', year: 'numeric'})
+
+				dateCount[dateKey] = 0
+
+				currentDate.setMonth(currentDate.getMonth() + 1)
+			}
+
+			for (const order of filtered.value){
+				const dateKey = new Date(order.createdAt).toLocaleDateString('en-US', {month: 'short', year: 'numeric'})
+
+				const orderID = order.netID
+
+				if (!(dateKey in uniqueVisitors)){
+					uniqueVisitors[dateKey] = new Set()
+				}
+
+				if (!(uniqueVisitors[dateKey]?.has(orderID))){
+					dateCount[dateKey] += 1
+					uniqueVisitors[dateKey]?.add(orderID)
+				}
+			}
+		}
+	}
 	return dateCount
 })
 
@@ -174,10 +313,7 @@ const formatLabel = (key: string) => {
 }
 
 const chartPoints = computed(() => {
-	const startDate = ''
-	const endDate = ''
-
-	return Object.keys(countedDates.value).sort().map(key => ({
+	return Object.keys(countedDates.value).map(key => ({
 		label: formatLabel(key),
 		value: countedDates.value[key]
 	}))
