@@ -2,7 +2,7 @@
     	<div>
 			<canvas ref="barContainer"></canvas>
 
-        <button style="cursor: pointer;" @click="resetChart">Back</button>
+        <button v-if="inItemChart" class="border border-solid rounded-lg px-3 py-1" style="cursor: pointer;" @click="resetChart">Back</button>
         </div>
 </template>
 
@@ -25,8 +25,13 @@ const labelName = computed(() => {
 
 const categoryItemQty = computed (() =>{
 	if (categories.value){
-		return categories.value.map(cat => cat.Items.length)
-	}else{
+		return categories.value.map(cat => {
+			const categoryTotalQty = cat.Items.reduce((sum, item) => {
+				return sum + item.quantity
+			}, 0)
+			return categoryTotalQty
+		})
+	} else {
 		return []
 	}
 })
@@ -43,29 +48,30 @@ const categoryItemList = computed(() => {
   })
 })
 
-console.log(categoryItemList.value)
+const baseColors = [
+	'#86ADDC',
+	'#B0E4C8',
+	'#FF9D93',
+]
+
+function generateColor(index: number){
+	const hue = (index * 137) % 360
+
+	return `hsl(${hue}, 70%, 65%)`
+}
+
+const colors = categories.value.map((_, index) => {
+	return baseColors[index] || generateColor(index)
+})
 
 function addData(chart, labels, newData) {
     chart.data.labels = labels
     chart.data.datasets = [{					
-					label: 'Total Inventory Category Count',
 					data: newData,
 					hoverBorderColor: 'black',
 					hoverBorderWidth: 2,
-					backgroundColor: [
-						'#86ADDC',
-						'#B0E4C8',
-						'#BDE8F8',
-						'#C6DEDB',
-						'#DCEBF2',
-						'#EECCDD',
-						'#EFBCB3',
-						'#FAFAD4',
-						'#FEDBCF',
-						'#FF9D93',
-						'#FFBD81',
-						'#FBD873',
-					]}]
+					backgroundColor: colors,
+				}]
     chart.update();
 }
 
@@ -78,7 +84,7 @@ function wipeData(chart){
 const chart = shallowRef(null)
 const originalCategoryLabels = labelName.value
 const originalCategoryData = categoryItemQty.value
-let inItemChart = ref(false)
+const inItemChart = ref(false)
 
 function resetChart(){
 	wipeData(chart.value)
@@ -94,28 +100,19 @@ onMounted(() => {
 			labels: labelName.value,
 			datasets: [
 				{
-					label: 'Total Inventory Count',
 					data: originalCategoryData,
 					hoverBorderColor: 'black',
 					hoverBorderWidth: 2,
-					backgroundColor: [
-						'#86ADDC',
-						'#B0E4C8',
-						'#BDE8F8',
-						'#C6DEDB',
-						'#DCEBF2',
-						'#EECCDD',
-						'#EFBCB3',
-						'#FAFAD4',
-						'#FEDBCF',
-						'#FF9D93',
-						'#FFBD81',
-						'#FBD873',
-					],
+					backgroundColor: colors,
 				},
 			],
 		},
 		options: {
+			plugins:{
+				legend:{
+					display: false
+				}
+			},
 			responsive: true,
 			
 			onHover(event, chartElement){
