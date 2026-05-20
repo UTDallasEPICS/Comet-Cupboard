@@ -3,7 +3,7 @@
 		<div class="flex items-center justify-end">
 			<div class="justify-left mr-2 flex flex-col gap-1">
 				<p class="text-right text-sm">Time Level</p>
-				<USelect v-model="grouping" :items="['Day', 'Week', 'Month']" class="w-28" />
+				<USelect v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" class="w-28" />
 			</div>
 
 			<div class="flex flex-col justify-center gap-1">
@@ -29,7 +29,6 @@
 <script lang="ts" setup>
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from "chart.js"
 import { Chart } from "chart.js/auto"
-import { breakpointsTailwind, useBreakpoints } from "@vueuse/core"
 import { DateFormatter, getLocalTimeZone, today } from "@internationalized/date"
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
@@ -52,17 +51,6 @@ const orders = computed(() => {
 const df = new DateFormatter("en-US", { month: "short", day: "numeric" })
 const dfMonth = new DateFormatter("en-US", { month: "short" })
 const tz = getLocalTimeZone()
-const breakpoints = useBreakpoints(breakpointsTailwind)
-const isDesktop = breakpoints.greaterOrEqual("sm")
-
-const ranges = [
-	{ label: "Last 7 days", days: 7 },
-	{ label: "Last 14 days", days: 14 },
-	{ label: "Last 30 days", days: 30 },
-	{ label: "Last 3 months", months: 3 },
-	{ label: "Last 6 months", months: 6 },
-	{ label: "Last year", years: 1 },
-]
 
 const initialEnd = today(tz)
 const modelValue = shallowRef({
@@ -70,31 +58,7 @@ const modelValue = shallowRef({
 	end: initialEnd,
 })
 
-console.log(modelValue.value)
-
 const inputDate = useTemplateRef("inputDate")
-
-const label = computed(() => {
-	const { start, end } = modelValue.value
-	if (!start) return "Pick a date"
-	if (!end) return df.format(start.toDate(tz))
-	return `${df.format(start.toDate(tz))} - ${df.format(end.toDate(tz))}`
-})
-
-function computeStart(range: (typeof ranges)[number]) {
-	const end = today(tz)
-	return { start: end.subtract({ days: range.days, months: range.months, years: range.years }), end }
-}
-
-function isRangeSelected(range: (typeof ranges)[number]) {
-	if (!modelValue.value?.start || !modelValue.value?.end) return false
-	const { start, end } = computeStart(range)
-	return modelValue.value.start.compare(start) === 0 && modelValue.value.end.compare(end) === 0
-}
-
-function selectRange(range: (typeof ranges)[number]) {
-	modelValue.value = computeStart(range)
-}
 
 const filtered = computed(() => {
 	if (!modelValue.value.start || !modelValue.value.end) return []
@@ -109,9 +73,9 @@ const filtered = computed(() => {
 	})
 })
 
-const grouping = ref("Day")
+console.log('filtered: ',filtered.value)
 
-const type = ref("Total")
+const grouping = ref("Day")
 
 watch(modelValue, () => {
 	if (!modelValue.value.start || !modelValue.value.end) return
@@ -128,6 +92,29 @@ watch(modelValue, () => {
 	}
 })
 
+const semesterFromDate = (date) => {
+	const springSemesterStart = new Date(date.getFullYear(), 0)
+	const springSemesterEnd = new Date(date.getFullYear(), 4, 31)
+	const summerSemesterStart = new Date(date.getFullYear(), 5)
+	const summerSemesterEnd = new Date(date.getFullYear(), 7, 24)
+	// const fallSemesterStart = new Date(date.getFullYear(), 8)
+	// const fallSemesterEnd = new Date(date.getFullYear(), 11, 31)
+
+	let semester
+
+	if (date >= springSemesterStart && date <= springSemesterEnd) {
+		semester = "Spring"
+	} else if (date >= summerSemesterStart && date <= summerSemesterEnd) {
+		semester = "Summer"
+	} else {
+		semester = "Fall"
+	}
+
+	return `${semester} ${date.getFullYear()}`
+}
+
+console.log(semesterFromDate(modelValue.value.start.toDate(tz)))
+
 const countedDates = computed(() => {
 	if (!modelValue.value.start || !modelValue.value.end) return { total: {}, uniqueVisitors: {} }
 	const dateCount: Record<string, number> = {}
@@ -139,8 +126,6 @@ const countedDates = computed(() => {
 	const endDate = new Date(modelValue.value.end.toDate(tz))
 	endDate.setHours(0, 0, 0)
 
-	console.log(currentDate, endDate)
-
 	if (grouping.value === "Day") {
 		while (currentDate <= endDate) {
 			const dateKey = currentDate.toLocaleDateString("en-US")
@@ -191,7 +176,7 @@ const countedDates = computed(() => {
 			dateCount[dateKey] = 0
 
 			currentDate.setMonth(currentDate.getMonth() + 1)
-		}
+	}
 
 		for (const order of filtered.value) {
 			const dateKey = new Date(order.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })
@@ -200,96 +185,52 @@ const countedDates = computed(() => {
 				dateCount[dateKey] += 1
 			}
 		}
+	} else if (grouping.value === "Semester") {
+		for (const order of filtered.value){
+			const dateKey = semesterFromDate(new Date(order.createdAt))
+
+			console.log('dateKey: ', dateKey)	
+			
+			if (!(dateKey in dateCount)) {
+				dateCount[dateKey] = 0
+			}
+			
+			dateCount[dateKey] += 1
+		}
 	}
 
-	if (grouping.value === "Day") {
-		while (currentDate <= endDate) {
-			const dateKey = currentDate.toLocaleDateString("en-US")
-			dateCount[dateKey] = 0
+	// Unique Visitors
+	for (const order of filtered.value){
+		let dateKey: string
 
-			currentDate.setDate(currentDate.getDate() + 1)
-		}
-
-		for (const order of filtered.value) {
-			const dateKey = new Date(order.createdAt).toLocaleDateString("en-US")
-			const orderID = order.netID
-
-			if (!(dateKey in uniqueVisitors)) {
-				uniqueVisitors[dateKey] = new Set()
-			}
-
-			if (!uniqueVisitors[dateKey]?.has(orderID)) {
-				dateCount[dateKey] += 1
-				uniqueVisitors[dateKey]?.add(orderID)
-			}
-		}
-	} else if (grouping.value === "Week") {
-		while (currentDate <= endDate) {
-			const weekStart = new Date(currentDate)
-			weekStart.setDate(weekStart.getDate() - weekStart.getDay())
-
-			const weekEnd = new Date(weekStart)
-			weekEnd.setDate(weekEnd.getDate() + 6)
-
-			const dateKey = `${weekStart.toLocaleDateString("en-US")} - ${weekEnd.toLocaleDateString("en-US")}`
-
-			dateCount[dateKey] = 0
-
-			currentDate.setDate(currentDate.getDate() + 7)
-		}
-
-		for (const order of filtered.value) {
+		if (grouping.value === 'Day') {
+			dateKey = new Date(order.createdAt).toLocaleDateString("en-US")
+			console.log('dateKey: ',dateKey)
+		} else if (grouping.value === 'Week'){
 			const weekStart = new Date(order.createdAt)
 			weekStart.setDate(weekStart.getDate() - weekStart.getDay())
 
 			const weekEnd = new Date(weekStart)
 			weekEnd.setDate(weekEnd.getDate() + 6)
 
-			const dateKey = `${weekStart.toLocaleDateString("en-US")} - ${weekEnd.toLocaleDateString("en-US")}`
-
-			const orderID = order.netID
-
-			if (!(dateKey in uniqueVisitors)) {
-				uniqueVisitors[dateKey] = new Set()
-			}
-
-			if (!uniqueVisitors[dateKey]?.has(orderID)) {
-				dateCount[dateKey] += 1
-				uniqueVisitors[dateKey]?.add(orderID)
-			}
-		}
-	} else if (grouping.value === "Month") {
-		while (currentDate <= endDate) {
-			const dateKey = currentDate.toLocaleDateString("en-US", { month: "short", year: "numeric" })
-
-			dateCount[dateKey] = 0
-
-			currentDate.setMonth(currentDate.getMonth() + 1)
+			dateKey = `${weekStart.toLocaleDateString("en-US")} - ${weekEnd.toLocaleDateString("en-US")}`
+		} else if (grouping.value === "Month") {
+			dateKey = new Date(order.createdAt).toLocaleDateString("en-US", {month: "short", year: "numeric"})
+		} else {
+			dateKey = semesterFromDate(new Date(order.createdAt))
 		}
 
-		for (const order of filtered.value) {
-			const dateKey = new Date(order.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })
-
-			const orderID = order.netID
-
-			if (!(dateKey in uniqueVisitors)) {
-				uniqueVisitors[dateKey] = new Set()
-			}
-
-			if (!uniqueVisitors[dateKey]?.has(orderID)) {
-				dateCount[dateKey] += 1
-				uniqueVisitors[dateKey]?.add(orderID)
-			}
+		if (!(dateKey in uniqueVisitors)){
+			uniqueVisitors[dateKey] = new Set()
 		}
+		uniqueVisitors[dateKey].add(order.netID)
 	}
+
 	return {
 		total: dateCount,
 		uniqueVisitors,
 	}
 })
-
-console.log("countedDates Total: ", countedDates.value.total)
-console.log("countedDates uniqueVisitors: ", countedDates.value.uniqueVisitors)
 
 const uniqueCounts = computed(() => {
 	const counts: Record<string, number> = {}
@@ -302,6 +243,9 @@ const uniqueCounts = computed(() => {
 })
 
 const formatLabel = (key: string) => {
+	if (grouping.value === "Semester") {
+		return key
+	}
 	if (grouping.value === "Week") {
 		const [start, end] = key.split(" - ")
 		return `${df.format(new Date(start))} - ${df.format(new Date(end))}`
@@ -373,5 +317,4 @@ onMounted(() => {
 		},
 	})
 })
-console.log(inputDate.value)
 </script>
