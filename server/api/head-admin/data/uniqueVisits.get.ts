@@ -72,17 +72,18 @@ export default defineSafeHandler(async (event) => {
 	}
 
 	//fill data into allTimeLevels
-	for (const { createdAt, label, count } of rows) {
+	for(const {createdAt, label, count} of rows){
 		const time = getTimeLevel(createdAt, timeLevel)
-		if (!allTimeLevels[time][label]) {
+		if (!allTimeLevels[time][label]){
 			allTimeLevels[time][label] = 0
 		}
 		allTimeLevels[time][label] += count
 	}
 
-	// sets visits per time level
-	for (const time in allTimeLevels) {
-		allTimeLevels[time] = Object.values(allTimeLevels[time]).reduce((sum, value) => sum + value, 0)
+	// sum up unique users per time level
+	for (const time in allTimeLevels){
+		const labels = allTimeLevels[time]
+		allTimeLevels[time] = Object.keys(labels).length
 	}
 
 	return allTimeLevels
