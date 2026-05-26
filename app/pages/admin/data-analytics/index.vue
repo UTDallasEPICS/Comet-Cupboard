@@ -1,7 +1,7 @@
 <template>
 	<header>
-			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/admin' }" />
-			<SharedTextPageTitle>Data</SharedTextPageTitle>
+		<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/admin' }" />
+		<SharedTextPageTitle>Data</SharedTextPageTitle>
 	</header>
 	<div class="p-4">
 		<div class="flex flex-row gap-x-4">

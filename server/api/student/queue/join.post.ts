@@ -42,7 +42,7 @@ export default defineSafeHandler(async (event) => {
 			},
 		})
 	})
-	
+
 	publishEvent(
 		createEvent("queue.entryAdded", {
 			position: queueEntry.position,

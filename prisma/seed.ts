@@ -50,12 +50,18 @@ const validUsers = [
 ]
 
 const locations = [
-	{ name: "Police Station", address: "100 N Floyd Road", imgName: "police_station.jpg", description: "https://police.utdallas.edu",archived: false },
+	{ name: "Police Station", address: "100 N Floyd Road", imgName: "police_station.jpg", description: "https://police.utdallas.edu", archived: false },
 	{ name: "Activity Center", address: "800 Campbell Rd", imgName: "activity_center.jpg", description: "https://urec.utdallas.edu", archived: false },
 ]
 
 const emergencyBags = [
-	{ bagCategory: BagCategory.NONVEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2026-07-28"), label: "12345", locationName: "Police Station", private: true },
+	{
+		bagCategory: BagCategory.NONVEGETARIAN_AND_NON_PEANUT_BUTTER,
+		expiryDate: new Date("2026-07-28"),
+		label: "12345",
+		locationName: "Police Station",
+		private: true,
+	},
 	{ bagCategory: BagCategory.VEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2027-01-01"), label: "15453", private: false },
 	{ bagCategory: BagCategory.NONVEGETARIAN_AND_PEANUT_BUTTER, expiryDate: new Date("2026-09-30"), label: "54321", private: false },
 ]
@@ -128,14 +134,14 @@ const createDeals = async () => {
 }
 
 const createLocations = async () => {
-	await prisma.location.createMany({ 
-		data: locations 
+	await prisma.location.createMany({
+		data: locations,
 	})
 }
 
 const createEmergencyBags = async () => {
 	await prisma.emergencyBag.createMany({
-		data: emergencyBags 
+		data: emergencyBags,
 	})
 }
 
@@ -153,9 +159,7 @@ const createEmergencyBagItems = async () => {
 
 const createIssuedEmergencyBags = async () => {
 	await prisma.issuedEmergencyBag.createMany({
-		data: [ 
-			{ bagCategory: BagCategory.VEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2026-05-01"), label: "99999", location: "Police Station" }
-		],
+		data: [{ bagCategory: BagCategory.VEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2026-05-01"), label: "99999", location: "Police Station" }],
 	})
 }
 
@@ -163,9 +167,7 @@ const createIssuedEmergencyBagItems = async () => {
 	const bags = await prisma.issuedEmergencyBag.findMany()
 
 	await prisma.issuedEmergencyBagItem.createMany({
-		data: [
-			{ itemID: items[0].itemID, bagID: bags[0].bagID, count: 3 },
-		],
+		data: [{ itemID: items[0].itemID, bagID: bags[0].bagID, count: 3 }],
 	})
 }
 

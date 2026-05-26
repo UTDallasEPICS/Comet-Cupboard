@@ -12,18 +12,10 @@
 				</template>
 
 				<div class="w-full">
-					<SharedButtonPositiveAction
-						class="ml-auto block"
-						text="Add Location"
-						@click="navigateTo('/admin/manage/locations/add')"
-					/>
+					<SharedButtonPositiveAction class="ml-auto block" text="Add Location" @click="navigateTo('/admin/manage/locations/add')" />
 				</div>
 
-				<UTable
-					:data="locations"
-					:columns="tableColumns"
-					empty="No locations currently available"
-				/>
+				<UTable :data="locations" :columns="tableColumns" empty="No locations currently available" />
 			</UCard>
 		</section>
 	</UContainer>
@@ -54,8 +46,7 @@ const columnsDef = [
 	{
 		id: "edit",
 		type: "edit",
-		onClick: (row) =>
-			navigateTo(`/admin/manage/locations/${row.original.name}/edit`),
+		onClick: (row) => navigateTo(`/admin/manage/locations/${row.original.name}/edit`),
 	},
 ]
 

@@ -6,20 +6,14 @@
 		}"
 	>
 		<div class="flex flex-col items-center">
-			<img
-				:src="`/api/public/image/${imgName}`"
-				:alt="name"
-				class="border-final-border-soft aspect-square h-full w-16 rounded-lg border object-cover"
-			/>
+			<img :src="`/api/public/image/${imgName}`" :alt="name" class="border-final-border-soft aspect-square h-full w-16 rounded-lg border object-cover" />
 			<SharedCardTitle>{{ name }}</SharedCardTitle>
-            <SharedCardTitle>Qty: {{ qty }}</SharedCardTitle>
+			<SharedCardTitle>Qty: {{ qty }}</SharedCardTitle>
 		</div>
-		
 	</UCard>
 </template>
 
 <script setup>
-
 const props = defineProps({
 	name: {
 		type: String,
@@ -33,7 +27,5 @@ const props = defineProps({
 		type: Number,
 		required: true,
 	},
-
 })
-
 </script>

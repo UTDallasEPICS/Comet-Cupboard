@@ -3,7 +3,7 @@ export default defineAppConfig({
 		card: {
 			slots: {
 				root: "shadow-md border-final-border-soft border",
-			}
+			},
 		},
 		button: {
 			slots: {

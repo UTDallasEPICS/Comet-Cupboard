@@ -1,7 +1,7 @@
 <template>
 	<header>
-			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/admin' }" />
-			<SharedTextPageTitle>Manage Sources</SharedTextPageTitle>
+		<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/admin' }" />
+		<SharedTextPageTitle>Manage Sources</SharedTextPageTitle>
 	</header>
 </template>
 

@@ -32,6 +32,6 @@ export default defineSafeHandler(async (event) => {
 
 	const mimeType = mime.lookup(filename) || "application/octet-stream"
 	setResponseHeader(event, "Content-Type", mimeType)
-	
+
 	return contents
 })

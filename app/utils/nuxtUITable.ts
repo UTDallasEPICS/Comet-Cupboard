@@ -34,7 +34,7 @@ export const buildNuxtUITable = (columnsDef, resolvedComponents) => {
 				return col.cell({ row })
 			}
 
-			const hasExpand = columnsDef.some(col => col.type === "expand")
+			const hasExpand = columnsDef.some((col) => col.type === "expand")
 
 			switch (col.type) {
 				case "image":
@@ -56,7 +56,7 @@ export const buildNuxtUITable = (columnsDef, resolvedComponents) => {
 				case "checkbox2":
 					return h(resolvedComponents.UCheckbox, {
 						modelValue: row.getIsSelected(),
-    					'onUpdate:modelValue': (val) => row.toggleSelected(val),
+						"onUpdate:modelValue": (val) => row.toggleSelected(val),
 						disabled: col.disabled ?? false,
 						variant: col.variant || "solid",
 						color: col.color || "primary",
@@ -90,28 +90,27 @@ export const buildNuxtUITable = (columnsDef, resolvedComponents) => {
 					)
 
 				case "expand":
-                    return h(resolvedComponents.UButton, {
-                        icon: col.icon || icons["chevronDown"],
-                        color: col.color || "primary",
-                        variant: col.variant || "ghost",
-                        ui: {
-                        leadingIcon: [
-                            "transition-transform",
-                            row.getIsExpanded() ? "rotate-180 duration-200" : ""
-                        ]
-                        },
-                        onClick: () => row.toggleExpanded()
-                    })
+					return h(resolvedComponents.UButton, {
+						icon: col.icon || icons["chevronDown"],
+						color: col.color || "primary",
+						variant: col.variant || "ghost",
+						ui: {
+							leadingIcon: ["transition-transform", row.getIsExpanded() ? "rotate-180 duration-200" : ""],
+						},
+						onClick: () => row.toggleExpanded(),
+					})
 
 				default:
 					return h(
 						"span",
 						{
-						class: hasExpand ? "block w-full h-full cursor-pointer" : "",
-						onClick: hasExpand ? (e) => {
-							e.stopPropagation();
-							row.toggleExpanded();
-						}: undefined
+							class: hasExpand ? "block w-full h-full cursor-pointer" : "",
+							onClick: hasExpand
+								? (e) => {
+										e.stopPropagation()
+										row.toggleExpanded()
+									}
+								: undefined,
 						},
 						row.original[col.accessorKey] || ""
 					)

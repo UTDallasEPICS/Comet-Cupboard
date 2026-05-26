@@ -1,7 +1,7 @@
 <template>
 	<UContainer class="py-8">
 		<header>
-		    <SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
+			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
 			<SharedTextPageTitle>Inventory Categories</SharedTextPageTitle>
 		</header>
 

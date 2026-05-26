@@ -19,7 +19,6 @@
 			</UContainer>
 		</section>
 
-
 		<section class="py-20">
 			<UContainer>
 				<div class="mx-auto max-w-4xl text-center">
@@ -40,24 +39,14 @@
 
 		<USeparator />
 
-		<section class="py-24 bg-gray-50/50 relative overflow-hidden">
-			<UContainer class="flex flex-col items-center text-center relative z-10">
-				<SharedTextSectionTitle class="mb-4"> 
-				Find an Emergency Bag
-				</SharedTextSectionTitle>
-			
-				<SharedTextBase class="max-w-xl text-gray-600 mb-10 leading-relaxed">
-				Check availability at all the locations across campus. 
-				</SharedTextBase>
+		<section class="relative overflow-hidden bg-gray-50/50 py-24">
+			<UContainer class="relative z-10 flex flex-col items-center text-center">
+				<SharedTextSectionTitle class="mb-4"> Find an Emergency Bag </SharedTextSectionTitle>
 
-				<UButton 
-					size="xl" 
-					variant="solid" 
-					to="/public/emergency-bag/locations"
-					class="px-10 py-4 text-lg font-semibold rounded-xl shadow-lg"
-					trailing
-					> 
-					View All Locations 
+				<SharedTextBase class="mb-10 max-w-xl leading-relaxed text-gray-600"> Check availability at all the locations across campus. </SharedTextBase>
+
+				<UButton size="xl" variant="solid" to="/public/emergency-bag/locations" class="rounded-xl px-10 py-4 text-lg font-semibold shadow-lg" trailing>
+					View All Locations
 				</UButton>
 			</UContainer>
 		</section>

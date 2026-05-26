@@ -1,6 +1,6 @@
 <template>
 	<header>
-			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
+		<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
 	</header>
 	<div class="p-4">
 		<div class="flex grow">

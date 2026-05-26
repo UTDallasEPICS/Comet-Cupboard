@@ -48,7 +48,7 @@ const onSubmit = async () => {
 	} catch (error) {
 		toast.add({ title: "Error during login", description: error.data.data, color: "error" })
 	}
-    // TODO: this will be proper SSO later
+	// TODO: this will be proper SSO later
 	reloadNuxtApp()
 }
 </script>

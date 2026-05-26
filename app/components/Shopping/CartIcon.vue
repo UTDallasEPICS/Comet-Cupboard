@@ -1,11 +1,7 @@
 <template>
 	<div class="relative cursor-pointer" :class="{ 'cursor-not-allowed opacity-50': cartDisabled }">
 		<div class="relative flex items-center justify-center rounded-md bg-green-900" style="width: 50px; height: 50px; background-color: #154734">
-			<UIcon
-				:name="icons['shopping']"
-				class="hover:text-final-utd-orange text-white transition-colors duration-200"
-				style="width: 40px; height: 40px"
-			/>
+			<UIcon :name="icons['shopping']" class="hover:text-final-utd-orange text-white transition-colors duration-200" style="width: 40px; height: 40px" />
 			<!-- cart item animate open/close -->
 			<div
 				class="absolute origin-bottom transform rounded-sm bg-white transition-all duration-300"
