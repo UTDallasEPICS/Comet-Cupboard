@@ -8,13 +8,13 @@
 					</template>
 
 					<div class="space-y-2">
-						<div v-if="queueStatus">
-							<SharedTextBase> Public Code: {{ queueStatus.publicCode }} </SharedTextBase>
-							<SharedTextBase> Position: {{ queueStatus.position }} </SharedTextBase>
+						<div v-if="queueStore.queueStatus">
+							<SharedTextBase> Public Code: {{ queueStore.queueStatus.publicCode }} </SharedTextBase>
+							<SharedTextBase> Position: {{ queueStore.queueStatus.position }} </SharedTextBase>
 							<SharedButtonCancel text="Leave Queue" @click="leaveQueue" />
 						</div>
 						<div v-else>
-							<div v-if="cart">
+							<div v-if="cartStore.cart">
 								<SharedTextBase> You already have an active cart. </SharedTextBase>
 							</div>
 							<div v-else>
@@ -31,7 +31,7 @@
 					<template #header>
 						<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
 					</template>
-					<UTable :data="queue" :columns="tableColumns" :meta="meta" empty="No one currently in queue" />
+					<UTable :data="queueStore.queue" :columns="tableColumns" :meta="meta" empty="No one currently in queue" />
 				</UCard>
 			</section>
 		</NuxtLayout>
@@ -42,11 +42,8 @@
 definePageMeta({ layout: false })
 
 const queueStore = useQueueStore()
-const { queue, queueStatus } = storeToRefs(queueStore)
-const { getQueue, updateQueueStatus } = queueStore
 
 const cartStore = useCartStore()
-const { cart } = storeToRefs(cartStore)
 
 const columnsDef = [
 	{ header: "Position", accessorKey: "position", type: "text" },
@@ -57,7 +54,7 @@ const tableColumns = buildNuxtUITable(columnsDef, {})
 const meta = {
 	class: {
 		tr: (row) => {
-			if (row.original.publicCode === queueStatus.value?.publicCode) {
+			if (row.original.publicCode === queueStore.queueStatus?.publicCode) {
 				return "bg-final-utd-green/10"
 			}
 			return ""
@@ -66,8 +63,8 @@ const meta = {
 }
 
 onMounted(async () => {
-	await getQueue()
-	await updateQueueStatus()
+	await queueStore.getQueue()
+	await queueStore.updateQueueStatus()
 })
 
 const joinQueue = async () => {

@@ -1,15 +1,12 @@
-import { useStudentEventStream } from "../composables/useStudentEventStream"
-
 export default defineNuxtPlugin(async (nuxtApp) => {
 	const { connectStudent } = useStudentEventStream()
 	const { connectVolunteer } = useVolunteerEventStream()
-	const permissions = usePermissionsStore()
-	const { canStudentAccess, canVolunteerAccess } = storeToRefs(permissions)
+	const permissionsStore = usePermissionsStore()
 
-	if (canStudentAccess.value) {
+	if (permissionsStore.canStudentAccess) {
 		connectStudent()
 	}
-	if (canVolunteerAccess.value) {
+	if (permissionsStore.canVolunteerAccess) {
 		connectVolunteer()
 	}
 })

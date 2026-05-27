@@ -263,10 +263,9 @@ const submitBag = async (data) => {
 }
 
 //View Tab
-const permissions = usePermissionsStore()
-const { canAdminAccess } = storeToRefs(permissions)
+const permissionsStore = usePermissionsStore()
 
-const emergencyBagsEndpoint = computed(() => (canAdminAccess.value ? "/api/admin/emergency-bag/emergencyBags" : "/api/volunteer/emergency-bag/emergencyBags"))
+const emergencyBagsEndpoint = computed(() => (permissionsStore.canAdminAccess ? "/api/admin/emergency-bag/emergencyBags" : "/api/volunteer/emergency-bag/emergencyBags"))
 
 const { data: emergencyBags, refresh: refreshEmergencyBags } = await useFetch(emergencyBagsEndpoint)
 const expanded = ref({})

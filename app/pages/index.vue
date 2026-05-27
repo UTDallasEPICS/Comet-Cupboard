@@ -12,8 +12,8 @@
 					<SharedTextHeroDescription class="mt-6 text-white"> Supporting academic success by meeting basic needs. </SharedTextHeroDescription>
 
 					<div class="mt-10 flex flex-row gap-4">
-						<UButton size="xl" variant="solid" to="/login"> Student Login </UButton>
-						<UButton size="xl" variant="solid" to="/vol-login"> Volunteer Login </UButton>
+						<SharedButtonNavigateTo text="Student Login" to="/login" />
+						<SharedButtonNavigateTo text="Volunteer Login" to="/vol-login" />
 					</div>
 				</div>
 			</UContainer>
@@ -44,10 +44,8 @@
 				<SharedTextSectionTitle class="mb-4"> Find an Emergency Bag </SharedTextSectionTitle>
 
 				<SharedTextBase class="mb-10 max-w-xl leading-relaxed text-gray-600"> Check availability at all the locations across campus. </SharedTextBase>
-
-				<UButton size="xl" variant="solid" to="/public/emergency-bag/locations" class="rounded-xl px-10 py-4 text-lg font-semibold shadow-lg" trailing>
-					View All Locations
-				</UButton>
+				
+				<SharedButtonNavigateTo text="View Locations" to="/public/emergency-bag/locations" />
 			</UContainer>
 		</section>
 	</div>

@@ -35,7 +35,7 @@
 
 			<div class="flex justify-center pt-6">
 				<SharedButtonPositiveAction v-if="!selectedSource" text="No source selected" disabled />
-				<SharedButtonPositiveAction v-else text="Submit" @click="submitChanges(selectedSource, fieldInputs)" />
+				<SharedButtonPositiveAction v-else text="Submit" @click="inventoryStore.submitChanges(selectedSource, fieldInputs)" />
 			</div>
 		</div>
 	</UContainer>
@@ -48,17 +48,15 @@ const { data: items } = await useFetch("/api/student/inventory/items")
 const fields = ref<string[]>([])
 const fieldInputs = ref<Record<string, string>>({})
 const inventoryStore = useInventoryStore()
-const { inventoryChangesItems } = storeToRefs(inventoryStore)
-const { submitChanges } = inventoryStore
 
 const inventoryItemsMap = computed(() => {
 	return (
 		items.value
 			?.filter((item) => {
-				return inventoryChangesItems.value.some((change) => change.itemID === item.itemID)
+				return inventoryStore.inventoryChangesItems.some((change) => change.itemID === item.itemID)
 			})
 			.map((item) => {
-				const change = inventoryChangesItems.value.find((c) => c.itemID === item.itemID)
+				const change = inventoryStore.inventoryChangesItems.find((c) => c.itemID === item.itemID)
 				return {
 					id: item.itemID,
 					name: item.name,

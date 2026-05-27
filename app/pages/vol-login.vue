@@ -17,17 +17,15 @@ const state = ref({
 	netID: "",
 })
 
-const permissions = usePermissionsStore()
-const { setPermissionsFromServer } = permissions
-const { canStudentAccess, canVolunteerAccess, canAdminAccess } = storeToRefs(permissions)
+const permissionsStore = usePermissionsStore()
 
 onMounted(async () => {
-	await setPermissionsFromServer()
-	if (canAdminAccess.value) {
+	await permissionsStore.setPermissionsFromServer()
+	if (permissionsStore.canAdminAccess) {
 		navigateTo("/admin")
-	} else if (canVolunteerAccess.value) {
+	} else if (permissionsStore.canVolunteerAccess) {
 		navigateTo("/volunteer")
-	} else if (canStudentAccess.value) {
+	} else if (permissionsStore.canStudentAccess) {
 		navigateTo("/student")
 	}
 })
@@ -38,7 +36,7 @@ const onSubmit = async () => {
 			method: "POST",
 			body: { netID: state.value.netID },
 		})
-		await setPermissionsFromServer()
+		await permissionsStore.setPermissionsFromServer()
 		refreshCookie("netID")
 		refreshCookie("AccessPermission")
 

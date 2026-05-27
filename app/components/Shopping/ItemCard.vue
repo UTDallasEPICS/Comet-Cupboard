@@ -10,8 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-const store = useCartStore()
-const { getCart } = store
+const cartStore = useCartStore()
 
 const props = defineProps({
 	name: { type: String, required: true },
@@ -26,6 +25,6 @@ const addToCart = async () => {
 		method: "POST",
 		body: { itemID: props.itemID, incrementChange: 1 },
 	})
-	await getCart()
+	await cartStore.getCart()
 }
 </script>

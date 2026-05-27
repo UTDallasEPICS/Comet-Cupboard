@@ -3,14 +3,12 @@
 		<template #header>
 			<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
 		</template>
-		<UTable :data="volunteerQueue" :columns="tableColumns" empty="No one currently in queue" />
+		<UTable :data="queueStore.volunteerQueue" :columns="tableColumns" empty="No one currently in queue" />
 	</UCard>
 </template>
 
 <script lang="ts" setup>
 const queueStore = useQueueStore()
-const { volunteerQueue } = storeToRefs(queueStore)
-const { getVolunteerQueue } = queueStore
 
 const UButton = resolveComponent("UButton")
 const UCheckbox = resolveComponent("UCheckbox")
@@ -35,7 +33,7 @@ const columnsDef = [
 const tableColumns = buildNuxtUITable(columnsDef, { UButton, UCheckbox, UDropdownMenu })
 
 onMounted(async () => {
-	await getVolunteerQueue()
+	await queueStore.getVolunteerQueue()
 })
 
 const approveQueueEntry = async (row) => {

@@ -13,7 +13,7 @@
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<li v-for="item in filtered" :key="item.itemID">
 						<InventoryItemCard
-							:change-count="inventoryChangesItems.find((i) => i.itemID === item.itemID)?.count || 0"
+							:change-count="inventoryStore.inventoryChangesItems.find((i) => i.itemID === item.itemID)?.count || 0"
 							:current-count="item.quantity"
 							:img-name="item.imgName"
 							:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
@@ -35,7 +35,6 @@ const route = useRoute()
 const currentCategory = route.params.category as string
 
 const inventoryStore = useInventoryStore()
-const { inventoryChangesItems } = storeToRefs(inventoryStore)
 
 const sortOption = ref("Alphabetical")
 const sortOptions = ["Alphabetical", "Quantity"]

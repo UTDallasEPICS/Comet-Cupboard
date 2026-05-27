@@ -33,9 +33,8 @@ const shownCategories = computed(() => {
 	})
 })
 const inventoryStore = useInventoryStore()
-const { getInventoryChanges } = inventoryStore
 
 onMounted(async () => {
-	await getInventoryChanges()
+	await inventoryStore.getInventoryChanges()
 })
 </script>

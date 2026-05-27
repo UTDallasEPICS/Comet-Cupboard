@@ -2,24 +2,21 @@ let eventStream: EventSource | null = null
 const listeners: ((event: AppEvent) => void)[] = []
 
 export const useStudentEventStream = () => {
-	const cart = useCartStore()
-	const { handleCartEvent } = cart
-	const queue = useQueueStore()
-	const { handleQueueEvent } = queue
+	const cartStore = useCartStore()
+	const queueStore = useQueueStore()
 	const toast = useToast()
-	const permissions = usePermissionsStore()
-	const { setPermissionsFromServer } = permissions
+	const permissionsStore = usePermissionsStore()
 	const config = useRuntimeConfig()
 
 	const dispatchQueueEvent = async (event: AppEvent) => {
 		if (["queue.queueUpdated", "queue.entryApproved", "queue.entryRemoved", "queue.entryAdded"].includes(event.type)) {
-			await handleQueueEvent(event)
+			await queueStore.handleQueueEvent(event)
 		}
 	}
 
 	const dispatchCartEvent = async (event: AppEvent) => {
 		if (["queue.entryApproved", "cart.verification.decision"].includes(event.type)) {
-			await handleCartEvent(event)
+			await cartStore.handleCartEvent(event)
 		}
 	}
 
@@ -27,7 +24,7 @@ export const useStudentEventStream = () => {
 		if (event.type === "volunteerRequest.decision") {
 			const { netID, decision } = event.payload
 			if (decision === "ACCEPT") {
-				await setPermissionsFromServer()
+				await permissionsStore.setPermissionsFromServer()
 				refreshCookie("netID")
 				refreshCookie("AccessPermission")
 

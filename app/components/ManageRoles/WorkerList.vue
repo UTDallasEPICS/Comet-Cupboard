@@ -10,8 +10,7 @@
 <script lang="ts" setup>
 const toast = useToast()
 
-const permissions = usePermissionsStore()
-const { canAdminAccess, canHeadAdminAccess } = storeToRefs(permissions)
+const permissionsStore = usePermissionsStore()
 
 const currentUserNetID = useCookie("netID")
 
@@ -26,7 +25,7 @@ const UDropdownMenu = resolveComponent("UDropdownMenu")
 const getActionItems = (row) => {
 	const items = [{ type: "label", label: "Actions" }, { type: "separator" }]
 
-	if (canHeadAdminAccess.value) {
+	if (permissionsStore.canHeadAdminAccess) {
 		if (row.original.role !== "HEAD_ADMIN") {
 			if (row.original.role !== "STUDENT") {
 				items.push({
@@ -54,7 +53,7 @@ const getActionItems = (row) => {
 				color: "error",
 			})
 		}
-	} else if (canAdminAccess.value) {
+	} else if (permissionsStore.canAdminAccess) {
 		if (row.original.role === "VOLUNTEER") {
 			items.push({
 				label: "Demote to Student",

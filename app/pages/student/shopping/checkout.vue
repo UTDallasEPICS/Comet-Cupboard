@@ -69,7 +69,7 @@
 							</div>
 							<div class="mt-4 flex flex-col gap-4">
 								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-									<li v-for="cartItem in cartItems" :key="cartItem.itemID">
+									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
 										<ShoppingCartAdjustCountItemCard
 											:item-deal="
 												cartItem.Item.Deal
@@ -122,7 +122,7 @@
 							</div>
 							<div class="mt-4 flex flex-col gap-4">
 								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-									<li v-for="cartItem in cartItems" :key="cartItem.itemID">
+									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
 										<ShoppingCartReviewItemCard
 											:item-deal="
 												cartItem.Item.Deal
@@ -160,7 +160,7 @@
 
 							<div class="mt-4 flex flex-col gap-4">
 								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-									<li v-for="cartItem in cartItems" :key="cartItem.itemID">
+									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
 										<ShoppingCartReviewItemCard
 											:item-deal="
 												cartItem.Item.Deal
@@ -257,15 +257,13 @@ const items: StepperItem[] = [
 const active = ref(0)
 const cartRejected = ref(false)
 const cartVerificationReason = ref("")
-const store = useCartStore()
-const { getCart } = store
-const { cartItems, pending } = storeToRefs(store)
+const cartStore = useCartStore()
 
 const { onEvent } = useStudentEventStream()
 
 onMounted(async () => {
-	await getCart()
-	if (pending.value) {
+	await cartStore.getCart()
+	if (cartStore.pending) {
 		active.value = 3
 	}
 })
@@ -276,7 +274,7 @@ const unsubscribe = onEvent(async (event) => {
 			cartVerificationReason.value = event.payload.reason || "No reason provided."
 			active.value = 4
 			cartRejected.value = event.payload.decision === "ACCEPT" ? false : true
-			await getCart()
+			await cartStore.getCart()
 			break
 		}
 	}
@@ -286,7 +284,7 @@ const countAdjustments = ref<Record<string, number>>({})
 
 const combineCartAndTemporaryAdjustments = computed(() => {
 	return {
-		CartItems: cartItems.value.map((cartItem) => {
+		CartItems: cartStore.cartItems.map((cartItem) => {
 			const adjustment = countAdjustments.value[cartItem.itemID] || 0
 			return {
 				...cartItem,
@@ -313,11 +311,11 @@ const incrementStepper = () => {
 }
 
 const submitCart = async () => {
-	if (cartItems.value.length === 0) {
+	if (cartStore.cartItems.length === 0) {
 		return
 	}
 
-	const allCartItemAdjustments = cartItems.value.map((cartItem) => {
+	const allCartItemAdjustments = cartStore.cartItems.map((cartItem) => {
 		return {
 			itemID: cartItem.itemID,
 			countAdjustment: countAdjustments.value[cartItem.itemID] || 0,
@@ -331,7 +329,7 @@ const submitCart = async () => {
 			adjustments: allCartItemAdjustments,
 		},
 	})
-	await getCart() // refresh cart to get updated counts and lock the cart
+	await cartStore.getCart() // refresh cart to get updated counts and lock the cart
 	incrementStepper()
 }
 

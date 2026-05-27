@@ -1,5 +1,5 @@
 export const useLogout = () => {
-	const { clearPermissions } = usePermissionsStore()
+	const permissionsStore = usePermissionsStore()
 	const netIDCookie = useCookie("netID")
 
 	const logout = async () => {
@@ -16,7 +16,7 @@ export const useLogout = () => {
 		} catch (error) {}
 
 		netIDCookie.value = null
-		clearPermissions()
+		permissionsStore.clearPermissions()
 		await navigateTo("/")
 		reloadNuxtApp()
 	}

@@ -52,13 +52,13 @@
 							<UInputDate v-model="expiryDate" size="xl" icon="i-lucide-calendar" :min-value="minDate" />
 						</div>
 					</UCard>
-					<UCard v-if="canAdminAccess">
+					<UCard v-if="permissionsStore.canAdminAccess">
 						<template #header>
 							<SharedTextCardTitle>Privacy</SharedTextCardTitle>
 						</template>
 						<URadioGroup v-model="selectedPrivacy" size="md" variant="card" :items="privacyOptions" />
 					</UCard>
-					<UCard v-if="canAdminAccess">
+					<UCard v-if="permissionsStore.canAdminAccess">
 						<template #header>
 							<SharedTextCardTitle>Description</SharedTextCardTitle>
 						</template>
@@ -97,8 +97,8 @@
 						<div class="flex flex-col gap-2 text-sm">
 							<p><span class="font-medium">Category:</span> {{ categoryLabel }}</p>
 							<p><span class="font-medium">Expiry Date:</span> {{ expiryDate.toString() }}</p>
-							<p v-if="canAdminAccess"><span class="font-medium">Privacy:</span> {{ selectedPrivacy === "private" ? "Private" : "Public" }}</p>
-							<p v-if="canAdminAccess && description"><span class="font-medium">Description:</span> {{ description }}</p>
+							<p v-if="permissionsStore.canAdminAccess"><span class="font-medium">Privacy:</span> {{ selectedPrivacy === "private" ? "Private" : "Public" }}</p>
+							<p v-if="permissionsStore.canAdminAccess && description"><span class="font-medium">Description:</span> {{ description }}</p>
 						</div>
 					</UCard>
 					<div class="flex flex-row justify-between gap-4">
@@ -141,7 +141,7 @@ const privacyOptions = [
 const props = defineProps<{ initialData?: any }>()
 const emit = defineEmits(["submit"])
 
-const { canAdminAccess } = storeToRefs(usePermissionsStore())
+const permissionsStore = usePermissionsStore()
 const toast = useToast()
 
 const active = ref(0)

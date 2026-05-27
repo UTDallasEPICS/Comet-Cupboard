@@ -9,7 +9,7 @@
 	>
 		<template #left>
 			<USlideover
-				v-if="loggedIn"
+				v-if="permissionsStore.loggedIn"
 				side="left"
 				:overlay="false"
 				:ui="{
@@ -49,8 +49,8 @@
 					}"
 				>
 					<UChip
-						:show="numberOfChanges > 0"
-						:text="numberOfChanges"
+						:show="inventoryStore.numberOfChanges > 0"
+						:text="inventoryStore.numberOfChanges"
 						:ui="{
 							base: 'top-2 right-2 h-[20px] min-w-[20px] text-[20px] ring-0 text-sm',
 						}"
@@ -75,7 +75,7 @@
 				</USlideover>
 				<USlideover
 					v-if="showCartIcon"
-					v-model:open="cartView"
+					v-model:open="cartStore.cartView"
 					side="right"
 					:overlay="false"
 					:ui="{
@@ -84,7 +84,7 @@
 					}"
 				>
 					<UButton variant="ghost" class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent">
-						<ShoppingCartIcon :cart-view="cartView" :cart-disabled="false" :cart-total-count="cartTotalCount" />
+						<ShoppingCartIcon :cart-view="cartStore.cartView" :cart-disabled="false" :cart-total-count="cartStore.cartTotalCount" />
 					</UButton>
 
 					<template #header="{ close }">
@@ -104,13 +104,13 @@
 						sideOffset: 8,
 					}"
 				>
-					<UButton v-if="canStudentAccess" variant="ghost" :icon="icons['profile']" size="xl" />
+					<UButton v-if="permissionsStore.canStudentAccess" variant="ghost" :icon="icons['profile']" size="xl" />
 
 					<template #content>
 						<div class="flex w-64 flex-col items-start gap-2 p-4">
 							<SharedTextBase>John Doe</SharedTextBase>
 							<SharedTextBase>John.Doe1@utdallas.edu</SharedTextBase>
-							<SharedTextBase class="text-final-utd-orange">{{ roleText }}</SharedTextBase>
+							<SharedTextBase class="text-final-utd-orange">{{ permissionsStore.roleText }}</SharedTextBase>
 							<USeparator />
 							<UButton variant="outline" :icon="icons['logout']" class="w-full" @click="logout"> Logout </UButton>
 						</div>
@@ -126,10 +126,7 @@ import type { NavigationMenuItem } from "@nuxt/ui"
 
 const cartStore = useCartStore()
 const inventoryStore = useInventoryStore()
-const permissions = usePermissionsStore()
-const { cart, cartView, cartTotalCount } = storeToRefs(cartStore)
-const { canStudentAccess, canVolunteerAccess, canAdminAccess, roleText, loggedIn } = storeToRefs(permissions)
-const { inventoryChanges, numberOfChanges } = storeToRefs(inventoryStore)
+const permissionsStore = usePermissionsStore()
 
 const route = useRoute()
 const showCartIcon = computed(() => {
@@ -145,7 +142,7 @@ const { logout } = useLogout()
 const items = ref<NavigationMenuItem[]>(
 	[
 		// Student Group
-		canStudentAccess.value && {
+		permissionsStore.canStudentAccess && {
 			label: "Student",
 			icon: icons["student"],
 			open: true,
@@ -153,7 +150,7 @@ const items = ref<NavigationMenuItem[]>(
 		},
 
 		// Volunteer Group
-		canVolunteerAccess.value && {
+		permissionsStore.canVolunteerAccess && {
 			label: "Volunteer",
 			icon: icons["volunteer"],
 			open: true,
@@ -161,7 +158,7 @@ const items = ref<NavigationMenuItem[]>(
 		},
 
 		// Admin Group
-		canAdminAccess.value && {
+		permissionsStore.canAdminAccess && {
 			label: "Admin",
 			icon: icons["admin"],
 			open: true,

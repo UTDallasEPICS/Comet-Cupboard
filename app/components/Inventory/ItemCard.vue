@@ -83,7 +83,6 @@ const props = defineProps({
 })
 
 const inventoryStore = useInventoryStore()
-const { changeInventorySessionItemCount } = inventoryStore
 
 const editMenuItems = ref<DropdownMenuItem[]>([
 	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${props.category}/${props.itemID}/edit`) },
@@ -93,11 +92,11 @@ const editMenuItems = ref<DropdownMenuItem[]>([
 const adjustAmount = ref(1)
 
 const increment = async () => {
-	await changeInventorySessionItemCount(props.itemID, adjustAmount.value)
+	await inventoryStore.changeInventorySessionItemCount(props.itemID, adjustAmount.value)
 }
 
 const decrement = async () => {
-	await changeInventorySessionItemCount(props.itemID, -adjustAmount.value)
+	await inventoryStore.changeInventorySessionItemCount(props.itemID, -adjustAmount.value)
 }
 
 const displayChange = computed(() => {
