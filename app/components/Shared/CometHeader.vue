@@ -9,33 +9,28 @@
 	>
 		<template #left>
 			<USlideover
-				v-if="true"
+				v-if="loggedIn"
 				side="left"
-				title="Navigation Menu"
 				:overlay="false"
 				:ui="{
 					content: 'bg-final-page-bg',
 					header: 'bg-final-utd-orange',
-					title: 'text-white',
-					close: 'text-white hover:bg-transparent hover:text-black focus-visible:bg-transparent focus-visible:text-black focus-visible:ring-0 active:bg-transparent',
-				}"
-				:close="{
-					size: 'xl',
 				}"
 			>
-				<UButton
-					variant="ghost"
-					size="xl"
-					:icon="icons['hamburger']"
-					:ui="{
-						leadingIcon: 'size-8',
-					}"
-				/>
+				<UButton variant="ghost" class="hover:bg-transparent active:bg-transparent" size="xl" :icon="icons['hamburger']" />
+
+				<template #header="{ close }">
+					<div class="flex w-full flex-row items-center justify-between">
+						<img src="/CometCupboardLogo2.png" class="h-8" />
+						<UButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" :icon="icons['close']" @click="close" />
+					</div>
+				</template>
+
 				<template #body>
 					<UNavigationMenu :items="items" orientation="vertical" class="w-full" />
 				</template>
 			</USlideover>
-			<div class="relative ml-4 overflow-hidden">
+			<div class="relative ml-2 overflow-hidden">
 				<NuxtLink to="/" class="focus:outline-none">
 					<img src="/CometCupboardLogo1.png" class="h-8" />
 				</NuxtLink>
@@ -43,25 +38,37 @@
 		</template>
 
 		<template #right>
-			<div class="flex flex-row gap-4">
+			<div class="flex flex-row gap-2">
 				<USlideover
 					v-if="showInventoryChangesIcon"
 					side="right"
-					title="Preview Inventory Changes"
 					:overlay="false"
 					:ui="{
 						content: 'max-w-112 mt-16 bg-final-page-bg',
 						header: 'bg-final-utd-orange',
-						title: 'text-white',
-						close: 'text-white hover:bg-transparent hover:text-black focus-visible:bg-transparent focus-visible:text-black focus-visible:ring-0 active:bg-transparent',
-					}"
-					:close="{
-						size: 'xl',
 					}"
 				>
-					<UChip :show="numberOfChanges > 0" :text="numberOfChanges" size="3xl">
-						<UButton :icon="icons['inventory']" class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent" />
+					<UChip
+						:show="numberOfChanges > 0"
+						:text="numberOfChanges"
+						:ui="{
+							base: 'top-2 right-2 h-[20px] min-w-[20px] text-[20px] ring-0 text-sm',
+						}"
+					>
+						<UButton
+							variant="ghost"
+							:icon="icons['inventory']"
+							class="text-white hover:bg-transparent focus-visible:ring-0 active:bg-transparent"
+						/>
 					</UChip>
+
+					<template #header="{ close }">
+						<div class="flex w-full flex-row items-center justify-between">
+							<SharedTextBase class="font-semibold text-white">Inventory Changes</SharedTextBase>
+							<UButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" :icon="icons['close']" @click="close" />
+						</div>
+					</template>
+
 					<template #body>
 						<InventoryReviewChangesDrawer />
 					</template>
@@ -70,21 +77,22 @@
 					v-if="showCartIcon"
 					v-model:open="cartView"
 					side="right"
-					title="Preview Cart"
 					:overlay="false"
 					:ui="{
 						content: 'max-w-112 mt-16 bg-final-page-bg',
 						header: 'bg-final-utd-orange',
-						title: 'text-white',
-						close: 'text-white hover:bg-transparent hover:text-black focus-visible:bg-transparent focus-visible:text-black focus-visible:ring-0 active:bg-transparent',
-					}"
-					:close="{
-						size: 'xl',
 					}"
 				>
 					<UButton variant="ghost" class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent">
 						<ShoppingCartIcon :cart-view="cartView" :cart-disabled="false" :cart-total-count="cartTotalCount" />
 					</UButton>
+
+					<template #header="{ close }">
+						<div class="flex w-full flex-row items-center justify-between">
+							<SharedTextBase class="font-semibold text-white">Your Cart</SharedTextBase>
+							<UButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" :icon="icons['close']" @click="close" />
+						</div>
+					</template>
 					<template #body>
 						<ShoppingCartDrawer />
 					</template>
@@ -120,12 +128,12 @@ const cartStore = useCartStore()
 const inventoryStore = useInventoryStore()
 const permissions = usePermissionsStore()
 const { cart, cartView, cartTotalCount } = storeToRefs(cartStore)
-const { canStudentAccess, canVolunteerAccess, canAdminAccess, roleText } = storeToRefs(permissions)
+const { canStudentAccess, canVolunteerAccess, canAdminAccess, roleText, loggedIn } = storeToRefs(permissions)
 const { inventoryChanges, numberOfChanges } = storeToRefs(inventoryStore)
 
 const route = useRoute()
 const showCartIcon = computed(() => {
-	return cart.value != null && route.path.startsWith("/student") && route.path !== "/student/shopping/checkout"
+	return route.path.startsWith("/student") && route.path !== "/student/shopping/checkout"
 })
 
 const showInventoryChangesIcon = computed(() => {

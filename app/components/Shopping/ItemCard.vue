@@ -3,7 +3,7 @@
 		<template #body>
 			<div class="mt-auto flex flex-row items-center gap-2">
 				<SharedTextBase>QTY: {{ quantity }}</SharedTextBase>
-				<SharedButtonPositiveAction text="+ Add" @click="addToCart" />
+				<SharedButtonPositiveAction text="Add" class="w-16" @click="addToCart" />
 			</div>
 		</template>
 	</SharedItemCard>

@@ -8,7 +8,7 @@
 				<div class="mx-auto mt-4 flex w-full flex-row flex-wrap gap-4 sm:items-center sm:justify-start">
 					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search items" class="grow" />
 					<USelect v-model="sortOption" :items="sortOptions" class="max-w-md grow" />
-					<SharedButtonPositiveAction text="+ Add" :to="`/volunteer/inventory/${currentCategory}/add`" />
+					<SharedButtonPositiveAction text="Add" :to="`/volunteer/inventory/${currentCategory}/add`" />
 				</div>
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<li v-for="item in filtered" :key="item.itemID">
