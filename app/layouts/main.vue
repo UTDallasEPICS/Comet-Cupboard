@@ -1,5 +1,5 @@
 <template>
-	<UContainer class="py-4">
+	<UContainer class="py-4 sm:py-8">
 		<header class="mb-4">
 			<div class="flex flex-row items-center">
 				<SharedButtonNavigateBack v-if="backNavigation" :text="backNavigation.text" :to="backNavigation.to" />

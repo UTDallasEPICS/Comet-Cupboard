@@ -2,7 +2,7 @@ export default defineAppConfig({
 	ui: {
 		card: {
 			slots: {
-				root: "shadow-md border-final-border-soft border",
+				root: "shadow-md border-border-soft border",
 			},
 		},
 		button: {

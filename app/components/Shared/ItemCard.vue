@@ -1,6 +1,6 @@
 <template>
 	<UCard
-		class="border-final-border-soft relative min-w-72 shadow-md"
+		class="border-border-soft relative min-w-72 shadow-md"
 		:ui="{
 			header: 'p-2 py-2 sm:p-2 sm:py-2',
 			body: 'p-2 py-2 sm:p-2 sm:py-2',
@@ -22,7 +22,7 @@
 			<img
 				:src="`/api/public/image/${imgName}`"
 				:alt="name"
-				class="border-final-border-soft ml-2 aspect-square h-full w-16 rounded-lg border object-cover"
+				class="border-border-soft ml-2 aspect-square h-full w-16 rounded-lg border object-cover"
 			/>
 			<slot name="body" />
 		</div>

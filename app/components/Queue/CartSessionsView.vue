@@ -1,8 +1,6 @@
 <template>
 	<UCard>
-		<template #header>
-			<SharedTextSectionTitle> Cart Sessions </SharedTextSectionTitle>
-		</template>
+		<SharedTextSectionTitle> Cart Sessions </SharedTextSectionTitle>
 		<UTable :data="cartSessionsStore.cartSessions" :columns="tableColumns" empty="No cart sessions currently available" />
 	</UCard>
 </template>

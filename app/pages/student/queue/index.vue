@@ -3,9 +3,7 @@
 		<NuxtLayout name="main" title="Queue" :back-navigation="{ text: 'Back to Dashboard', to: '/student' }">
 			<section>
 				<UCard>
-					<template #header>
-						<SharedTextSectionTitle> Current Status </SharedTextSectionTitle>
-					</template>
+					<SharedTextSectionTitle class="mb-4"> Current Status </SharedTextSectionTitle>
 
 					<div class="space-y-2">
 						<div v-if="queueStore.queueStatus">
@@ -28,9 +26,7 @@
 
 			<section>
 				<UCard>
-					<template #header>
-						<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
-					</template>
+					<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
 					<UTable :data="queueStore.queue" :columns="tableColumns" :meta="meta" empty="No one currently in queue" />
 				</UCard>
 			</section>
@@ -55,7 +51,7 @@ const meta = {
 	class: {
 		tr: (row) => {
 			if (row.original.publicCode === queueStore.queueStatus?.publicCode) {
-				return "bg-final-utd-green/10"
+				return "bg-utd-green/10"
 			}
 			return ""
 		},

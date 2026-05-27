@@ -15,12 +15,12 @@
 			<div class="mt-auto flex flex-col items-end gap-2">
 				<div class="flex flex-row items-center gap-2">
 					<SharedTextBase>Qty:</SharedTextBase>
-					<div class="border-final-text-soft flex flex-row rounded-xl border">
+					<div class="border-text-soft flex flex-row rounded-xl border">
 						<div class="w-12">
 							<p class="ml-2 text-center">{{ props.currentCount }}</p>
 						</div>
 
-						<div :style="clipStyle" class="bg-final-border-soft flex w-16 items-center justify-center rounded-r-xl">
+						<div :style="clipStyle" class="bg-border-soft flex w-16 items-center justify-center rounded-r-xl">
 							<p class="text-center">{{ displayChange }}</p>
 						</div>
 					</div>

@@ -1,5 +1,5 @@
 <template>
-	<component :is="props.as" class="text-final-text-soft text-sm leading-normal">
+	<component :is="props.as" class="text-text-soft text-sm leading-normal">
 		<slot />
 	</component>
 </template>

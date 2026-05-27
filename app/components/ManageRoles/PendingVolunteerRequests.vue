@@ -1,8 +1,6 @@
 <template>
 	<UCard>
-		<template #header>
-			<SharedTextSectionTitle> Pending Volunteer Requests </SharedTextSectionTitle>
-		</template>
+		<SharedTextSectionTitle> Pending Volunteer Requests </SharedTextSectionTitle>
 		<UTable :data="pendingVolunteerRequests" :columns="tableColumns" empty="No pending volunteer requests currently available" />
 	</UCard>
 </template>

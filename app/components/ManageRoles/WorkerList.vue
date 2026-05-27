@@ -1,8 +1,6 @@
 <template>
 	<UCard>
-		<template #header>
-			<SharedTextSectionTitle> Volunteers and Admins </SharedTextSectionTitle>
-		</template>
+		<SharedTextSectionTitle> Volunteers and Admins </SharedTextSectionTitle>
 		<UTable :data="workerUsers" :columns="tableColumns" empty="No worker users currently available" />
 	</UCard>
 </template>

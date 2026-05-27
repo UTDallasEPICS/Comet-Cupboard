@@ -8,7 +8,7 @@
 		</div>
 		<div class="h-fit max-h-120 space-y-3 overflow-y-auto px-3 py-3">
 			<div v-if="!filteredItems.length" class="py-8 text-center">
-				<p class="text-final-text-soft text-sm">Search results will appear here</p>
+				<p class="text-text-soft text-sm">Search results will appear here</p>
 			</div>
 			<div
 				v-for="item in filteredItems"
@@ -29,13 +29,13 @@
 				</div>
 				<div class="min-w-0 flex-1">
 					<p class="truncate text-sm font-semibold">{{ item.name }}</p>
-					<p class="text-final-text-soft text-xs">Available: {{ getAvailableQuantity(item.itemID) }} / {{ item.quantity }}</p>
+					<p class="text-text-soft text-xs">Available: {{ getAvailableQuantity(item.itemID) }} / {{ item.quantity }}</p>
 				</div>
 				<UButton
 					size="sm"
 					:disabled="getAvailableQuantity(item.itemID) <= 0"
 					variant="solid"
-					:ui="{ base: 'bg-final-utd-green' }"
+					:ui="{ base: 'bg-utd-green' }"
 					@click="emit('add', item)"
 					>+ Add</UButton
 				>

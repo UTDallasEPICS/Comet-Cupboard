@@ -1,6 +1,6 @@
 <template>
 	<UHeader
-		class="bg-final-utd-green"
+		class="bg-utd-green"
 		:toggle="false"
 		:ui="{
 			container: 'mx-0 w-full max-w-none',
@@ -13,8 +13,8 @@
 				side="left"
 				:overlay="false"
 				:ui="{
-					content: 'bg-final-page-bg',
-					header: 'bg-final-utd-orange',
+					content: 'bg-page-bg',
+					header: 'bg-utd-orange',
 				}"
 			>
 				<UButton variant="ghost" class="hover:bg-transparent active:bg-transparent" size="xl" :icon="icons['hamburger']" />
@@ -44,8 +44,8 @@
 					side="right"
 					:overlay="false"
 					:ui="{
-						content: 'max-w-112 mt-16 bg-final-page-bg',
-						header: 'bg-final-utd-orange',
+						content: 'max-w-112 mt-16 bg-page-bg',
+						header: 'bg-utd-orange',
 					}"
 				>
 					<UChip
@@ -79,8 +79,8 @@
 					side="right"
 					:overlay="false"
 					:ui="{
-						content: 'max-w-112 mt-16 bg-final-page-bg',
-						header: 'bg-final-utd-orange',
+						content: 'max-w-112 mt-16 bg-page-bg',
+						header: 'bg-utd-orange',
 					}"
 				>
 					<UButton variant="ghost" class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent">
@@ -110,9 +110,9 @@
 						<div class="flex w-64 flex-col items-start gap-2 p-4">
 							<SharedTextBase>John Doe</SharedTextBase>
 							<SharedTextBase>John.Doe1@utdallas.edu</SharedTextBase>
-							<SharedTextBase class="text-final-utd-orange">{{ permissionsStore.roleText }}</SharedTextBase>
+							<SharedTextBase class="text-utd-orange">{{ permissionsStore.roleText }}</SharedTextBase>
 							<USeparator />
-							<UButton variant="outline" :icon="icons['logout']" class="w-full" @click="logout"> Logout </UButton>
+							<UButton variant="outline" color="neutral" :icon="icons['logout']" class="w-full" @click="logout"> Logout </UButton>
 						</div>
 					</template>
 				</UPopover>

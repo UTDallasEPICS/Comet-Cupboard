@@ -7,7 +7,7 @@
 					v-model="activeTab"
 					:items="items"
 					:ui="{
-						root: 'gap-0 border-2 border-final-border-soft rounded-lg',
+						root: 'gap-0 border-2 border-border-soft rounded-lg',
 						trigger: 'rounded-t-lg',
 						content: 'rounded-b-lg p-0',
 					}"
@@ -84,9 +84,9 @@
 						<div
 							class="flex items-center gap-3 px-6 py-4"
 							:class="{
-								'bg-final-utd-green': alertModal.type === 'success',
-								'bg-final-negative-red': alertModal.type === 'error',
-								'bg-final-utd-orange': alertModal.type === 'validation',
+								'bg-utd-green': alertModal.type === 'success',
+								'bg-negative-red': alertModal.type === 'error',
+								'bg-utd-orange': alertModal.type === 'validation',
 							}"
 						>
 							<span class="text-2xl font-bold text-white">
@@ -99,12 +99,12 @@
 
 						<!-- Body -->
 						<div class="flex flex-col gap-4 bg-white px-6 py-5">
-							<p class="text-final-cancel-gray text-sm leading-relaxed">{{ alertModal.message }}</p>
+							<p class="text-cancel-gray text-sm leading-relaxed">{{ alertModal.message }}</p>
 
 							<!-- Bag ID highlight (only on successful creation) -->
-							<div v-if="alertModal.bagLabel" class="border-final-utd-green flex flex-col gap-1 rounded-lg border-2 bg-green-50 px-4 py-3">
-								<span class="text-final-utd-green text-xs font-semibold tracking-widest uppercase">Assigned Bag ID</span>
-								<span class="text-final-utd-green text-2xl font-bold tracking-wide">{{ alertModal.bagLabel }}</span>
+							<div v-if="alertModal.bagLabel" class="border-utd-green flex flex-col gap-1 rounded-lg border-2 bg-green-50 px-4 py-3">
+								<span class="text-utd-green text-xs font-semibold tracking-widest uppercase">Assigned Bag ID</span>
+								<span class="text-utd-green text-2xl font-bold tracking-wide">{{ alertModal.bagLabel }}</span>
 							</div>
 
 							<div class="flex justify-end">
@@ -112,9 +112,9 @@
 									size="md"
 									class="px-8 font-semibold text-white"
 									:class="{
-										'bg-final-utd-green hover:brightness-90': alertModal.type === 'success',
-										'bg-final-negative-red hover:brightness-90': alertModal.type === 'error',
-										'bg-final-utd-orange hover:brightness-90': alertModal.type === 'validation',
+										'bg-utd-green hover:brightness-90': alertModal.type === 'success',
+										'bg-negative-red hover:brightness-90': alertModal.type === 'error',
+										'bg-utd-orange hover:brightness-90': alertModal.type === 'validation',
 									}"
 									@click="alertModal.open = false"
 								>

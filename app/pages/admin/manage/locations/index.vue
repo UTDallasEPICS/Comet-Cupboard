@@ -3,14 +3,10 @@
 		<NuxtLayout name="main" title="Manage Locations" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
 			<section>
 				<UCard>
-					<template #header>
-						<SharedTextSectionTitle> Locations </SharedTextSectionTitle>
-					</template>
-
+					<SharedTextSectionTitle> Locations </SharedTextSectionTitle>
 					<div class="w-full">
 						<SharedButtonPositiveAction class="ml-auto block" text="Add Location" @click="navigateTo('/admin/manage/locations/add')" />
 					</div>
-
 					<UTable :data="locations" :columns="tableColumns" empty="No locations currently available" />
 				</UCard>
 			</section>

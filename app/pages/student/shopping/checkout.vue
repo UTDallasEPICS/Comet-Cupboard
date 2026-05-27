@@ -191,7 +191,7 @@
 							<template v-if="cartRejected">
 								<UCard variant="outline">
 									<template #header>
-										<p class="">Status: <span class="text-final-negative-red">Rejected</span></p>
+										<p class="">Status: <span class="text-negative-red">Rejected</span></p>
 									</template>
 									<p>Reason: {{ cartVerificationReason }}</p>
 								</UCard>
@@ -200,7 +200,7 @@
 							<template v-else>
 								<UCard variant="outline">
 									<template #header>
-										<p class="">Status: <span class="text-final-utd-green">Accepted</span></p>
+										<p class="">Status: <span class="text-utd-green">Accepted</span></p>
 									</template>
 									<p>Reason: {{ cartVerificationReason }}</p>
 								</UCard>

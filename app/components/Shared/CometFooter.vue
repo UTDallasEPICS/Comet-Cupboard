@@ -1,5 +1,5 @@
 <template>
-	<UFooter class="bg-final-cancel-gray text-white">
+	<UFooter class="bg-cancel-gray text-white">
 		<div class="flex flex-col gap-8 py-6 sm:flex-row sm:items-start sm:justify-between">
 			<img src="/CometCupboardLogo2.png" alt="Comet Cupboard" class="h-14" />
 

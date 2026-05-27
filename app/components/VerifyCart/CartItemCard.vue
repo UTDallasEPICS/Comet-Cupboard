@@ -21,11 +21,11 @@
 					</div>
 					<div v-if="detailed" class="flex justify-between">
 						<p>Deals</p>
-						<p v-if="dealCount !== 0" class="text-final-negative-red w-12 text-right">-{{ dealCount }}</p>
+						<p v-if="dealCount !== 0" class="text-negative-red w-12 text-right">-{{ dealCount }}</p>
 					</div>
 					<div v-if="detailed" class="flex justify-between">
 						<p>Expired</p>
-						<p v-if="expiredCount !== 0" class="text-final-negative-red w-12 text-right">-{{ expiredCount }}</p>
+						<p v-if="expiredCount !== 0" class="text-negative-red w-12 text-right">-{{ expiredCount }}</p>
 					</div>
 				</div>
 

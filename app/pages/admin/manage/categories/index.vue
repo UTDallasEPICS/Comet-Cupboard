@@ -3,9 +3,7 @@
 		<NuxtLayout name="main" title="Manage Categories" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
 			<section>
 				<UCard>
-					<template #header>
-						<SharedTextSectionTitle> Categories </SharedTextSectionTitle>
-					</template>
+					<SharedTextSectionTitle> Categories </SharedTextSectionTitle>
 					<div class="w-full">
 						<SharedButtonPositiveAction class="ml-auto block" text="Add Category" @click="navigateTo('/admin/manage/categories/add')" />
 					</div>

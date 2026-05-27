@@ -80,7 +80,7 @@
 						</template>
 						<div class="space-y-3">
 							<div v-if="bagItems.length === 0 && currentBagItems.length === 0" class="py-4 text-center">
-								<p class="text-final-text-soft text-sm">No items in bag</p>
+								<p class="text-text-soft text-sm">No items in bag</p>
 							</div>
 							<div v-for="item in [...bagItems, ...currentBagItems]" :key="item.itemID" class="flex items-center gap-3 rounded bg-gray-100 p-3">
 								<img v-if="item.imgName" :src="`/api/public/image/${item.imgName}`" :alt="item.name" class="h-10 w-10 rounded object-cover" />

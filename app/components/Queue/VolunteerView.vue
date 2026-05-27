@@ -1,8 +1,6 @@
 <template>
 	<UCard>
-		<template #header>
-			<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
-		</template>
+		<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
 		<UTable :data="queueStore.volunteerQueue" :columns="tableColumns" empty="No one currently in queue" />
 	</UCard>
 </template>

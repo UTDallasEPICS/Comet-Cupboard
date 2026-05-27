@@ -10,7 +10,7 @@
 					<img
 						:src="`/api/public/image/${item?.imgName}`"
 						:alt="item?.name"
-						class="border-final-border-soft aspect-square h-full rounded-lg border object-cover"
+						class="border-border-soft aspect-square h-full rounded-lg border object-cover"
 					/>
 
 					<URadioGroup v-model="selectedDealOption" class="mt-4" :items="dealOptions" />

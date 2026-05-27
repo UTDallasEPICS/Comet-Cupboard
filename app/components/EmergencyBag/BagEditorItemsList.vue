@@ -5,9 +5,9 @@
 		</template>
 		<div class="h-54 space-y-3 overflow-y-auto">
 			<div v-if="bagItems.length === 0 && currentBagItems.length === 0" class="py-4 text-center">
-				<p class="text-final-text-soft text-sm">No items in bag yet</p>
+				<p class="text-text-soft text-sm">No items in bag yet</p>
 			</div>
-			<p v-if="currentBagItems.length > 0 && bagItems.length > 0" class="text-final-text-soft text-xs font-medium">New Items:</p>
+			<p v-if="currentBagItems.length > 0 && bagItems.length > 0" class="text-text-soft text-xs font-medium">New Items:</p>
 			<div v-for="item in bagItems" :key="item.itemID" class="flex items-center justify-between rounded bg-gray-100 p-3">
 				<BagItems
 					:item="item"
@@ -16,7 +16,7 @@
 					@remove="emit('remove', $event, false)"
 				/>
 			</div>
-			<p v-if="currentBagItems.length > 0" class="text-final-text-soft text-xs font-medium">Current Emergency Bag Items:</p>
+			<p v-if="currentBagItems.length > 0" class="text-text-soft text-xs font-medium">Current Emergency Bag Items:</p>
 			<div v-for="item in currentBagItems" :key="item.itemID" class="flex items-center justify-between rounded bg-gray-100 p-3">
 				<BagItems
 					:item="item"
