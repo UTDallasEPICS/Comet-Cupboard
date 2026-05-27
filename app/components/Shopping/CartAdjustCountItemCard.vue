@@ -10,11 +10,14 @@
 				</div>
 				<div class="flex flex-row justify-end gap-4">
 					<SharedTextBase>Adjust Count:</SharedTextBase>
-					<div class="flex w-20 flex-row">
-						<UButton :icon="icons['subtract']" size="xs" variant="soft" :disabled="countAdjustment <= 0" @click="decrement" />
-						<SharedTextBase class="w-8 text-center">{{ countAdjustment }}</SharedTextBase>
-						<UButton :icon="icons['add']" size="xs" variant="soft" :disabled="countAdjustment >= props.count" @click="increment" />
-					</div>
+					<SharedIncrementDecrementPill
+						class="w-20"
+						:count="props.countAdjustment"
+						:min="0"
+						:max="props.count"
+						@increment="increment"
+						@decrement="decrement"
+					/>
 				</div>
 			</div>
 		</template>

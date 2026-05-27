@@ -11,19 +11,19 @@
 			<div class="flex flex-row justify-between px-2">
 				<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
 				<div class="flex items-center gap-2">
-					<UBadge v-if="dealType === 'free'" label="Free" />
-					<UBadge v-else-if="dealType === 'deal'" :label="`${props.itemDeal.actualCount} for ${props.itemDeal.adjustedCount}`" />
+					<UBadge v-if="dealType === 'free'" class="bg-deal-green" label="Free" />
+					<UBadge
+						v-else-if="dealType === 'deal'"
+						class="bg-deal-green"
+						:label="`${props.itemDeal.actualCount} for ${props.itemDeal.adjustedCount}`"
+					/>
 					<slot name="header-actions" />
 				</div>
 			</div>
 		</template>
 
 		<div class="flex flex-row justify-between">
-			<img
-				:src="`/api/public/image/${imgName}`"
-				:alt="name"
-				class="border-border-soft ml-2 aspect-square h-full w-16 rounded-lg border object-cover"
-			/>
+			<img :src="`/api/public/image/${imgName}`" :alt="name" class="border-border-soft ml-2 aspect-square h-full w-16 rounded-lg border object-cover" />
 			<slot name="body" />
 		</div>
 		<template v-if="$slots.footer" #footer>

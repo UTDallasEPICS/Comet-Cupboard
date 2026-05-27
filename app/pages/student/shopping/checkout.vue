@@ -2,7 +2,6 @@
 	<div>
 		<NuxtLayout name="main" title="Shopping Checkout">
 			<section>
-				<SharedTextSectionTitle class="sr-only">Checkout Content</SharedTextSectionTitle>
 				<div class="mx-auto flex w-full flex-col items-center">
 					<UStepper
 						v-model="active"

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<NuxtLayout name="main" :title="`Add ${currentCategory} Item`" :back-navigation="{ text: `Back to ${currentCategory}`, to: '/volunteer/inventory' }">
+		<NuxtLayout name="main" :title="`Add ${currentCategory} Item`" :back-navigation="{ text: `Back to ${currentCategory}`, to: `/volunteer/inventory/${currentCategory}` }">
 			<section>
 				<div class="mx-auto w-min">
 					<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">

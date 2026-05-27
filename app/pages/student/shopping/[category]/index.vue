@@ -2,13 +2,20 @@
 	<div>
 		<NuxtLayout name="main" :title="currentCategory" :back-navigation="{ text: 'Back to Categories', to: '/student/shopping' }">
 			<section>
-				<SharedTextSectionTitle class="sr-only">Add Items to Your Cart</SharedTextSectionTitle>
-				<div class="mt-4 flex flex-row justify-end">
-					<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="horizontal" />
-				</div>
-				<div class="mx-auto mt-4 flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-start">
+				<div class="flex flex-row flex-nowrap items-center gap-2">
 					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search items" class="grow" />
-					<USelect v-model="sortOption" :items="sortOptions" class="max-w-md grow" />
+					<UPopover>
+						<UButton :icon="icons['sortFilter']" variant="ghost" color="neutral" size="md" />
+
+						<template #content>
+							<div class="flex w-64 flex-col items-start gap-2 p-4">
+								<SharedTextBase class="w-full text-center">Sort/Filter Options</SharedTextBase>
+								<USeparator />
+								<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="vertical" />
+								<USelect v-model="sortOption" :items="sortOptions" class="w-full max-w-md grow" />
+							</div>
+						</template>
+					</UPopover>
 				</div>
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<li v-for="item in filtered" :key="item.itemID">

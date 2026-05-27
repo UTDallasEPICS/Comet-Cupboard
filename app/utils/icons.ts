@@ -11,6 +11,7 @@ export const icons = {
 	sort: "i-lucide-arrow-up-down",
 	sortAsc: "i-lucide-arrow-up-narrow-wide",
 	sortDesc: "i-lucide-arrow-down-wide-narrow",
+	sortFilter: "i-lucide-sliders-horizontal",
 	ellipsesActions: "i-lucide-ellipsis",
 	chevronDown: "i-lucide-chevron-down",
 	student: "i-lucide-user",
