@@ -23,6 +23,7 @@ export const icons = {
 	locations: "i-lucide-map-pin",
 	verifyCart: "i-lucide-check-circle",
 	data: "i-lucide-chart-column-big",
+	emergencyBag: "i-lucide-shopping-bag",
 	management: "i-lucide-settings",
 	sources: "i-lucide-database",
 	categories: "i-lucide-tags",

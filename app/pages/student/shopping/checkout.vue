@@ -56,16 +56,7 @@
 								color="neutral"
 								variant="outline"
 							/>
-							<div class="mt-4 flex flex-col gap-4">
-								<UAlert
-									v-for="warning in pendingCartWarnings(combineCartAndTemporaryAdjustments)"
-									:key="warning"
-									:icon="icons['warning']"
-									color="warning"
-									:title="warning"
-									class="text-black"
-								/>
-							</div>
+							<SharedWarningsList :warnings="pendingCartWarnings(combineCartAndTemporaryAdjustments)" class="mt-4" />
 							<div class="mt-4 flex flex-col gap-4">
 								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
@@ -109,16 +100,7 @@
 								variant="outline"
 							/>
 
-							<div class="mt-4 flex flex-col gap-4">
-								<UAlert
-									v-for="warning in pendingCartWarnings(combineCartAndTemporaryAdjustments)"
-									:key="warning"
-									:icon="icons['warning']"
-									color="warning"
-									:title="warning"
-									class="text-black"
-								/>
-							</div>
+							<SharedWarningsList :warnings="pendingCartWarnings(combineCartAndTemporaryAdjustments)" class="mt-4" />
 							<div class="mt-4 flex flex-col gap-4">
 								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
@@ -151,7 +133,7 @@
 							<USeparator class="m4-6" />
 
 							<UAlert
-								title="Your cart has been submitted and is awaiting verification. A staff member will review the items and finalize your request."
+								:title="`Your cart has been submitted and is awaiting verification. A staff member will review the items and finalize your request${loadingDots}`"
 								:icon="icons['information']"
 								color="neutral"
 								variant="outline"
@@ -292,6 +274,8 @@ const combineCartAndTemporaryAdjustments = computed(() => {
 		}),
 	}
 })
+
+const { loadingDots } = useLoadingDots()
 
 onBeforeUnmount(() => {
 	unsubscribe()

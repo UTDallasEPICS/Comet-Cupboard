@@ -297,7 +297,7 @@ const columnsDef = computed(() => {
     },*/
 	]
 
-	if (canAdminAccess.value) {
+	if (permissionsStore.canAdminAccess) {
 		base.push({ header: "Private", accessorKey: "private", type: "text", sortable: true, cell: ({ row }) => (row.original.private ? "Yes" : "No") })
 	}
 

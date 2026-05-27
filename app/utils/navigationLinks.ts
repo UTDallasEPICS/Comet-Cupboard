@@ -58,7 +58,7 @@ export const roleLinks: Record<Role, AppLink[]> = {
 		{
 			label: "Emergency Bags",
 			description: "Add, Edit, Remove, View Emergency Bags",
-			icon: icons["management"],
+			icon: icons["emergencyBag"],
 			to: "/volunteer/emergency-bag/manage",
 		},
 	],

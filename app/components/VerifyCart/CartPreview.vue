@@ -5,16 +5,7 @@
 			<p v-else>Cart Preview</p>
 		</template>
 		<div v-if="validCartID" class="flex h-full flex-col gap-y-4">
-			<div class="flex flex-col gap-4">
-				<UAlert
-					v-for="warning in pendingCartWarnings(cart)"
-					:key="warning"
-					:icon="icons['warning']"
-					color="warning"
-					:title="warning"
-					class="text-black"
-				/>
-			</div>
+			<SharedWarningsList :warnings="pendingCartWarnings(cart)" class="mt-4" />
 			<div class="grid justify-items-center gap-4" :style="{ gridTemplateColumns: 'repeat(auto-fill, minmax(288px, 1fr))' }">
 				<UCollapsible v-for="category in Object.keys(categoryCartItems)" :key="category" class="w-full" :default-open="true">
 					<UButton
