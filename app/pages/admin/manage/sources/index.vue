@@ -1,8 +1,11 @@
 <template>
-	<header>
-		<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/admin' }" />
-		<SharedTextPageTitle>Manage Sources</SharedTextPageTitle>
-	</header>
+	<div>
+		<NuxtLayout name="main" title="Manage Sources" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
+			Sources management coming soon!
+		</NuxtLayout>
+	</div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+definePageMeta({ layout: false })
+</script>

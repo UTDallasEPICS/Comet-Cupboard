@@ -1,18 +1,17 @@
 <template>
-	<header>
-		<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
-	</header>
-	<UContainer class="py-8">
-		<header>
-			<SharedTextPageTitle>Manage Queue</SharedTextPageTitle>
-		</header>
+	<div>
+		<NuxtLayout name="main" :title="`Manage Queue`" :back-navigation="{ text: `Back to Dashboard`, to: '/volunteer' }"
+			><section>
+				<QueueCartSessionsView />
+			</section>
 
-		<section class="mt-4">
-			<QueueCartSessionsView />
-		</section>
-
-		<section class="mt-4">
-			<QueueVolunteerView />
-		</section>
-	</UContainer>
+			<section>
+				<QueueVolunteerView />
+			</section>
+		</NuxtLayout>
+	</div>
 </template>
+
+<script lang="ts" setup>
+definePageMeta({ layout: false })
+</script>

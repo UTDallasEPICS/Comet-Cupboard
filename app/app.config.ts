@@ -7,7 +7,7 @@ export default defineAppConfig({
 		},
 		button: {
 			slots: {
-				base: "enabled:hover:cursor-pointer active:scale-95 rounded-lg",
+				base: "enabled:hover:cursor-pointer active:brightness-80 rounded-lg",
 			},
 		},
 	},

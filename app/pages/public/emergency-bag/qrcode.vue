@@ -1,36 +1,36 @@
 <template>
-	<UContainer class="py-8">
-		<header>
-			<SharedTextPageTitle>Emergency Bag</SharedTextPageTitle>
-		</header>
+	<div>
+		<NuxtLayout name="main" title="Claim Emergency Bag">
+			<section>
+				<UCard>
+					<template #header>
+						<SharedTextSectionTitle>Claim Bag</SharedTextSectionTitle>
+					</template>
 
-		<section class="mt-4">
-			<UCard>
-				<template #header>
-					<SharedTextSectionTitle>Claim Bag</SharedTextSectionTitle>
-				</template>
+					<div class="space-y-4">
+						<UInput v-model="bagID" placeholder="Bag ID" :disabled="isLoading" />
 
-				<div class="space-y-4">
-					<UInput v-model="bagID" placeholder="Bag ID" :disabled="isLoading" />
+						<SharedTextBase v-if="errorMessage" class="text-red-500">
+							{{ errorMessage }}
+						</SharedTextBase>
 
-					<SharedTextBase v-if="errorMessage" class="text-red-500">
-						{{ errorMessage }}
-					</SharedTextBase>
+						<SharedTextBase v-if="successMessage" class="text-green-500">
+							{{ successMessage }}
+						</SharedTextBase>
 
-					<SharedTextBase v-if="successMessage" class="text-green-500">
-						{{ successMessage }}
-					</SharedTextBase>
-
-					<div class="flex justify-end">
-						<SharedButtonPositiveAction text="Submit" :disabled="isLoading" @click="submitBagID" />
+						<div class="flex justify-end">
+							<SharedButtonPositiveAction text="Submit" :disabled="isLoading" @click="submitBagID" />
+						</div>
 					</div>
-				</div>
-			</UCard>
-		</section>
-	</UContainer>
+				</UCard>
+			</section>
+		</NuxtLayout>
+	</div>
 </template>
 
 <script lang="ts" setup>
+definePageMeta({ layout: false })
+
 const bagID = ref("")
 const isLoading = ref(false)
 const errorMessage = ref("")

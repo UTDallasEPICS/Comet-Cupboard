@@ -1,47 +1,46 @@
 <template>
-	<UContainer class="py-8">
-		<header>
-			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/student' }" />
-			<SharedTextPageTitle>Queue</SharedTextPageTitle>
-		</header>
+	<div>
+		<NuxtLayout name="main" title="Queue" :back-navigation="{ text: 'Back to Dashboard', to: '/student' }">
+			<section>
+				<UCard>
+					<template #header>
+						<SharedTextSectionTitle> Current Status </SharedTextSectionTitle>
+					</template>
 
-		<section class="mt-4">
-			<UCard>
-				<template #header>
-					<SharedTextSectionTitle> Current Status </SharedTextSectionTitle>
-				</template>
-
-				<div class="space-y-2">
-					<div v-if="queueStatus">
-						<SharedTextBase> Public Code: {{ queueStatus.publicCode }} </SharedTextBase>
-						<SharedTextBase> Position: {{ queueStatus.position }} </SharedTextBase>
-						<SharedButtonCancel text="Leave Queue" @click="leaveQueue" />
-					</div>
-					<div v-else>
-						<div v-if="cart">
-							<SharedTextBase> You already have an active cart. </SharedTextBase>
+					<div class="space-y-2">
+						<div v-if="queueStatus">
+							<SharedTextBase> Public Code: {{ queueStatus.publicCode }} </SharedTextBase>
+							<SharedTextBase> Position: {{ queueStatus.position }} </SharedTextBase>
+							<SharedButtonCancel text="Leave Queue" @click="leaveQueue" />
 						</div>
 						<div v-else>
-							<SharedTextBase> You are not currently in the queue. </SharedTextBase>
-							<SharedButtonPositiveAction text="Join Queue" @click="joinQueue" />
+							<div v-if="cart">
+								<SharedTextBase> You already have an active cart. </SharedTextBase>
+							</div>
+							<div v-else>
+								<SharedTextBase> You are not currently in the queue. </SharedTextBase>
+								<SharedButtonPositiveAction text="Join Queue" @click="joinQueue" />
+							</div>
 						</div>
 					</div>
-				</div>
-			</UCard>
-		</section>
+				</UCard>
+			</section>
 
-		<section class="mt-4">
-			<UCard>
-				<template #header>
-					<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
-				</template>
-				<UTable :data="queue" :columns="tableColumns" :meta="meta" empty="No one currently in queue" />
-			</UCard>
-		</section>
-	</UContainer>
+			<section>
+				<UCard>
+					<template #header>
+						<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
+					</template>
+					<UTable :data="queue" :columns="tableColumns" :meta="meta" empty="No one currently in queue" />
+				</UCard>
+			</section>
+		</NuxtLayout>
+	</div>
 </template>
 
 <script lang="ts" setup>
+definePageMeta({ layout: false })
+
 const queueStore = useQueueStore()
 const { queue, queueStatus } = storeToRefs(queueStore)
 const { getQueue, updateQueueStatus } = queueStore

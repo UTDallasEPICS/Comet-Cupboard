@@ -1,140 +1,136 @@
 <template>
-	<UContainer class="py-8">
-		<header>
-			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
-			<SharedTextPageTitle>Emergency Bag Management</SharedTextPageTitle>
-		</header>
-		<div class="mt-6">
-			<!--Tabs-->
-			<UTabs
-				v-model="activeTab"
-				:items="items"
-				:ui="{
-					root: 'gap-0 border-2 border-final-border-soft rounded-lg',
-					trigger: 'rounded-t-lg',
-					content: 'rounded-b-lg p-0',
-				}"
-			>
-				<!--Tab Trigger-->
-				<template #default="{ item }">
-					<div class="flex items-center gap-2" :data-tour="`tab-${item.value}`">
-						<span>{{ item.label }}</span>
-						<button v-if="item.value === 'edit'" class="hover:cursor-pointer" @click.stop="closeEditTab">✕</button>
-					</div>
-				</template>
-
-				<!--START OF ADD BAG STUFF-->
-				<template #add>
-					<div class="pt-4 pl-4">
-						<BagEditor @submit="submitBag" />
-					</div>
-				</template>
-				<!--END OF ADD BAG STUFF-->
-
-				<!--START OF VIEW/MODIFY BAG STUFF-->
-				<template #view>
-					<section>
-						<div class="flex flex-col gap-2 p-2 md:flex-row md:justify-between">
-							<UInput v-model="manage_searchQuery" :icon="icons['search']" placeholder="Search items" class="w-full md:w-72" />
-							<div v-if="selectedBagIDs.length > 0" class="flex justify-between">
-								<UInputMenu v-model="moveLocation" :items="moveLocations" />
-								<UButton :icon="icons['move']" size="xs" variant="solid" @click="moveBags"> Move </UButton>
-							</div>
+	<div>
+		<NuxtLayout name="main" title="Manage Emergency Bags" :back-navigation="{ text: 'Back to Dashboard', to: '/volunteer' }">
+			<div class="mt-6">
+				<!--Tabs-->
+				<UTabs
+					v-model="activeTab"
+					:items="items"
+					:ui="{
+						root: 'gap-0 border-2 border-final-border-soft rounded-lg',
+						trigger: 'rounded-t-lg',
+						content: 'rounded-b-lg p-0',
+					}"
+				>
+					<!--Tab Trigger-->
+					<template #default="{ item }">
+						<div class="flex items-center gap-2" :data-tour="`tab-${item.value}`">
+							<span>{{ item.label }}</span>
+							<button v-if="item.value === 'edit'" class="hover:cursor-pointer" @click.stop="closeEditTab">✕</button>
 						</div>
+					</template>
 
-						<UTable
-							sticky
-							v-model:expanded="expanded"
-							v-model:rowSelection="selected"
-							:getRowId="(row) => row.bagID"
-							:data="filtered_viewData"
-							:columns="columns"
-							:ui="{
-								td: 'py-2',
-								th: 'py-2',
-								tr: 'text-sm',
+					<!--START OF ADD BAG STUFF-->
+					<template #add>
+						<div class="pt-4 pl-4">
+							<EmergencyBagEditor @submit="submitBag" />
+						</div>
+					</template>
+					<!--END OF ADD BAG STUFF-->
+
+					<!--START OF VIEW/MODIFY BAG STUFF-->
+					<template #view>
+						<section>
+							<div class="flex flex-col gap-2 p-2 md:flex-row md:justify-between">
+								<UInput v-model="manage_searchQuery" :icon="icons['search']" placeholder="Search items" class="w-full md:w-72" />
+								<div v-if="selectedBagIDs.length > 0" class="flex justify-between">
+									<UInputMenu v-model="moveLocation" :items="moveLocations" />
+									<UButton :icon="icons['move']" size="xs" variant="solid" @click="moveBags"> Move </UButton>
+								</div>
+							</div>
+
+							<UTable
+								sticky
+								v-model:expanded="expanded"
+								v-model:rowSelection="selected"
+								:getRowId="(row) => row.bagID"
+								:data="filtered_viewData"
+								:columns="columns"
+								:ui="{
+									td: 'py-2',
+									th: 'py-2',
+									tr: 'text-sm',
+								}"
+							>
+								<template #expanded="{ row }">
+									<EmergencyBagExpandedRow
+										:key="row.original.bagID"
+										:bag="row.original"
+										:moveLocations="moveLocations"
+										:icons="icons"
+										@move="moveSingleBag"
+										@edit="editBag"
+										@delete="deleteBag"
+									/>
+								</template>
+							</UTable>
+						</section>
+					</template>
+					<!--END OF VIEW/MODIFY BAG STUFF-->
+
+					<!--START OF EDIT BAG-->
+					<template #edit>
+						<EmergencyBagEditor :initialData="editingBag" @submit="submitBag" />
+					</template>
+					<!--END OF EDIT BAG-->
+				</UTabs>
+			</div>
+
+			<!-- Alert Modal -->
+			<UModal v-model:open="alertModal.open" :dismissible="false">
+				<template #content>
+					<div class="overflow-hidden rounded-xl shadow-2xl">
+						<!-- Colored header bar -->
+						<div
+							class="flex items-center gap-3 px-6 py-4"
+							:class="{
+								'bg-final-utd-green': alertModal.type === 'success',
+								'bg-final-negative-red': alertModal.type === 'error',
+								'bg-final-utd-orange': alertModal.type === 'validation',
 							}"
 						>
-							<template #expanded="{ row }">
-								<ExpandedRow
-									:key="row.original.bagID"
-									:bag="row.original"
-									:moveLocations="moveLocations"
-									:icons="icons"
-									@move="moveSingleBag"
-									@edit="editBag"
-									@delete="deleteBag"
-								/>
-							</template>
-						</UTable>
-					</section>
-				</template>
-				<!--END OF VIEW/MODIFY BAG STUFF-->
-
-				<!--START OF EDIT BAG-->
-				<template #edit>
-					<BagEditor :initialData="editingBag" @submit="submitBag" />
-				</template>
-				<!--END OF EDIT BAG-->
-			</UTabs>
-		</div>
-
-		<!-- Alert Modal -->
-		<UModal v-model:open="alertModal.open" :dismissible="false">
-			<template #content>
-				<div class="overflow-hidden rounded-xl shadow-2xl">
-					<!-- Colored header bar -->
-					<div
-						class="flex items-center gap-3 px-6 py-4"
-						:class="{
-							'bg-final-utd-green': alertModal.type === 'success',
-							'bg-final-negative-red': alertModal.type === 'error',
-							'bg-final-utd-orange': alertModal.type === 'validation',
-						}"
-					>
-						<span class="text-2xl font-bold text-white">
-							<span v-if="alertModal.type === 'success'">✓</span>
-							<span v-else-if="alertModal.type === 'error'">✕</span>
-							<span v-else>⚠</span>
-						</span>
-						<h3 class="text-lg font-bold tracking-wide text-white">{{ alertModal.title }}</h3>
-					</div>
-
-					<!-- Body -->
-					<div class="flex flex-col gap-4 bg-white px-6 py-5">
-						<p class="text-final-cancel-gray text-sm leading-relaxed">{{ alertModal.message }}</p>
-
-						<!-- Bag ID highlight (only on successful creation) -->
-						<div v-if="alertModal.bagLabel" class="border-final-utd-green flex flex-col gap-1 rounded-lg border-2 bg-green-50 px-4 py-3">
-							<span class="text-final-utd-green text-xs font-semibold tracking-widest uppercase">Assigned Bag ID</span>
-							<span class="text-final-utd-green text-2xl font-bold tracking-wide">{{ alertModal.bagLabel }}</span>
+							<span class="text-2xl font-bold text-white">
+								<span v-if="alertModal.type === 'success'">✓</span>
+								<span v-else-if="alertModal.type === 'error'">✕</span>
+								<span v-else>⚠</span>
+							</span>
+							<h3 class="text-lg font-bold tracking-wide text-white">{{ alertModal.title }}</h3>
 						</div>
 
-						<div class="flex justify-end">
-							<UButton
-								size="md"
-								class="px-8 font-semibold text-white"
-								:class="{
-									'bg-final-utd-green hover:brightness-90': alertModal.type === 'success',
-									'bg-final-negative-red hover:brightness-90': alertModal.type === 'error',
-									'bg-final-utd-orange hover:brightness-90': alertModal.type === 'validation',
-								}"
-								@click="alertModal.open = false"
-							>
-								OK
-							</UButton>
+						<!-- Body -->
+						<div class="flex flex-col gap-4 bg-white px-6 py-5">
+							<p class="text-final-cancel-gray text-sm leading-relaxed">{{ alertModal.message }}</p>
+
+							<!-- Bag ID highlight (only on successful creation) -->
+							<div v-if="alertModal.bagLabel" class="border-final-utd-green flex flex-col gap-1 rounded-lg border-2 bg-green-50 px-4 py-3">
+								<span class="text-final-utd-green text-xs font-semibold tracking-widest uppercase">Assigned Bag ID</span>
+								<span class="text-final-utd-green text-2xl font-bold tracking-wide">{{ alertModal.bagLabel }}</span>
+							</div>
+
+							<div class="flex justify-end">
+								<UButton
+									size="md"
+									class="px-8 font-semibold text-white"
+									:class="{
+										'bg-final-utd-green hover:brightness-90': alertModal.type === 'success',
+										'bg-final-negative-red hover:brightness-90': alertModal.type === 'error',
+										'bg-final-utd-orange hover:brightness-90': alertModal.type === 'validation',
+									}"
+									@click="alertModal.open = false"
+								>
+									OK
+								</UButton>
+							</div>
 						</div>
 					</div>
-				</div>
-			</template>
-		</UModal>
-	</UContainer>
+				</template>
+			</UModal>
+		</NuxtLayout>
+	</div>
 </template>
 
 <script lang="ts" setup>
-import { resolveComponent } from "vue"
-import BagEditor from "~/components/EmergencyBag/BagEditor.vue"
-import ExpandedRow from "~/components/EmergencyBag/ExpandedRow.vue"
+definePageMeta({ layout: false })
 
 const resolvedComponents = {
 	UButton: resolveComponent("UButton"),

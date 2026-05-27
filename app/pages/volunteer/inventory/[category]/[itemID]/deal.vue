@@ -1,47 +1,49 @@
 <template>
-	<UContainer class="py-8">
-		<header>
-			<SharedButtonNavigateBack :text="'Back to ' + currentCategory" :to="{ path: `/volunteer/inventory/${currentCategory}` }" />
-			<SharedTextPageTitle>{{ currentCategory }}</SharedTextPageTitle>
-		</header>
+	<div>
+		<NuxtLayout
+			name="main"
+			:title="`Edit ${item?.name} Deal`"
+			:back-navigation="{ text: `Back to ${currentCategory}`, to: `/volunteer/inventory/${currentCategory}` }"
+		>
+			<section>
+				<div class="mx-auto w-min">
+					<img
+						:src="`/api/public/image/${item?.imgName}`"
+						:alt="item?.name"
+						class="border-final-border-soft aspect-square h-full rounded-lg border object-cover"
+					/>
 
-		<section class="mt-4">
-			<SharedTextSectionTitle>Edit {{ item?.name }} Deal</SharedTextSectionTitle>
-			<div class="mx-auto w-min">
-				<img
-					:src="`/api/public/image/${item?.imgName}`"
-					:alt="item?.name"
-					class="border-final-border-soft aspect-square h-full rounded-lg border object-cover"
-				/>
+					<URadioGroup v-model="selectedDealOption" class="mt-4" :items="dealOptions" />
 
-				<URadioGroup v-model="selectedDealOption" class="mt-4" :items="dealOptions" />
+					<UForm :validate="validate" :state="state" class="mt-4 w-96 space-y-4" @submit="onSubmit" @error="onError">
+						<div v-if="selectedDealOption == 'Deal is X for Y'">
+							<UFormField id="newDealActualCount" name="newDealActualCount" label="Actual Count" description="The number of items in the deal">
+								<UInputNumber v-model="state.newDealActualCount" placeholder="Enter actual count" :min="1" :max="99" />
+							</UFormField>
+							<UFormField
+								id="newDealAdjustedCount"
+								name="newDealAdjustedCount"
+								label="Adjusted Count"
+								description="The number of items the actual count is being adjusted to in the deal"
+							>
+								<UInputNumber v-model="state.newDealAdjustedCount" placeholder="Enter adjusted count" :min="0" :max="99" />
+							</UFormField>
+						</div>
 
-				<UForm :validate="validate" :state="state" class="mt-4 w-96 space-y-4" @submit="onSubmit" @error="onError">
-					<div v-if="selectedDealOption == 'Deal is X for Y'">
-						<UFormField id="newDealActualCount" name="newDealActualCount" label="Actual Count" description="The number of items in the deal">
-							<UInputNumber v-model="state.newDealActualCount" placeholder="Enter actual count" :min="1" :max="99" />
-						</UFormField>
-						<UFormField
-							id="newDealAdjustedCount"
-							name="newDealAdjustedCount"
-							label="Adjusted Count"
-							description="The number of items the actual count is being adjusted to in the deal"
-						>
-							<UInputNumber v-model="state.newDealAdjustedCount" placeholder="Enter adjusted count" :min="0" :max="99" />
-						</UFormField>
-					</div>
-
-					<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
-						<SharedButtonPositiveAction type="submit" text="Submit" />
-					</footer>
-				</UForm>
-			</div>
-		</section>
-	</UContainer>
+						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
+							<SharedButtonPositiveAction type="submit" text="Submit" />
+						</footer>
+					</UForm>
+				</div>
+			</section>
+		</NuxtLayout>
+	</div>
 </template>
 
 <script lang="ts" setup>
 import * as z from "zod"
+
+definePageMeta({ layout: false })
 
 const route = useRoute()
 const currentCategory = route.params.category as string

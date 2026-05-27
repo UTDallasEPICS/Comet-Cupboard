@@ -37,7 +37,7 @@
 			</USlideover>
 			<div class="relative ml-4 overflow-hidden">
 				<NuxtLink to="/" class="focus:outline-none">
-					<img src="/CometCupboardLogo1.png" class="h-10" />
+					<img src="/CometCupboardLogo1.png" class="h-8" />
 				</NuxtLink>
 			</div>
 		</template>

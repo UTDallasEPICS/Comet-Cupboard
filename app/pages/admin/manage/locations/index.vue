@@ -1,27 +1,26 @@
 <template>
-	<UContainer class="py-8">
-		<header>
-			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/admin' }" />
-			<SharedTextPageTitle>Manage Locations</SharedTextPageTitle>
-		</header>
+	<div>
+		<NuxtLayout name="main" title="Manage Locations" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
+			<section>
+				<UCard>
+					<template #header>
+						<SharedTextSectionTitle> Locations </SharedTextSectionTitle>
+					</template>
 
-		<section class="mt-4">
-			<UCard>
-				<template #header>
-					<SharedTextSectionTitle> Locations </SharedTextSectionTitle>
-				</template>
+					<div class="w-full">
+						<SharedButtonPositiveAction class="ml-auto block" text="Add Location" @click="navigateTo('/admin/manage/locations/add')" />
+					</div>
 
-				<div class="w-full">
-					<SharedButtonPositiveAction class="ml-auto block" text="Add Location" @click="navigateTo('/admin/manage/locations/add')" />
-				</div>
-
-				<UTable :data="locations" :columns="tableColumns" empty="No locations currently available" />
-			</UCard>
-		</section>
-	</UContainer>
+					<UTable :data="locations" :columns="tableColumns" empty="No locations currently available" />
+				</UCard>
+			</section>
+		</NuxtLayout>
+	</div>
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: false })
+
 const { data: locations } = await useFetch("/api/public/location/locations", {
 	query: { includeArchived: true },
 })

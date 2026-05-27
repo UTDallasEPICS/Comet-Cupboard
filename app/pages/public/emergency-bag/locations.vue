@@ -1,23 +1,7 @@
 <template>
 	<div>
-		<UContainer class="py-8">
-			<header class="relative mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-				<div class="sm:absolute sm:left-0">
-					<SharedButtonNavigateBack text="Back" :to="{ path: '/' }" />
-				</div>
-
-				<div class="w-full text-center">
-					<SharedTextPageTitle>Locations</SharedTextPageTitle>
-				</div>
-
-				<div class="flex flex-col items-center gap-2 sm:absolute sm:right-0 sm:flex-row sm:gap-3">
-					<SharedTextBaseSecondary class="text-xs sm:text-sm"> Auto refresh in {{ countdown }}s </SharedTextBaseSecondary>
-
-					<UButton size="xs" variant="soft" :icon="icons['refresh']" @click="refreshNow" class="whitespace-nowrap"> Refresh now </UButton>
-				</div>
-			</header>
-
-			<section class="mt-4">
+		<NuxtLayout name="main" title="Emergency Bag Locations" :refresh-page-timer="60">
+			<section>
 				<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 					<UCard v-for="location in activeLocations" :key="location.name" class="flex h-full flex-col" :ui="{ body: { class: 'flex-grow' } }">
 						<template #header>
@@ -75,11 +59,13 @@
 					</div>
 				</footer>
 			</section>
-		</UContainer>
+		</NuxtLayout>
 	</div>
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: false })
+
 interface LocationData {
 	name: string
 	address: string

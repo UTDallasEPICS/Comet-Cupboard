@@ -1,36 +1,35 @@
 <template>
-	<UContainer class="py-8">
-		<header>
-			<SharedButtonNavigateBack text="Back to Categories" :to="{ path: '/student/shopping' }" />
-			<SharedTextPageTitle>All Items</SharedTextPageTitle>
-		</header>
-
-		<section class="mt-4">
-			<SharedTextSectionTitle class="sr-only">Add Items to Your Cart</SharedTextSectionTitle>
-			<div class="mt-4 flex flex-row justify-end">
-				<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="horizontal" />
-			</div>
-			<div class="mx-auto mt-4 flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-start">
-				<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search items" class="grow" />
-				<USelect v-model="sortOption" :items="sortOptions" class="max-w-md grow" />
-			</div>
-			<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-				<li v-for="item in filtered" :key="item.itemID">
-					<ShoppingItemCard
-						type-of-card="SHOPPING"
-						:img-name="item.imgName"
-						:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
-						:item-i-d="item.itemID"
-						:name="item.name"
-						:quantity="item.quantity"
-					/>
-				</li>
-			</ul>
-		</section>
-	</UContainer>
+	<div>
+		<NuxtLayout name="main" title="All Items" :back-navigation="{ text: 'Back to Categories', to: '/student/shopping' }">
+			<section>
+				<SharedTextSectionTitle class="sr-only">Add Items to Your Cart</SharedTextSectionTitle>
+				<div class="mt-4 flex flex-row justify-end">
+					<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="horizontal" />
+				</div>
+				<div class="mx-auto mt-4 flex w-full flex-col gap-4 sm:flex-row sm:items-center sm:justify-start">
+					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search items" class="grow" />
+					<USelect v-model="sortOption" :items="sortOptions" class="max-w-md grow" />
+				</div>
+				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<li v-for="item in filtered" :key="item.itemID">
+						<ShoppingItemCard
+							type-of-card="SHOPPING"
+							:img-name="item.imgName"
+							:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
+							:item-i-d="item.itemID"
+							:name="item.name"
+							:quantity="item.quantity"
+						/>
+					</li>
+				</ul>
+			</section>
+		</NuxtLayout>
+	</div>
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: false })
+
 const sortOption = ref("Alphabetical")
 const sortOptions = ["Alphabetical", "Quantity"]
 

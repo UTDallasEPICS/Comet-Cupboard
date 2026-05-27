@@ -1,60 +1,58 @@
 <template>
-	<UContainer class="py-8">
-		<header>
-			<SharedButtonNavigateBack text="Back to Manage Categories" :to="{ path: '/admin/manage/categories' }" />
-			<SharedTextPageTitle>Manage Categories</SharedTextPageTitle>
-		</header>
-
-		<section class="mt-4">
-			<SharedTextSectionTitle>Add Category</SharedTextSectionTitle>
-			<div class="mx-auto w-min">
-				<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
-					<UFormField
-						id="image"
-						name="image"
-						label="Category Image"
-						description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels"
-					>
-						<div class="flex flex-col gap-2">
-							<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
-						</div>
-					</UFormField>
-					<UFormField
-						id="categoryName"
-						name="categoryName"
-						label="Category Name"
-						description="Category name must be at most 20 characters and only contain letters and spaces"
-					>
-						<UInput v-model="state.categoryName" placeholder="Enter category name" />
-					</UFormField>
-					<UCard
-						:ui="{
-							header: 'p-2 py-2 sm:p-2 sm:py-2',
-							body: 'p-2 py-2 sm:p-2 sm:py-2',
-						}"
-					>
-						<template #header>
-							<SharedTextBase class="mb-1"> Existing Categories with Similar Names </SharedTextBase>
-						</template>
-						<template #default>
-							<ul class="space-y-1">
-								<li v-for="similarItem in mostSimilarItems" :key="similarItem.id">
-									<SharedTextBase>{{ similarItem.name }}</SharedTextBase>
-								</li>
-							</ul>
-						</template>
-					</UCard>
-					<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
-						<SharedButtonPositiveAction type="submit" text="Submit" />
-					</footer>
-				</UForm>
-			</div>
-		</section>
-	</UContainer>
+	<div>
+		<NuxtLayout name="main" :title="`Add Category`" :back-navigation="{ text: 'Back to Manage Categories', to: '/admin/manage/categories' }">
+			<section>
+				<div class="mx-auto w-min">
+					<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
+						<UFormField
+							id="image"
+							name="image"
+							label="Category Image"
+							description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels"
+						>
+							<div class="flex flex-col gap-2">
+								<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
+							</div>
+						</UFormField>
+						<UFormField
+							id="categoryName"
+							name="categoryName"
+							label="Category Name"
+							description="Category name must be at most 20 characters and only contain letters and spaces"
+						>
+							<UInput v-model="state.categoryName" placeholder="Enter category name" />
+						</UFormField>
+						<UCard
+							:ui="{
+								header: 'p-2 py-2 sm:p-2 sm:py-2',
+								body: 'p-2 py-2 sm:p-2 sm:py-2',
+							}"
+						>
+							<template #header>
+								<SharedTextBase class="mb-1"> Existing Categories with Similar Names </SharedTextBase>
+							</template>
+							<template #default>
+								<ul class="space-y-1">
+									<li v-for="similarItem in mostSimilarItems" :key="similarItem.id">
+										<SharedTextBase>{{ similarItem.name }}</SharedTextBase>
+									</li>
+								</ul>
+							</template>
+						</UCard>
+						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
+							<SharedButtonPositiveAction type="submit" text="Submit" />
+						</footer>
+					</UForm>
+				</div>
+			</section>
+		</NuxtLayout>
+	</div>
 </template>
 
 <script lang="ts" setup>
 import * as z from "zod"
+
+definePageMeta({ layout: false })
 
 const formSchema = imageSchema.extend({
 	categoryName: z

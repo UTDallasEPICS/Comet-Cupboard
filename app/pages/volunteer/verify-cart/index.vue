@@ -1,31 +1,33 @@
 <template>
-	<header>
-		<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
-	</header>
-	<div class="p-4">
-		<div class="flex grow">
-			<div class="flex grow flex-row flex-wrap justify-center md:my-8 md:flex-nowrap md:justify-normal">
-				<div :class="(currentCartIDPreview === '' ? 'visible' : 'invisible hidden') + ' md:visible md:block'" class="md:mr-4 lg:mr-12">
-					<VerifyCartPendingList :selected-cart="currentCartIDPreview" @update:select-cart="setCartIDPreview" />
+	<div>
+		<NuxtLayout name="main" title="Verify Carts" :back-navigation="{ text: `Back to Dashboard`, to: `/volunteer` }">
+			<div class="flex grow">
+				<div class="flex grow flex-row flex-wrap justify-center md:my-8 md:flex-nowrap md:justify-normal">
+					<div :class="(currentCartIDPreview === '' ? 'visible' : 'invisible hidden') + ' md:visible md:block'" class="md:mr-4 lg:mr-12">
+						<VerifyCartPendingList :selected-cart="currentCartIDPreview" @update:select-cart="setCartIDPreview" />
+					</div>
+					<UButton
+						:class="(currentCartIDPreview === '' ? 'invisible hidden' : 'visible') + ' md:invisible md:hidden'"
+						class="mr-auto mb-2"
+						@click="resetCartIDPreview"
+					>
+						Back to carts
+					</UButton>
+					<VerifyCartPreview
+						:class="(currentCartIDPreview === '' ? 'invisible hidden' : 'visible') + ' md:visible md:flex md:flex-col'"
+						:cart-i-d="currentCartIDPreview"
+						@cart-declined="declineToastMessage"
+						@cart-accepted="acceptToastMessage"
+					/>
 				</div>
-				<SharedButtonNavigateBack
-					text="Back to carts"
-					:class="(currentCartIDPreview === '' ? 'invisible hidden' : 'visible') + ' md:invisible md:hidden'"
-					class="mr-auto mb-2"
-					@click="resetCartIDPreview"
-				/>
-				<VerifyCartPreview
-					:class="(currentCartIDPreview === '' ? 'invisible hidden' : 'visible') + ' md:visible md:flex md:flex-col'"
-					:cart-i-d="currentCartIDPreview"
-					@cart-declined="declineToastMessage"
-					@cart-accepted="acceptToastMessage"
-				/>
 			</div>
-		</div>
+		</NuxtLayout>
 	</div>
 </template>
 
 <script lang="ts" setup>
+definePageMeta({ layout: false })
+
 const toast = useToast()
 
 const currentCartIDPreview = ref<string>("")
