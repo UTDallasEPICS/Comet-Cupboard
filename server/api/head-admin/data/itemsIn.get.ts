@@ -1,8 +1,10 @@
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
 import { z } from "zod"
+import { getTimeLevel } from "~~/server/utils/data"
 
 const schema = z.object({
+	timeLevel: z.enum(["Day", "Week", "Month", "Semester"]).default("Day"),
 	startDate: z.coerce.date().optional(),
 	endDate: z.coerce.date().optional(),
 })
@@ -16,7 +18,7 @@ export default defineSafeHandler(async (event) => {
 		throw createError({ statusCode: 400, statusMessage: "Invalid request parameters" })
 	}
 
-	const { startDate, endDate } = result.data
+	const { timeLevel, startDate, endDate } = result.data
 
 	const sources = await prisma.itemCountChange.findMany({
 		include: {
@@ -45,30 +47,17 @@ export default defineSafeHandler(async (event) => {
 	})
 
     const rows = sources.map((row) => {
-        return {
+        return{
             date: row.date,
             amountChanged: row.amountChanged,
             itemName: row.Item.name,
             itemCategory: row.Item.categoryName,
-            sourceName: row.Source.name,
+            itemQty: row.Item.quantity,
+            sourceName: row.Source.name
         }
     })
 
-	const total = {}
+    console.log("rows: ", rows)
 
-    for (const {amountChanged, itemCategory, sourceName} of rows){
-		if (!(sourceName in total)){
-			total[sourceName] = {}
-		}
-
-		if (sourceName in total){
-			total[sourceName][itemCategory] = amountChanged 
-		} else {
-			total[sourceName][itemCategory] += amountChanged
-		}
-	}
-
-	console.log(total)
-
-	return total
+	return sources
 })

@@ -1,6 +1,23 @@
 <template>
 	<div>
-		<canvas ref="barContainer"></canvas>
+		<div class="flex items-center justify-end">
+			<div class="flex flex-col justify-center gap-1">
+				<p class="text-right text-sm">Time Range</p>
+
+				<UInputDate ref="inputDate" v-model="modelValue" range>
+					<template #trailing>
+						<UPopover :reference="inputDate?.inputsRef[0]?.$el">
+							<UButton color="neutral" variant="link" size="sm" icon="i-lucide-calendar" aria-label="Select a date range" class="px-0" />
+
+							<template #content>
+								<UCalendar v-model="modelValue" class="p-2" :number-of-months="2" range />
+							</template>
+						</UPopover>
+					</template>
+				</UInputDate>
+			</div>
+		</div>
+		<canvas ref="barContainer" />
 	</div>
 
 	<div>
@@ -11,104 +28,113 @@
 <script lang="ts" setup>
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, elements } from "chart.js"
 import { Chart, RadialLinearScale, PointElement, LineElement, Filler } from "chart.js/auto"
-import { title } from "process"
+import { DateFormatter, getLocalTimeZone, today } from "@internationalized/date"
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const { data: sources } = await useFetch("/api/head-admin/data/source")
+const inputDate = useTemplateRef("inputDate")
+const tz = getLocalTimeZone()
+const initialEnd = today(tz)
 
-const chartContainer = useTemplateRef("barContainer")
-
-const aggregatedData = computed(() => {
-	if (!sources.value) return []
-
-	const data = sources.value.flatMap((source) => {
-		return source.ItemCountChanges.map((change) => ({
-			sourceName: source.name,
-			categoryName: change.Item.categoryName,
-			amountChanged: change.amountChanged,
-		}))
-	})
-
-	const total = {}
-	for (const dict of data) {
-		if (!(dict.sourceName in total)) {
-			total[dict.sourceName] = {}
-		}
-		if (!(dict.categoryName in total[dict.sourceName])) {
-			total[dict.sourceName][dict.categoryName] = dict.amountChanged
-		} else {
-			total[dict.sourceName][dict.categoryName] += dict.amountChanged
-		}
-	}
-
-	return total
+const modelValue = shallowRef({
+	start: initialEnd.subtract({ days: 14 }),
+	end: initialEnd,
 })
 
-const chartData = computed(() => {
-	const categories = [...new Set(Object.values(aggregatedData.value).flatMap((obj) => Object.keys(obj)))]
+const data = ref({})
+const chartContainer = useTemplateRef("barContainer")
+const chart = shallowRef(null)
+const drilledDown = ref(false)
+const clickedCategory = ref<string | null>(null)
+const sourceColors = shallowRef([])
+const overviewState = shallowRef({
+	labels: [],
+	datasets: [],
+})
 
-	const datasets = Object.entries(aggregatedData.value).map(([sourceNames, categoryMap]) => ({
-		label: sourceNames,
-		data: categories.map((cat) => categoryMap[cat] || 0),
+const updateChart = async () => {
+	if (!modelValue.value.start || !modelValue.value.end) return
+
+	const sourceContributionData = await $fetch("/api/head-admin/data/source", {
+		query: {
+			startDate: modelValue.value.start ? modelValue.value.start.toDate(tz).toISOString() : undefined,
+			endDate: modelValue.value.end ? modelValue.value.end.toDate(tz).toISOString() : undefined,
+		},
+	})
+
+	// stores api data
+	data.value = sourceContributionData
+
+	// builds overview x-axis labels (categories)
+	const categories = [...new Set(Object.values(sourceContributionData).flatMap(Object.keys))]
+
+	// build sources for stack
+	const sources = Object.keys(sourceContributionData)
+
+	const datasets = sources.map((source) => ({
+		label: source,
+		data: categories.map((category) => sourceContributionData[source][category] || 0),
 	}))
 
-	return {
+	// save overview chart
+	overviewState.value = {
 		labels: categories,
 		datasets,
 	}
+
+	if (drilledDown.value && clickedCategory.value) {
+		showDrillDownView(clickedCategory.value)
+	} else {
+		chart.value.data.labels = overviewState.value.labels
+		chart.value.data.datasets = overviewState.value.datasets
+		chart.value.update()
+
+		sourceColors.value = overviewState.value.datasets.map((_, i) =>
+			chart.value.getDatasetMeta(i).controller.getStyle(0).backgroundColor
+		)
+	}
+}
+
+watch(modelValue, () => {
+	if (!modelValue.value.start || !modelValue.value.end) return
+	updateChart()
 })
 
-function addData(chart, labels, newData, sourceColors) {
-	chart.data.labels = labels
-	chart.data.datasets = [
-		{
-			data: newData,
-			hoverBorderColor: "black",
-			hoverBorderWidth: 2,
-			borderColor: sourceColors.map(c => c[0]),
-			backgroundColor: sourceColors.map(c => c[1]),
-		},
-	]
-	chart.update()
-}
+const showDrillDownView = (categoryName: string) => {
+	if (!chart.value) return
 
-function updateConfigByMutating(chart, title, showLegend) {
-    chart.options.plugins.title.text = title
-	chart.options.plugins.legend.display = showLegend
-    chart.update();
-}
+	const drilledDownLabels = Object.keys(data.value)
 
-function resetToOriginal(chart, categories, originalSourcesData){
-	chart.data.labels = categories
-	chart.data.datasets = originalSourcesData
-	chart.update()
-}
+	const drilledDownData = Object.entries(data.value).map(([sourceName, categoryObject]) => {
+		return categoryObject[categoryName] || 0
+	})
 
-function wipeData(chart) {
-	chart.data.labels = []
-	chart.data.datasets = []
-	chart.update()
-}
-
-function resetChart() {
-	wipeData(chart.value)
-	updateConfigByMutating(chart.value, 'Source Contributions')
-	resetToOriginal(chart.value, originalCategoryLabels, originalSourcesData)
+	chart.value.data.labels = drilledDownLabels
+	chart.value.data.datasets = [{
+		label: categoryName,
+		data: drilledDownData,
+		backgroundColor: sourceColors.value
+	}]
 	chart.value.update()
-	drilledDown.value = false
 }
 
-const chart = shallowRef(null)
-const originalCategoryLabels = chartData.value.labels
-const originalSourcesData = chartData.value.datasets
-const drilledDown = ref(false)
+const resetChart = () => {
+	if (!chart.value) return
 
-onMounted(() => {
+	drilledDown.value = false
+
+	clickedCategory.value = null
+
+	chart.value.data.labels = overviewState.value.labels
+	chart.value.data.datasets = overviewState.value.datasets
+	chart.value.update()
+}
+
+onMounted(async () => {
 	chart.value = new Chart(chartContainer.value!, {
 		type: "bar",
 		data: {
-			labels: chartData.value.labels,
-			datasets: chartData.value.datasets,
+			labels: [],
+			datasets: [],
 		},
 		options: {
 			plugins: {
@@ -122,32 +148,15 @@ onMounted(() => {
 				chartContainer.value.style.cursor = chartElement[0] ? "pointer" : "default"
 			},
 
-			onClick(event, categoryLabel, chart) {
+			onClick(event, elements) {
 				if (drilledDown.value) return
-				
-				const clickedCategoryName = chartData.value.labels[categoryLabel[0].index]
+				if (!elements.length) return
 
-				const sourceColors = chart.data.datasets.map((dataset) =>{
-					return [
-						dataset.borderColor,
-						dataset.backgroundColor,
-					]
-				})
+				const clickedCategoryName = overviewState.value.labels[elements[0].index]
 
-				wipeData(chart)
-
-				const sourceNames = Object.entries(aggregatedData.value).map(([sourceName, categoryMap]) => {
-					return sourceName
-				})
-
-				const sourceCategoryQty = Object.entries(aggregatedData.value).map(([sourceName, categoryMap]) => {
-					if (Object.keys(categoryMap).includes(clickedCategoryName)) return categoryMap[clickedCategoryName]
-					else return 0
-				})
-
-				addData(chart, sourceNames, sourceCategoryQty, sourceColors)
-				updateConfigByMutating(chart, clickedCategoryName, false)
+				clickedCategory.value = clickedCategoryName
 				drilledDown.value = true
+				showDrillDownView(clickedCategoryName)
 			},
 			scales: {
 				x: {
@@ -159,5 +168,7 @@ onMounted(() => {
 			},
 		},
 	})
+
+	await updateChart()
 })
 </script>

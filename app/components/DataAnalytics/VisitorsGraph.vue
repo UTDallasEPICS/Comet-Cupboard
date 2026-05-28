@@ -22,7 +22,7 @@
 				</UInputDate>
 			</div>
 		</div>
-		<canvas ref="lineContainer"></canvas>
+		<canvas ref="lineContainer"/>
 	</div>
 </template>
 
@@ -69,13 +69,10 @@ const updateChart = async () => {
 	})
 
 	const dates = Object.keys(totalVisitorData).map(formatLabel)
-	console.log("dates: ", dates)
 
 	const totalVisitors = Object.values(totalVisitorData)
-	console.log("totalVisitors: ", totalVisitors)
 
 	const uniqueVisitors = Object.values(uniqueVisitorData)
-	console.log("uniqueVisitors: ", uniqueVisitors)
 
 	if (!chart.value) return
 

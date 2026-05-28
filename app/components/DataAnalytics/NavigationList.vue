@@ -4,7 +4,7 @@
 			<p>Data Pages</p>
 		</template>
 		<div class="flex flex-col gap-2">
-			<UButton key="items-in" variant="outline" class="h-12 w-full justify-center" @click="emit('update:navigate-data', 'items-in')">
+			<UButton key="Items Donated" variant="outline" class="h-12 w-full justify-center" @click="emit('update:navigate-data', 'Items Donated')">
 				<p>Items In</p>
 			</UButton>
 			<UButton key="Inventory" variant="outline" class="h-12 w-full justify-center" @click="emit('update:navigate-data', 'Inventory')">
@@ -16,7 +16,7 @@
 			<UButton key="Visitors" variant="outline" class="h-12 w-full justify-center" @click="emit('update:navigate-data', 'Visitors')">
 				<p>User Visits</p>
 			</UButton>
-			<UButton key="items-in" variant="outline" class="h-12 w-full justify-center" @click="emit('update:navigate-data', 'items-in')">
+			<UButton key="Items Donated" variant="outline" class="h-12 w-full justify-center" @click="emit('update:navigate-data', 'Items Donated')">
 				<p>Audit Log</p>
 			</UButton>
 		</div>

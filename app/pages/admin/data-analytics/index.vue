@@ -15,6 +15,7 @@
 				<DataAnalyticsInventoryGraph v-if="currentView === 'Inventory'"/>
 				<DataAnalyticsSourceContributionGraph v-else-if="currentView === 'Source Contribution'"/>
 				<DataAnalyticsVisitorsGraph v-else-if="currentView === 'Visitors'"/>
+				<DataAnalyticsItemsDonated v-else-if="currentView === 'Items Donated'"/>
 			</div>
 		</div>
 
@@ -25,5 +26,5 @@
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, elements } from 'chart.js'
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const currentView = ref<'Inventory' | 'Source Contribution' | 'Visitors'>('Inventory')
+const currentView = ref<'Inventory' | 'Source Contribution' | 'Visitors' | 'Items Donated'>('Inventory')
 </script>
