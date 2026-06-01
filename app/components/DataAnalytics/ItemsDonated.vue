@@ -26,7 +26,7 @@
 	</div>
 
 	<div>
-		<button v-if="drilledDown" class="rounded-lg border border-solid px-3 py-1" style="cursor: pointer" @click="resetChart">Back</button>
+		<button v-if="firstDrillDown || secondDrillDown" class="rounded-lg border border-solid px-3 py-1" style="cursor: pointer" @click="resetChart">Back</button>
 	</div>
 </template>
 
@@ -48,154 +48,177 @@ const modelValue = shallowRef({
 	end: initialEnd,
 })
 
-// const updateChart = async () => {
-//     if (!modelValue.value.start || !modelValue.value.end) return
-// }
-
-const { data: sources } = await useFetch("/api/head-admin/data/source")
-
+const data = ref({})
 const chartContainer = useTemplateRef("barContainer")
+const chart = shallowRef(null)
+const firstDrillDown = ref(false)
+const secondDrillDown = ref(false)
+const selectedTimeLevel = ref<string | null>(null)
+const clickedCategory = ref<string | null>(null)
+const overviewState = shallowRef<{ labels: string[]; datasets: { label: string; data: number[] }[] }>({
+	labels: [],
+	datasets: [],
+})
 
-const aggregatedData = computed(() => {
-	if (!sources.value) return []
+const updateChart = async () => {
+	if (!modelValue.value.start || !modelValue.value.end) return
 
-	const data = sources.value.flatMap((source) => {
-		return source.ItemCountChanges.map((change) => ({
-			sourceName: source.name,
-			categoryName: change.Item.categoryName,
-			amountChanged: change.amountChanged,
-		}))
+	firstDrillDown.value = false
+	secondDrillDown.value = false
+	selectedTimeLevel.value = null
+	clickedCategory.value = null
+
+	const itemChangesData = await $fetch("/api/head-admin/data/itemsIn", {
+		query: {
+			timeLevel: grouping.value,
+			startDate: modelValue.value.start ? modelValue.value.start.toDate(tz).toISOString() : undefined,
+			endDate: modelValue.value.end ? modelValue.value.end.toDate(tz).toISOString() : undefined,
+		}
 	})
 
-	const total = {}
-	for (const dict of data) {
-		if (!(dict.sourceName in total)) {
-			total[dict.sourceName] = {}
-		}
-		if (!(dict.categoryName in total[dict.sourceName])) {
-			total[dict.sourceName][dict.categoryName] = dict.amountChanged
-		} else {
-			total[dict.sourceName][dict.categoryName] += dict.amountChanged
-		}
+	data.value = itemChangesData
+	console.log(itemChangesData)
+	
+	const formatted = {}
+	Object.entries(itemChangesData).forEach(([key, value]) => {
+		formatted[formatLabel(key)] = value
+	})
+	data.value = formatted
+
+	const dateLabel = Object.keys(itemChangesData).map(formatLabel)
+	console.log ("labels", dateLabel)
+
+	const restocks = Object.values(itemChangesData)
+
+	const restockedQty = restocks.map((date) => {
+		return Object.values(date).reduce((sum: number, category: any) => {
+			return sum + category.total
+		}, 0)
+	})
+
+	console.log(restockedQty)
+
+	overviewState.value = {
+		labels: dateLabel,
+		datasets: [{
+			label: "Items Donated",
+			data: restockedQty
+		}]
 	}
 
-	return total
-})
-
-const chartData = computed(() => {
-	const categories = [...new Set(Object.values(aggregatedData.value).flatMap((obj) => Object.keys(obj)))]
-
-	const datasets = Object.entries(aggregatedData.value).map(([sourceNames, categoryMap]) => ({
-		label: sourceNames,
-		data: categories.map((cat) => categoryMap[cat] || 0),
-	}))
-
-	return {
-		labels: categories,
-		datasets,
-	}
-})
-
-function addData(chart, labels, newData, sourceColors) {
-	chart.data.labels = labels
-	chart.data.datasets = [
-		{
-			data: newData,
-			hoverBorderColor: "black",
-			hoverBorderWidth: 2,
-			borderColor: sourceColors.map(c => c[0]),
-			backgroundColor: sourceColors.map(c => c[1]),
-		},
-	]
-	chart.update()
-}
-
-function updateConfigByMutating(chart, title, showLegend) {
-    chart.options.plugins.title.text = title
-	chart.options.plugins.legend.display = showLegend
-    chart.update();
-}
-
-function resetToOriginal(chart, categories, originalSourcesData){
-	chart.data.labels = categories
-	chart.data.datasets = originalSourcesData
-	chart.update()
-}
-
-function wipeData(chart) {
-	chart.data.labels = []
-	chart.data.datasets = []
-	chart.update()
-}
-
-function resetChart() {
-	wipeData(chart.value)
-	updateConfigByMutating(chart.value, 'Source Contributions')
-	resetToOriginal(chart.value, originalCategoryLabels, originalSourcesData)
+	chart.value.data.labels = overviewState.value.labels
+	chart.value.data.datasets = overviewState.value.datasets
 	chart.value.update()
-	drilledDown.value = false
 }
 
-const chart = shallowRef(null)
-const originalCategoryLabels = chartData.value.labels
-const originalSourcesData = chartData.value.datasets
-const drilledDown = ref(false)
+watch([modelValue, grouping], () =>{
+	if (!modelValue.value.start || !modelValue.value.end) return
+	updateChart()
+})
 
-onMounted(() => {
+const showCategoryDrillDownView = (date: string) => {
+	if (!chart.value) return
+
+	const categoryData = data.value[date]
+	console.log("categoryData: ",categoryData)
+
+	const categoryLabels = Object.keys(categoryData)
+	const categoryValues = categoryLabels.map((cat) => {
+		return categoryData[cat].total
+	})
+
+	chart.value.data.labels = categoryLabels
+	chart.value.data.datasets = [{
+		label: `Categories Restocked on ${date}`,
+		data: categoryValues,
+	}]
+	chart.value.update()
+}
+
+const showItemDrillDownView = (category: string) => {
+	if (!chart.value) return
+
+	const itemData = data.value[selectedTimeLevel.value][category].items
+
+	const itemLabels = Object.keys(itemData)
+	const itemValues = Object.values(itemData)
+
+	chart.value.data.labels = itemLabels
+	chart.value.data.datasets = [{
+		label: `${category} on ${selectedTimeLevel.value}`,
+		data: itemValues,
+	}]
+	chart.value.update()
+}
+
+const resetChart = () => {
+	if (!chart.value) return
+
+	if (secondDrillDown.value) {
+		secondDrillDown.value = false
+		clickedCategory.value = null
+		showCategoryDrillDownView(selectedTimeLevel.value!)
+		return
+	}
+
+	firstDrillDown.value = false
+	selectedTimeLevel.value = null
+
+	chart.value.data.labels = overviewState.value.labels
+	chart.value.data.datasets = overviewState.value.datasets
+	chart.value.update()
+}
+
+const formatLabel = (key: string) => {
+	if (grouping.value === "Semester") {
+		return key
+	}
+	
+	if (grouping.value === "Week") {
+		const [start, end] = key.split(" - ")
+
+		return `${df.format(new Date(start))} - ${df.format(new Date(end))}`
+	} 
+
+	if (grouping.value === "Month") {
+		return `${dfMonth.format(new Date(key))}`
+	}
+
+	return df.format(new Date(key))
+}
+
+onMounted(async () => {
 	chart.value = new Chart(chartContainer.value!, {
 		type: "bar",
 		data: {
-			labels: chartData.value.labels,
-			datasets: chartData.value.datasets,
+			labels: [],
+			datasets: [],
 		},
 		options: {
-			plugins: {
-				title: {
-					display: true,
-					text: "Source Contributions",
-				},
-			},
 			responsive: true,
 			onHover(event, chartElement) {
 				chartContainer.value.style.cursor = chartElement[0] ? "pointer" : "default"
 			},
 
-			onClick(event, categoryLabel, chart) {
-				if (drilledDown.value) return
+			onClick(event, elements) {
+				if (secondDrillDown.value) return
+				if (!elements.length) return
 				
-				const clickedCategoryName = chartData.value.labels[categoryLabel[0].index]
-
-				const sourceColors = chart.data.datasets.map((dataset) =>{
-					return [
-						dataset.borderColor,
-						dataset.backgroundColor,
-					]
-				})
-
-				wipeData(chart)
-
-				const sourceNames = Object.entries(aggregatedData.value).map(([sourceName, categoryMap]) => {
-					return sourceName
-				})
-
-				const sourceCategoryQty = Object.entries(aggregatedData.value).map(([sourceName, categoryMap]) => {
-					if (Object.keys(categoryMap).includes(clickedCategoryName)) return categoryMap[clickedCategoryName]
-					else return 0
-				})
-
-				addData(chart, sourceNames, sourceCategoryQty, sourceColors)
-				updateConfigByMutating(chart, clickedCategoryName, false)
-				drilledDown.value = true
-			},
-			scales: {
-				x: {
-					stacked: true,
-				},
-				y: {
-					stacked: true,
-				},
+				if (firstDrillDown.value){
+					const clickedCategoryName = chart.value.data.labels[elements[0].index]
+					clickedCategory.value = clickedCategoryName
+					secondDrillDown.value = true
+					showItemDrillDownView(clickedCategoryName)
+				} else {
+					const clickedDate = overviewState.value.labels[elements[0].index]
+					selectedTimeLevel.value = clickedDate
+					firstDrillDown.value = true
+					showCategoryDrillDownView(clickedDate)
+				}
 			},
 		},
 	})
+
+	await updateChart()
 })
 </script>

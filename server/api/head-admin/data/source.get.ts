@@ -68,7 +68,5 @@ export default defineSafeHandler(async (event) => {
 		}
 	}
 
-	console.log(total)
-
 	return total
 })

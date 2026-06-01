@@ -58,7 +58,6 @@ const updateChart = async () => {
 			endDate: modelValue.value.end ? modelValue.value.end.toDate(tz).toISOString() : undefined,
 		}
 	})
-	console.log("totalVisitorData: ", totalVisitorData)
 
 	const uniqueVisitorData = await $fetch("/api/head-admin/data/uniqueVisits", {
 		query: {

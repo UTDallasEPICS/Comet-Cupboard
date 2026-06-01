@@ -16,7 +16,7 @@
 			<UButton key="Visitors" variant="outline" class="h-12 w-full justify-center" @click="emit('update:navigate-data', 'Visitors')">
 				<p>User Visits</p>
 			</UButton>
-			<UButton key="Items Donated" variant="outline" class="h-12 w-full justify-center" @click="emit('update:navigate-data', 'Items Donated')">
+			<UButton key="Audit Log" variant="outline" class="h-12 w-full justify-center" @click="emit('update:navigate-data', 'Audit Log')">
 				<p>Audit Log</p>
 			</UButton>
 		</div>

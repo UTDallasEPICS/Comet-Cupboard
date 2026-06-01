@@ -20,7 +20,7 @@ export default defineSafeHandler(async (event) => {
 
 	const { timeLevel, startDate, endDate } = result.data
 
-	const sources = await prisma.itemCountChange.findMany({
+	const itemChanges = await prisma.itemCountChange.findMany({
 		include: {
 			Item: {
 				select: {
@@ -29,11 +29,6 @@ export default defineSafeHandler(async (event) => {
 					quantity: true,
 				},
 			},
-            Source:{ 
-                select: {
-                    name: true
-                }
-            }
 		},
 		where: {
 			date: {
@@ -46,18 +41,65 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
-    const rows = sources.map((row) => {
+    const rows = itemChanges.map((row) => {
         return{
             date: row.date,
             amountChanged: row.amountChanged,
             itemName: row.Item.name,
             itemCategory: row.Item.categoryName,
             itemQty: row.Item.quantity,
-            sourceName: row.Source.name
         }
     })
 
-    console.log("rows: ", rows)
+	if (rows.length === 0) {
+		return {}
+	}
+	
+	const firstDate = startDate ?? new Date(rows[0]?.date)
+	const lastDate = endDate ?? new Date(rows[rows.length - 1]?.date)
+	const lastTimeLevel = getTimeLevel(lastDate, timeLevel)
+	const allTimeLevels = {}
+	let curDate = new Date(firstDate)
+	while (curDate <= lastDate || getTimeLevel(curDate, timeLevel) === lastTimeLevel) {
+		const level = getTimeLevel(curDate, timeLevel)
+		if (allTimeLevels[level] == undefined) {
+			allTimeLevels[level] = {}
+		}
 
-	return sources
+		// Increment days within time range
+		switch (timeLevel) {
+			case "Day":
+				curDate.setDate(curDate.getDate() + 1)
+				break
+			case "Week":
+				curDate.setDate(curDate.getDate() + 7)
+				break
+			case "Month":
+				curDate.setMonth(curDate.getMonth() + 1)
+				break
+			case "Semester":
+				curDate.setMonth(curDate.getMonth() + 1)
+				break
+		}
+	}
+
+	for (const row of rows) {
+		const level = getTimeLevel(row.date, timeLevel)
+		const category = row.itemCategory
+		const item = row.itemName
+
+		if (!(category in allTimeLevels[level])) {
+			allTimeLevels[level][category] = { total: 0, items: {} }
+		}
+
+		allTimeLevels[level][category].total += row.amountChanged
+
+		if (!(item in allTimeLevels[level][category].items)){
+			allTimeLevels[level][category].items[item] = 0
+		}
+
+		allTimeLevels[level][category].items[item] += row.amountChanged
+	}
+
+	return allTimeLevels
 })

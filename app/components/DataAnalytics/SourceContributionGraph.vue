@@ -137,12 +137,6 @@ onMounted(async () => {
 			datasets: [],
 		},
 		options: {
-			plugins: {
-				title: {
-					display: true,
-					text: "Source Contributions",
-				},
-			},
 			responsive: true,
 			onHover(event, chartElement) {
 				chartContainer.value.style.cursor = chartElement[0] ? "pointer" : "default"
