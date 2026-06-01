@@ -68,7 +68,7 @@ const updateChart = async () => {
 	selectedTimeLevel.value = null
 	clickedCategory.value = null
 
-	const itemChangesData = await $fetch("/api/head-admin/data/itemsIn", {
+	const itemsDistributedData = await $fetch("/api/head-admin/data/itemsOut", {
 		query: {
 			timeLevel: grouping.value,
 			startDate: modelValue.value.start ? modelValue.value.start.toDate(tz).toISOString() : undefined,
@@ -76,19 +76,19 @@ const updateChart = async () => {
 		}
 	})
 
-	data.value = itemChangesData
+	data.value = itemsDistributedData
 	
 	const formatted = {}
-	Object.entries(itemChangesData).forEach(([key, value]) => {
+	Object.entries(itemsDistributedData).forEach(([key, value]) => {
 		formatted[formatLabel(key)] = value
 	})
 	data.value = formatted
 
-	const dateLabels = Object.keys(itemChangesData).map(formatLabel)
+	const dateLabels = Object.keys(itemsDistributedData).map(formatLabel)
 
-	const restocks = Object.values(itemChangesData)
+	const distributions = Object.values(itemsDistributedData)
 
-	const restockedQty = restocks.map((date) => {
+	const distributedQty = distributions.map((date) => {
 		return Object.values(date).reduce((sum: number, category: any) => {
 			return sum + category.total
 		}, 0)
@@ -97,8 +97,8 @@ const updateChart = async () => {
 	overviewState.value = {
 		labels: dateLabels,
 		datasets: [{
-			label: "Items Donated",
-			data: restockedQty
+			label: "Items Distributed",
+			data: distributedQty
 		}]
 	}
 
@@ -124,7 +124,7 @@ const showCategoryDrillDownView = (date: string) => {
 
 	chart.value.data.labels = categoryLabels
 	chart.value.data.datasets = [{
-		label: `Categories Restocked on ${date}`,
+		label: `Categories distributed on ${date}`,
 		data: categoryValues,
 	}]
 	chart.value.update()
@@ -140,7 +140,7 @@ const showItemDrillDownView = (category: string) => {
 
 	chart.value.data.labels = itemLabels
 	chart.value.data.datasets = [{
-		label: `${category} on ${selectedTimeLevel.value}`,
+		label: `${category} distributed on ${selectedTimeLevel.value}`,
 		data: itemValues,
 	}]
 	chart.value.update()

@@ -20,50 +20,52 @@ export default defineSafeHandler(async (event) => {
 
 	const { timeLevel, startDate, endDate } = result.data
 
-	const itemChanges = await prisma.itemCountChange.findMany({
+	const order = await prisma.order.findMany({
 		include: {
-			Item: {
-				select: {
-					name: true,
-					categoryName: true,
-					quantity: true,
+			OrderItems: {
+				include: {
+					Item: {
+						select: {
+							categoryName: true,
+							name: true,
+						},
+					},
 				},
 			},
 		},
 		where: {
-			date: {
+			createdAt: {
 				gte: startDate,
 				lte: endDate,
 			},
 		},
 		orderBy: {
-			date: "asc",
+			createdAt: "asc",
 		},
 	})
 
-    const rows = itemChanges.map((row) => {
-        return{
-            date: row.date,
-            amountChanged: row.amountChanged,
-            itemName: row.Item.name,
-            itemCategory: row.Item.categoryName,
-            itemQty: row.Item.quantity,
-        }
-    })
+	const rows = order.flatMap((order) => {
+		return order.OrderItems.map((item) => ({
+			date: order.createdAt,
+			distributionCount: item.count,
+			itemCategory: item.Item.categoryName,
+			itemName: item.Item.name,
+		}))
+	})
 
 	if (rows.length === 0) {
 		return {}
 	}
-	
+
 	const firstDate = startDate ?? new Date(rows[0]?.date)
 	const lastDate = endDate ?? new Date(rows[rows.length - 1]?.date)
 	const lastTimeLevel = getTimeLevel(lastDate, timeLevel)
-	const donationsByTimeLevel = {}
+	const distributionsByTimeLevel = {}
 	let curDate = new Date(firstDate)
 	while (curDate <= lastDate || getTimeLevel(curDate, timeLevel) === lastTimeLevel) {
 		const level = getTimeLevel(curDate, timeLevel)
-		if (donationsByTimeLevel[level] == undefined) {
-			donationsByTimeLevel[level] = {}
+		if (distributionsByTimeLevel[level] == undefined) {
+			distributionsByTimeLevel[level] = {}
 		}
 
 		// Increment days within time range
@@ -88,18 +90,20 @@ export default defineSafeHandler(async (event) => {
 		const category = row.itemCategory
 		const item = row.itemName
 
-		if (!(category in donationsByTimeLevel[level])) {
-			donationsByTimeLevel[level][category] = { total: 0, items: {} }
+		if (!(category in distributionsByTimeLevel[level])) {
+			distributionsByTimeLevel[level][category] = { total: 0, items: {} }
 		}
 
-		donationsByTimeLevel[level][category].total += row.amountChanged
+		distributionsByTimeLevel[level][category].total += row.distributionCount
 
-		if (!(item in donationsByTimeLevel[level][category].items)){
-			donationsByTimeLevel[level][category].items[item] = 0
+		if (!(item in distributionsByTimeLevel[level][category].items)) {
+			distributionsByTimeLevel[level][category].items[item] = 0
 		}
 
-		donationsByTimeLevel[level][category].items[item] += row.amountChanged
+		distributionsByTimeLevel[level][category].items[item] += row.distributionCount
 	}
 
-	return donationsByTimeLevel
+    console.log(distributionsByTimeLevel)
+
+	return distributionsByTimeLevel
 })

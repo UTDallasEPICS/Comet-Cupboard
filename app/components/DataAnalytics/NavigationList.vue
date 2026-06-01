@@ -5,7 +5,10 @@
 		</template>
 		<div class="flex flex-col gap-2">
 			<UButton key="Items Donated" variant="outline" class="h-12 w-full justify-center" @click="emit('update:navigate-data', 'Items Donated')">
-				<p>Items In</p>
+				<p>Items Donated</p>
+			</UButton>
+			<UButton key="Items Distributed" variant="outline" class="h-12 w-full justify-center" @click="emit('update:navigate-data', 'Items Distributed')">
+				<p>Items Distributed</p>
 			</UButton>
 			<UButton key="Inventory" variant="outline" class="h-12 w-full justify-center" @click="emit('update:navigate-data', 'Inventory')">
 				<p>Current Inventory</p>
