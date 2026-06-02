@@ -22,11 +22,13 @@
 				</UInputDate>
 			</div>
 		</div>
-		<canvas ref="barContainer"/>
+		<canvas ref="barContainer" />
 	</div>
 
 	<div>
-		<button v-if="firstDrillDown || secondDrillDown" class="rounded-lg border border-solid px-3 py-1" style="cursor: pointer" @click="resetChart">Back</button>
+		<button v-if="firstDrillDown || secondDrillDown" class="rounded-lg border border-solid px-3 py-1" style="cursor: pointer" @click="resetChart">
+			Back
+		</button>
 	</div>
 </template>
 
@@ -73,11 +75,11 @@ const updateChart = async () => {
 			timeLevel: grouping.value,
 			startDate: modelValue.value.start ? modelValue.value.start.toDate(tz).toISOString() : undefined,
 			endDate: modelValue.value.end ? modelValue.value.end.toDate(tz).toISOString() : undefined,
-		}
+		},
 	})
 
 	data.value = itemChangesData
-	
+
 	const formatted = {}
 	Object.entries(itemChangesData).forEach(([key, value]) => {
 		formatted[formatLabel(key)] = value
@@ -96,18 +98,21 @@ const updateChart = async () => {
 
 	overviewState.value = {
 		labels: dateLabels,
-		datasets: [{
-			label: "Items Donated",
-			data: restockedQty
-		}]
+		datasets: [
+			{
+				label: "Items Donated",
+				data: restockedQty,
+			},
+		],
 	}
 
 	chart.value.data.labels = overviewState.value.labels
 	chart.value.data.datasets = overviewState.value.datasets
+	chart.value.options.plugins.title.text = 'Items Donated'
 	chart.value.update()
 }
 
-watch([modelValue, grouping], () =>{
+watch([modelValue, grouping], () => {
 	if (!modelValue.value.start || !modelValue.value.end) return
 	updateChart()
 })
@@ -123,10 +128,21 @@ const showCategoryDrillDownView = (date: string) => {
 	})
 
 	chart.value.data.labels = categoryLabels
-	chart.value.data.datasets = [{
-		label: `Categories Restocked on ${date}`,
-		data: categoryValues,
-	}]
+	if (grouping.value === "Day" || grouping.value === "Week") {
+		chart.value.data.datasets = [
+			{
+				data: categoryValues,
+			},
+		]
+		chart.value.options.plugins.title.text = `Categories restocked on ${date}`
+	} else {
+		chart.value.data.datasets = [
+			{
+				data: categoryValues,
+			},
+		]
+		chart.value.options.plugins.title.text = `Categories restocked in ${date}`
+	}
 	chart.value.update()
 }
 
@@ -139,10 +155,21 @@ const showItemDrillDownView = (category: string) => {
 	const itemValues = Object.values(itemData)
 
 	chart.value.data.labels = itemLabels
-	chart.value.data.datasets = [{
-		label: `${category} on ${selectedTimeLevel.value}`,
-		data: itemValues,
-	}]
+	if (grouping.value === "Day" || grouping.value === "Week") {
+		chart.value.data.datasets = [
+			{
+				data: itemValues,
+			},
+		]
+		chart.value.options.plugins.title.text = `${category} restocked on ${selectedTimeLevel.value}`
+	} else {
+		chart.value.data.datasets = [
+			{
+				data: itemValues,
+			},
+		]
+		chart.value.options.plugins.title.text = `${category} restocked in ${selectedTimeLevel.value}`
+	}
 	chart.value.update()
 }
 
@@ -168,12 +195,12 @@ const formatLabel = (key: string) => {
 	if (grouping.value === "Semester") {
 		return key
 	}
-	
+
 	if (grouping.value === "Week") {
 		const [start, end] = key.split(" - ")
 
 		return `${df.format(new Date(start))} - ${df.format(new Date(end))}`
-	} 
+	}
 
 	if (grouping.value === "Month") {
 		return `${dfMonth.format(new Date(key))}`
@@ -189,7 +216,16 @@ onMounted(async () => {
 			labels: [],
 			datasets: [],
 		},
+		plugins: [topLabelPlugin],
 		options: {
+			plugins: {
+				legend: {
+					display: false,
+				},
+				title: {
+					display: true,
+				},
+			},
 			responsive: true,
 			onHover(event, chartElement) {
 				chartContainer.value.style.cursor = chartElement[0] ? "pointer" : "default"
@@ -198,8 +234,8 @@ onMounted(async () => {
 			onClick(event, elements) {
 				if (secondDrillDown.value) return
 				if (!elements.length) return
-				
-				if (firstDrillDown.value){
+
+				if (firstDrillDown.value) {
 					const clickedCategoryName = chart.value.data.labels[elements[0].index]
 					clickedCategory.value = clickedCategoryName
 					secondDrillDown.value = true

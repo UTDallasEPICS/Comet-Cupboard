@@ -24,7 +24,11 @@ const overviewState = shallowRef<{ labels: string[]; datasets: { label: string; 
 const updateChart = async () => {
 	const currentInventoryData = await $fetch('/api/head-admin/data/category')
 
+	console.log(currentInventoryData)
+
 	const categories = Object.keys(currentInventoryData)
+
+	console.log("categories: ", categories)
 
 	const itemsInCategory = Object.values(currentInventoryData)
 
@@ -41,7 +45,7 @@ const updateChart = async () => {
 		datasets: [
 			{
 				label: "Current Inventory",
-				data: itemQty
+				data: itemQty,
 			}
 		]
 	}
@@ -55,18 +59,21 @@ const showDrillDownView = (categoryName: string) => {
 	if (!chart.value) return
 
 	const categoryItems = itemData.value[categoryName]
-	console.log(categoryItems)
 
 	const drilledDownLabels = Object.keys(categoryItems)
-	console.log(drilledDownLabels)
 
 	chart.value.data.labels = drilledDownLabels
 	chart.value.data.datasets = [
 		{
 			label: `${categoryName} Inventory`,
-			data: Object.values(categoryItems)
+			data: Object.values(categoryItems),
+			// backgroundColor: drilledDownLabels.map(item => getItemColor(categoryName))
 		},
 	]
+	chart.value.options.plugins.title = {
+		display: true,
+		text: categoryName,
+	}
 	chart.value.update()
 }
 
@@ -79,6 +86,7 @@ const resetChart = () => {
 
 	chart.value.data.labels = overviewState.value.labels
 	chart.value.data.datasets = overviewState.value.datasets
+	chart.value.options.plugins.title.display = false
 	chart.value.update()
 }
 
@@ -92,13 +100,16 @@ onMounted(async() => {
 					data: [],
 					hoverBorderColor: 'black',
 					hoverBorderWidth: 2,
-					// backgroundColor: colors,
 				},
 			],
 		},
+		plugins: [topLabelPlugin], 
 		options: {
 			plugins:{
 				legend:{
+					display: true
+				},
+				title:{
 					display: false
 				}
 			},

@@ -114,6 +114,11 @@ const showDrillDownView = (categoryName: string) => {
 		data: drilledDownData,
 		backgroundColor: sourceColors.value
 	}]
+	chart.value.options.plugins.legend.display = false
+	chart.value.options.plugins.title = {
+		display: true,
+		text: categoryName,
+	}
 	chart.value.update()
 }
 
@@ -126,6 +131,8 @@ const resetChart = () => {
 
 	chart.value.data.labels = overviewState.value.labels
 	chart.value.data.datasets = overviewState.value.datasets
+	chart.value.options.plugins.legend.display = true
+	chart.value.options.plugins.title.display = false
 	chart.value.update()
 }
 
@@ -137,6 +144,14 @@ onMounted(async () => {
 			datasets: [],
 		},
 		options: {
+			plugins:{
+				legend:{
+					display: true
+				},
+				title:{
+					display: false
+				}
+			},
 			responsive: true,
 			onHover(event, chartElement) {
 				chartContainer.value.style.cursor = chartElement[0] ? "pointer" : "default"
