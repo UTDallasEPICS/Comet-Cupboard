@@ -132,6 +132,7 @@ const showCategoryDrillDownView = (date: string) => {
 		chart.value.data.datasets = [
 			{
 				data: categoryValues,
+				backgroundColor: categoryLabels.map(c => getCategoryColor(c)),
 			},
 		]
 		chart.value.options.plugins.title.text = `Categories distributed on ${date}`
@@ -139,6 +140,7 @@ const showCategoryDrillDownView = (date: string) => {
 		chart.value.data.datasets = [
 			{
 				data: categoryValues,
+				backgroundColor: categoryLabels.map(c => getCategoryColor(c)),
 			},
 		]
 		chart.value.options.plugins.title.text = `Categories distributed in ${date}`
@@ -159,6 +161,7 @@ const showItemDrillDownView = (category: string) => {
 		chart.value.data.datasets = [
 			{
 				data: itemValues,
+				backgroundColor: getItemColor(category),
 			},
 		]
 		chart.value.options.plugins.title.text = `${category} distributed on ${selectedTimeLevel.value}`
@@ -166,6 +169,7 @@ const showItemDrillDownView = (category: string) => {
 		chart.value.data.datasets = [
 			{
 				data: itemValues,
+				backgroundColor: getItemColor(category),
 			},
 		]
 		chart.value.options.plugins.title.text = `${category} distributed in ${selectedTimeLevel.value}`

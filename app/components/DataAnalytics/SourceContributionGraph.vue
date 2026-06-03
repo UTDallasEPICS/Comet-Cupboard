@@ -45,7 +45,6 @@ const chartContainer = useTemplateRef("barContainer")
 const chart = shallowRef(null)
 const drilledDown = ref(false)
 const clickedCategory = ref<string | null>(null)
-const sourceColors = shallowRef([])
 const overviewState = shallowRef({
 	labels: [],
 	datasets: [],
@@ -87,10 +86,6 @@ const updateChart = async () => {
 		chart.value.data.labels = overviewState.value.labels
 		chart.value.data.datasets = overviewState.value.datasets
 		chart.value.update()
-
-		sourceColors.value = overviewState.value.datasets.map((_, i) =>
-			chart.value.getDatasetMeta(i).controller.getStyle(0).backgroundColor
-		)
 	}
 }
 
@@ -112,7 +107,6 @@ const showDrillDownView = (categoryName: string) => {
 	chart.value.data.datasets = [{
 		label: categoryName,
 		data: drilledDownData,
-		backgroundColor: sourceColors.value
 	}]
 	chart.value.options.plugins.legend.display = false
 	chart.value.options.plugins.title = {

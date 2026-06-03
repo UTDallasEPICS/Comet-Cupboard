@@ -24,11 +24,7 @@ const overviewState = shallowRef<{ labels: string[]; datasets: { label: string; 
 const updateChart = async () => {
 	const currentInventoryData = await $fetch('/api/head-admin/data/category')
 
-	console.log(currentInventoryData)
-
 	const categories = Object.keys(currentInventoryData)
-
-	console.log("categories: ", categories)
 
 	const itemsInCategory = Object.values(currentInventoryData)
 
@@ -46,6 +42,7 @@ const updateChart = async () => {
 			{
 				label: "Current Inventory",
 				data: itemQty,
+				backgroundColor: categories.map(c => getCategoryColor(c))
 			}
 		]
 	}
@@ -67,7 +64,7 @@ const showDrillDownView = (categoryName: string) => {
 		{
 			label: `${categoryName} Inventory`,
 			data: Object.values(categoryItems),
-			// backgroundColor: drilledDownLabels.map(item => getItemColor(categoryName))
+			backgroundColor: getItemColor(categoryName)
 		},
 	]
 	chart.value.options.plugins.title = {
@@ -107,7 +104,7 @@ onMounted(async() => {
 		options: {
 			plugins:{
 				legend:{
-					display: true
+					display: false
 				},
 				title:{
 					display: false

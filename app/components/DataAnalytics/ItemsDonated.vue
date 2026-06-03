@@ -127,18 +127,23 @@ const showCategoryDrillDownView = (date: string) => {
 		return categoryData[cat].total
 	})
 
+	console.log("categoryLabels",categoryLabels)
+
 	chart.value.data.labels = categoryLabels
 	if (grouping.value === "Day" || grouping.value === "Week") {
 		chart.value.data.datasets = [
 			{
 				data: categoryValues,
+				backgroundColor: categoryLabels.map(c => getCategoryColor(c))
 			},
 		]
+		console.log(chart.value.data.datasets)
 		chart.value.options.plugins.title.text = `Categories restocked on ${date}`
 	} else {
 		chart.value.data.datasets = [
 			{
 				data: categoryValues,
+				backgroundColor: categoryLabels.map(c => getCategoryColor(c)),
 			},
 		]
 		chart.value.options.plugins.title.text = `Categories restocked in ${date}`
@@ -159,6 +164,7 @@ const showItemDrillDownView = (category: string) => {
 		chart.value.data.datasets = [
 			{
 				data: itemValues,
+				backgroundColor: getItemColor(category)
 			},
 		]
 		chart.value.options.plugins.title.text = `${category} restocked on ${selectedTimeLevel.value}`
@@ -166,6 +172,7 @@ const showItemDrillDownView = (category: string) => {
 		chart.value.data.datasets = [
 			{
 				data: itemValues,
+				backgroundColor: getItemColor(category)
 			},
 		]
 		chart.value.options.plugins.title.text = `${category} restocked in ${selectedTimeLevel.value}`
