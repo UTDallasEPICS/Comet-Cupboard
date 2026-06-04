@@ -3,7 +3,7 @@
 		<div class="flex items-center justify-end">
 			<div class="justify-left mr-2 flex flex-col gap-1">
 				<p class="text-right text-sm">Time Level</p>
-				<USelect v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" class="w-28" />
+				<USelect v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" class="w-28" @update:model-value="groupingChange = true" />
 			</div>
 
 			<div class="flex flex-col justify-center gap-1">
@@ -33,6 +33,7 @@ import { DateFormatter, getLocalTimeZone, today } from "@internationalized/date"
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const grouping = ref("Day")
+const groupingChange = ref(false)
 const inputDate = useTemplateRef("inputDate")
 const df = new DateFormatter("en-US", { month: "short", day: "numeric" })
 const dfMonth = new DateFormatter("en-US", { month: "short" })
@@ -46,6 +47,27 @@ const chart = shallowRef<Chart | null>(null)
 const modelValue = shallowRef({
 	start: initialEnd.subtract({ days: 14 }),
 	end: initialEnd,
+})
+
+const automatedGrouping = computed(() => {
+	if (!modelValue.value.start || !modelValue.value.end) {
+		return "Day"
+	}
+
+	const start = modelValue.value.start.toDate(tz)
+	const end = modelValue.value.end.toDate(tz)
+
+	const diffDays = Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+
+	if (diffDays <= 30) {
+		return "Day"
+	} else if (diffDays <= 90) {
+		return "Week"
+	} else if (diffDays <= 180){
+		return "Month"
+	} else {
+		return "Semester"
+	}
 })
 
 const updateChart = async () => {
@@ -89,20 +111,11 @@ watch([modelValue, grouping], () =>{
 	updateChart()
 })
 
-// watch(modelValue, () => {
-// 	if (!modelValue.value.start || !modelValue.value.end) return
-// 	const start = modelValue.value.start.toDate(tz)
-// 	const end = modelValue.value.end.toDate(tz)
-// 	const diffDays = Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
-
-// 	if (diffDays <= 30) {
-// 		grouping.value = "Day"
-// 	} else if (diffDays <= 90) {
-// 		grouping.value = "Week"
-// 	} else {
-// 		grouping.value = "Month"
-// 	}
-// }
+watch(automatedGrouping, (newGrouping) => {
+	if (groupingChange.value === false) {
+		grouping.value = newGrouping
+	}
+})
 
 const formatLabel = (key: string) => {
 	if (grouping.value === "Semester") {

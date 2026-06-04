@@ -9,7 +9,6 @@ export const CATEGORY_PALETTE = [
   '#FF9DA7',
   '#9C755F',
   '#BAB0AC',
-
   '#86BCB6',
   '#D37295',
   '#8CD17D',
@@ -20,7 +19,6 @@ export const CATEGORY_PALETTE = [
   '#FFBE7D',
   '#FF9D9A',
   '#9D7660',
-
   '#D7B5A6',
   '#CFCFCF',
   '#8E6C8A',
@@ -30,7 +28,7 @@ export const CATEGORY_PALETTE = [
   '#6B6ECF',
   '#CEDB9C',
   '#BD9E39',
-  '#E7BA52'
+  '#E7BA52',
 ]
 
 const categoryColors = new Map<string, string>()
@@ -38,7 +36,7 @@ let nextColorIndex = 0
 
 export function getCategoryColor(category: string){
   if(!categoryColors.has(category)){
-    const color = CATEGORY_PALETTE[nextColorIndex]
+    const color = CATEGORY_PALETTE[nextColorIndex % CATEGORY_PALETTE.length]
 
     categoryColors.set(category, color)
     nextColorIndex++
