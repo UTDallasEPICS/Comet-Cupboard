@@ -69,9 +69,12 @@ const updateChart = async () => {
 	// build sources for stack
 	const sources = Object.keys(sourceContributionData)
 
+	console.log("sources: ",sources)
+
 	const datasets = sources.map((source) => ({
 		label: source,
 		data: categories.map((category) => sourceContributionData[source][category] || 0),
+		backgroundColor: getSourceColor(source)
 	}))
 
 	// save overview chart
@@ -79,6 +82,8 @@ const updateChart = async () => {
 		labels: categories,
 		datasets,
 	}
+
+	console.log("datasets: ",datasets)
 
 	if (drilledDown.value && clickedCategory.value) {
 		showDrillDownView(clickedCategory.value)
@@ -116,6 +121,16 @@ const showDrillDownView = (categoryName: string) => {
 	chart.value.update()
 }
 
+// const sumDataLabel = {
+// 	id: 'sumDataLabel',
+// 	afterDatasetsDraw(chart, args, plugins){
+// 		const { ctx, scales: {y} } = chart;
+
+// 		console.log(chart.getDatasetMeta(0))
+// 		console.log(chart.getDatasetMeta(1))
+// 	}
+// }
+
 const resetChart = () => {
 	if (!chart.value) return
 
@@ -137,6 +152,7 @@ onMounted(async () => {
 			labels: [],
 			datasets: [],
 		},
+		// plugins: [sumDataLabel],
 		options: {
 			plugins:{
 				legend:{

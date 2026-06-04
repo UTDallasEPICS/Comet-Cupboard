@@ -1,4 +1,4 @@
-export const CATEGORY_PALETTE = [
+const COLOR_PALETTE = [
   '#4E79A7',
   '#F28E2B',
   '#E15759',
@@ -9,7 +9,6 @@ export const CATEGORY_PALETTE = [
   '#FF9DA7',
   '#9C755F',
   '#BAB0AC',
-
   '#86BCB6',
   '#D37295',
   '#8CD17D',
@@ -20,7 +19,6 @@ export const CATEGORY_PALETTE = [
   '#FFBE7D',
   '#FF9D9A',
   '#9D7660',
-
   '#D7B5A6',
   '#CFCFCF',
   '#8E6C8A',
@@ -34,19 +32,33 @@ export const CATEGORY_PALETTE = [
 ]
 
 const categoryColors = new Map<string, string>()
+const sourceColors = new Map<string, string>()
 let nextColorIndex = 0
 
 export function getCategoryColor(category: string){
   if(!categoryColors.has(category)){
-    const color = CATEGORY_PALETTE[nextColorIndex]
+    const categoryColor = COLOR_PALETTE[nextColorIndex % COLOR_PALETTE.length]
 
-    categoryColors.set(category, color)
+    categoryColors.set(category, categoryColor)
     nextColorIndex++
   }
 
   console.log(categoryColors)
 
-	return categoryColors.get(category) ?? CATEGORY_PALETTE[0]
+	return categoryColors.get(category)
+}
+
+export function getSourceColor(source: string){
+  if(!sourceColors.has(source)){
+    const sourceColor = COLOR_PALETTE[nextColorIndex % COLOR_PALETTE.length]
+
+    sourceColors.set(source, sourceColor)
+    nextColorIndex++
+  }
+
+  console.log(sourceColors)
+
+	return sourceColors.get(source)
 }
 
 export function getItemColor(category: string){
