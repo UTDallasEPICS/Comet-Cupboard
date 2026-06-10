@@ -111,7 +111,5 @@ export default defineSafeHandler(async (event) => {
 		distributionsByTimeLevel[level][category].items[item] += row.distributionCount
 	}
 
-    console.log(distributionsByTimeLevel)
-
 	return distributionsByTimeLevel
 })
