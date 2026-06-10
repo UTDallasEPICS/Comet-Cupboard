@@ -18,6 +18,14 @@ export default defineSafeHandler(async (event) => {
 
 	const { startDate, endDate } = result.data
 
+	if(startDate) {
+		startDate.setHours(0, 0, 0, 0)
+	}
+
+	if(endDate) {
+		endDate.setHours(23, 59, 59, 999)
+	}
+
 	const sources = await prisma.itemCountChange.findMany({
 		include: {
 			Item: {

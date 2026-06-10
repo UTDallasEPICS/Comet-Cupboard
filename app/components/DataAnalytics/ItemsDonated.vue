@@ -114,6 +114,14 @@ const updateChart = async () => {
 
 watch([modelValue, grouping], () => {
 	if (!modelValue.value.start || !modelValue.value.end) return
+	const start = modelValue.value.start.toDate(tz)
+    const end = modelValue.value.end.toDate(tz)
+	
+	console.log("Start Date:", start)
+    console.log("End Date:", end)
+
+    console.log("Start ISO:", start.toISOString())
+    console.log("End ISO:", end.toISOString())
 	updateChart()
 })
 

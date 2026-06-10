@@ -69,12 +69,13 @@ const updateChart = async () => {
 	// build sources for stack
 	const sources = Object.keys(sourceContributionData)
 
-	console.log("sources: ",sources)
-
 	const datasets = sources.map((source) => ({
 		label: source,
 		data: categories.map((category) => sourceContributionData[source][category] || 0),
-		backgroundColor: getSourceColor(source)
+		backgroundColor: getSourceColor(source)[0],
+		borderColor: getSourceColor(source)[1],
+		borderWidth: 2,
+		fill: false,
 	}))
 
 	// save overview chart
@@ -82,8 +83,6 @@ const updateChart = async () => {
 		labels: categories,
 		datasets,
 	}
-
-	console.log("datasets: ",datasets)
 
 	if (drilledDown.value && clickedCategory.value) {
 		showDrillDownView(clickedCategory.value)
@@ -109,10 +108,15 @@ const showDrillDownView = (categoryName: string) => {
 	})
 
 	chart.value.data.labels = drilledDownLabels
-	chart.value.data.datasets = [{
-		label: categoryName,
-		data: drilledDownData,
-	}]
+	chart.value.data.datasets = [
+		{
+			label: categoryName,
+			data: drilledDownData,
+			backgroundColor: drilledDownLabels.map(s => getSourceColor(s)[0]),
+			borderColor: drilledDownLabels.map(s => getSourceColor(s)[1]),
+			fill: false
+		},
+	]
 	chart.value.options.plugins.legend.display = false
 	chart.value.options.plugins.title = {
 		display: true,
@@ -120,16 +124,6 @@ const showDrillDownView = (categoryName: string) => {
 	}
 	chart.value.update()
 }
-
-// const sumDataLabel = {
-// 	id: 'sumDataLabel',
-// 	afterDatasetsDraw(chart, args, plugins){
-// 		const { ctx, scales: {y} } = chart;
-
-// 		console.log(chart.getDatasetMeta(0))
-// 		console.log(chart.getDatasetMeta(1))
-// 	}
-// }
 
 const resetChart = () => {
 	if (!chart.value) return
@@ -152,15 +146,15 @@ onMounted(async () => {
 			labels: [],
 			datasets: [],
 		},
-		// plugins: [sumDataLabel],
+		plugins: [stackedTopLabelPlugin],
 		options: {
-			plugins:{
-				legend:{
-					display: true
+			plugins: {
+				legend: {
+					display: true,
 				},
-				title:{
-					display: false
-				}
+				title: {
+					display: false,
+				},
 			},
 			responsive: true,
 			onHover(event, chartElement) {

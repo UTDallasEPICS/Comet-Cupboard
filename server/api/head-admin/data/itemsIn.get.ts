@@ -1,6 +1,8 @@
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
+import { start } from "node:repl"
 import { z } from "zod"
+import { en } from "zod/v4/locales"
 import { getTimeLevel } from "~~/server/utils/data"
 
 const schema = z.object({
@@ -19,6 +21,14 @@ export default defineSafeHandler(async (event) => {
 	}
 
 	const { timeLevel, startDate, endDate } = result.data
+
+	if(startDate) {
+		startDate.setHours(0, 0, 0, 0)
+	}
+
+	if(endDate) {
+		endDate.setHours(23, 59, 59, 999)
+	}
 
 	const itemChanges = await prisma.itemCountChange.findMany({
 		include: {

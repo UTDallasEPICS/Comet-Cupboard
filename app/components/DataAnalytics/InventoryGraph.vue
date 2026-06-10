@@ -42,7 +42,7 @@ const updateChart = async () => {
 			{
 				label: "Current Inventory",
 				data: itemQty,
-				backgroundColor: categories.map(c => getCategoryColor(c))
+				backgroundColor: categories.map(c => getCategoryColor(c)),
 			}
 		]
 	}

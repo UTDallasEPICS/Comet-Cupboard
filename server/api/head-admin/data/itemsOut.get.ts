@@ -20,6 +20,14 @@ export default defineSafeHandler(async (event) => {
 
 	const { timeLevel, startDate, endDate } = result.data
 
+	if(startDate) {
+		startDate.setHours(0, 0, 0, 0)
+	}
+
+	if(endDate) {
+		endDate.setHours(23, 59, 59, 999)
+	}
+
 	const order = await prisma.order.findMany({
 		include: {
 			OrderItems: {
