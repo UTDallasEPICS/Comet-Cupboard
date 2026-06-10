@@ -1,14 +1,17 @@
 <template>
-    	<div>
-			<canvas ref="barContainer"></canvas>
-
-        <button v-if="drilledDown" class="border border-solid rounded-lg px-3 py-1" style="cursor: pointer;" @click="resetChart">Back</button>
-        </div>
+	<div class="flex flex-row">
+		<VerticalDataComponent/>
+		<div class="h-auto w-full">
+			<canvas ref="barContainer" />
+			<button v-if="drilledDown" class="rounded-lg border border-solid px-3 py-1" style="cursor: pointer" @click="resetChart">Back</button>
+		</div>
+	</div>
 </template>
 
-<script lang='ts' setup>
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, elements } from 'chart.js'
-import { Chart, RadialLinearScale, PointElement, LineElement, Filler,} from "chart.js/auto"
+<script lang="ts" setup>
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, elements } from "chart.js"
+import { Chart, RadialLinearScale, PointElement, LineElement, Filler } from "chart.js/auto"
+import VerticalDataComponent from "./VerticalDataComponent.vue"
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const itemData = ref()
@@ -22,7 +25,7 @@ const overviewState = shallowRef<{ labels: string[]; datasets: { label: string; 
 })
 
 const updateChart = async () => {
-	const currentInventoryData = await $fetch('/api/head-admin/data/category')
+	const currentInventoryData = await $fetch("/api/head-admin/data/category")
 
 	const categories = Object.keys(currentInventoryData)
 
@@ -42,9 +45,9 @@ const updateChart = async () => {
 			{
 				label: "Current Inventory",
 				data: itemQty,
-				backgroundColor: categories.map(c => getCategoryColor(c)),
-			}
-		]
+				backgroundColor: categories.map((c) => getCategoryColor(c)),
+			},
+		],
 	}
 
 	chart.value.data.labels = overviewState.value.labels
@@ -64,7 +67,7 @@ const showDrillDownView = (categoryName: string) => {
 		{
 			label: `${categoryName} Inventory`,
 			data: Object.values(categoryItems),
-			backgroundColor: getItemColor(categoryName)
+			backgroundColor: getItemColor(categoryName),
 		},
 	]
 	chart.value.options.plugins.title = {
@@ -87,7 +90,7 @@ const resetChart = () => {
 	chart.value.update()
 }
 
-onMounted(async() => {
+onMounted(async () => {
 	chart.value = new Chart(chartContainer.value!, {
 		type: "bar",
 		data: {
@@ -95,25 +98,25 @@ onMounted(async() => {
 			datasets: [
 				{
 					data: [],
-					hoverBorderColor: 'black',
+					hoverBorderColor: "black",
 					hoverBorderWidth: 2,
 				},
 			],
 		},
-		plugins: [topLabelPlugin], 
+		plugins: [topLabelPlugin],
 		options: {
-			plugins:{
-				legend:{
-					display: false
+			plugins: {
+				legend: {
+					display: false,
 				},
-				title:{
-					display: false
-				}
+				title: {
+					display: false,
+				},
 			},
 			responsive: true,
-			
-			onHover(event, chartElement){
-				chartContainer.value.style.cursor = chartElement[0] ? 'pointer' : 'default'
+
+			onHover(event, chartElement) {
+				chartContainer.value.style.cursor = chartElement[0] ? "pointer" : "default"
 			},
 
 			onClick(event, elements) {
@@ -126,9 +129,9 @@ onMounted(async() => {
 				drilledDown.value = true
 				showDrillDownView(clickedCategoryName)
 			},
-		}
+		},
 	})
-	
+
 	await updateChart()
 })
 </script>
