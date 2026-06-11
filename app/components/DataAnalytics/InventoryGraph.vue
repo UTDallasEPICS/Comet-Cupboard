@@ -1,6 +1,6 @@
 <template>
-	<div class="flex flex-row">
-		<VerticalDataComponent/>
+	<div class="flex flex-row gap-10 mt-20">
+		<VerticalDataComponent title="Category Quantity" :items="sortedCategories" />
 		<div class="h-auto w-full">
 			<canvas ref="barContainer" />
 			<button v-if="drilledDown" class="rounded-lg border border-solid px-3 py-1" style="cursor: pointer" @click="resetChart">Back</button>
@@ -15,10 +15,12 @@ import VerticalDataComponent from "./VerticalDataComponent.vue"
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const itemData = ref()
+const categoryQty = ref<{ category: string; total: number }[]>([])
 const chart = shallowRef<Chart | null>(null)
 const chartContainer = useTemplateRef("barContainer")
 const drilledDown = ref(false)
 const clickedCategory = ref<string | null>(null)
+const categoriesSorted = ref([])
 const overviewState = shallowRef<{ labels: string[]; datasets: { label: string; data: number[] }[] }>({
 	labels: [],
 	datasets: [],
@@ -26,6 +28,13 @@ const overviewState = shallowRef<{ labels: string[]; datasets: { label: string; 
 
 const updateChart = async () => {
 	const currentInventoryData = await $fetch("/api/head-admin/data/category")
+
+	categoryQty.value = Object.entries(currentInventoryData).map(([category, item]) => {
+		const total = Object.values(item).reduce((sum, qty) => {
+			return sum + qty
+		}, 0)
+		return { category, total }
+	})
 
 	const categories = Object.keys(currentInventoryData)
 
@@ -54,6 +63,15 @@ const updateChart = async () => {
 	chart.value.data.datasets = overviewState.value.datasets
 	chart.value.update()
 }
+
+const sortedCategories = computed(() => {
+	return [...categoryQty.value]
+		.sort((a, b) => a.total - b.total)
+		.map((item) => ({
+			label: item.category,
+			value: item.total,
+		}))
+})
 
 const showDrillDownView = (categoryName: string) => {
 	if (!chart.value) return
