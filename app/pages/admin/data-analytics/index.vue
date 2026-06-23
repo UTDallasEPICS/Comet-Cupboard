@@ -1,12 +1,6 @@
 <template>
 	<div>
-		<!-- <div class="flex justify-center">
-			<div class="flex items-center justify-center bg-final-utd-orange min-w-2/3 min-h-auto rounded-b-lg">
-				<h1 class="text-4xl font-bold mb-2 text-white">{{ currentView }}</h1>
-			</div>
-		</div> -->
-
-		<div class="flex gap-10">
+		<div class="flex">
 			<div :class="['flex min-h-screen shrink-0 flex-col border-r border-gray-400 shadow-xl', sidebarOpen ? 'w-48' : 'w-12']">
 				<UCollapsible :open="sidebarOpen" class="flex w-full flex-col">
 					<div class="group flex h-12 items-center">
@@ -38,18 +32,18 @@
 							key="Items Distributed"
 							color="neutral"
 							variant="ghost"
-							leading-icon="i-lucide-package-plus"
+							leading-icon="i-lucide-package-minus"
 							class="h-12 w-full justify-center"
 							@click="currentView = 'Items Distributed'"
 						>
 						</UButton>
 						<UButton
-							key="Inventory"
+							key="Current Inventory"
 							color="neutral"
 							variant="ghost"
 							leading-icon="i-lucide-boxes"
 							class="h-12 w-full justify-center"
-							@click="currentView = 'Inventory'"
+							@click="currentView = 'Current Inventory'"
 						>
 						</UButton>
 						<UButton
@@ -88,8 +82,8 @@
 				</UCollapsible>
 			</div>
 
-			<div class="h-full w-full">
-				<DataAnalyticsInventoryGraph v-if="currentView === 'Inventory'" />
+			<div class="min-w-0 flex-1 mx-10 my-4">
+				<DataAnalyticsInventoryGraph v-if="currentView === 'Current Inventory'" />
 				<DataAnalyticsSourceContributionGraph v-else-if="currentView === 'Source Contribution'" />
 				<DataAnalyticsVisitorsGraph v-else-if="currentView === 'Visitors'" />
 				<DataAnalyticsItemsDonated v-else-if="currentView === 'Items Donated'" />
@@ -103,7 +97,7 @@
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, elements } from "chart.js"
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const currentView = ref<"Inventory" | "Source Contribution" | "Visitors" | "Items Donated" | "Items Distributed">("Inventory")
+const currentView = ref<"Current Inventory" | "Source Contribution" | "Visitors" | "Items Donated" | "Items Distributed">("Current Inventory")
 
 const sidebarOpen = ref(false)
 </script>

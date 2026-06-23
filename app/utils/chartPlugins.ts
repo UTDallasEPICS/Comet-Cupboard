@@ -22,20 +22,14 @@ export const stackedTopLabelPlugin = {
 	afterDatasetsDraw(chart) {
 		const { ctx } = chart
 
-		chart.data.labels.forEach((bar, barIndex) => {
-			let total = 0
+		chart.data.datasets.forEach((dataset, datasetIndex) => {
+			const meta = chart.getDatasetMeta(datasetIndex)
 
-			chart.data.datasets.forEach((dataset, datasetIndex) => {
-				if (chart.isDatasetVisible(datasetIndex)) {
-					total += dataset.data[barIndex] || 0
-				}
-
-                const meta = chart.getDatasetMeta(datasetIndex)
-                const barElement = meta.data[barIndex]
-                ctx.textAlign = "center"
-                if (total) {
-                ctx.fillText(total, barElement.x, barElement.y - 5)
-                }
+			meta.data.forEach((bar, index) => {
+				const value = dataset.data[index]
+				if (!value) return
+				ctx.textAlign = "center"
+				ctx.fillText(String(value), bar.x, bar.y - 5)
 			})
 		})
 	},

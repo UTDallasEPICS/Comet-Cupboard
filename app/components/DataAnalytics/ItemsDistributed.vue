@@ -1,34 +1,60 @@
 <template>
 	<div>
-		<div class="flex items-center justify-end">
-			<div class="justify-left mr-2 flex flex-col gap-1">
-				<p class="text-right text-sm">Time Level</p>
-				<USelect v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" class="w-28" />
-			</div>
+		<div class="mb-4 flex items-center justify-between">
+			<h1 class="text-4xl font-bold text-black">Items Distributed</h1>
 
-			<div class="flex flex-col justify-center gap-1">
-				<p class="text-right text-sm">Time Range</p>
+			<DataAnalyticsOptionButton :grouping="grouping" :date-range="displayRange" :show-time-level="true" :show-date-range="true">
+				<div class="flex flex-col p-4">
+					<div class="justify-left flex flex-col">
+						<p class="my-2 text-sm font-bold">Time Level</p>
+						<USelect v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" class="w-full" />
+					</div>
 
-				<UInputDate ref="inputDate" v-model="modelValue" range>
-					<template #trailing>
-						<UPopover :reference="inputDate?.inputsRef[0]?.$el">
-							<UButton color="neutral" variant="link" size="sm" icon="i-lucide-calendar" aria-label="Select a date range" class="px-0" />
+					<div class="justify-left flex flex-col">
+						<p class="my-2 text-sm font-bold">Time Range</p>
+						<UInputDate ref="inputDate" v-model="modelValue" range>
+							<template #trailing>
+								<UPopover :reference="inputDate?.inputsRef[0]?.$el">
+									<UButton color="neutral" variant="link" size="sm" icon="i-lucide-calendar" aria-label="Select a date range" class="px-0" />
 
-							<template #content>
-								<UCalendar v-model="modelValue" class="p-2" :number-of-months="2" range />
+									<template #content>
+										<UCalendar v-model="modelValue" class="p-2" :number-of-months="2" range />
+									</template>
+								</UPopover>
 							</template>
-						</UPopover>
-					</template>
-				</UInputDate>
+						</UInputDate>
+						<div class="justify-left my-2 flex flex-col">
+							<USwitch v-model="showCount" label="Show by count" class="my-2" />
+							<USwitch v-model="sortByCount" label="Sort by count" />
+						</div>
+					</div>
+				</div>
+			</DataAnalyticsOptionButton>
+		</div>
+	</div>
+	<div class="mt-5 flex min-h-32 w-full items-center justify-center rounded-lg bg-white shadow-2xl">
+		<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Total Items Distributed" :value="totalItemsDistributed" />
+		<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Total Distribution Events" :value="totalDistributionEvents" />
+		<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Largest Distribution Count" :value="largestDistributionCount" />
+		<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Average Distribution Size" :value="averageDistributionSize" />
+
+		<DataAnalyticsDataCardComponent v-if="firstDrillDown || secondDrillDown" title="Total Inventory" :value="totalItemsDistributed" />
+	</div>
+	<div>
+		<div class="mt-10 flex flex-row gap-10">
+			<DataAnalyticsVerticalDataComponent title="Top Distributed Categories" :items="topDistributedCategories" />
+			<div class="min-h-140 w-full min-w-0">
+					<button
+						v-if="firstDrillDown || secondDrillDown"
+						class="absolute rounded-lg border border-solid px-3 py-1"
+						style="cursor: pointer"
+						@click="resetChart"
+					>
+						Back
+					</button>
+				<canvas ref="barContainer" class="mt-4"/>
 			</div>
 		</div>
-		<canvas ref="barContainer" />
-	</div>
-
-	<div>
-		<button v-if="firstDrillDown || secondDrillDown" class="rounded-lg border border-solid px-3 py-1" style="cursor: pointer" @click="resetChart">
-			Back
-		</button>
 	</div>
 </template>
 
@@ -50,17 +76,21 @@ const modelValue = shallowRef({
 	end: initialEnd,
 })
 
-const data = ref({})
+const distributedData = ref({})
+const selectedTimeLevel = ref<string | null>(null)
+const selectedCategory = ref<string | null>(null)
+
 const chartContainer = useTemplateRef("barContainer")
 const chart = shallowRef(null)
-const firstDrillDown = ref(false)
-const secondDrillDown = ref(false)
-const selectedTimeLevel = ref<string | null>(null)
-const clickedCategory = ref<string | null>(null)
+
 const overviewState = shallowRef<{ labels: string[]; datasets: { data: number[] }[] }>({
 	labels: [],
 	datasets: [],
 })
+const firstDrillDown = ref(false)
+const secondDrillDown = ref(false)
+const showCount = ref(false)
+const sortByCount = ref(false)
 
 const updateChart = async () => {
 	if (!modelValue.value.start || !modelValue.value.end) return
@@ -68,7 +98,7 @@ const updateChart = async () => {
 	firstDrillDown.value = false
 	secondDrillDown.value = false
 	selectedTimeLevel.value = null
-	clickedCategory.value = null
+	selectedCategory.value = null
 
 	const itemsDistributedData = await $fetch("/api/head-admin/data/itemsOut", {
 		query: {
@@ -78,24 +108,23 @@ const updateChart = async () => {
 		},
 	})
 
-	data.value = itemsDistributedData
-
 	const formatted = {}
+
 	Object.entries(itemsDistributedData).forEach(([key, value]) => {
 		formatted[formatLabel(key)] = value
 	})
-	data.value = formatted
 
-	const dateLabels = Object.keys(itemsDistributedData).map(formatLabel)
+	distributedData.value = formatted
 
-	const distributions = Object.values(itemsDistributedData)
+	console.log("distributedData", distributedData.value)
 
-	const distributedQty = distributions.map((date) => {
+	const dateLabels = Object.keys(distributedData.value)
+
+	const distributedQty = Object.values(distributedData.value).map((date) => {
 		return Object.values(date).reduce((sum: number, category: any) => {
 			return sum + category.total
 		}, 0)
 	})
-
 
 	overviewState.value = {
 		labels: dateLabels,
@@ -117,22 +146,114 @@ watch([modelValue, grouping], () => {
 	updateChart()
 })
 
+watch(sortByCount, () => {
+	if (firstDrillDown.value && !secondDrillDown.value) {
+		showCategoryDrillDownView(selectedTimeLevel.value)
+	} else if (secondDrillDown.value) {
+		showItemDrillDownView(selectedCategory.value)
+	}
+})
+
+const currentTimeLevel = computed(() => {
+	if (!selectedTimeLevel.value) return {}
+
+	return distributedData.value[selectedTimeLevel.value] ?? {}
+})
+
+const currentCategoryData = computed(() => {
+	if (!selectedCategory.value) return null
+
+	return currentTimeLevel.value[selectedCategory.value] ?? null
+})
+
+const totalItemsDistributed = computed(() => {
+	if (!selectedTimeLevel.value) {
+		return Object.values(distributedData.value)
+			.flatMap((dateData) => Object.values(dateData))
+			.reduce((sum, categoryData) => sum + categoryData.total, 0)
+	}
+
+	if (!selectedCategory.value) {
+		return Object.values(currentTimeLevel.value).reduce((sum, categoryData) => sum + categoryData.total, 0)
+	}
+
+	return currentCategoryData.value.total ?? 0
+})
+
+const totalDistributionEvents = computed(() => {
+	return Object.values(distributedData.value).filter((dateData) => Object.values(dateData).some((category) => category.total > 0)).length
+})
+
+const largestDistributionCount = computed(() => {
+	const totals = Object.values(distributedData.value).map((dateData) => {
+		return Object.values(dateData).reduce((sum, categoryData) => sum + categoryData.total, 0)
+	})
+
+	return Math.max(...totals)
+})
+
+const averageDistributionSize = computed(() => {
+	if (totalDistributionEvents.value === 0) return 0
+
+	return Math.round(totalItemsDistributed.value / totalDistributionEvents.value)
+})
+
+const categoryTotals = computed(() => {
+	if (!selectedTimeLevel.value) {
+		return Object.values(distributedData.value)
+			.flatMap((dateData) => Object.entries(dateData))
+			.reduce((acc, [categoryName, categoryData]) => {
+				acc[categoryName] = (acc[categoryName] ?? 0) + categoryData.total
+				return acc
+			}, {})
+	}
+
+	if (!selectedCategory.value) {
+		return Object.entries(currentTimeLevel.value).reduce((acc, [categoryName, categoryData]) => {
+			acc[categoryName] = categoryData.total
+			return acc
+		}, {})
+	}
+
+	return currentCategoryData.value?.items ?? {}
+})
+
+const topDistributedCategories = computed(() => {
+	if (!totalItemsDistributed.value) return []
+
+	return Object.entries(categoryTotals.value)
+		.map(([label, value]) => ({ label, value }))
+		.sort((a, b) => b.value - a.value)
+		.map(({ label, value }) => ({
+			label,
+			value: showCount.value ? value.toString() : ((value / totalItemsDistributed.value) * 100).toFixed(1) + "%",
+		}))
+})
+
 const showCategoryDrillDownView = (date: string) => {
 	if (!chart.value) return
 
-	const categoryData = data.value[date]
+	const categoryData = distributedData.value[date]
 
-	const categoryLabels = Object.keys(categoryData)
-	const categoryValues = categoryLabels.map((cat) => {
-		return categoryData[cat].total
-	})
+	console.log("categoryData", categoryData)
+
+	const entries = Object.entries(categoryData).map(([label, data]) => ({
+		label,
+		value: data.total,
+	}))
+
+	if (sortByCount.value) {
+		entries.sort((a, b) => a.value - b.value)
+	}
+	const categoryLabels = entries.map((e) => e.label)
+	const categoryValues = entries.map((e) => e.value)
 
 	chart.value.data.labels = categoryLabels
 	if (grouping.value === "Day" || grouping.value === "Week") {
 		chart.value.data.datasets = [
 			{
 				data: categoryValues,
-				backgroundColor: categoryLabels.map(c => getCategoryColor(c)),
+				backgroundColor: categoryLabels.map((c) => getCategoryColor(c)),
 			},
 		]
 		chart.value.options.plugins.title.text = `Categories distributed on ${date}`
@@ -140,7 +261,7 @@ const showCategoryDrillDownView = (date: string) => {
 		chart.value.data.datasets = [
 			{
 				data: categoryValues,
-				backgroundColor: categoryLabels.map(c => getCategoryColor(c)),
+				backgroundColor: categoryLabels.map((c) => getCategoryColor(c)),
 			},
 		]
 		chart.value.options.plugins.title.text = `Categories distributed in ${date}`
@@ -151,10 +272,19 @@ const showCategoryDrillDownView = (date: string) => {
 const showItemDrillDownView = (category: string) => {
 	if (!chart.value) return
 
-	const itemData = data.value[selectedTimeLevel.value][category].items
+	const itemData = currentCategoryData.value?.items
 
-	const itemLabels = Object.keys(itemData)
-	const itemValues = Object.values(itemData)
+	const entries = Object.entries(itemData).map(([label, value]) => ({
+		label,
+		value: value,
+	}))
+
+	if (sortByCount.value) {
+		entries.sort((a, b) => a.value - b.value)
+	}
+
+	const itemLabels = entries.map((e) => e.label)
+	const itemValues = entries.map((e) => e.value)
 
 	chart.value.data.labels = itemLabels
 	if (grouping.value === "Day" || grouping.value === "Week") {
@@ -182,7 +312,7 @@ const resetChart = () => {
 
 	if (secondDrillDown.value) {
 		secondDrillDown.value = false
-		clickedCategory.value = null
+		selectedCategory.value = null
 		showCategoryDrillDownView(selectedTimeLevel.value!)
 		return
 	}
@@ -213,6 +343,14 @@ const formatLabel = (key: string) => {
 	return df.format(new Date(key))
 }
 
+const displayRange = computed(() => {
+	const { start, end } = modelValue.value
+
+	if (!start || !end) return ""
+
+	return `${start.month}/${start.day}/${start.year} - ${end.month}/${end.day}/${end.year}`
+})
+
 onMounted(async () => {
 	chart.value = new Chart(chartContainer.value!, {
 		type: "bar",
@@ -236,6 +374,7 @@ onMounted(async () => {
 				},
 			},
 			responsive: true,
+			maintainAspectRatio: false,
 			onHover(event, chartElement) {
 				chartContainer.value.style.cursor = chartElement[0] ? "pointer" : "default"
 			},
@@ -245,15 +384,15 @@ onMounted(async () => {
 				if (!elements.length) return
 
 				if (firstDrillDown.value) {
-					const clickedCategoryName = chart.value.data.labels[elements[0].index]
-					clickedCategory.value = clickedCategoryName
+					const selectedCategoryName = chart.value.data.labels[elements[0].index]
+					selectedCategory.value = selectedCategoryName
 					secondDrillDown.value = true
-					showItemDrillDownView(clickedCategoryName)
+					showItemDrillDownView(selectedCategoryName)
 				} else {
-					const clickedTime = overviewState.value.labels[elements[0].index]
-					selectedTimeLevel.value = clickedTime
+					const selectedTime = overviewState.value.labels[elements[0].index]
+					selectedTimeLevel.value = selectedTime
 					firstDrillDown.value = true
-					showCategoryDrillDownView(clickedTime)
+					showCategoryDrillDownView(selectedTime)
 				}
 			},
 		},

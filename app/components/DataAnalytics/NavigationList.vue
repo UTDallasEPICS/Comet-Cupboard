@@ -6,7 +6,7 @@
 		<UButton color="neutral" variant="ghost" leading-icon="i-lucide-package-plus" class="h-12 w-full" @click="emit('update:navigate-data', 'Items Distributed')">
 			<p>Items Distributed</p>
 		</UButton>
-		<UButton color="neutral" variant="ghost" leading-icon="i-lucide-boxes" class="h-12 w-full" @click="emit('update:navigate-data', 'Inventory')">
+		<UButton color="neutral" variant="ghost" leading-icon="i-lucide-boxes" class="h-12 w-full" @click="emit('update:navigate-data', 'Current Inventory')">
 			<p>Current Inventory</p>
 		</UButton>
 		<UButton color="neutral" variant="ghost" leading-icon="i-lucide-building" class="h-12 w-full" @click="emit('update:navigate-data', 'Source Contribution')">

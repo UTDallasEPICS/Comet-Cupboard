@@ -1,28 +1,41 @@
 <template>
 	<div>
-		<div class="flex items-center justify-end">
-			<div class="justify-left mr-2 flex flex-col gap-1">
-				<p class="text-right text-sm">Time Level</p>
-				<USelect v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" class="w-28" @update:model-value="groupingChange = true" />
-			</div>
+		<div class="mb-4 flex items-center justify-between">
+			<h1 class="text-4xl font-bold text-black">Visitors</h1>
 
-			<div class="flex flex-col justify-center gap-1">
-				<p class="text-right text-sm">Time Range</p>
+			<DataAnalyticsOptionButton :grouping="grouping" :date-range="displayRange" :show-time-level="true" :show-date-range="true">
+				<div class="flex flex-col p-4">
+					<div class="justify-left flex flex-col">
+						<p class="my-2 text-sm font-bold">Time Level</p>
+						<USelect v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" class="w-full" />
+					</div>
 
-				<UInputDate ref="inputDate" v-model="modelValue" range>
-					<template #trailing>
-						<UPopover :reference="inputDate?.inputsRef[0]?.$el">
-							<UButton color="neutral" variant="link" size="sm" icon="i-lucide-calendar" aria-label="Select a date range" class="px-0" />
+					<div class="justify-left flex flex-col">
+						<p class="my-2 text-sm font-bold">Time Range</p>
+						<UInputDate ref="inputDate" v-model="modelValue" range>
+							<template #trailing>
+								<UPopover :reference="inputDate?.inputsRef[0]?.$el">
+									<UButton color="neutral" variant="link" size="sm" icon="i-lucide-calendar" aria-label="Select a date range" class="px-0" />
 
-							<template #content>
-								<UCalendar v-model="modelValue" class="p-2" :number-of-months="2" range />
+									<template #content>
+										<UCalendar v-model="modelValue" class="p-2" :number-of-months="2" range />
+									</template>
+								</UPopover>
 							</template>
-						</UPopover>
-					</template>
-				</UInputDate>
-			</div>
+						</UInputDate>
+					</div>
+				</div>
+			</DataAnalyticsOptionButton>
 		</div>
-		<canvas ref="lineContainer"/>
+	</div>
+	<div class="mt-5 flex min-h-32 w-full items-center justify-center rounded-lg bg-white shadow-2xl">
+		<DataAnalyticsDataCardComponent title="Total Visitors" :value="totalVisitors" />
+		<DataAnalyticsDataCardComponent title="Total Unique Visitors" :value="totalUniqueVisitors" />
+		<DataAnalyticsDataCardComponent title="Peak Visitor Count" :value="peakVisitors" />
+		<DataAnalyticsDataCardComponent title="Average Visitors" :value="avgVisitors" />
+	</div>
+	<div class="min-h-140 w-full min-w-0">
+		<canvas ref="lineContainer" />
 	</div>
 </template>
 
@@ -40,14 +53,16 @@ const dfMonth = new DateFormatter("en-US", { month: "short" })
 const tz = getLocalTimeZone()
 const initialEnd = today(tz)
 
-const chartContainer = useTemplateRef("lineContainer")
-
-const chart = shallowRef<Chart | null>(null)
-
 const modelValue = shallowRef({
 	start: initialEnd.subtract({ days: 14 }),
 	end: initialEnd,
 })
+
+const visitorData = ref({})
+const uniqueVisitorData = ref({})
+
+const chartContainer = useTemplateRef("lineContainer")
+const chart = shallowRef<Chart | null>(null)
 
 const automatedGrouping = computed(() => {
 	if (!modelValue.value.start || !modelValue.value.end) {
@@ -63,7 +78,7 @@ const automatedGrouping = computed(() => {
 		return "Day"
 	} else if (diffDays <= 90) {
 		return "Week"
-	} else if (diffDays <= 180){
+	} else if (diffDays <= 180) {
 		return "Month"
 	} else {
 		return "Semester"
@@ -73,15 +88,7 @@ const automatedGrouping = computed(() => {
 const updateChart = async () => {
 	if (!modelValue.value.start || !modelValue.value.end) return
 
-	const totalVisitorData = await $fetch("/api/head-admin/data/visitor", {
-		query:{
-			timeLevel: grouping.value,
-			startDate: modelValue.value.start ? modelValue.value.start.toDate(tz).toISOString() : undefined,
-			endDate: modelValue.value.end ? modelValue.value.end.toDate(tz).toISOString() : undefined,
-		}
-	})
-
-	const uniqueVisitorData = await $fetch("/api/head-admin/data/uniqueVisits", {
+	const fetchVisitorData = await $fetch("/api/head-admin/data/visitor", {
 		query: {
 			timeLevel: grouping.value,
 			startDate: modelValue.value.start ? modelValue.value.start.toDate(tz).toISOString() : undefined,
@@ -89,24 +96,37 @@ const updateChart = async () => {
 		},
 	})
 
-	const dates = Object.keys(totalVisitorData).map(formatLabel)
+	const fetchUniqueVisitorData = await $fetch("/api/head-admin/data/uniqueVisits", {
+		query: {
+			timeLevel: grouping.value,
+			startDate: modelValue.value.start ? modelValue.value.start.toDate(tz).toISOString() : undefined,
+			endDate: modelValue.value.end ? modelValue.value.end.toDate(tz).toISOString() : undefined,
+		},
+	})
 
-	const totalVisitors = Object.values(totalVisitorData)
+	visitorData.value = fetchVisitorData
+	uniqueVisitorData.value = fetchUniqueVisitorData
 
-	const uniqueVisitors = Object.values(uniqueVisitorData)
+	console.log(visitorData.value)
+	console.log(uniqueVisitorData.value)
+	console.log(totalVisitors.value)
+	console.log(totalUniqueVisitors.value)
+	console.log(peakVisitors.value)
+
+	const dates = Object.keys(visitorData.value).map(formatLabel)
 
 	if (!chart.value) return
 
 	chart.value.data.labels = dates
 
-	chart.value.data.datasets[0].data = totalVisitors
+	chart.value.data.datasets[0].data = Object.values(visitorData.value)
 
-	chart.value.data.datasets[1].data = uniqueVisitors
+	chart.value.data.datasets[1].data = Object.values(uniqueVisitorData.value)
 
 	chart.value.update()
 }
 
-watch([modelValue, grouping], () =>{
+watch([modelValue, grouping], () => {
 	if (!modelValue.value.start || !modelValue.value.end) return
 	updateChart()
 })
@@ -117,16 +137,32 @@ watch(automatedGrouping, (newGrouping) => {
 	}
 })
 
+const totalVisitors = computed(() => {
+	return Object.values(visitorData.value).reduce((sum, qty) => sum + qty, 0)
+})
+
+const totalUniqueVisitors = computed(() => {
+	return Object.values(uniqueVisitorData.value).reduce((sum, qty) => sum + qty, 0)
+})
+
+const peakVisitors = computed(() => {
+	return Math.max(...Object.values(visitorData.value))
+})
+
+const avgVisitors = computed(() => {
+	return (totalVisitors.value / Object.entries(visitorData.value).length).toFixed(1)
+})
+
 const formatLabel = (key: string) => {
 	if (grouping.value === "Semester") {
 		return key
 	}
-	
+
 	if (grouping.value === "Week") {
 		const [start, end] = key.split(" - ")
 
 		return `${df.format(new Date(start))} - ${df.format(new Date(end))}`
-	} 
+	}
 
 	if (grouping.value === "Month") {
 		return `${dfMonth.format(new Date(key))}`
@@ -134,6 +170,14 @@ const formatLabel = (key: string) => {
 
 	return df.format(new Date(key))
 }
+
+const displayRange = computed(() => {
+	const { start, end } = modelValue.value
+
+	if (!start || !end) return ""
+
+	return `${start.month}/${start.day}/${start.year} - ${end.month}/${end.day}/${end.year}`
+})
 
 onMounted(async () => {
 	chart.value = new Chart(chartContainer.value!, {
@@ -155,13 +199,14 @@ onMounted(async () => {
 		},
 		options: {
 			responsive: true,
+			maintainAspectRatio: false,
 			interaction: {
 				mode: "index",
 				intersect: false,
 			},
 		},
 	})
-	
+
 	await updateChart()
 })
 </script>
