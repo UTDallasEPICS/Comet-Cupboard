@@ -20,7 +20,7 @@
 						</UInputDate>
 						<div class="justify-left my-2 flex flex-col">
 							<USwitch v-model="showCount" label="Show by count" class="my-2" />
-							<USwitch v-model="sortByCount" label="Sort by count" />
+							<USwitch v-if="drilledDown" v-model="sortByCount" label="Sort by count" />
 						</div>
 					</div>
 				</div>
