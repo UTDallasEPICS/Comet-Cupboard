@@ -20,14 +20,21 @@
 					</div>
 					<template v-if="!sidebarOpen">
 						<UButton
+							key="Current Inventory"
+							color="neutral"
+							variant="ghost"
+							leading-icon="i-lucide-boxes"
+							class="h-12 w-full justify-center"
+							@click="currentView = 'Current Inventory'"
+						/>
+						<UButton
 							key="Items Donated"
 							color="neutral"
 							variant="ghost"
 							leading-icon="i-lucide-package-plus"
 							class="h-12 w-full justify-center"
 							@click="currentView = 'Items Donated'"
-						>
-						</UButton>
+						/>
 						<UButton
 							key="Items Distributed"
 							color="neutral"
@@ -35,17 +42,7 @@
 							leading-icon="i-lucide-package-minus"
 							class="h-12 w-full justify-center"
 							@click="currentView = 'Items Distributed'"
-						>
-						</UButton>
-						<UButton
-							key="Current Inventory"
-							color="neutral"
-							variant="ghost"
-							leading-icon="i-lucide-boxes"
-							class="h-12 w-full justify-center"
-							@click="currentView = 'Current Inventory'"
-						>
-						</UButton>
+						/>
 						<UButton
 							key="Source Contribution"
 							color="neutral"
@@ -53,8 +50,7 @@
 							leading-icon="i-lucide-building"
 							class="h-12 w-full justify-center"
 							@click="currentView = 'Source Contribution'"
-						>
-						</UButton>
+						/>
 						<UButton
 							key="Visitors"
 							color="neutral"
@@ -62,8 +58,7 @@
 							leading-icon="i-lucide-users-round"
 							class="h-12 w-full justify-center"
 							@click="currentView = 'Visitors'"
-						>
-						</UButton>
+						/>
 						<UButton
 							key="Audit Log"
 							color="neutral"
@@ -71,8 +66,7 @@
 							leading-icon="i-lucide-clipboard-clock"
 							class="h-12 w-full justify-center"
 							@click="currentView = 'Audit Log'"
-						>
-						</UButton>
+						/>
 					</template>
 					<template #content>
 						<div class="flex flex-row">
@@ -82,7 +76,7 @@
 				</UCollapsible>
 			</div>
 
-			<div class="min-w-0 flex-1 mx-10 my-4">
+			<div class="mx-10 my-4 min-w-0 flex-1">
 				<DataAnalyticsInventoryGraph v-if="currentView === 'Current Inventory'" />
 				<DataAnalyticsSourceContributionGraph v-else-if="currentView === 'Source Contribution'" />
 				<DataAnalyticsVisitorsGraph v-else-if="currentView === 'Visitors'" />

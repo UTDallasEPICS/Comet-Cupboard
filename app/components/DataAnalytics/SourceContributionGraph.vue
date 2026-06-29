@@ -27,7 +27,7 @@
 			</DataAnalyticsOptionButton>
 		</div>
 	</div>
-	<div class="mt-5 flex min-h-32 w-full items-center justify-center rounded-lg bg-white shadow-2xl">
+	<div class="mt-4 flex min-h-32 w-full items-center justify-center rounded-3xl border bg-white">
 		<DataAnalyticsDataCardComponent title="Total Source Contributions" :value="totalSourceContributions" />
 		<!-- <DataAnalyticsDataCardComponent v-if="!drilledDown" title="Average Contribution Size" :value="totalInventory" /> -->
 	</div>
@@ -35,8 +35,10 @@
 		<div class="mt-10 flex flex-row gap-10">
 			<DataAnalyticsVerticalDataComponent title="Source Share %" :items="sourceContributionShare" />
 			<div class="min-h-140 w-full min-w-0">
-				<button v-if="drilledDown" class="absolute rounded-lg border border-solid px-3 py-1" style="cursor: pointer" @click="resetChart">Back</button>
-				<canvas ref="barContainer" class="mt-4" />
+				<button v-if="drilledDown" class="absolute rounded-lg border border-solid px-3 py-1 m-4" style="cursor: pointer" @click="resetChart">Back</button>
+				<div class="h-full w-full border border-gray-300 px-8">
+					<canvas ref="barContainer" class="mt-4" />
+				</div>
 			</div>
 		</div>
 	</div>
@@ -115,6 +117,7 @@ const updateChart = async () => {
 	} else {
 		chart.value.data.labels = overviewState.value.labels
 		chart.value.data.datasets = overviewState.value.datasets
+		chart.value.options.plugins.title.text = "Source Contribution per Category"
 		chart.value.update()
 	}
 }
@@ -199,13 +202,15 @@ const showDrillDownView = (categoryName: string) => {
 			data: entries.map((e) => e.value),
 			backgroundColor: entries.map((e) => getSourceColor(e.sourceName)[0]),
 			borderColor: entries.map((e) => getSourceColor(e.sourceName)[1]),
+			borderWidth: 2,
 			fill: false,
 		},
 	]
 	chart.value.options.plugins.legend.display = false
 	chart.value.options.plugins.title = {
 		display: true,
-		text: categoryName,
+		text: categoryName + " Contribution",
+		...titleOptions
 	}
 	chart.value.update()
 }
@@ -220,7 +225,7 @@ const resetChart = () => {
 	chart.value.data.labels = overviewState.value.labels
 	chart.value.data.datasets = overviewState.value.datasets
 	chart.value.options.plugins.legend.display = true
-	chart.value.options.plugins.title.display = false
+	chart.value.options.plugins.title.text = "Source Contribution per Category"
 	chart.value.update()
 }
 
@@ -231,6 +236,18 @@ const displayRange = computed(() => {
 
 	return `${start.month}/${start.day}/${start.year} - ${end.month}/${end.day}/${end.year}`
 })
+
+const titleOptions = {
+	color: "#000000",
+	font: {
+		size: 30,
+		weight: "bold",
+	},
+	padding: {
+		top: 10,
+		bottom: 40,
+	},
+}
 
 onMounted(async () => {
 	chart.value = new Chart(chartContainer.value!, {
@@ -244,13 +261,14 @@ onMounted(async () => {
 			plugins: {
 				legend: {
 					display: true,
+					position: 'right',
 				},
 				title: {
-					display: false,
+					display: true,
+					...titleOptions
 				},
 			},
 			responsive: true,
-			maintainAspectRatio: false,
 			onHover(event, chartElement) {
 				chartContainer.value.style.cursor = chartElement[0] ? "pointer" : "default"
 			},

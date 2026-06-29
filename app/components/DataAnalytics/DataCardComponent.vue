@@ -1,15 +1,15 @@
 <template>
-	<UCard class="mx-4 w-60 border-[#e4701e]">
+	<div class="mx-20">
 		<div class="flex flex-col items-center">
-			<div class="h-10 flex items-center justify-center text-sm font-bold">
+			<div class="h-10 flex items-center text-black justify-center text-lg font-bold">
 				{{ title }}
 			</div>
 
-			<div class="flex justify-center">
+			<div class="flex text-5xl font-bold text-black justify-center">
 				<span>{{ value }}</span>
 			</div>
 		</div>
-	</UCard>
+	</div>
 </template>
 
 <script lang="ts" setup>

@@ -85,7 +85,7 @@ export function getSourceColor(source: string){
   
   const sourceBorderColor = sourceColors.get(source)
 
-  const sourceColor = sourceBorderColor + "33" // changes opacity to 20%
+  const sourceColor = sourceBorderColor + "60" // changes opacity
 
 	return [sourceColor, sourceBorderColor]
 }

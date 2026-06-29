@@ -13,7 +13,7 @@
 			</DataAnalyticsOptionButton>
 		</div>
 	</div>
-	<div class="mt-5 flex min-h-32 w-full items-center justify-center rounded-lg bg-white shadow-2xl">
+	<div class="mt-4 flex min-h-32 w-full items-center justify-center rounded-3xl border bg-white">
 		<DataAnalyticsDataCardComponent v-if="!drilledDown" title="Total Inventory" :value="totalInventory" />
 		<DataAnalyticsDataCardComponent v-if="drilledDown" title="Total Count" :value="itemCount" />
 	</div>
@@ -21,8 +21,10 @@
 		<DataAnalyticsVerticalDataComponent v-if="!drilledDown" title="Category Quantity" :items="sortedCategories" />
 		<DataAnalyticsVerticalDataComponent v-if="drilledDown" title="Item Concentration" :items="itemConcentration" />
 		<div class="min-h-140 w-full min-w-0">
-			<button v-if="drilledDown" class="absolute rounded-lg border border-solid px-3 py-1" style="cursor: pointer" @click="resetChart">Back</button>
-			<canvas ref="barContainer" class="mt-4" />
+			<button v-if="drilledDown" class="absolute rounded-lg border border-solid px-3 py-1 m-4" style="cursor: pointer" @click="resetChart">Back</button>
+			<div class="h-full w-full border border-gray-300 px-8">
+				<canvas ref="barContainer" class="mt-4" />
+			</div>
 		</div>
 	</div>
 </template>
@@ -69,6 +71,7 @@ const updateChart = async () => {
 
 	chart.value.data.labels = overviewState.value.labels
 	chart.value.data.datasets = overviewState.value.datasets
+	chart.value.options.plugins.title.text = "Category View"
 	chart.value.update()
 }
 
@@ -147,9 +150,9 @@ const showDrillDownView = (categoryName: string) => {
 
 	chart.value.options.plugins.title = {
 		display: true,
-		text: categoryName,
+		text: categoryName + " Items",
+		...titleOptions,
 	}
-
 	chart.value.update()
 }
 
@@ -162,8 +165,24 @@ const resetChart = () => {
 
 	chart.value.data.labels = overviewState.value.labels
 	chart.value.data.datasets = overviewState.value.datasets
-	chart.value.options.plugins.title.display = false
+	chart.value.options.plugins.title = {
+		display: true,
+		text: "Category View",
+		...titleOptions,
+	}
 	chart.value.update()
+}
+
+const titleOptions = {
+	color: "#000000",
+	font: {
+		size: 30,
+		weight: "bold",
+	},
+	padding: {
+		top: 10,
+		bottom: 40,
+	},
 }
 
 onMounted(async () => {
@@ -186,11 +205,11 @@ onMounted(async () => {
 					display: false,
 				},
 				title: {
-					display: false,
+					display: true,
+					...titleOptions,
 				},
 			},
 			responsive: true,
-			maintainAspectRatio: false,
 			onHover(event, chartElement) {
 				chartContainer.value.style.cursor = chartElement[0] ? "pointer" : "default"
 			},

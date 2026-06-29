@@ -33,7 +33,7 @@
 		</div>
 	</div>
 
-	<div class="mt-5 flex min-h-32 w-full items-center justify-center rounded-lg bg-white shadow-2xl">
+	<div class="mt-4 flex min-h-32 w-full items-center justify-center rounded-3xl border bg-white">
 		<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Total Items Donated" :value="totalItemsDonated" />
 		<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Total Donation Events" :value="totalDonationEvents" />
 		<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Largest Donation Count" :value="largestDonationCount" />
@@ -47,13 +47,15 @@
 			<div class="min-h-140 w-full min-w-0">
 				<button
 					v-if="firstDrillDown || secondDrillDown"
-					class="absolute rounded-lg border border-solid px-3 py-1"
+					class="absolute rounded-lg border border-solid px-3 py-1 m-4"
 					style="cursor: pointer"
 					@click="resetChart"
 				>
 					Back
 				</button>
-				<canvas ref="barContainer" class="mt-4" />
+				<div class="h-full w-full border border-gray-300 px-8">
+					<canvas ref="barContainer" class="mt-4" />
+				</div>
 			</div>
 		</div>
 	</div>
@@ -137,7 +139,7 @@ const updateChart = async () => {
 
 	chart.value.data.labels = overviewState.value.labels
 	chart.value.data.datasets = overviewState.value.datasets
-	chart.value.options.plugins.title.text = "Items Donated"
+	chart.value.options.plugins.title.text = "Item Donation Count"
 	chart.value.update()
 }
 
@@ -176,7 +178,7 @@ const largestDonationCount = computed(() => {
 		return Object.values(dateData).reduce((sum, categoryData) => sum + categoryData.total, 0)
 	})
 
-	return Math.max(...totals)
+	return Math.max(0, ...totals)
 })
 
 const averageDonationSize = computed(() => {
@@ -320,6 +322,11 @@ const resetChart = () => {
 
 	chart.value.data.labels = overviewState.value.labels
 	chart.value.data.datasets = overviewState.value.datasets
+	chart.value.options.plugins.title = {
+		display: true,
+		text: "Item Donation Count",
+		...titleOptions,
+	}
 	chart.value.update()
 }
 
@@ -349,6 +356,18 @@ const displayRange = computed(() => {
 	return `${start.month}/${start.day}/${start.year} - ${end.month}/${end.day}/${end.year}`
 })
 
+const titleOptions = {
+	color: "#000000",
+	font: {
+		size: 30,
+		weight: "bold",
+	},
+	padding: {
+		top: 10,
+		bottom: 40,
+	},
+}
+
 onMounted(async () => {
 	chart.value = new Chart(chartContainer.value!, {
 		type: "bar",
@@ -364,10 +383,10 @@ onMounted(async () => {
 				},
 				title: {
 					display: true,
+					...titleOptions,
 				},
 			},
 			responsive: true,
-			maintainAspectRatio: false,
 			onHover(event, chartElement) {
 				chartContainer.value.style.cursor = chartElement[0] ? "pointer" : "default"
 			},

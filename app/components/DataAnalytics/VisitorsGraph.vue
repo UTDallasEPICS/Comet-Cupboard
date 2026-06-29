@@ -28,14 +28,14 @@
 			</DataAnalyticsOptionButton>
 		</div>
 	</div>
-	<div class="mt-5 flex min-h-32 w-full items-center justify-center rounded-lg bg-white shadow-2xl">
+	<div class="mt-4 mb-10 flex min-h-32 w-full items-center justify-center rounded-3xl border bg-white">
 		<DataAnalyticsDataCardComponent title="Total Visitors" :value="totalVisitors" />
 		<DataAnalyticsDataCardComponent title="Total Unique Visitors" :value="totalUniqueVisitors" />
 		<DataAnalyticsDataCardComponent title="Peak Visitor Count" :value="peakVisitors" />
 		<DataAnalyticsDataCardComponent title="Average Visitors" :value="avgVisitors" />
 	</div>
-	<div class="min-h-140 w-full min-w-0">
-		<canvas ref="lineContainer" />
+	<div class="w-full gap-10 border border-gray-300 px-8">
+		<canvas ref="lineContainer" class="mt-4" />
 	</div>
 </template>
 
@@ -123,6 +123,8 @@ const updateChart = async () => {
 
 	chart.value.data.datasets[1].data = Object.values(uniqueVisitorData.value)
 
+	chart.value.options.plugins.title.text = "Visitor Count"
+
 	chart.value.update()
 }
 
@@ -179,6 +181,18 @@ const displayRange = computed(() => {
 	return `${start.month}/${start.day}/${start.year} - ${end.month}/${end.day}/${end.year}`
 })
 
+const titleOptions = {
+	color: "#000000",
+	font: {
+		size: 30,
+		weight: "bold",
+	},
+	padding: {
+		top: 10,
+		bottom: 40,
+	},
+}
+
 onMounted(async () => {
 	chart.value = new Chart(chartContainer.value!, {
 		type: "line",
@@ -199,10 +213,15 @@ onMounted(async () => {
 		},
 		options: {
 			responsive: true,
-			maintainAspectRatio: false,
 			interaction: {
 				mode: "index",
 				intersect: false,
+			},
+			plugins: {
+				title: {
+					display: true,
+					...titleOptions,
+				},
 			},
 		},
 	})
