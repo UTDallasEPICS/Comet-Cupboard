@@ -6,7 +6,7 @@
 			<DataAnalyticsOptionButton :show-time-level="false" :show-date-range="false">
 				<div class="flex flex-col p-4">
 					<div class="justify-left my-2 flex flex-col">
-						<USwitch v-model="showCount" label="Show by count" class="my-2" />
+						<USwitch v-if="drilledDown" v-model="showCount" label="Show by count" class="my-2" />
 						<USwitch v-model="sortByCount" label="Sort by count" />
 					</div>
 				</div>
