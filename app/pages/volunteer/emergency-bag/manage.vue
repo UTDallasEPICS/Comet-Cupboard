@@ -11,196 +11,223 @@
 					<UStepper ref="stepper" :items="steps">
 						<template #content="{ item }">
 							<div v-if="item.label === 'Add'">
-								<UCard>
-									<div class="flex flex-col">
-										<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-											<UCard>
-												<!-- Header -->
-												<template #header>
-													<h2 class="text-xl font-bold">Search Product</h2>
-												</template>
-												<!-- Search Bar -->
-												<div class="rounded-lg bg-gray-100 px-4 py-3">
-													<UInput
-														v-model="searchQuery"
-														icon="i-lucide-search"
-														placeholder="Search items"
-														variant="outline"
-														class="w-full"
-													/>
-												</div>
+								<div class="flex justify-center">
+									<div class="flex w-full max-w-100 flex-col gap-4">
+										<!-- Current Bag Items -->
+										<div class="flex items-center justify-between">
+											<h2 class="text-xl font-bold">Current Bag</h2>
+											<UPopover>
+												<UButton class="bg-final-utd-green rounded-lg px-4 py-2"> Add Items</UButton>
 
-												<!-- Product List -->
-												<div class="h-fit max-h-124 space-y-3 overflow-y-auto px-3 py-3">
-													<div v-if="!filteredItems?.length" class="py-8 text-center text-gray-500">
-														Search results will appear here
+												<template #content>
+													<div class="rounded-lg bg-gray-100 px-4 py-3">
+														<UInput
+															v-model="searchQuery"
+															icon="i-lucide-search"
+															placeholder="Search items"
+															variant="outline"
+															class="w-full"
+														/>
 													</div>
-													<div
-														v-for="item in filteredItems || []"
-														:key="item.itemID"
-														class="flex flex-row items-center justify-between gap-3 rounded bg-gray-100 p-3"
-													>
-														<!-- Image -->
+													<div class="h-fit max-h-124 space-y-3 overflow-y-auto px-3 py-3">
+														<div v-if="!filteredItems?.length" class="py-8 text-center text-gray-500">
+															Search results will appear here
+														</div>
+														<div
+															v-for="item in filteredItems || []"
+															:key="item.itemID"
+															class="flex flex-row items-center justify-between gap-3 rounded bg-gray-100 p-3"
+														>
+															<!-- Image -->
+															<img
+																v-if="item.imgName && item.categoryName"
+																:src="`/api/public/image/${item.imgName}`"
+																:alt="item.name"
+																class="h-10 w-10 rounded object-cover sm:h-12 sm:w-12"
+															/>
+															<div v-else class="flex h-12 w-12 items-center justify-center rounded bg-gray-300">
+																<span class="text-xs text-gray-500">No Img</span>
+															</div>
+
+															<!-- Item Info -->
+															<div class="flex-1">
+																<p class="font-semibold">{{ item.name }}</p>
+																<p class="text-sm text-gray-600">
+																	Available: {{ getAvailableQuantity(item.itemID) }} / {{ item.quantity }}
+																</p>
+															</div>
+
+															<!-- Add Button -->
+															<UButton
+																size="sm"
+																:disabled="getAvailableQuantity(item.itemID) <= 0"
+																class="bg-final-utd-green px-3 py-1 text-sm text-white"
+																@click="addItemToBag(item)"
+															>
+																+ Add
+															</UButton>
+														</div>
+													</div>
+												</template>
+											</UPopover>
+										</div>
+
+										<!-- Search Bar -->
+
+										<div class="h-130 space-y-2 overflow-y-auto">
+											<div v-if="bagItems.length === 0" class="text-center text-gray-500">No items in bag yet</div>
+											<div v-for="item in bagItems" :key="item.itemID">
+												<UCard>
+													<template #header>
+														<div class="flex items-center justify-between">
+															<p class="text-sm font-semibold">{{ item.name }}</p>
+															<UButton
+																class="rounded bg-orange-600 px-2 py-1 hover:bg-gray-500"
+																@click="removeItemFromBag(item.itemID)"
+																>✕</UButton
+															>
+														</div>
+													</template>
+													<div class="flex items-center justify-between">
 														<img
-															v-if="item.imgName && item.categoryName"
+															v-if="item.imgName"
 															:src="`/api/public/image/${item.imgName}`"
 															:alt="item.name"
 															class="h-10 w-10 rounded object-cover sm:h-12 sm:w-12"
 														/>
-														<div v-else class="flex h-12 w-12 items-center justify-center rounded bg-gray-300">
-															<span class="text-xs text-gray-500">No Img</span>
-														</div>
-
-														<!-- Item Info -->
-														<div class="flex-1">
-															<p class="font-semibold">{{ item.name }}</p>
-															<p class="text-sm text-gray-600">
-																Available: {{ getAvailableQuantity(item.itemID) }} / {{ item.quantity }}
-															</p>
-														</div>
-
-														<!-- Add Button -->
-														<UButton
-															size="sm"
-															:disabled="getAvailableQuantity(item.itemID) <= 0"
-															class="bg-final-utd-green px-3 py-1 text-sm text-white"
-															@click="addItemToBag(item)"
-														>
-															+ Add
-														</UButton>
-													</div>
-												</div>
-											</UCard>
-											<div class="flex flex-col gap-4">
-												<!-- Current Bag Items -->
-												<UCard class="min-h-0 flex-1">
-													<template #header>
-														<h2 class="text-xl font-bold">Current Bag</h2>
-													</template>
-													<div class="h-54 space-y-3 overflow-y-auto">
-														<div v-if="bagItems.length === 0" class="text-center text-gray-500">No items in bag yet</div>
-														<div
-															v-for="item in bagItems"
-															:key="item.itemID"
-															class="flex items-center justify-between rounded bg-gray-100 p-3"
-														>
-															<div>
-																<p class="text-sm font-semibold">{{ item.name }}</p>
-															</div>
-															<div class="flex items-center gap-2">
-																<UButton
-																	class="rounded bg-gray-400 px-2 py-1 hover:bg-gray-500"
-																	@click="decreaseItemCount(item.itemID)"
-																	>−</UButton
-																>
-																<span class="w-6 text-center font-semibold">{{ item.count }}</span>
-																<UButton
-																	class="rounded bg-gray-400 px-2 py-1 hover:bg-gray-500"
-																	@click="increaseItemCount(item.itemID)"
-																	>+</UButton
-																>
-																<UButton
-																	class="rounded bg-orange-600 px-2 py-1 hover:bg-gray-500"
-																	@click="removeItemFromBag(item.itemID)"
-																	>✕</UButton
-																>
-															</div>
+														<div class="flex items-center gap-2">
+															<UButton
+																class="bg-final-utd-green rounded-2xl px-2 py-1 hover:bg-green-700"
+																@click="decreaseItemCount(item.itemID)"
+																>−</UButton
+															>
+															<span class="w-6 text-center font-semibold">{{ item.count }}</span>
+															<UButton
+																class="bg-final-utd-green rounded-2xl px-2 py-1 hover:bg-green-700"
+																@click="increaseItemCount(item.itemID)"
+																>+</UButton
+															>
 														</div>
 													</div>
 												</UCard>
 											</div>
 										</div>
 									</div>
-								</UCard>
+								</div>
 							</div>
 							<div v-if="item.label === 'Details'">
-								<UCard>
-									<div class="flex flex-col">
-										<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-											<!--Category Selection -->
-											<UCard>
-												<template #header>
-													<div class="text-xl font-bold text-gray-700">Category</div>
-												</template>
-												<URadioGroup v-model="selectedCategory" size="md" variant="card" :items="categories" />
-											</UCard>
+								<div class="flex flex-col items-center">
+									<div class="flex w-full max-w-100 flex-col gap-4">
+										<!--Category Selection -->
+										<UCard>
+											<template #header>
+												<div class="text-xl font-bold text-gray-700">Label Tag</div>
+											</template>
+											<UCheckboxGroup v-model="selectedCategory" size="md" variant="card" :items="labels" />
+										</UCard>
 
-											<div class="flex h-full flex-col">
-												<!--Expiry Date -->
-												<UCard class="h-50 flex-1">
-													<template #header>
-														<div class="flex-1 text-xl font-bold text-gray-700">Expiry Date</div>
-													</template>
-													<div class="flex h-full items-center justify-center">
-														<UInputDate v-model="expiryDate" size="xl" icon="i-lucide-calendar" :min-value="minDate" />
-													</div>
-												</UCard>
-											</div>
-
-											<UCard>
-												<!-- Privacy -->
+										<div class="flex h-full flex-col">
+											<!--Expiry Date -->
+											<UCard class="h-50 flex-1">
 												<template #header>
-													<div class="text-xl font-bold text-gray-700">Privacy</div>
+													<div class="flex-1 text-xl font-bold text-gray-700">Expiry Date</div>
 												</template>
-												<URadioGroup v-model="selectedPrivacy" size="md" variant="card" :items="privacy" />
-											</UCard>
-
-											<UCard v-if="selectedPrivacy === 'PRIVATE'">
-												<!-- Privacy -->
-												<template #header>
-													<div class="text-xl font-bold text-gray-700">Description</div>
-												</template>
-												<UTextarea v-model="bagDescription" placeholder="Optional bag description" class="w-full" :rows="4" />
+												<div class="flex h-full items-center justify-center">
+													<UInputDate v-model="expiryDate" size="xl" icon="i-lucide-calendar" :min-value="minDate" />
+												</div>
 											</UCard>
 										</div>
+
+										<UCard>
+											<!-- Privacy -->
+											<template #header>
+												<div class="text-xl font-bold text-gray-700">Privacy</div>
+											</template>
+											<URadioGroup v-model="selectedPrivacy" size="md" variant="card" :items="privacy" />
+											<UTextarea
+												v-if="selectedPrivacy === 'PRIVATE'"
+												v-model="bagDescription"
+												placeholder="Optional bag description"
+												class="mt-2 w-full"
+												:rows="4"
+											/>
+										</UCard>
 									</div>
-								</UCard>
+								</div>
 							</div>
 							<div v-if="item.label === 'Confirm'">
-								<UCard>
-									<div class="flex flex-col">
-										<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-											<!--Category Selection -->
-											<UCard>
+								<div class="flex flex-col items-center">
+									<div class="flex w-full max-w-100 flex-col gap-4">
+										<div class="flex h-full flex-col">
+											<!-- Bag Details -->
+											<UCard class="h-50 flex-1">
 												<template #header>
-													<div class="text-xl font-bold text-gray-700">Items</div>
+													<div class="flex-1 text-xl font-bold text-gray-700">Bag Details</div>
 												</template>
-												<div
-													v-for="bagItem in bagItems"
-													:key="bagItem.itemID"
-													class="mb-2 flex flex-row items-center justify-between gap-3 rounded bg-gray-100 p-3"
-												>
-													<div class="flex flex-row items-center gap-4 font-bold">
+												<div class="space-y-1">
+													<div class="flex">
+														<p class="font-bold">Label:</p>
+														<span
+															v-for="label in labels.filter((l) => selectedCategory.includes(l.value))"
+															:key="label.value"
+															:class="`-py-1 rounded-full px-4 text-sm ${label.color}`"
+														>
+															{{ label.label }}
+														</span>
+													</div>
+													<div class="flex gap-2">
+														<p class="font-bold">Expiration:</p>
+														<span>{{
+															expiryDate ? `${expiryDate.month}/${expiryDate.day}/${expiryDate.year}` : "Date not set"
+														}}</span>
+													</div>
+													<div class="flex gap-2">
+														<p class="font-bold">Privacy:</p>
+														<span>{{ selectedPrivacy }}</span>
+													</div>
+													<span v-if="selectedPrivacy === 'PRIVATE'">Description:</span>
+												</div>
+											</UCard>
+										</div>
+										<!--Category Selection -->
+										<UCard>
+											<template #header>
+												<div class="text-xl font-bold text-gray-700">Items</div>
+											</template>
+											<div v-for="bagItem in bagItems" :key="bagItem.itemID" class="mb-2">
+												<UCard>
+													<template #header>
+														<p>{{ bagItem.name }}</p>
+													</template>
+													<div class="flex items-center justify-between">
 														<img
 															:src="`/api/public/image/${bagItem.imgName}`"
 															:alt="bagItem.name"
 															class="h-10 w-10 rounded object-cover sm:h-12 sm:w-12"
 														/>
-														<p>{{ bagItem.name }}</p>
+														<p>x{{ bagItem.count }}</p>
 													</div>
-													<p>x{{ bagItem.count }}</p>
-												</div>
-											</UCard>
-
-											<div class="flex h-full flex-col">
-												<!-- Bag Details -->
-												<UCard class="h-50 flex-1">
-													<template #header>
-														<div class="flex-1 text-xl font-bold text-gray-700">Bag Details</div>
-													</template>
 												</UCard>
 											</div>
-										</div>
+										</UCard>
 									</div>
-								</UCard>
+								</div>
 							</div>
 						</template>
 					</UStepper>
 
-					<div class="mt-4 flex justify-between gap-2">
-						<UButton leading-icon="i-lucide-arrow-left" :disabled="!stepper?.hasPrev" @click="stepper?.prev()"> Prev </UButton>
+					<div class="my-4 flex justify-between">
+						<UButton leading-icon="i-lucide-arrow-left" class="bg-final-utd-orange" :disabled="!stepper?.hasPrev" @click="stepper?.prev()">
+							Back
+						</UButton>
 
-						<UButton trailing-icon="i-lucide-arrow-right" :disabled="!stepper?.hasNext" @click="stepper?.next()"> Next </UButton>
+						<UButton
+							:trailing-icon="stepper?.hasNext ? 'i-lucide-arrow-right' : ''"
+							:class="stepper?.hasNext ? 'bg-final-utd-orange' : 'bg-final-utd-green'"
+							@click="stepper?.hasNext ? stepper?.next() : navigateTo('/dashboard')"
+						>
+							{{ stepper?.hasNext ? "Next" : "Confirm Bag" }}
+						</UButton>
 					</div>
 				</div>
 			</UContainer>
@@ -213,6 +240,7 @@ import { resolveComponent } from "vue"
 import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date"
 
 const UButton = resolveComponent("UButton")
+const stepper = ref()
 
 const resolvedComponents = {
 	UButton: resolveComponent("UButton"),
@@ -231,15 +259,15 @@ const steps = [
 const manage_searchQuery = ref("")
 
 //Add Tab
-const categories = [
-	{ label: "Vegetarian", value: "VEGETARIAN" },
-	{ label: "Peanut Butter", value: "PEANUT_BUTTER" },
+const labels = [
+	{ label: "Vegetarian", value: "VEGETARIAN", color: "#ADBC76" },
+	{ label: "Peanut Butter", value: "PEANUT_BUTTER", color: "#F6D6A2" },
 ]
 const privacy = [
-	{ label: "Private", value: "PRIVATE" },
 	{ label: "Public", value: "PUBLIC" },
+	{ label: "Private", value: "PRIVATE" },
 ]
-const selectedCategory = ref<string | null>(null)
+const selectedCategory = ref<string[]>([])
 const selectedPrivacy = ref<string | null>(null)
 const bagDescription = ref<string | null>(null)
 
@@ -350,7 +378,7 @@ const submitBag = async () => {
 		console.log("Bag created successfully!", response)
 
 		// Reset form
-		selectedCategory.value = null
+		selectedCategory.value = []
 		bagItems.value = []
 		expiryDate.value = minDate
 		searchQuery.value = ""
@@ -389,7 +417,7 @@ const columnsDef = [
 	},
 	{ header: "Bag ID", accessorKey: "label", type: "text", sortable: true },
 	{ header: "Location", accessorKey: "locationName", type: "text" },
-	{ header: "Category", accessorKey: "bagCategory", type: "text", cell: ({ row }) => categoryMap[row.original.bagCategory] ?? row.original.bagCategory },
+	{ header: "Label", accessorKey: "bagCategory", type: "text", cell: ({ row }) => categoryMap[row.original.bagCategory] ?? row.original.bagCategory },
 	/*{
     type: 'edit',icon: icons['edit'],
     onClick: (row) => {  console.log('To implement...')},
