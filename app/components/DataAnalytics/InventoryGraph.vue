@@ -7,7 +7,6 @@
 				<div class="flex flex-col p-4">
 					<div class="justify-left my-2 flex flex-col">
 						<USwitch v-if="drilledDown" v-model="showCount" label="Show by count" class="my-2" />
-						<USwitch v-model="sortByCount" label="Sort by count" />
 					</div>
 				</div>
 			</DataAnalyticsOptionButton>
@@ -18,12 +17,13 @@
 		<DataAnalyticsDataCardComponent v-if="drilledDown" title="Total Count" :value="itemCount" />
 	</div>
 	<div class="mt-10 flex flex-row gap-10">
-		<DataAnalyticsVerticalDataComponent v-if="!drilledDown" title="Category Quantity" :items="sortedCategories" />
-		<DataAnalyticsVerticalDataComponent v-if="drilledDown" title="Item Concentration" :items="itemConcentration" />
+		<DataAnalyticsVerticalDataComponent v-if="!drilledDown" title="Category Quantity" :items="sortedCategories" :countToggle="false" />
+		<DataAnalyticsVerticalDataComponent v-if="drilledDown" title="Item Concentration" :items="itemConcentration" :countToggle="true" />
 		<div class="min-h-140 w-full min-w-0">
 			<button v-if="drilledDown" class="absolute rounded-lg border border-solid px-3 py-1 m-4" style="cursor: pointer" @click="resetChart">Back</button>
 			<div class="h-full w-full border border-gray-300 px-8">
-				<canvas ref="barContainer" class="mt-4" />
+					<USwitch class="justify-self-end mt-4" v-model="sortByCount" label="Sort by count" />
+				<canvas ref="barContainer" />
 			</div>
 		</div>
 	</div>
@@ -84,14 +84,16 @@ watch(sortByCount, () => {
 })
 
 const sortedCategories = computed(() => {
-	return Object.entries(inventoryData.value)
-		.map(([category, items]) => ({
+	return Object.entries(inventoryData.value).map(([category, items]) => {
+		const count = Object.values(items).reduce((sum, qty) => sum + qty, 0)
+
+		return {
 			label: category,
-			value: Object.values(items).reduce((sum, qty) => {
-				return sum + qty
-			}, 0),
-		}))
-		.sort((a, b) => b.value - a.value)
+			count,
+			percentage: (((count / totalInventory.value) * 100).toFixed(1))
+		}
+	})
+	.sort((a, b) => b.count - a.count)
 })
 
 const totalInventory = computed(() => {
@@ -116,12 +118,12 @@ const itemConcentration = computed(() => {
 	if (!itemCount.value) return []
 
 	return Object.entries(currentCategoryItems.value)
-		.map(([label, value]) => ({ label, value }))
-		.sort((a, b) => b.value - a.value)
-		.map(({ label, value }) => ({
-			label,
-			value: showCount.value ? value.toString() : ((value / itemCount.value) * 100).toFixed(1) + "%",
+		.map(([label, count]) => ({
+			label, 
+			count, 
+			percentage: ((( count / itemCount.value)) * 100).toFixed(1), 
 		}))
+		.sort((a, b) => b.count - a.count)
 })
 
 const showDrillDownView = (categoryName: string) => {

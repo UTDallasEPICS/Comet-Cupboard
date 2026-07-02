@@ -1,7 +1,7 @@
 <template>
 	<div class="mx-20">
 		<div class="flex flex-col items-center">
-			<div class="h-10 flex items-center text-black justify-center text-lg font-bold">
+			<div class="h-10 flex items-center text-black justify-center text-l font-bold">
 				{{ title }}
 			</div>
 

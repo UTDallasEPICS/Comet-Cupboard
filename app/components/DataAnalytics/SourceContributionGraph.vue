@@ -20,7 +20,6 @@
 						</UInputDate>
 						<div class="justify-left my-2 flex flex-col">
 							<USwitch v-model="showCount" label="Show by count" class="my-2" />
-							<USwitch v-model="sortByCount" label="Sort by count" />
 						</div>
 					</div>
 				</div>
@@ -37,6 +36,7 @@
 			<div class="min-h-140 w-full min-w-0">
 				<button v-if="drilledDown" class="absolute rounded-lg border border-solid px-3 py-1 m-4" style="cursor: pointer" @click="resetChart">Back</button>
 				<div class="h-full w-full border border-gray-300 px-8">
+					<USwitch v-if="drilledDown" class="justify-self-end mt-4" v-model="sortByCount" label="Sort by count" />
 					<canvas ref="barContainer" class="mt-4" />
 				</div>
 			</div>

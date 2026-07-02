@@ -24,7 +24,6 @@
 							</template>
 						</UInputDate>
 						<div class="justify-left my-2 flex flex-col">
-							<USwitch v-model="showCount" label="Show by count" class="my-2" />
 							<USwitch v-model="sortByCount" label="Sort by count" />
 						</div>
 					</div>
@@ -53,6 +52,7 @@
 					Back
 				</button>
 				<div class="h-full w-full border border-gray-300 px-8">
+					<USwitch v-if="firstDrillDown || secondDrillDown" class="justify-self-end mt-4" v-model="sortByCount" label="Sort by count" />
 					<canvas ref="barContainer" class="mt-4" />
 				</div>
 			</div>

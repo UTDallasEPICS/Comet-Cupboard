@@ -43,7 +43,7 @@
 	</div>
 	<div>
 		<div class="mt-10 flex flex-row gap-10">
-			<DataAnalyticsVerticalDataComponent title="Top Donated Categories" :items="topDonatedCategories" />
+			<DataAnalyticsVerticalDataComponent title="Top Donated Categories" :items="topDonatedCategories" :countToggle="true" />
 			<div class="min-h-140 w-full min-w-0">
 				<button
 					v-if="firstDrillDown || secondDrillDown"
@@ -54,6 +54,7 @@
 					Back
 				</button>
 				<div class="h-full w-full border border-gray-300 px-8">
+					<USwitch v-if="firstDrillDown || secondDrillDown" class="justify-self-end mt-4" v-model="sortByCount" label="Sort by count" />
 					<canvas ref="barContainer" class="mt-4" />
 				</div>
 			</div>
