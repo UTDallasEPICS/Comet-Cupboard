@@ -7,7 +7,18 @@ export default defineSafeHandler(async (event) => {
 		select: {
 			position: true,
 			publicCode: true,
+			UserSession: {
+				select: {
+					publicIcon: true,
+				},
+			},
 		},
 	})
-	return queue
+	const formattedQueue = queue.map((entry) => ({
+		position: entry.position,
+		publicCode: entry.publicCode,
+		publicIcon: entry.UserSession.publicIcon,
+	}))
+
+	return formattedQueue
 })

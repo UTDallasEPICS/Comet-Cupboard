@@ -3,9 +3,14 @@ import { StatusCodes } from "http-status-codes"
 import { Prisma, RoleType } from "../../../../prisma/generated/prisma/client"
 
 export default defineSafeHandler(async (event) => {
-	const userID = event.context.user.netID
+	const userID = event.context.userSession.userID
+	const currentUserRole = event.context.userSession.User.role
 
 	try {
+		if (currentUserRole !== RoleType.HEAD_ADMIN) {
+			throw createError({ statusCode: StatusCodes.FORBIDDEN, statusMessage: "Current user is not a head admin" })
+		}
+
 		const currentHeadAdmins = await prisma.user.findMany({
 			where: {
 				role: RoleType.HEAD_ADMIN,
@@ -17,7 +22,7 @@ export default defineSafeHandler(async (event) => {
 
 		await prisma.user.update({
 			where: {
-				netID: userID,
+				userID: userID,
 				role: RoleType.HEAD_ADMIN,
 			},
 			data: {

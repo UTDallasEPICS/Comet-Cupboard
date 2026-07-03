@@ -1,22 +1,17 @@
 export const useLogout = () => {
 	const permissionsStore = usePermissionsStore()
-	const netIDCookie = useCookie("netID")
+	const userSessionStore = useUserSessionInfoStore()
+	const userIDCookie = useCookie("userID")
 
 	const logout = async () => {
-		// Delete cart (ignore errors)
+		// Delete user session (ignore errors)
 		try {
-			await $fetch("/api/student/cart/cart", { method: "DELETE" })
+			await $fetch("/api/public/account/logout", { method: "POST" })
 		} catch (error) {}
 
-		// Remove from queue (ignore errors)
-		try {
-			await $fetch("/api/student/queue/leave", {
-				method: "POST",
-			})
-		} catch (error) {}
-
-		netIDCookie.value = null
+		userIDCookie.value = null
 		permissionsStore.clearPermissions()
+		userSessionStore.clearUserSessionInfo()
 		await navigateTo("/")
 		reloadNuxtApp()
 	}

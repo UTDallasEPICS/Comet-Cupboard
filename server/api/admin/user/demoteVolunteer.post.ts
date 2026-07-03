@@ -12,7 +12,7 @@ export default defineSafeHandler(async (event) => {
 	const { userID } = await validateBody(event, schema)
 
 	const transactionResult = await prisma.$transaction(async (tx) => {
-		const user = await tx.user.findUnique({ where: { netID: userID, role: RoleType.VOLUNTEER } })
+		const user = await tx.user.findUnique({ where: { userID: userID, role: RoleType.VOLUNTEER } })
 
 		if (!user) {
 			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Volunteer user not found" })
@@ -20,7 +20,7 @@ export default defineSafeHandler(async (event) => {
 
 		await tx.user.update({
 			where: {
-				netID: userID,
+				userID: userID,
 			},
 			data: {
 				role: RoleType.STUDENT,

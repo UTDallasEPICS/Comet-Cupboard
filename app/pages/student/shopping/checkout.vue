@@ -7,7 +7,7 @@
 						v-model="active"
 						class="w-full"
 						:items="items"
-						:orientation="`${smaller ? 'vertical' : 'horizontal'}`"
+						orientation="horizontal"
 						:disabled="true"
 						:ui="{
 							trigger: 'border-1',
@@ -48,15 +48,19 @@
 							</div>
 						</template>
 
-						<template #AdjustCounts>
+						<template #EditCart>
 							<USeparator class="mb-4" />
 							<UAlert
-								title="Review each item and adjust expired/damaged/overstocked counts before continuing."
+								title="If you have any expired, damaged, or overstocked items, adjust your cart so that the volunteer can correctly verify your cart."
 								:icon="icons['information']"
 								color="neutral"
 								variant="outline"
 							/>
-							<SharedWarningsList :warnings="pendingCartWarnings(combineCartAndTemporaryAdjustments)" class="mt-4" />
+							<SharedWarningsList
+								v-if="pendingCartWarnings(combineCartAndTemporaryAdjustments).length > 0"
+								:warnings="pendingCartWarnings(combineCartAndTemporaryAdjustments)"
+								class="mt-4"
+							/>
 							<div class="mt-4 flex flex-col gap-4">
 								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
@@ -100,7 +104,11 @@
 								variant="outline"
 							/>
 
-							<SharedWarningsList :warnings="pendingCartWarnings(combineCartAndTemporaryAdjustments)" class="mt-4" />
+							<SharedWarningsList
+								v-if="pendingCartWarnings(combineCartAndTemporaryAdjustments).length > 0"
+								:warnings="pendingCartWarnings(combineCartAndTemporaryAdjustments)"
+								class="mt-4"
+							/>
 							<div class="mt-4 flex flex-col gap-4">
 								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
@@ -129,7 +137,7 @@
 							</div>
 						</template>
 
-						<template #Verification>
+						<template #Verifying>
 							<USeparator class="m4-6" />
 
 							<UAlert
@@ -166,7 +174,7 @@
 							</div>
 						</template>
 
-						<template #Confirmation>
+						<template #Confirmed>
 							<USeparator class="mb-4" />
 
 							<template v-if="cartRejected">
@@ -214,8 +222,8 @@ const items: StepperItem[] = [
 		icon: icons["disclosures"],
 	},
 	{
-		slot: "AdjustCounts" as const,
-		title: "Adjust Counts",
+		slot: "EditCart" as const,
+		title: "Edit Cart",
 		icon: icons["edit"],
 	},
 	{
@@ -224,13 +232,13 @@ const items: StepperItem[] = [
 		icon: icons["shopping"],
 	},
 	{
-		slot: "Verification" as const,
-		title: "Pending Verification",
+		slot: "Verifying" as const,
+		title: "Verifying",
 		icon: icons["pending"],
 	},
 	{
-		slot: "Confirmation" as const,
-		title: "Confirmation",
+		slot: "Confirmed" as const,
+		title: "Confirmed",
 		icon: icons["confirmation"],
 	},
 ]

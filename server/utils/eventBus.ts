@@ -5,29 +5,18 @@ import type { AppEvent } from "#shared/types/events"
 export const publishEvent = async (event: AppEvent) => {
 	switch (event.type) {
 		case "queue.entryAdded":
-			connectionsByRole.volunteer.broadcast(
-				JSON.stringify({
-					type: "queue.entryAdded",
-					payload: event.payload,
-				})
-			)
 			connectionsByRole.student.broadcast(
 				JSON.stringify({
 					type: "queue.entryAdded",
 					payload: {
 						position: event.payload.position,
 						publicCode: event.payload.publicCode,
+						publicIcon: event.payload.publicIcon,
 					},
 				})
 			)
 			break
 		case "queue.entryRemoved":
-			connectionsByRole.volunteer.broadcast(
-				JSON.stringify({
-					type: "queue.entryRemoved",
-					payload: event.payload,
-				})
-			)
 			connectionsByRole.student.broadcast(
 				JSON.stringify({
 					type: "queue.entryRemoved",
@@ -39,12 +28,6 @@ export const publishEvent = async (event: AppEvent) => {
 			)
 			break
 		case "queue.entryApproved":
-			connectionsByRole.volunteer.broadcast(
-				JSON.stringify({
-					type: "queue.entryApproved",
-					payload: event.payload,
-				})
-			)
 			connectionsByRole.student.broadcast(
 				JSON.stringify({
 					type: "queue.entryApproved",
@@ -56,14 +39,6 @@ export const publishEvent = async (event: AppEvent) => {
 			)
 			break
 		case "queue.queueUpdated":
-			connectionsByRole.volunteer.broadcast(
-				JSON.stringify({
-					type: "queue.queueUpdated",
-					payload: {
-						queue: event.payload,
-					},
-				})
-			)
 			connectionsByRole.student.broadcast(
 				JSON.stringify({
 					type: "queue.queueUpdated",
@@ -72,6 +47,7 @@ export const publishEvent = async (event: AppEvent) => {
 							return {
 								position: entry.position,
 								publicCode: entry.publicCode,
+								publicIcon: entry.publicIcon,
 							}
 						}),
 					},
@@ -96,7 +72,7 @@ export const publishEvent = async (event: AppEvent) => {
 			break
 		case "cart.verification.decision":
 			connectionsByRole.student.messageToUser(
-				event.payload.netID,
+				event.payload.userID,
 				JSON.stringify({
 					type: "cart.verification.decision",
 					payload: event.payload,
@@ -121,7 +97,7 @@ export const publishEvent = async (event: AppEvent) => {
 			break
 		case "volunteerRequest.decision":
 			connectionsByRole.student.messageToUser(
-				event.payload.netID,
+				event.payload.userID,
 				JSON.stringify({
 					type: "volunteerRequest.decision",
 					payload: event.payload,

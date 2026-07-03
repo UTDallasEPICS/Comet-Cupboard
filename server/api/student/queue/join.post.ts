@@ -3,26 +3,25 @@ import { createEvent } from "#server/utils/eventsFactory"
 import { publishEvent } from "#server/utils/eventBus"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
-import { generateQueueName } from "#server/utils/queueNames"
 
 export default defineSafeHandler(async (event) => {
-	const netID = event.context.user.netID
+	const publicCode = event.context.userSession.publicCode
 
-	let queueEntry: { netID: string; position: number; publicCode: string } = {
-		netID,
+	let queueEntry = {
 		position: -1,
 		publicCode: "",
+		publicIcon: "",
 	}
 	await prisma.$transaction(async (tx) => {
 		const existingEntry = await tx.queueEntry.findUnique({
-			where: { netID },
+			where: { publicCode: publicCode },
 		})
 		if (existingEntry) {
 			throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "User is already in the queue" })
 		}
 
 		const existingCart = await tx.cart.findUnique({
-			where: { cartID: netID },
+			where: { publicCode: publicCode },
 		})
 		if (existingCart) {
 			throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "User already has a cart" })
@@ -33,21 +32,32 @@ export default defineSafeHandler(async (event) => {
 		})
 		const tempQueueNumber = maxPositionEntry ? maxPositionEntry.position + 1 : 1
 
-		// you know what I think colliding queue names can be funny
-		queueEntry = await tx.queueEntry.create({
+		const foundQueueEntry = await tx.queueEntry.create({
 			data: {
-				netID: netID,
-				publicCode: generateQueueName(),
+				publicCode: publicCode,
 				position: tempQueueNumber,
 			},
+			include: {
+				UserSession: {
+					select: {
+						publicCode: true,
+						publicIcon: true,
+					},
+				},
+			},
 		})
+		queueEntry = {
+			position: foundQueueEntry.position,
+			publicCode: foundQueueEntry.publicCode,
+			publicIcon: foundQueueEntry.UserSession.publicIcon,
+		}
 	})
 
 	publishEvent(
 		createEvent("queue.entryAdded", {
 			position: queueEntry.position,
 			publicCode: queueEntry.publicCode,
-			netID: queueEntry.netID,
+			publicIcon: queueEntry.publicIcon,
 		})
 	)
 

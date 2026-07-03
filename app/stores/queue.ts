@@ -1,8 +1,7 @@
-import type { QueueEntry, QueueEntryNonSensitive } from "#shared/types/events"
+import type { QueueEntryNonSensitive } from "#shared/types/events"
 
 export const useQueueStore = defineStore("queue", () => {
 	const queue = ref<Array<QueueEntryNonSensitive>>([])
-	const volunteerQueue = ref<Array<QueueEntry>>([])
 	const queueStatus = ref<Record<string, any> | null>(null)
 
 	const getQueue = async () => {
@@ -11,15 +10,6 @@ export const useQueueStore = defineStore("queue", () => {
 			queue.value = response
 		} catch (error: unknown) {
 			queue.value = []
-		}
-	}
-
-	const getVolunteerQueue = async () => {
-		try {
-			const response = await $fetch("/api/volunteer/queue/queue")
-			volunteerQueue.value = response
-		} catch (error: unknown) {
-			volunteerQueue.value = []
 		}
 	}
 
@@ -51,22 +41,5 @@ export const useQueueStore = defineStore("queue", () => {
 		await updateQueueStatus()
 	}
 
-	const handleVolunteerQueueEvent = async (event: AppEvent) => {
-		switch (event.type) {
-			case "queue.queueUpdated":
-				volunteerQueue.value = event.payload
-				break
-			case "queue.entryAdded":
-				volunteerQueue.value.push(event.payload)
-				break
-			case "queue.entryRemoved":
-				volunteerQueue.value = volunteerQueue.value.filter((entry) => entry.publicCode !== event.payload.publicCode)
-				break
-			case "queue.entryApproved":
-				volunteerQueue.value = volunteerQueue.value.filter((entry) => entry.publicCode !== event.payload.publicCode)
-				break
-		}
-	}
-
-	return { handleQueueEvent, handleVolunteerQueueEvent, queue, getQueue, queueStatus, updateQueueStatus, volunteerQueue, getVolunteerQueue }
+	return { handleQueueEvent, queue, getQueue, queueStatus, updateQueueStatus }
 })

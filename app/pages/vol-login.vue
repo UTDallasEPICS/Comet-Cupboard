@@ -2,8 +2,8 @@
 	<section>
 		<div class="flex flex-row items-center justify-center">
 			<UForm :state="state" @submit="onSubmit">
-				<UFormField label="Volunteer Net ID" name="netID">
-					<UInput v-model="state.netID" required placeholder="Net ID" color="neutral" size="xl" />
+				<UFormField label="Volunteer Net ID" name="userID">
+					<UInput v-model="state.userID" required placeholder="Net ID" color="neutral" size="xl" />
 				</UFormField>
 			</UForm>
 		</div>
@@ -14,13 +14,15 @@
 const toast = useToast()
 
 const state = ref({
-	netID: "",
+	userID: "",
 })
 
 const permissionsStore = usePermissionsStore()
+const userSessionStore = useUserSessionInfoStore()
 
 onMounted(async () => {
 	await permissionsStore.setPermissionsFromServer()
+	await userSessionStore.setUserSessionInfoFromServer()
 	if (permissionsStore.canAdminAccess) {
 		navigateTo("/admin")
 	} else if (permissionsStore.canVolunteerAccess) {
@@ -34,10 +36,11 @@ const onSubmit = async () => {
 	try {
 		await $fetch("/api/public/account/login", {
 			method: "POST",
-			body: { netID: state.value.netID },
+			body: { userID: state.value.userID },
 		})
 		await permissionsStore.setPermissionsFromServer()
-		refreshCookie("netID")
+		await userSessionStore.setUserSessionInfoFromServer()
+		refreshCookie("userID")
 		refreshCookie("AccessPermission")
 
 		await $fetch("/api/student/user/requestVolunteer", {

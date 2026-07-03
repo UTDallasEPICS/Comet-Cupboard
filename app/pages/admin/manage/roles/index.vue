@@ -6,7 +6,7 @@
 			</section>
 
 			<section>
-				<ManageRolesWorkerList />
+				<ManageRolesWorkerList class="mt-4" />
 			</section>
 		</NuxtLayout>
 	</div>

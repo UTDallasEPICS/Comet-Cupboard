@@ -20,6 +20,21 @@ export default defineSafeHandler(async (event) => {
 		orderBy: {
 			createdAt: "asc",
 		},
+		include: {
+			UserSession: {
+				select: {
+					publicCode: true,
+					publicIcon: true,
+				},
+			},
+		},
 	})
-	return carts
+
+	const formattedCarts = carts.map((cart) => ({
+		publicCode: cart.UserSession.publicCode,
+		publicIcon: cart.UserSession.publicIcon,
+		pending: cart.pending,
+		createdAt: cart.createdAt,
+	}))
+	return formattedCarts
 })

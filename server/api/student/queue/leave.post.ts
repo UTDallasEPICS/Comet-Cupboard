@@ -6,18 +6,18 @@ import { defineSafeHandler } from "#server/utils/handler"
 import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 export default defineSafeHandler(async (event) => {
-	const netID = event.context.user.netID
+	const publicCode = event.context.userSession.publicCode
 
 	try {
 		const existingEntry = await prisma.queueEntry.delete({
-			where: { netID: netID },
+			where: { publicCode: publicCode },
 		})
 
 		publishEvent(
 			createEvent("queue.entryRemoved", {
 				position: existingEntry.position,
 				publicCode: existingEntry.publicCode,
-				netID: existingEntry.netID,
+				publicIcon: "", // don't want to join on UserSession here
 			})
 		)
 		return "User has left the queue"

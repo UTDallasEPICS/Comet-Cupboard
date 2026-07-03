@@ -20,7 +20,7 @@ const items = []
 
 const populateItems = async () => {
 	const categories: Array<string> = readdirSync("./test-images").filter((file) => {
-		return !(file === "_category_banners") && !(file === "Locations")
+		return !(file === "_category_banners") && !(file === "_location_images") && !(file === "Locations")
 	})
 	const promises = categories.flatMap((category) => {
 		const categoryItems: Array<string> = readdirSync("./test-images/" + category)
@@ -40,19 +40,32 @@ const populateItems = async () => {
 }
 
 const validUsers = [
-	{ netID: "stu000000", role: RoleType.STUDENT },
-	{ netID: "stu000001", role: RoleType.STUDENT },
-	{ netID: "stu000002", role: RoleType.STUDENT },
-	{ netID: "vol000000", role: RoleType.VOLUNTEER },
-	{ netID: "vol000001", role: RoleType.VOLUNTEER },
-	{ netID: "adm000000", role: RoleType.ADMIN },
-	{ netID: "had000000", role: RoleType.HEAD_ADMIN },
+	{ userID: "stu000000", role: RoleType.STUDENT },
+	{ userID: "stu000001", role: RoleType.STUDENT },
+	{ userID: "stu000002", role: RoleType.STUDENT },
+	{ userID: "vol000000", role: RoleType.VOLUNTEER },
+	{ userID: "vol000001", role: RoleType.VOLUNTEER },
+	{ userID: "adm000000", role: RoleType.ADMIN },
+	{ userID: "had000000", role: RoleType.HEAD_ADMIN },
 ]
 
-const locations = [
-	{ name: "Police Station", address: "100 N Floyd Road", imgName: "police_station.jpg", description: "https://police.utdallas.edu", archived: false },
-	{ name: "Activity Center", address: "800 Campbell Rd", imgName: "activity_center.jpg", description: "https://urec.utdallas.edu", archived: false },
-]
+const populateLocations = async () => {
+	const locationImages = readdirSync("./test-images/_location_images")
+	const locationData = [
+		{ name: "Police Station", address: "100 N Floyd Road", description: "https://police.utdallas.edu" },
+		{ name: "Activity Center", address: "800 Campbell Rd", description: "https://urec.utdallas.edu" },
+	]
+	const promises = locationData.map(async (location) => {
+		const imgName = locationImages.find((image) => image.split(".")[0] === location.name.replace(/\s/g, "_").toLowerCase())
+		if (imgName) {
+			const imgBuffer = await processImage(await readFile("./test-images/_location_images/" + imgName))
+			const uploadedImgName = await uploadImage(imgBuffer)
+			return { ...location, imgName: uploadedImgName }
+		}
+		return { ...location, imgName: null }
+	})
+	return await Promise.all(promises)
+}
 
 const emergencyBags = [
 	{
@@ -134,6 +147,7 @@ const createDeals = async () => {
 }
 
 const createLocations = async () => {
+	const locations = await populateLocations()
 	await prisma.location.createMany({
 		data: locations,
 	})
@@ -223,7 +237,7 @@ const createOrders = async () => {
 	while (tempDate < currentDate) {
 		// consider only weekdays
 		if (!(tempDate.getDay() === 0 || tempDate.getDay() === 6)) {
-			const randomUser = validUsers[Math.floor(Math.random() * validUsers.length)].netID
+			const randomUser = validUsers[Math.floor(Math.random() * validUsers.length)].userID
 
 			const pickedItems = []
 			const pickedAmount = 3
@@ -236,7 +250,7 @@ const createOrders = async () => {
 			}
 
 			orders.push({
-				netID: randomUser,
+				userID: randomUser,
 				cartCreatedAt: new Date(tempDate),
 			})
 

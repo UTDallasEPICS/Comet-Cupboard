@@ -14,13 +14,13 @@ const schema = z
 
 export default defineSafeHandler(async (event) => {
 	const { itemID } = await validateBody(event, schema)
-	const netID = event.context.user.netID
+	const publicCode = event.context.userSession.publicCode
 
 	try {
 		await prisma.cartItem.delete({
 			where: {
 				cartItemID: {
-					cartID: netID,
+					publicCode: publicCode,
 					itemID: itemID,
 				},
 				Cart: {

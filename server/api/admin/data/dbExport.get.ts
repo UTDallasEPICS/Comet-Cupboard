@@ -86,7 +86,7 @@ export default defineSafeHandler(async (event) => {
 		worksheetOrders.addRow({
 			timestamp: orderItem.Order.date,
 			order_id: orderItem.orderID,
-			user: orderItem.Order.netID,
+			user: orderItem.Order.userID,
 			item_id: orderItem.itemID,
 			item_name: orderItem.Item.name,
 			amount_ordered: orderItem.count,

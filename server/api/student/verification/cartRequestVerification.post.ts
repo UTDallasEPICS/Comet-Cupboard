@@ -20,13 +20,13 @@ const schema = z
 	.required()
 
 export default defineSafeHandler(async (event) => {
-	const netID = event.context.user.netID
+	const publicCode = event.context.userSession.publicCode
 
 	const { adjustments } = await validateBody(event, schema)
 
 	const cart = await prisma.$transaction(async (tx) => {
 		const existingCart = await tx.cart.findUnique({
-			where: { cartID: netID, pending: false },
+			where: { publicCode: publicCode, pending: false },
 			include: {
 				CartItems: {
 					include: {
@@ -60,7 +60,7 @@ export default defineSafeHandler(async (event) => {
 			}
 			try {
 				await tx.cartItem.update({
-					where: { cartItemID: { cartID: netID, itemID: adjustment.itemID } },
+					where: { cartItemID: { publicCode: publicCode, itemID: adjustment.itemID } },
 					data: {
 						countAdjustment: adjustment.countAdjustment,
 					},
@@ -75,7 +75,7 @@ export default defineSafeHandler(async (event) => {
 
 		try {
 			const updatedCart = await tx.cart.update({
-				where: { cartID: netID },
+				where: { publicCode: publicCode },
 				data: { pending: true },
 				include: {
 					CartItems: {
@@ -84,6 +84,12 @@ export default defineSafeHandler(async (event) => {
 								omit: { quantity: true },
 								include: { Deal: true },
 							},
+						},
+					},
+					UserSession: {
+						select: {
+							publicCode: true,
+							publicIcon: true,
 						},
 					},
 				},
@@ -96,7 +102,12 @@ export default defineSafeHandler(async (event) => {
 			throw error
 		}
 	})
-	publishEvent(createEvent("verifyCartList.cart.added", { cart: cart }))
+	const formattedCart = {
+		...cart,
+		publicCode: cart.publicCode,
+		publicIcon: cart.UserSession.publicIcon,
+	}
+	publishEvent(createEvent("verifyCartList.cart.added", { cart: formattedCart }))
 
 	return "Successfully requested cart verification"
 })

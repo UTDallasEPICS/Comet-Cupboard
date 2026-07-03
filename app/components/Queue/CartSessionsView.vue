@@ -1,19 +1,16 @@
 <template>
 	<UCard>
 		<SharedTextSectionTitle> Cart Sessions </SharedTextSectionTitle>
-		<UTable :data="cartSessionsStore.cartSessions" :columns="tableColumns" empty="No cart sessions currently available" />
+		<div v-for="cart in cartSessionsStore.cartSessions" :key="cart.publicCode" class="mt-4">
+			<div class="flex flex-row items-center">
+				<UUser :name="cart.publicCode" :avatar="{ icon: cart.publicIcon }" size="xl" />
+			</div>
+		</div>
 	</UCard>
 </template>
 
 <script lang="ts" setup>
 const cartSessionsStore = useCartSessionsStore()
-
-const UButton = resolveComponent("UButton")
-const UCheckbox = resolveComponent("UCheckbox")
-const UDropdownMenu = resolveComponent("UDropdownMenu")
-
-const columnsDef = [{ header: "Cart ID", accessorKey: "cartID", type: "text" }]
-const tableColumns = buildNuxtUITable(columnsDef, { UButton, UCheckbox, UDropdownMenu })
 
 onMounted(async () => {
 	await cartSessionsStore.getCartSessions()

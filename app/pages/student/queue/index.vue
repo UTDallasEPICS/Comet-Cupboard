@@ -6,10 +6,14 @@
 					<SharedTextSectionTitle class="mb-4"> Current Status </SharedTextSectionTitle>
 
 					<div class="space-y-2">
-						<div v-if="queueStore.queueStatus">
-							<SharedTextBase> Public Code: {{ queueStore.queueStatus.publicCode }} </SharedTextBase>
-							<SharedTextBase> Position: {{ queueStore.queueStatus.position }} </SharedTextBase>
-							<SharedButtonCancel text="Leave Queue" @click="leaveQueue" />
+						<div v-if="queueStore.queueStatus" class="flex flex-row justify-between">
+							<UUser
+								:name="queueStore.queueStatus.publicCode"
+								:description="`Position: ${queueStore.queueStatus.position}`"
+								:avatar="{ icon: queueStore.queueStatus.publicIcon }"
+								size="xl"
+							/>
+							<SharedButtonCancel text="Leave Queue" class="my-auto h-min" @click="leaveQueue" />
 						</div>
 						<div v-else>
 							<div v-if="cartStore.cart">
@@ -25,9 +29,20 @@
 			</section>
 
 			<section>
-				<UCard>
-					<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
-					<UTable :data="queueStore.queue" :columns="tableColumns" :meta="meta" empty="No one currently in queue" />
+				<UCard class="mt-4">
+					<SharedTextSectionTitle class="mb-4"> Current Queue </SharedTextSectionTitle>
+					<div v-for="queueEntry in queueStore.queue" :key="queueEntry.position">
+						<UUser
+							:name="queueEntry.publicCode"
+							:description="`Position: ${queueEntry.position}`"
+							:avatar="{ icon: queueEntry.publicIcon }"
+							size="xl"
+							:class="{
+								'bg-utd-green/10': queueEntry.publicCode === queueStore.queueStatus?.publicCode,
+								'rounded-lg': true,
+							}"
+						/>
+					</div>
 				</UCard>
 			</section>
 		</NuxtLayout>
@@ -38,25 +53,8 @@
 definePageMeta({ layout: false })
 
 const queueStore = useQueueStore()
-
 const cartStore = useCartStore()
 
-const columnsDef = [
-	{ header: "Position", accessorKey: "position", type: "text" },
-	{ header: "Display Name", accessorKey: "publicCode", type: "text" },
-]
-const tableColumns = buildNuxtUITable(columnsDef, {})
-
-const meta = {
-	class: {
-		tr: (row) => {
-			if (row.original.publicCode === queueStore.queueStatus?.publicCode) {
-				return "bg-utd-green/10"
-			}
-			return ""
-		},
-	},
-}
 
 onMounted(async () => {
 	await queueStore.getQueue()

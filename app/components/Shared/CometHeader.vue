@@ -21,7 +21,7 @@
 
 				<template #header="{ close }">
 					<div class="flex w-full flex-row items-center justify-between">
-						<img src="/CometCupboardLogo2.png" class="h-8" />
+						<img src="/CometCupboardLogo2.png" class="aspect-auto h-8" />
 						<UButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" :icon="icons['close']" @click="close" />
 					</div>
 				</template>
@@ -108,8 +108,14 @@
 
 					<template #content>
 						<div class="flex w-64 flex-col items-start gap-2 p-4">
-							<SharedTextBase>John Doe</SharedTextBase>
-							<SharedTextBase>John.Doe1@utdallas.edu</SharedTextBase>
+							<UUser
+								:name="userSessionInfoStore.publicCode"
+								:description="userID"
+								:avatar="{
+									icon: userSessionInfoStore.publicIcon,
+								}"
+								size="xl"
+							/>
 							<SharedTextBase class="text-utd-orange">{{ permissionsStore.roleText }}</SharedTextBase>
 							<USeparator />
 							<UButton variant="outline" color="neutral" :icon="icons['logout']" class="w-full" @click="logout"> Logout </UButton>
@@ -127,6 +133,9 @@ import type { NavigationMenuItem } from "@nuxt/ui"
 const cartStore = useCartStore()
 const inventoryStore = useInventoryStore()
 const permissionsStore = usePermissionsStore()
+const userSessionInfoStore = useUserSessionInfoStore()
+
+const userID = useCookie("userID")
 
 const route = useRoute()
 const showCartIcon = computed(() => {

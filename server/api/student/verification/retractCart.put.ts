@@ -6,12 +6,12 @@ import { defineSafeHandler } from "#server/utils/handler"
 import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 export default defineSafeHandler(async (event) => {
-	const netID = event.context.user.netID
+	const publicCode = event.context.userSession.publicCode
 
 	const cart = await prisma.$transaction(async (tx) => {
 		const pendingCart = await tx.cart.findUnique({
 			where: {
-				cartID: netID,
+				publicCode: publicCode,
 				pending: true,
 			},
 		})
@@ -22,7 +22,7 @@ export default defineSafeHandler(async (event) => {
 		try {
 			const cart = await tx.cart.update({
 				where: {
-					cartID: pendingCart.cartID,
+					publicCode: publicCode,
 				},
 				data: {
 					pending: false,
@@ -37,6 +37,6 @@ export default defineSafeHandler(async (event) => {
 		}
 	})
 
-	publishEvent(createEvent("verifyCartList.cart.removed", { cartID: cart.cartID }))
+	publishEvent(createEvent("verifyCartList.cart.removed", { publicCode: cart.publicCode }))
 	return "Successfully retracted cart"
 })

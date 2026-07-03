@@ -1,7 +1,7 @@
 <template>
 	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
 		<template #body>
-			<div class="flex flex-col justify-end">
+			<div class="flex flex-col justify-center">
 				<div class="flex flex-row justify-end gap-4">
 					<SharedTextBase class="text-end">Quantity:</SharedTextBase>
 					<div class="w-20">

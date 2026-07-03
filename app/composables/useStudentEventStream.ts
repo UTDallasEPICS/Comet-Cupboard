@@ -22,10 +22,10 @@ export const useStudentEventStream = () => {
 
 	const handleVolunteerRequestDecisionEvent = async (event: AppEvent) => {
 		if (event.type === "volunteerRequest.decision") {
-			const { netID, decision } = event.payload
+			const { decision } = event.payload
 			if (decision === "ACCEPT") {
 				await permissionsStore.setPermissionsFromServer()
-				refreshCookie("netID")
+				refreshCookie("userID")
 				refreshCookie("AccessPermission")
 
 				await navigateTo("/volunteer")
@@ -43,10 +43,10 @@ export const useStudentEventStream = () => {
 		eventStream = new EventSource(`${config.public.LOCAL_URL}api/student/events/student`)
 
 		eventStream.onopen = () => {
-			toast.add({
-				title: "Connected",
-				description: "Real-time updates are now enabled.",
-			})
+			// toast.add({
+			// 	title: "Connected",
+			// 	description: "Real-time updates are now enabled.",
+			// })
 		}
 
 		eventStream.onmessage = (e) => {

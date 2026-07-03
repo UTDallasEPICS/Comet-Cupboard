@@ -9,7 +9,7 @@ export default defineSafeHandler(async () => {
 			},
 		},
 		select: {
-			netID: true,
+			userID: true,
 			role: true,
 		},
 	})

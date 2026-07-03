@@ -6,7 +6,7 @@
 			</section>
 
 			<section>
-				<QueueVolunteerView />
+				<QueueVolunteerView class="mt-4"/>
 			</section>
 		</NuxtLayout>
 	</div>

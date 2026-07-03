@@ -9,32 +9,40 @@ import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 const schema = z
 	.object({
-		netID: z.string(),
+		publicCode: z.string(),
 	})
 	.strict()
 	.required()
 
 export default defineSafeHandler(async (event) => {
 	const result = await validateBody(event, schema)
-	const { netID } = result
+	const { publicCode } = result
 
 	const transactionResult = await prisma.$transaction(async (tx) => {
 		try {
 			const queueEntry = await tx.queueEntry.delete({
-				where: { netID },
+				where: { publicCode },
+				include: {
+					UserSession: {
+						select: {
+							publicCode: true,
+							publicIcon: true,
+						},
+					},
+				}
 			})
 			await tx.cart.create({
 				data: {
-					cartID: netID,
+					publicCode: publicCode,
 				},
 			})
 
-			publishEvent(createEvent("cartSession.created", { cartID: netID }))
+			publishEvent(createEvent("cartSession.created", { publicCode: publicCode, publicIcon: queueEntry.UserSession.publicIcon }))
 			publishEvent(
 				createEvent("queue.entryApproved", {
-					netID: netID,
+					publicCode: publicCode,
 					position: queueEntry.position,
-					publicCode: queueEntry.publicCode,
+					publicIcon: queueEntry.UserSession.publicIcon
 				})
 			)
 

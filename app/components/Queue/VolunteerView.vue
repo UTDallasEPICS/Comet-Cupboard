@@ -1,60 +1,52 @@
 <template>
 	<UCard>
 		<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
-		<UTable :data="queueStore.volunteerQueue" :columns="tableColumns" empty="No one currently in queue" />
+		<div v-for="queueEntry in queueStore.queue" :key="queueEntry.position" class="mt-4">
+			<div
+				class="flex flex-row items-center justify-between"
+				:class="{
+					'bg-utd-green/10': queueEntry.publicCode === queueStore.queueStatus?.publicCode,
+					'rounded-lg': true,
+				}"
+			>
+				<UUser :name="queueEntry.publicCode" :description="`Position: ${queueEntry.position}`" :avatar="{ icon: queueEntry.publicIcon }" size="xl" />
+				<UDropdownMenu
+					:items="[
+						{ label: 'Approve', onClick: () => approveQueueEntry(queueEntry) },
+						{ label: 'Remove', onClick: () => removeQueueEntry(queueEntry) },
+					]"
+				>
+					<UButton :icon="icons['ellipsesActions']" variant="ghost" class="h-8 w-8" />
+				</UDropdownMenu>
+			</div>
+		</div>
 	</UCard>
 </template>
 
 <script lang="ts" setup>
 const queueStore = useQueueStore()
 
-const UButton = resolveComponent("UButton")
-const UCheckbox = resolveComponent("UCheckbox")
-const UDropdownMenu = resolveComponent("UDropdownMenu")
-
-const getActionItems = (row) => {
-	return [
-		{ type: "label", label: "Actions" },
-		{ type: "separator" },
-		{ label: "Approve", onClick: () => approveQueueEntry(row) },
-		{ label: "Ping Student", onClick: () => startQueueEntryTimer(row) },
-		{ label: "Remove", onClick: () => removeQueueEntry(row) },
-	]
-}
-
-const columnsDef = [
-	{ header: "Position", accessorKey: "position", type: "text" },
-	{ header: "Display Name", accessorKey: "publicCode", type: "text" },
-	{ header: "Net ID", accessorKey: "netID", type: "text" },
-	{ id: "actions", type: "actions", items: getActionItems, meta: { class: { td: "text-right" } } },
-]
-const tableColumns = buildNuxtUITable(columnsDef, { UButton, UCheckbox, UDropdownMenu })
-
 onMounted(async () => {
-	await queueStore.getVolunteerQueue()
+	await queueStore.getQueue()
 })
 
-const approveQueueEntry = async (row) => {
+const approveQueueEntry = async (queueEntry) => {
 	try {
 		await $fetch("/api/volunteer/queue/approve", {
 			method: "POST",
 			body: {
-				netID: row.original.netID,
+				publicCode: queueEntry.publicCode,
 			},
 		})
 	} catch (e) {}
 }
 
-const startQueueEntryTimer = async (row) => {
-	// Implement
-}
-
-const removeQueueEntry = async (row) => {
+const removeQueueEntry = async (queueEntry) => {
 	try {
 		await $fetch("/api/volunteer/queue/remove", {
 			method: "POST",
 			body: {
-				netID: row.original.netID,
+				publicCode: queueEntry.publicCode,
 			},
 		})
 	} catch (e) {}

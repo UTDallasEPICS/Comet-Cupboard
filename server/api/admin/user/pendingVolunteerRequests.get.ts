@@ -6,16 +6,20 @@ export default defineSafeHandler(async (event) => {
 		where: {
 			role: RoleType.VOLUNTEER,
 		},
-		select: {
-			userID: true,
-			User: {
+		include: {
+			UserSession: {
 				select: {
-					netID: true,
-					role: true,
+					publicCode: true,
+					publicIcon: true,
 				},
 			},
-		},
+		}
 	})
 
-	return requests
+	const formattedRequests = requests.map((request) => ({
+		publicCode: request.UserSession.publicCode,
+		publicIcon: request.UserSession.publicIcon,
+	}))
+
+	return formattedRequests
 })

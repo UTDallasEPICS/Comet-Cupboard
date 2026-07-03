@@ -1,12 +1,17 @@
-import type { User } from "../../prisma/generated/prisma/client"
+import type { Prisma } from "../../prisma/generated/prisma/client"
 import { RoleType } from "../../prisma/generated/prisma/client"
 import { prisma } from "#server/utils/db"
 
-type UserInfo = User
+type UserSessionWithUser = Prisma.UserSessionGetPayload<{
+	include: {
+		User: true
+	}
+}>
+
 declare module "h3" {
 	interface H3EventContext {
 		permissions: { [id: string]: boolean }
-		user: UserInfo
+		userSession: UserSessionWithUser
 	}
 }
 
@@ -14,29 +19,33 @@ export default defineSafeHandler(async (event) => {
 	event.context.permissions = {}
 	event.context.permissions[AccessPermission.PUBLIC] = true
 	const cookies = parseCookies(event)
-	if (cookies && cookies.netID) {
-		const netID: string = cookies.netID
-		const user = await prisma.user.findUnique({
+	if (cookies && cookies.userID) {
+		const userID: string = cookies.userID
+
+		const userSession: UserSessionWithUser | null = await prisma.userSession.findUnique({
 			where: {
-				netID: netID,
+				userID: userID,
+			},
+			include: {
+				User: true,
 			},
 		})
 
-		if (user) {
-			event.context.user = user
-			if (user.role === RoleType.STUDENT) {
+		if (userSession) {
+			event.context.userSession = userSession
+			if (userSession.User.role === RoleType.STUDENT) {
 				event.context.permissions[AccessPermission.STUDENT] = true
 			}
-			if (user.role === RoleType.VOLUNTEER) {
+			if (userSession.User.role === RoleType.VOLUNTEER) {
 				event.context.permissions[AccessPermission.STUDENT] = true
 				event.context.permissions[AccessPermission.VOLUNTEER] = true
 			}
-			if (user.role === RoleType.ADMIN) {
+			if (userSession.User.role === RoleType.ADMIN) {
 				event.context.permissions[AccessPermission.STUDENT] = true
 				event.context.permissions[AccessPermission.VOLUNTEER] = true
 				event.context.permissions[AccessPermission.ADMIN] = true
 			}
-			if (user.role === RoleType.HEAD_ADMIN) {
+			if (userSession.User.role === RoleType.HEAD_ADMIN) {
 				event.context.permissions[AccessPermission.STUDENT] = true
 				event.context.permissions[AccessPermission.VOLUNTEER] = true
 				event.context.permissions[AccessPermission.ADMIN] = true

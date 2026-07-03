@@ -10,7 +10,7 @@ const toast = useToast()
 
 const permissionsStore = usePermissionsStore()
 
-const currentUserNetID = useCookie("netID")
+const currentUserUserID = useCookie("userID")
 
 const { data: workerUsers, refresh } = await useFetch("/api/admin/user/workerUsers", {
 	method: "GET",
@@ -44,7 +44,7 @@ const getActionItems = (row) => {
 					color: "error",
 				})
 			}
-		} else if (currentUserNetID.value === row.original.netID) {
+		} else if (currentUserUserID.value === row.original.userID) {
 			items.push({
 				label: "SELF DEMOTE TO ADMIN",
 				onClick: () => headAdminSelfDemote(row),
@@ -71,7 +71,7 @@ const getActionItems = (row) => {
 }
 
 const columnsDef = [
-	{ header: "Net ID", accessorKey: "netID", type: "text", sortable: true },
+	{ header: "Net ID", accessorKey: "userID", type: "text", sortable: true },
 	{ header: "Role", accessorKey: "role", type: "text", sortable: true },
 	{ id: "actions", type: "actions", items: getActionItems, meta: { class: { td: "text-right" } } },
 ]
@@ -82,7 +82,7 @@ const demoteVolunteertoStudent = async (row) => {
 		await $fetch("/api/admin/user/demoteVolunteer", {
 			method: "POST",
 			body: {
-				userID: row.original.netID,
+				userID: row.original.userID,
 			},
 		})
 		await refresh()
@@ -94,7 +94,7 @@ const setUserToRoleHeadAdminFunction = async (row, role) => {
 		await $fetch("/api/head-admin/user/role", {
 			method: "POST",
 			body: {
-				userID: row.original.netID,
+				userID: row.original.userID,
 				newRole: role,
 			},
 		})

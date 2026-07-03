@@ -1,7 +1,21 @@
 <template>
 	<UCard>
-		<SharedTextSectionTitle> Pending Volunteer Requests </SharedTextSectionTitle>
-		<UTable :data="pendingVolunteerRequests" :columns="tableColumns" empty="No pending volunteer requests currently available" />
+		<SharedTextSectionTitle> Volunteer Requests </SharedTextSectionTitle>
+		<div class="flex flex-col gap-y-2 mt-4">
+			<div v-for="pendingRequest in pendingVolunteerRequests" :key="pendingRequest.publicCode">
+				<div class="flex flex-row items-center justify-between">
+					<UUser :name="pendingRequest.publicCode" :avatar="{ icon: pendingRequest.publicIcon }" size="xl" />
+					<UDropdownMenu
+						:items="[
+							{ label: 'Accept', onClick: () => approveVolunteerRequest(pendingRequest) },
+							{ label: 'Reject', onClick: () => rejectVolunteerRequest(pendingRequest) },
+						]"
+					>
+						<UButton :icon="icons['ellipsesActions']" variant="ghost" class="h-8 w-8" />
+					</UDropdownMenu>
+				</div>
+			</div>
+		</div>
 	</UCard>
 </template>
 
@@ -10,43 +24,24 @@ const { data: pendingVolunteerRequests, refresh } = await useFetch("/api/admin/u
 	method: "GET",
 })
 
-const UButton = resolveComponent("UButton")
-const UCheckbox = resolveComponent("UCheckbox")
-const UDropdownMenu = resolveComponent("UDropdownMenu")
-
-const getActionItems = (row) => {
-	return [
-		{ type: "label", label: "Actions" },
-		{ type: "separator" },
-		{ label: "Accept", onClick: () => approveVolunteerRequest(row) },
-		{ label: "Reject", onClick: () => rejectVolunteerRequest(row) },
-	]
-}
-
-const columnsDef = [
-	{ header: "User ID", accessorKey: "userID", type: "text", sortable: true },
-	{ id: "actions", type: "actions", items: getActionItems, meta: { class: { td: "text-right" } } },
-]
-const tableColumns = buildNuxtUITable(columnsDef, { UButton, UCheckbox, UDropdownMenu })
-
-const approveVolunteerRequest = async (row) => {
+const approveVolunteerRequest = async (pendingRequest) => {
 	try {
 		await $fetch("/api/admin/user/volunteerRequestAction", {
 			method: "POST",
 			body: {
-				userID: row.original.userID,
+				publicCode: pendingRequest.publicCode,
 				action: "ACCEPT",
 			},
 		})
 		await refresh()
 	} catch (e) {}
 }
-const rejectVolunteerRequest = async (row) => {
+const rejectVolunteerRequest = async (pendingRequest) => {
 	try {
 		await $fetch("/api/admin/user/volunteerRequestAction", {
 			method: "POST",
 			body: {
-				userID: row.original.userID,
+				publicCode: pendingRequest.publicCode,
 				action: "REJECT",
 			},
 		})
