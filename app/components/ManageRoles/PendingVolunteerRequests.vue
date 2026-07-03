@@ -4,7 +4,7 @@
 		<div class="flex flex-col gap-y-2 mt-4">
 			<div v-for="pendingRequest in pendingVolunteerRequests" :key="pendingRequest.publicCode">
 				<div class="flex flex-row items-center justify-between">
-					<UUser :name="pendingRequest.publicCode" :avatar="{ icon: pendingRequest.publicIcon }" size="xl" />
+					<UUser :name="pendingRequest.publicCode" :avatar="{ icon: pendingRequest.publicIcon }" size="lg" />
 					<UDropdownMenu
 						:items="[
 							{ label: 'Accept', onClick: () => approveVolunteerRequest(pendingRequest) },

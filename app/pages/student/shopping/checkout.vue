@@ -182,7 +182,7 @@
 									<template #header>
 										<p class="">Status: <span class="text-negative-red">Rejected</span></p>
 									</template>
-									<p>Reason: {{ cartVerificationReason }}</p>
+									<SharedTextBase>Reason: {{ cartVerificationReason }}</SharedTextBase>
 								</UCard>
 								<SharedButtonCancel text="Back to Shopping" @click="goToShopping" />
 							</template>
@@ -191,7 +191,7 @@
 									<template #header>
 										<p class="">Status: <span class="text-utd-green">Accepted</span></p>
 									</template>
-									<p>Reason: {{ cartVerificationReason }}</p>
+									<SharedTextBase>Reason: {{ cartVerificationReason }}</SharedTextBase>
 								</UCard>
 								<div class="flex flex-row justify-end">
 									<SharedButtonPositiveAction text="Back to Dashboard" @click="navigateTo('/student')" />

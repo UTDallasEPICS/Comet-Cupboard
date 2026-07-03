@@ -10,6 +10,8 @@
 			<template v-else>
 				<div class="flex w-full flex-col items-center gap-2">
 					<SharedTextBase>You need to join queue before shopping</SharedTextBase>
+					<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+
 					<SharedButtonNavigateTo text="Go to Queue" to="/student/queue" />
 				</div>
 			</template>

@@ -15,11 +15,7 @@
 					class="h-12 w-full"
 					@click="emit('update:select-cart', pendingCart.publicCode)"
 				>
-					<UUser
-						:name="pendingCart.publicCode"
-						:avatar="{ icon: pendingCart.publicIcon }"
-						size="xl"
-					/>
+					<UUser :name="pendingCart.publicCode" :avatar="{ icon: pendingCart.publicIcon }" size="lg" />
 				</UButton>
 			</div>
 		</div>

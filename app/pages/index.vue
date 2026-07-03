@@ -9,9 +9,9 @@
 						Comet Cupboard
 					</SharedTextHero>
 
-					<SharedTextHeroDescription class="mt-6 text-white"> Supporting academic success by meeting basic needs. </SharedTextHeroDescription>
+					<SharedTextHeroDescription class="mt-4 text-white"> Supporting academic success by meeting basic needs. </SharedTextHeroDescription>
 
-					<div class="mt-10 flex flex-row gap-4">
+					<div class="mt-4 flex flex-row gap-4">
 						<SharedButtonNavigateTo text="Student Login" to="/login" />
 						<SharedButtonNavigateTo text="Volunteer Login" to="/vol-login" />
 					</div>
@@ -19,11 +19,11 @@
 			</UContainer>
 		</section>
 
-		<section class="py-20">
+		<section class="py-16">
 			<UContainer>
 				<div class="mx-auto max-w-4xl text-center">
-					<SharedTextSectionTitle> Upcoming Restocks and Notices </SharedTextSectionTitle>
-					<div class="mt-8 overflow-hidden rounded-lg shadow">
+					<SharedTextSectionTitle> Comet Cupboard Calendar </SharedTextSectionTitle>
+					<div class="mt-4 overflow-hidden rounded-lg shadow">
 						<iframe
 							src="https://calendar.google.com/calendar/embed?src=utdcometcupboard%40gmail.com&ctz=America%2FChicago&showTitle=0"
 							style="border: 0"
@@ -39,12 +39,11 @@
 
 		<USeparator />
 
-		<section class="relative overflow-hidden bg-gray-50/50 py-24">
-			<UContainer class="relative z-10 flex flex-col items-center text-center">
-				<SharedTextSectionTitle class="mb-4"> Find an Emergency Bag </SharedTextSectionTitle>
-
-				<SharedTextBase class="mb-10 max-w-xl leading-relaxed text-gray-600"> Check availability at all the locations across campus. </SharedTextBase>
-				
+		<section class="relative overflow-hidden bg-gray-50/50 py-16">
+			<UContainer class="relative flex flex-col items-center gap-4 text-center">
+				<SharedTextSectionTitle> Find an Emergency Bag </SharedTextSectionTitle>
+				<SharedTextBase class="max-w-xl"> Check availability at locations across campus </SharedTextBase>
+				<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
 				<SharedButtonNavigateTo text="View Locations" to="/public/emergency-bag/locations" />
 			</UContainer>
 		</section>

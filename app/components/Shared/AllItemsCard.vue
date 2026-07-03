@@ -4,7 +4,7 @@
 		class="border-border-soft h-20 w-full min-w-72 overflow-hidden border bg-white p-0 pl-2 shadow-md"
 	>
 		<div class="text-text-soft flex w-full min-w-32 flex-1 items-center px-4">
-			<p>All Items</p>
+			<SharedTextBase class="font-semibold">All Items</SharedTextBase>
 		</div>
 		<div class="h-full w-48 min-w-20 shrink-0">
 			<img alt="Comet Cupboard" src="/shelves.jpg" :style="clipStyle" class="h-full w-full object-cover" />

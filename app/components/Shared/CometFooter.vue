@@ -1,31 +1,31 @@
 <template>
 	<UFooter class="bg-cancel-gray text-white">
 		<div class="flex flex-col gap-8 py-6 sm:flex-row sm:items-start sm:justify-between">
-			<img src="/CometCupboardLogo2.png" alt="Comet Cupboard" class="w-32 aspect-auto" />
+			<img src="/CometCupboardLogo2.png" alt="Comet Cupboard" class="aspect-auto w-32" />
 
 			<div class="space-y-2">
-				<p class="font-bold">Contact</p>
-				<p>{{ room }}</p>
-				<p>{{ userID }}</p>
-				<p>{{ phone }}</p>
+				<SharedTextBase class="font-bold text-white">Contact</SharedTextBase>
+				<SharedTextBase class="text-white">{{ room }}</SharedTextBase>
+				<SharedTextBase class="text-white">{{ userID }}</SharedTextBase>
+				<SharedTextBase class="text-white">{{ phone }}</SharedTextBase>
 			</div>
 
 			<div class="space-y-2">
-				<p class="font-bold">Hours</p>
+				<SharedTextBase class="font-bold text-white">Hours</SharedTextBase>
 
 				<div>
-					<p class="font-bold">Monday, Wednesday, Friday</p>
-					<p>10 AM - 4 PM</p>
+					<SharedTextBase class="font-bold text-white">Monday, Wednesday, Friday</SharedTextBase>
+					<SharedTextBase class="text-white">10 AM - 4 PM</SharedTextBase>
 				</div>
 
 				<div>
-					<p class="font-bold">Tuesday, Thursday</p>
-					<p>11 AM - 5 PM</p>
+					<SharedTextBase class="font-bold text-white">Tuesday, Thursday</SharedTextBase>
+					<SharedTextBase class="text-white">11 AM - 5 PM</SharedTextBase>
 				</div>
 			</div>
 
 			<div class="space-y-2">
-				<p class="font-bold">Connect With Us</p>
+				<SharedTextBase class="font-bold text-white">Connect With Us</SharedTextBase>
 				<ULink :to="instagram">
 					<UIcon :name="icons['instagram']" class="size-6 text-white" />
 				</ULink>

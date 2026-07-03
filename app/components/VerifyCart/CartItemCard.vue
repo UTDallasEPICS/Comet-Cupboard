@@ -1,7 +1,7 @@
 <template>
 	<UCard>
 		<template #header>
-			<p>{{ name }}</p>
+			<SharedTextBase>{{ name }}</SharedTextBase>
 		</template>
 
 		<div class="flex flex-row gap-x-4">
@@ -16,23 +16,23 @@
 			<div class="flex w-full flex-col justify-between">
 				<div>
 					<div class="flex justify-between font-bold">
-						<p>Total QTY</p>
-						<p class="w-12 text-right">{{ totalQTY }}</p>
+						<SharedTextBase>Total QTY</SharedTextBase>
+						<SharedTextBase class="w-12 text-right">{{ totalQTY }}</SharedTextBase>
 					</div>
 					<div v-if="detailed" class="flex justify-between">
-						<p>Deals</p>
-						<p v-if="dealCount !== 0" class="text-negative-red w-12 text-right">-{{ dealCount }}</p>
+						<SharedTextBase>Deals</SharedTextBase>
+						<SharedTextBase v-if="dealCount !== 0" class="text-negative-red w-12 text-right">-{{ dealCount }}</SharedTextBase>
 					</div>
 					<div v-if="detailed" class="flex justify-between">
-						<p>Expired</p>
-						<p v-if="expiredCount !== 0" class="text-negative-red w-12 text-right">-{{ expiredCount }}</p>
+						<SharedTextBase>Expired</SharedTextBase>
+						<SharedTextBase v-if="expiredCount !== 0" class="text-negative-red w-12 text-right">-{{ expiredCount }}</SharedTextBase>
 					</div>
 				</div>
 
 				<USeparator v-if="detailed" />
 				<div v-if="detailed" class="flex justify-between">
-					<p>Adjusted QTY</p>
-					<p class="w-12 text-right">{{ adjustedQTY }}</p>
+					<SharedTextBase>Adjusted QTY</SharedTextBase>
+					<SharedTextBase class="w-12 text-right">{{ adjustedQTY }}</SharedTextBase>
 				</div>
 			</div>
 		</div>

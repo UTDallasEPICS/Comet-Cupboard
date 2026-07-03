@@ -104,7 +104,7 @@
 						sideOffset: 8,
 					}"
 				>
-					<UButton v-if="permissionsStore.canStudentAccess" variant="ghost" :icon="icons['profile']" size="xl" />
+					<UButton v-if="permissionsStore.canStudentAccess" variant="ghost" :icon="icons['profile']" size="lg" />
 
 					<template #content>
 						<div class="flex w-64 flex-col items-start gap-2 p-4">
@@ -114,7 +114,7 @@
 								:avatar="{
 									icon: userSessionInfoStore.publicIcon,
 								}"
-								size="xl"
+								size="lg"
 							/>
 							<SharedTextBase class="text-utd-orange">{{ permissionsStore.roleText }}</SharedTextBase>
 							<USeparator />

@@ -2,16 +2,20 @@
 @import "@nuxt/ui";
 
 @theme {
+	--font-sans: "Nunito", "sans-serif";
+}
+
+@theme {
 	--color-primary: #e4701e;
 	--color-secondary: #154734;
-	--color-warning: #FFDF9E;
+	--color-warning: #ffdf9e;
 
 	--color-utd-green: #154734;
 	--color-utd-orange: #e4701e; /* slightly off from utd's orange, but matches comet cupboard colors */
 	--color-page-bg: #f9fafb;
 	--color-cancel-gray: #4a4a4a;
 	--color-negative-red: #d20b0b;
-	--color-deal-green: #1C9E6D;
+	--color-deal-green: #1c9e6d;
 
 	--color-text-soft: oklch(0.372 0.044 257.287);
 	--color-border-soft: oklch(90% 0.013 255.508);

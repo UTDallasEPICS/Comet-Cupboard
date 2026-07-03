@@ -2,7 +2,7 @@
 	<UCard class="w-full">
 		<template #header>
 			<div v-if="validPublicCode" class="flex flex-row items-center justify-between">
-				<UUser :name="cart.publicCode" :avatar="{ icon: cart.publicIcon }" size="xl" />
+				<UUser :name="cart.publicCode" :avatar="{ icon: cart.publicIcon }" size="lg" />
 
 				<UButton @click="emit('update:select-cart', '')"> Back to carts </UButton>
 			</div>
