@@ -23,9 +23,6 @@
 								</UPopover>
 							</template>
 						</UInputDate>
-						<div class="justify-left my-2 flex flex-col">
-							<USwitch v-model="sortByCount" label="Sort by count" />
-						</div>
 					</div>
 				</div>
 			</DataAnalyticsOptionButton>
@@ -41,7 +38,7 @@
 	</div>
 	<div>
 		<div class="mt-10 flex flex-row gap-10">
-			<DataAnalyticsVerticalDataComponent title="Top Distributed Categories" :items="topDistributedCategories" />
+			<DataAnalyticsVerticalDataComponent title="Top Distributed Categories" :items="topDistributedCategories" :count-toggle="true" />
 			<div class="min-h-140 w-full min-w-0">
 				<button
 					v-if="firstDrillDown || secondDrillDown"
@@ -52,7 +49,7 @@
 					Back
 				</button>
 				<div class="h-full w-full border border-gray-300 px-8">
-					<USwitch v-if="firstDrillDown || secondDrillDown" class="justify-self-end mt-4" v-model="sortByCount" label="Sort by count" />
+					<USwitch v-if="firstDrillDown || secondDrillDown" class="mt-4 justify-self-end" v-model="sortByCount" label="Sort by count" />
 					<canvas ref="barContainer" class="mt-4" />
 				</div>
 			</div>
@@ -224,12 +221,12 @@ const topDistributedCategories = computed(() => {
 	if (!totalItemsDistributed.value) return []
 
 	return Object.entries(categoryTotals.value)
-		.map(([label, value]) => ({ label, value }))
-		.sort((a, b) => b.value - a.value)
-		.map(({ label, value }) => ({
+		.map(([label, count]) => ({
 			label,
-			value: showCount.value ? value.toString() : ((value / totalItemsDistributed.value) * 100).toFixed(1) + "%",
+			count,
+			percentage: ((count / totalItemsDistributed.value) * 100).toFixed(1),
 		}))
+		.sort((a, b) => b.count - a.count)
 })
 
 const showCategoryDrillDownView = (date: string) => {

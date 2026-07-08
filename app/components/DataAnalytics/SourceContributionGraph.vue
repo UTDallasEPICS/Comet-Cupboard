@@ -18,9 +18,6 @@
 								</UPopover>
 							</template>
 						</UInputDate>
-						<div class="justify-left my-2 flex flex-col">
-							<USwitch v-model="showCount" label="Show by count" class="my-2" />
-						</div>
 					</div>
 				</div>
 			</DataAnalyticsOptionButton>
@@ -32,7 +29,7 @@
 	</div>
 	<div>
 		<div class="mt-10 flex flex-row gap-10">
-			<DataAnalyticsVerticalDataComponent title="Source Share %" :items="sourceContributionShare" />
+			<DataAnalyticsVerticalDataComponent title="Source Share %" :items="sourceContributionShare" :count-toggle="true" />
 			<div class="min-h-140 w-full min-w-0">
 				<button v-if="drilledDown" class="absolute rounded-lg border border-solid px-3 py-1 m-4" style="cursor: pointer" @click="resetChart">Back</button>
 				<div class="h-full w-full border border-gray-300 px-8">
@@ -159,12 +156,12 @@ const sourceContributionShare = computed(() => {
 	if (!totalSourceContributions.value) return []
 
 	return Object.entries(sourceTotals.value)
-		.map(([label, value]) => ({ label, value }))
-		.sort((a, b) => b.value - a.value)
-		.map(({ label, value }) => ({
+		.map(([ label, count ]) => ({
 			label,
-			value: showCount.value ? value.toString() : ((value / totalSourceContributions.value) * 100).toFixed(1) + "%",
+			count,
+			percentage: ((count / totalSourceContributions.value) * 100).toFixed(1),
 		}))
+		.sort((a, b) => b.count - a.count)
 })
 
 const totalSourceContributions = computed(() => {

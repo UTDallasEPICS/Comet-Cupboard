@@ -17,12 +17,12 @@
 		<DataAnalyticsDataCardComponent v-if="drilledDown" title="Total Count" :value="itemCount" />
 	</div>
 	<div class="mt-10 flex flex-row gap-10">
-		<DataAnalyticsVerticalDataComponent v-if="!drilledDown" title="Category Quantity" :items="sortedCategories" :countToggle="false" />
-		<DataAnalyticsVerticalDataComponent v-if="drilledDown" title="Item Concentration" :items="itemConcentration" :countToggle="true" />
+		<DataAnalyticsVerticalDataComponent v-if="!drilledDown" title="Category Quantity" :items="sortedCategories" :count-toggle="true" />
+		<DataAnalyticsVerticalDataComponent v-if="drilledDown" title="Item Concentration" :items="itemConcentration" :count-toggle="true" />
 		<div class="min-h-140 w-full min-w-0">
 			<button v-if="drilledDown" class="absolute rounded-lg border border-solid px-3 py-1 m-4" style="cursor: pointer" @click="resetChart">Back</button>
 			<div class="h-full w-full border border-gray-300 px-8">
-					<USwitch class="justify-self-end mt-4" v-model="sortByCount" label="Sort by count" />
+					<USwitch v-model="sortByCount" class="justify-self-end mt-4" label="Sort by count" />
 				<canvas ref="barContainer" />
 			</div>
 		</div>
