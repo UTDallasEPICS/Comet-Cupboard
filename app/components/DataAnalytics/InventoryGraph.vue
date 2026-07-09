@@ -2,14 +2,6 @@
 	<div>
 		<div class="mb-4 flex items-center justify-between">
 			<h1 class="text-4xl font-bold text-black">Current Inventory</h1>
-
-			<DataAnalyticsOptionButton :show-time-level="false" :show-date-range="false">
-				<div class="flex flex-col p-4">
-					<div class="justify-left my-2 flex flex-col">
-						<USwitch v-if="drilledDown" v-model="showCount" label="Show by count" class="my-2" />
-					</div>
-				</div>
-			</DataAnalyticsOptionButton>
 		</div>
 	</div>
 	<div class="mt-4 flex min-h-32 w-full items-center justify-center rounded-3xl border bg-white">

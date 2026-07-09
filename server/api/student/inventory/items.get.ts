@@ -22,6 +22,6 @@ export default defineSafeHandler(async (event) => {
 			quantityAvailable: row.quantity,
 		}
 	})
-	console.log(rows)
+
 	return rows
 })
