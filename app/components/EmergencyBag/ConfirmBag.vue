@@ -18,7 +18,7 @@
 						<p class="font-bold">Privacy:</p>
 						<span>{{ bagDetails.selectedPrivacy }}</span>
 					</div>
-					<div v-if="bagDetails.selectedPrivacy === 'Private'" class="flex gap-2">
+					<div v-if="bagDetails.selectedPrivacy === 'PRIVATE'" class="flex gap-2">
 						<p class="font-bold">Bag Description:</p>
 						<span>{{ bagDetails.bagDescription }}</span>
 					</div>

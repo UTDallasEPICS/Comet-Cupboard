@@ -29,7 +29,7 @@
 				</template>
 				<URadioGroup v-model="bagDetails.selectedPrivacy" size="md" variant="card" :items="privacy" />
 				<UTextarea
-					v-if="bagDetails.selectedPrivacy === 'Private'"
+					v-if="bagDetails.selectedPrivacy === 'PRIVATE'"
 					v-model="bagDetails.bagDescription"
 					placeholder="Optional bag description"
 					class="mt-2 w-full"
@@ -50,12 +50,12 @@ const bagDetails = defineModel<{
 const inputDate = useTemplateRef("inputDate")
 
 const labels = [
-	{ label: "Vegetarian", value: "Vegetarian", color: "#ADBC76" },
-	{ label: "Peanut Butter", value: "Peanut Butter", color: "#F6D6A2" },
+	{ label: "Vegetarian", value: "VEGETARIAN", color: "#ADBC76" },
+	{ label: "Peanut Butter", value: "PEANUT_BUTTER", color: "#F6D6A2" },
 ]
 
 const privacy = [
-	{ label: "Public", value: "Public" },
-	{ label: "Private", value: "Private" },
+	{ label: "Public", value: "PUBLIC" },
+	{ label: "Private", value: "PRIVATE" },
 ]
 </script>
