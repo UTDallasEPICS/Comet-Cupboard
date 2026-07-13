@@ -19,6 +19,7 @@ export const icons = {
 	admin: "i-lucide-shield",
 	queue: "i-lucide-clock",
 	shopping: "i-lucide-shopping-cart",
+	shoppingBag: "i-lucide-shopping-bag",
 	inventory: "i-lucide-box",
 	locations: "i-lucide-map-pin",
 	verifyCart: "i-lucide-check-circle",

@@ -229,7 +229,7 @@ const createOrders = async () => {
 	const currentDate = new Date()
 	const tempDate = new Date()
 	// go back 3 months
-	tempDate.setMonth(tempDate.getMonth() - 3)
+	tempDate.setMonth(tempDate.getMonth() - 6)
 
 	const orders = []
 	const ordersItems = []
@@ -252,6 +252,7 @@ const createOrders = async () => {
 			orders.push({
 				userID: randomUser,
 				cartCreatedAt: new Date(tempDate),
+				createdAt: new Date(tempDate),
 			})
 
 			ordersItems.push(
@@ -293,11 +294,11 @@ const main = async () => {
 	await createOrders()
 
 	await createLocations()
-	await createEmergencyBags()
-	await createEmergencyBagItems()
+	// await createEmergencyBags()
+	// await createEmergencyBagItems()
 
-	await createIssuedEmergencyBags()
-	await createIssuedEmergencyBagItems()
+	// await createIssuedEmergencyBags()
+	// await createIssuedEmergencyBagItems()
 
 	console.log(`Database has been seeded. 🌱`)
 }
