@@ -1,18 +1,20 @@
-import type { AccessPermission } from "~/permissions"
-import { pageAccessMap, apiAccessMap } from "~/permissions"
+import { AccessPermission } from "#shared/utils/permissions"
+import { StatusCodes, ReasonPhrases } from "http-status-codes"
 
-export default defineEventHandler((event) => {
+export default defineSafeHandler((event) => {
 	const requestPath = getRequestURL(event).pathname
-	if (pageAccessMap[requestPath]) {
-		const requiredAccessPermission: AccessPermission = pageAccessMap[requestPath]
-		if (!event.context.permissions[requiredAccessPermission]) {
-			throw createError({ statusCode: 403, statusMessage: "Unauthorized" })
-		}
-	} else if (apiAccessMap[requestPath] && apiAccessMap[requestPath][event.method]) {
-		const requiredAccessPermission: AccessPermission = apiAccessMap[requestPath][event.method]
-		if (!event.context.permissions[requiredAccessPermission]) {
-			throw createError({ statusCode: 403, statusMessage: "Unauthorized" })
-		}
+	let requiredAccessPermission: AccessPermission = AccessPermission.PUBLIC
+	if (requestPath.startsWith("/api/admin") || requestPath.startsWith("/admin")) {
+		requiredAccessPermission = AccessPermission.ADMIN
+	} else if (requestPath.startsWith("/api/volunteer") || requestPath.startsWith("/volunteer")) {
+		requiredAccessPermission = AccessPermission.VOLUNTEER
+	} else if (requestPath.startsWith("/api/student") || requestPath.startsWith("/student")) {
+		requiredAccessPermission = AccessPermission.STUDENT
+	} else if (requestPath.startsWith("/api/head-admin") || requestPath.startsWith("/head-admin")) {
+		requiredAccessPermission = AccessPermission.HEAD_ADMIN
 	}
-	console.log("AUTHORIZING" + ` ${event.method} ${requestPath}`)
+
+	if (!event.context.permissions[requiredAccessPermission]) {
+		throw createError({ statusCode: StatusCodes.FORBIDDEN, statusMessage: ReasonPhrases.FORBIDDEN })
+	}
 })

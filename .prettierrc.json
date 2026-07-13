@@ -1,5 +1,5 @@
 {
-	"plugins": ["@prettier/plugin-pug"],
+	"plugins": ["prettier-plugin-tailwindcss"],
 	"printWidth": 160,
 	"endOfLine": "auto",
 	"useTabs": true,
@@ -13,13 +13,5 @@
 	"requirePragma": false,
 	"insertPragma": false,
 	"quoteProps": "as-needed",
-	"proseWrap": "always",
-	"pugFramework": "vue",
-	"pugAttributeSeparator": "none",
-	"pugSortAttributes": "asc",
-	"pugSortAttributesBeginning": ["v-show", "v-if", "v-else-if", "v-else", "v-for", ":key", "class"],
-	"pugSortAttributesEnd": ["^@.*$", "^:.*$"],
-	"pugClassNotation": "literal",
-	"pugClassLocation": "after-attributes",
-	"pugExplicitDiv": true
+	"proseWrap": "always"
 }

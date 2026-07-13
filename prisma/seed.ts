@@ -1,62 +1,127 @@
-import { copyFile } from "node:fs/promises"
+import { readFile, copyFile } from "node:fs/promises"
 import { nanoid } from "nanoid"
-import { PrismaClient } from "@prisma/client"
 import { existsSync, mkdirSync, readdirSync } from "fs"
+import "dotenv/config"
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
+import { PrismaClient, RoleType, BagCategory } from "./generated/prisma/client"
+import { uploadImage, processImage } from "../server/utils/image"
 
-const uploadDirectory = `${process.env.IMAGE_UPLOAD_DIRECTORY}`
+const connectionString = `${process.env.DATABASE_URL}`
+const adapter = new PrismaBetterSqlite3({ url: connectionString })
+const prisma = new PrismaClient({ adapter })
+
+const uploadDirectory = process.env.IMAGE_UPLOAD_DIRECTORY
 if (!existsSync(uploadDirectory)) {
 	mkdirSync(uploadDirectory)
 }
 
-const prisma: PrismaClient = new PrismaClient()
-const sources: Array<string> = ["NTFB", "Community Garden", "Individual Donation", "Cannot Distribute", "Error"]
-const categories: Array<string> = readdirSync("./test-images")
+const sources = []
 const items = []
 
-categories.forEach((category) => {
-	const categoryItems: Array<string> = readdirSync("./test-images/" + category)
-	categoryItems.forEach(async (categoryItem) => {
-		items.push({
-			itemID: nanoid(),
-			name: categoryItem.split(".")[0],
-			quantity: Math.floor(Math.random() * 20),
-			imgName: categoryItem,
-			categoryName: category,
-		})
-		await copyFile("./test-images/" + category + "/" + categoryItem, `${uploadDirectory}/${categoryItem}`)
+const populateItems = async () => {
+	const categories: Array<string> = readdirSync("./test-images").filter((file) => {
+		return !(file === "_category_banners") && !(file === "_location_images") && !(file === "Locations")
 	})
-})
+	const promises = categories.flatMap((category) => {
+		const categoryItems: Array<string> = readdirSync("./test-images/" + category)
+		return categoryItems.map(async (categoryItem) => {
+			const imgBuffer = await processImage(await readFile("./test-images/" + category + "/" + categoryItem))
+			const imgName = await uploadImage(imgBuffer)
+			items.push({
+				itemID: nanoid(),
+				name: categoryItem.split(".")[0],
+				quantity: Math.floor(Math.random() * 20),
+				imgName: imgName,
+				categoryName: category,
+			})
+		})
+	})
+	await Promise.all(promises)
+}
 
 const validUsers = [
-	{ netID: "stu000000" },
-	{ netID: "stu000001" },
-	{ netID: "stu000002" },
-	{ netID: "vol000000" },
-	{ netID: "vol000001" },
-	{ netID: "adm000000" },
+	{ userID: "stu000000", role: RoleType.STUDENT },
+	{ userID: "stu000001", role: RoleType.STUDENT },
+	{ userID: "stu000002", role: RoleType.STUDENT },
+	{ userID: "vol000000", role: RoleType.VOLUNTEER },
+	{ userID: "vol000001", role: RoleType.VOLUNTEER },
+	{ userID: "adm000000", role: RoleType.ADMIN },
+	{ userID: "had000000", role: RoleType.HEAD_ADMIN },
+]
+
+const populateLocations = async () => {
+	const locationImages = readdirSync("./test-images/_location_images")
+	const locationData = [
+		{ name: "Police Station", address: "100 N Floyd Road" },
+		{ name: "Activity Center", address: "800 Campbell Rd" },
+	]
+	const promises = locationData.map(async (location) => {
+		const imgName = locationImages.find((image) => image.split(".")[0] === location.name.replace(/\s/g, "_").toLowerCase())
+		if (imgName) {
+			const imgBuffer = await processImage(await readFile("./test-images/_location_images/" + imgName))
+			const uploadedImgName = await uploadImage(imgBuffer)
+			return { ...location, imgName: uploadedImgName }
+		}
+		return { ...location, imgName: null }
+	})
+	return await Promise.all(promises)
+}
+
+const emergencyBags = [
+	{
+		bagCategory: BagCategory.NEITHER,
+		expiryDate: new Date("2026-07-28"),
+		label: "12345",
+		locationName: "Police Station",
+		private: true,
+	},
+	{ bagCategory: BagCategory.VEGETARIAN, expiryDate: new Date("2027-01-01"), label: "15453", private: false },
+	{ bagCategory: BagCategory.PEANUT_BUTTER, expiryDate: new Date("2026-09-30"), label: "54321", private: false },
 ]
 
 const createUsers = async () => {
 	await prisma.user.createMany({ data: validUsers })
-	await prisma.student.createMany({ data: validUsers.filter((user) => user.netID.includes("stu") || user.netID.includes("vol")) })
-	await prisma.volunteer.createMany({ data: validUsers.filter((user) => user.netID.includes("vol")) })
-	await prisma.admin.createMany({ data: validUsers.filter((user) => user.netID.includes("adm")) })
 }
 
 const createSources = async () => {
-	await prisma.source.createMany({
-		data: sources.map((source) => {
+	const sourceNames = ["NTFB", "Community Garden", "Individual Donation", "Cannot Distribute", "Error"]
+	const createdSources = await prisma.source.createManyAndReturn({
+		data: sourceNames.map((source) => {
 			return { name: source }
 		}),
 	})
+	sources.push(...createdSources)
 }
 
 const createCategories = async () => {
+	const categoriesWithImages = [
+		{ name: "Breakfast Grains", img: "./test-images/_category_banners/grains.jpg" },
+		{ name: "Fridge Items", img: "./test-images/_category_banners/fridge.jpg" },
+		{ name: "Frozen Items", img: "./test-images/_category_banners/frozen.jpg" },
+		{ name: "Fruits", img: "./test-images/_category_banners/fruits.jpg" },
+		{ name: "Household Items", img: "./test-images/_category_banners/household.jpg" },
+		{ name: "Miscellaneous", img: "./test-images/_category_banners/misc.jpg" },
+		{ name: "Pantry Staples", img: "./test-images/_category_banners/pantry_staples.jpg" },
+		{ name: "Personal Care", img: "./test-images/_category_banners/personal_care.png" },
+		{ name: "Proteins", img: "./test-images/_category_banners/proteins.jpg" },
+		{ name: "Snacks", img: "./test-images/_category_banners/snacks.jpg" },
+		{ name: "Soup", img: "./test-images/_category_banners/soup.jpg" },
+		{ name: "Vegetables", img: "./test-images/_category_banners/vegetables.jpg" },
+	]
+
+	const categoriesWithNewImages = categoriesWithImages.map(async (category) => {
+		const buffer = await processImage(await readFile(category.img))
+		const imgName = await uploadImage(buffer)
+		return { ...category, imgName }
+	})
 	await prisma.category.createMany({
-		data: categories.map((category) => {
-			return { name: category }
+		data: (await Promise.all(categoriesWithNewImages)).map((category) => {
+			return { name: category.name, imgName: category.imgName }
 		}),
 	})
+	for (const category of categoriesWithImages) {
+		await copyFile(category.img, `${uploadDirectory}/${category.img.split("/").slice(-1)[0]}`)
+	}
 }
 
 const createItems = async () => {
@@ -78,6 +143,45 @@ const createDeals = async () => {
 			actualCount: 3,
 			adjustedCount: 1,
 		},
+	})
+}
+
+const createLocations = async () => {
+	const locations = await populateLocations()
+	await prisma.location.createMany({
+		data: locations,
+	})
+}
+
+const createEmergencyBags = async () => {
+	await prisma.emergencyBag.createMany({
+		data: emergencyBags,
+	})
+}
+
+const createEmergencyBagItems = async () => {
+	const bags = await prisma.emergencyBag.findMany()
+
+	await prisma.emergencyBagItem.createMany({
+		data: [
+			{ itemID: items[0].itemID, bagID: bags[0].bagID, count: 3 },
+			{ itemID: items[0].itemID, bagID: bags[1].bagID, count: 5 },
+			{ itemID: items[2].itemID, bagID: bags[2].bagID, count: 7 },
+		],
+	})
+}
+
+const createIssuedEmergencyBags = async () => {
+	await prisma.issuedEmergencyBag.createMany({
+		data: [{ bagCategory: BagCategory.VEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2026-05-01"), label: "99999", location: "Police Station" }],
+	})
+}
+
+const createIssuedEmergencyBagItems = async () => {
+	const bags = await prisma.issuedEmergencyBag.findMany()
+
+	await prisma.issuedEmergencyBagItem.createMany({
+		data: [{ itemID: items[0].itemID, bagID: bags[0].bagID, count: 3 }],
 	})
 }
 
@@ -106,9 +210,9 @@ const createRestocks = async () => {
 			pickedItems.forEach((itemID) => {
 				itemCountChanges.push({
 					itemID: itemID,
-					date: tempDate,
+					date: new Date(tempDate),
 					amountChanged: Math.floor(Math.random() * 10) + 5,
-					sourceName: sources[Math.floor(Math.random() * sources.length)],
+					sourceID: sources[Math.floor(Math.random() * sources.length)].sourceID,
 				})
 			})
 		}
@@ -125,7 +229,7 @@ const createOrders = async () => {
 	const currentDate = new Date()
 	const tempDate = new Date()
 	// go back 3 months
-	tempDate.setMonth(tempDate.getMonth() - 3)
+	tempDate.setMonth(tempDate.getMonth() - 6)
 
 	const orders = []
 	const ordersItems = []
@@ -133,7 +237,7 @@ const createOrders = async () => {
 	while (tempDate < currentDate) {
 		// consider only weekdays
 		if (!(tempDate.getDay() === 0 || tempDate.getDay() === 6)) {
-			const randomUser = validUsers[Math.floor(Math.random() * validUsers.length)].netID
+			const randomUser = validUsers[Math.floor(Math.random() * validUsers.length)].userID
 
 			const pickedItems = []
 			const pickedAmount = 3
@@ -146,8 +250,9 @@ const createOrders = async () => {
 			}
 
 			orders.push({
-				netID: randomUser,
-				date: tempDate,
+				userID: randomUser,
+				cartCreatedAt: new Date(tempDate),
+				createdAt: new Date(tempDate),
 			})
 
 			ordersItems.push(
@@ -179,6 +284,7 @@ const createOrders = async () => {
 }
 
 const main = async () => {
+	await populateItems()
 	await createSources()
 	await createCategories()
 	await createUsers()
@@ -186,6 +292,14 @@ const main = async () => {
 	await createDeals()
 	await createRestocks()
 	await createOrders()
+
+	await createLocations()
+	// await createEmergencyBags()
+	// await createEmergencyBagItems()
+
+	// await createIssuedEmergencyBags()
+	// await createIssuedEmergencyBagItems()
+
 	console.log(`Database has been seeded. 🌱`)
 }
 
