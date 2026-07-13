@@ -3,23 +3,17 @@ import { StatusCodes } from "http-status-codes"
 import { RoleType } from "../../../../prisma/generated/prisma/client"
 
 export default defineSafeHandler(async (event) => {
-	const netID = event.context.user.netID
+	const publicCode = event.context.userSession.publicCode
+	const currentUserRole = event.context.userSession.User.role
 
 	const transactionResult = await prisma.$transaction(async (tx) => {
-		const user = await tx.user.findUnique({
-			where: {
-				netID: netID,
-				role: RoleType.STUDENT,
-			},
-		})
-
-		if (!user) {
+		if (currentUserRole !== RoleType.STUDENT) {
 			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Student user not found" })
 		}
 
 		const existingRequest = await tx.roleRequest.findFirst({
 			where: {
-				userID: netID,
+				publicCode: publicCode,
 				role: RoleType.VOLUNTEER,
 			},
 		})
@@ -30,7 +24,7 @@ export default defineSafeHandler(async (event) => {
 
 		await tx.roleRequest.create({
 			data: {
-				userID: netID,
+				publicCode: publicCode,
 				role: RoleType.VOLUNTEER,
 			},
 		})

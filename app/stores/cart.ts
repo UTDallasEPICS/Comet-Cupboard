@@ -2,7 +2,6 @@ export const useCartStore = defineStore("cart", () => {
 	const cart = ref<Record<string, any> | null>(null)
 	const cartView = ref(false)
 	const queueStore = useQueueStore()
-	const { queueStatus } = storeToRefs(queueStore)
 
 	const resetCartView = () => {
 		cartView.value = false
@@ -11,7 +10,7 @@ export const useCartStore = defineStore("cart", () => {
 	const getCart = async () => {
 		try {
 			cart.value = await $fetch("/api/student/cart/cart")
-		} catch (e) {
+		} catch {
 			cart.value = null
 		}
 	}
@@ -27,9 +26,9 @@ export const useCartStore = defineStore("cart", () => {
 		if (cart.value === null || "CartItems" in cart.value === false) {
 			return 0
 		}
-		return cart.value.CartItems.map((cartItem) => {
+		return (cart.value.CartItems as Array<{ count: number }>).map((cartItem) => {
 			return cartItem.count
-		}).reduce((a, b) => a + b, 0)
+		}).reduce((a: number, b: number) => a + b, 0)
 	})
 
 	const pending = computed(() => {
@@ -42,7 +41,7 @@ export const useCartStore = defineStore("cart", () => {
 	const handleCartEvent = async (event: AppEvent) => {
 		switch (event.type) {
 			case "queue.entryApproved":
-				if (!cart.value && queueStatus.value) {
+				if (!cart.value && queueStore.queueStatus) {
 					// update cart if in queue and cart is empty, to check if the approved entry is for the current user
 					await getCart()
 				}

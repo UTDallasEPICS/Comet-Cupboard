@@ -1,17 +1,16 @@
 <template>
 	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
 		<template #body>
-			<div class="mt-auto flex flex-row items-center gap-2">
+			<div class="my-auto flex flex-row items-center gap-4 pr-2">
 				<SharedTextBase>QTY: {{ quantity }}</SharedTextBase>
-				<SharedButtonPositiveAction text="+ Add" @click="addToCart" />
+				<SharedButtonPositiveAction text="Add" class="w-20"  @click="addToCart" />
 			</div>
 		</template>
 	</SharedItemCard>
 </template>
 
 <script lang="ts" setup>
-const store = useCartStore()
-const { getCart } = store
+const cartStore = useCartStore()
 
 const props = defineProps({
 	name: { type: String, required: true },
@@ -26,6 +25,6 @@ const addToCart = async () => {
 		method: "POST",
 		body: { itemID: props.itemID, incrementChange: 1 },
 	})
-	await getCart()
+	await cartStore.getCart()
 }
 </script>

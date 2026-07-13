@@ -1,45 +1,17 @@
 <template>
-	<UContainer class="py-8">
-		<header class="flex items-center justify-between">
-			<SharedTextPageTitle>Manage Roles</SharedTextPageTitle>
+	<div>
+		<NuxtLayout name="main" title="Manage Roles" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }" :refresh-page-timer="60">
+			<section>
+				<ManageRolesPendingVolunteerRequests />
+			</section>
 
-			<div class="flex items-center gap-3">
-				<SharedTextBaseSecondary>Auto refresh in {{ countdown }}</SharedTextBaseSecondary>
-
-				<UButton size="xs" variant="soft" :icon="icons['refresh']" @click="refreshNow"> Refresh now </UButton>
-			</div>
-		</header>
-
-		<section class="mt-4">
-			<ManageRolesPendingVolunteerRequests />
-		</section>
-
-		<section class="mt-4">
-			<ManageRolesWorkerList />
-		</section>
-	</UContainer>
+			<section>
+				<ManageRolesWorkerList class="mt-4" />
+			</section>
+		</NuxtLayout>
+	</div>
 </template>
 
 <script lang="ts" setup>
-const countdown = ref(60)
-let interval
-
-const refreshNow = () => {
-	reloadNuxtApp()
-}
-
-onMounted(() => {
-	interval = setInterval(() => {
-		countdown.value--
-
-		if (countdown.value <= 0) {
-			refreshNow()
-			countdown.value = 60
-		}
-	}, 1000)
-})
-
-onBeforeUnmount(() => {
-	clearInterval(interval)
-})
+definePageMeta({ layout: false })
 </script>

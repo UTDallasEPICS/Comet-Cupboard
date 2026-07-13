@@ -3,26 +3,63 @@ import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
 import { validateBody } from "#server/utils/validation"
 import { defineSafeHandler } from "#server/utils/handler"
+import { generatePublicCodeName } from "#server/utils/publicCodeNames"
+import { getRandomProfileIcon } from "#server/utils/profileIcons"
 
 const schema = z
 	.object({
-		netID: z.string().length(9),
+		userID: z.string().length(9),
 	})
 	.strict()
 	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { netID } = await validateBody(event, schema)
+	const { userID } = await validateBody(event, schema)
 
-	const user = await prisma.user.findUnique({
-		where: {
-			netID: netID,
-		},
+	const transactionResult = await prisma.$transaction(async (tx) => {
+		let userSession = await tx.userSession.findUnique({
+			where: {
+				userID: userID,
+			},
+			include: {
+				User: true,
+			},
+		})
+		if (!userSession) {
+			const user = await tx.user.findUnique({
+				where: {
+					userID: userID,
+				},
+			})
+			if (!user) {
+				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "User not found" })
+			} else {
+				const allPublicCodeNames = await tx.userSession.findMany({
+					select: {
+						publicCode: true,
+					},
+				})
+
+				let newPublicCodeName = generatePublicCodeName()
+				while (allPublicCodeNames.some((session) => session.publicCode === newPublicCodeName)) {
+					newPublicCodeName = generatePublicCodeName()
+				}
+
+				userSession = await tx.userSession.create({
+					data: {
+						userID: user.userID,
+						publicCode: newPublicCodeName,
+						publicIcon: getRandomProfileIcon(),
+					},
+					include: {
+						User: true,
+					},
+				})
+			}
+		}
+		setCookie(event, "userID", userID)
+		return "Login successful"
 	})
-	if (!user) {
-		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "User not found" })
-	}
 
-	setCookie(event, "netID", netID)
-	return "Successful login"
+	return transactionResult
 })

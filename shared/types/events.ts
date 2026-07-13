@@ -1,14 +1,7 @@
 export interface QueueEntryNonSensitive {
 	position: number
 	publicCode: string
-}
-
-export interface QueueEntry extends QueueEntryNonSensitive {
-	netID: string
-}
-
-export interface QueueFullPayload {
-	queue: QueueEntry[]
+	publicIcon: string
 }
 
 export interface QueueFullPayloadNonSensitive {
@@ -22,24 +15,24 @@ export interface EventMap {
 	heartbeat: undefined
 
 	/* queue */
-	"queue.entryAdded": QueueEntry
-	"queue.entryRemoved": QueueEntry
-	"queue.entryApproved": QueueEntry
-	"queue.queueUpdated": QueueEntry[]
+	"queue.entryAdded": QueueEntryNonSensitive
+	"queue.entryRemoved": QueueEntryNonSensitive
+	"queue.entryApproved": QueueEntryNonSensitive
+	"queue.queueUpdated": QueueEntryNonSensitive[]
 
 	/* cart session */
-	"cartSession.created": { cartID: string }
-	"cartSession.removed": { cartID: string }
+	"cartSession.created": { publicCode: string; publicIcon: string }
+	"cartSession.removed": { publicCode: string }
 
 	/* cart verification */
-	"cart.verification.decision": { netID: string; decision: Decision; reason?: string }
+	"cart.verification.decision": { publicCode: string; decision: Decision; reason?: string, userID: string }
 
 	/* verify cart list */
 	"verifyCartList.cart.added": { cart: any }
-	"verifyCartList.cart.removed": { cartID: string }
+	"verifyCartList.cart.removed": { publicCode: string }
 
 	/* volunteer */
-	"volunteerRequest.decision": { netID: string; decision: Decision }
+	"volunteerRequest.decision": { publicCode: string; decision: Decision, userID: string }
 }
 
 export type AppEvent = {

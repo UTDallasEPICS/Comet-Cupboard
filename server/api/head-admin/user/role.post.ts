@@ -15,7 +15,7 @@ export default defineSafeHandler(async (event) => {
 	const transactionResult = await prisma.$transaction(async (tx) => {
 		const user = await tx.user.findUnique({
 			where: {
-				netID: userID,
+				userID: userID,
 			},
 		})
 
@@ -29,7 +29,7 @@ export default defineSafeHandler(async (event) => {
 
 		await tx.user.update({
 			where: {
-				netID: userID,
+				userID: userID,
 			},
 			data: {
 				role: newRole,

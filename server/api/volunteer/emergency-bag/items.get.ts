@@ -17,9 +17,9 @@ export default defineSafeHandler(async (event) => {
 		where: {
 			...(includeArchived === "false" ? { archived: false } : {}),
 		},
-        include: {
-            Category: true,
-        },
+		include: {
+			Category: true,
+		},
 	})
 
 	return items

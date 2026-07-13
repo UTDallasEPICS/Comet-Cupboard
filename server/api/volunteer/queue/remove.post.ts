@@ -9,24 +9,24 @@ import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 const schema = z
 	.object({
-		netID: z.string(),
+		publicCode: z.string(),
 	})
 	.strict()
 	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { netID } = await validateBody(event, schema)
+	const { publicCode } = await validateBody(event, schema)
 
 	try {
 		const queueEntry = await prisma.queueEntry.delete({
-			where: { netID },
+			where: { publicCode },
 		})
 
 		publishEvent(
 			createEvent("queue.entryRemoved", {
-				netID: netID,
 				position: queueEntry.position,
 				publicCode: queueEntry.publicCode,
+				publicIcon: "", // don't want to join on UserSession here
 			})
 		)
 

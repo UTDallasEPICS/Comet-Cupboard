@@ -1,26 +1,21 @@
 <template>
 	<UCard class="w-full">
 		<template #header>
-			<p v-if="validCartID">{{ cartID }}</p>
-			<p v-else>Cart Preview</p>
-		</template>
-		<div v-if="validCartID" class="flex h-full flex-col gap-y-4">
-			<div class="flex flex-col gap-4">
-				<UAlert
-					v-for="warning in pendingCartWarnings(cart)"
-					:key="warning"
-					:icon="icons['warning']"
-					color="warning"
-					:title="warning"
-					class="text-black"
-				/>
+			<div v-if="validPublicCode" class="flex flex-row items-center justify-between">
+				<UUser :name="cart.publicCode" :avatar="{ icon: cart.publicIcon }" size="lg" />
+
+				<SharedButtonNavigateTo text="Back to carts" @click="emit('update:select-cart', '')" />
 			</div>
+			<SharedTextCardTitle v-else>Cart Preview</SharedTextCardTitle>
+		</template>
+		<div v-if="validPublicCode" class="flex h-full flex-col gap-y-4">
+			<SharedWarningsList v-if="pendingCartWarnings(cart).length > 0" :warnings="pendingCartWarnings(cart)" />
 			<div class="grid justify-items-center gap-4" :style="{ gridTemplateColumns: 'repeat(auto-fill, minmax(288px, 1fr))' }">
 				<UCollapsible v-for="category in Object.keys(categoryCartItems)" :key="category" class="w-full" :default-open="true">
 					<UButton
 						:label="category"
 						color="primary"
-						variant="solid"
+						variant="ghost"
 						:trailing-icon="icons['chevronDown']"
 						block
 						class="group"
@@ -28,6 +23,8 @@
 							trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200',
 						}"
 					/>
+					<USeparator type="solid" size="sm" color="primary" />
+
 					<template #content>
 						<div class="m-1 grid place-items-center gap-4" style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))">
 							<ShoppingCartReviewItemCard
@@ -53,8 +50,8 @@
 				</UCollapsible>
 			</div>
 			<div class="flex flex-col items-end">
-				<p class="text-right text-nowrap">Total Count: {{ cartTotalCount }}</p>
-				<p class="text-right text-nowrap">Adjusted Count: {{ cartAdjustedCount }}</p>
+				<SharedTextBase class="text-right text-nowrap">Total Count: {{ cartTotalCount }}</SharedTextBase>
+				<SharedTextBase class="text-right text-nowrap">Adjusted Count: {{ cartAdjustedCount }}</SharedTextBase>
 				<UTextarea v-model="reason" placeholder="Add a reason for declining or accepting the cart" class="w-full max-w-96" />
 			</div>
 			<div class="flex flex-row justify-center gap-x-4 sm:justify-end">
@@ -62,42 +59,45 @@
 				<SharedButtonPositiveAction text="Accept" @click="acceptCart" />
 			</div>
 		</div>
-		<div v-else class="flex h-48 items-center justify-center">
-			<p class="text-center">There are no carts currently selected</p>
+		<div v-else class="flex flex-col items-center justify-center gap-4">
+			<SharedTextBase class="text-center">No carts currently selected</SharedTextBase>
+			<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
 		</div>
 	</UCard>
 </template>
 
 <script lang="ts" setup>
 const props = defineProps({
-	cartID: {
+	publicCode: {
 		type: String,
 		required: false,
 		default: "",
 	},
 })
 
-const emit = defineEmits(["cart-declined", "cart-accepted"])
+const emit = defineEmits(["update:select-cart", "cart-declined", "cart-accepted"])
 
 const reason = ref("")
 
-const validCartID = computed(() => {
-	return props.cartID !== ""
+const validPublicCode = computed(() => {
+	return props.publicCode !== ""
 })
 
 const { data: cart } = await useAsyncData(
 	"pending-cart",
 	async () => {
-		if (props.cartID === "") {
+		if (props.publicCode === "") {
 			return await Promise.resolve(null)
 		}
-		return $fetch("/api/volunteer/verification/pendingCart", {
-			query: { cartID: props.cartID },
+		const response = await $fetch("/api/volunteer/verification/pendingCart", {
+			query: { publicCode: props.publicCode },
 		})
+		console.log("response", response)
+		return response
 	},
 	{
 		immediate: false,
-		watch: [() => props.cartID],
+		watch: [() => props.publicCode],
 	}
 )
 
@@ -141,18 +141,18 @@ const cartTotalCount = computed(() => {
 const rejectCart = async () => {
 	await $fetch("/api/volunteer/verification/cartVerificationAction", {
 		method: "POST",
-		body: { cartID: props.cartID, action: "REJECT", reason: reason.value },
+		body: { publicCode: props.publicCode, action: "REJECT", reason: reason.value },
 	})
 	reason.value = ""
-	emit("cart-declined", props.cartID)
+	emit("cart-declined", props.publicCode)
 }
 
 const acceptCart = async () => {
 	await $fetch("/api/volunteer/verification/cartVerificationAction", {
 		method: "POST",
-		body: { cartID: props.cartID, action: "ACCEPT", reason: reason.value },
+		body: { publicCode: props.publicCode, action: "ACCEPT", reason: reason.value },
 	})
 	reason.value = ""
-	emit("cart-accepted", props.cartID)
+	emit("cart-accepted", props.publicCode)
 }
 </script>

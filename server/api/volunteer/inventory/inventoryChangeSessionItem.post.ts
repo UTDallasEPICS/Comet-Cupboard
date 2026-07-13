@@ -15,7 +15,7 @@ const schema = z
 
 export default defineSafeHandler(async (event) => {
 	const { itemID, incrementChange } = await validateBody(event, schema)
-	const netID = event.context.user.netID
+	const publicCode = event.context.userSession.publicCode
 
 	if (incrementChange === 0) {
 		return "No changes made"
@@ -24,25 +24,25 @@ export default defineSafeHandler(async (event) => {
 	const transactionResult = await prisma.$transaction(async (tx) => {
 		let inventoryChangeSession
 		inventoryChangeSession = await tx.inventoryChangeSession.findUnique({
-			where: { netID: netID },
+			where: { publicCode: publicCode },
 		})
 		if (!inventoryChangeSession) {
 			// create inventory change session if it doesn't exist
 			inventoryChangeSession = await tx.inventoryChangeSession.create({
-				data: { netID: netID },
+				data: { publicCode: publicCode },
 			})
 		}
 		try {
 			const inventoryChangeSessionItem = await tx.inventoryChangeSessionItem.upsert({
 				where: {
 					inventoryChangeSessionItemID: {
-						inventoryChangeSessionID: inventoryChangeSession.netID,
+						publicCode: publicCode,
 						itemID: itemID,
 					},
 				},
 				update: { count: { increment: incrementChange } },
 				create: {
-					inventoryChangeSessionID: inventoryChangeSession.netID,
+					publicCode: publicCode,
 					itemID: itemID,
 					count: incrementChange,
 				},
@@ -52,7 +52,7 @@ export default defineSafeHandler(async (event) => {
 				await tx.inventoryChangeSessionItem.delete({
 					where: {
 						inventoryChangeSessionItemID: {
-							inventoryChangeSessionID: inventoryChangeSession.netID,
+							publicCode: publicCode,
 							itemID: itemID,
 						},
 					},

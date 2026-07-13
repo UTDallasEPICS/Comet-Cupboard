@@ -1,24 +1,22 @@
 <template>
-	<UContainer class="py-8">
-		<header>
-			<SharedTextPageTitle>Manage Categories</SharedTextPageTitle>
-		</header>
-
-		<section class="mt-4">
-			<UCard>
-				<template #header>
+	<div>
+		<NuxtLayout name="main" title="Manage Categories" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
+			<section>
+				<UCard>
 					<SharedTextSectionTitle> Categories </SharedTextSectionTitle>
-				</template>
-				<div class="w-full">
-					<SharedButtonPositiveAction class="ml-auto block" text="Add Category" @click="navigateTo('/admin/manage/categories/add')" />
-				</div>
-				<UTable :data="categories" :columns="tableColumns" empty="No categories currently available" />
-			</UCard>
-		</section>
-	</UContainer>
+					<div class="w-full">
+						<SharedButtonPositiveAction class="ml-auto block" text="Add Category" @click="navigateTo('/admin/manage/categories/add')" />
+					</div>
+					<UTable :data="categories" :columns="tableColumns" empty="No categories currently available" />
+				</UCard>
+			</section>
+		</NuxtLayout>
+	</div>
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: false })
+
 const { data: categories } = await useFetch("/api/student/inventory/categories", {
 	query: { includeArchived: true },
 })

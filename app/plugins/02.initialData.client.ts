@@ -1,11 +1,7 @@
 export default defineNuxtPlugin(async (nuxtApp) => {
-	const { getQueue, updateQueueStatus, getVolunteerQueue } = useQueueStore()
-	const { getCart } = useCartStore()
-	const { canVolunteerAccess } = usePermissionsStore()
-	await getQueue()
-	await updateQueueStatus()
-	await getCart()
-	if (canVolunteerAccess) {
-		await getVolunteerQueue()
-	}
+	const queueStore = useQueueStore()
+	const cartStore = useCartStore()
+	await queueStore.getQueue()
+	await queueStore.updateQueueStatus()
+	await cartStore.getCart()
 })
