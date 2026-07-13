@@ -4,7 +4,7 @@
 			<div v-if="validPublicCode" class="flex flex-row items-center justify-between">
 				<UUser :name="cart.publicCode" :avatar="{ icon: cart.publicIcon }" size="lg" />
 
-				<UButton @click="emit('update:select-cart', '')"> Back to carts </UButton>
+				<SharedButtonNavigateTo text="Back to carts" @click="emit('update:select-cart', '')" />
 			</div>
 			<SharedTextCardTitle v-else>Cart Preview</SharedTextCardTitle>
 		</template>
@@ -50,8 +50,8 @@
 				</UCollapsible>
 			</div>
 			<div class="flex flex-col items-end">
-				<p class="text-right text-nowrap">Total Count: {{ cartTotalCount }}</p>
-				<p class="text-right text-nowrap">Adjusted Count: {{ cartAdjustedCount }}</p>
+				<SharedTextBase class="text-right text-nowrap">Total Count: {{ cartTotalCount }}</SharedTextBase>
+				<SharedTextBase class="text-right text-nowrap">Adjusted Count: {{ cartAdjustedCount }}</SharedTextBase>
 				<UTextarea v-model="reason" placeholder="Add a reason for declining or accepting the cart" class="w-full max-w-96" />
 			</div>
 			<div class="flex flex-row justify-center gap-x-4 sm:justify-end">
@@ -59,8 +59,9 @@
 				<SharedButtonPositiveAction text="Accept" @click="acceptCart" />
 			</div>
 		</div>
-		<div v-else class="flex h-48 items-center justify-center">
-			<p class="text-center">There are no carts currently selected</p>
+		<div v-else class="flex flex-col items-center justify-center gap-4">
+			<SharedTextBase class="text-center">No carts currently selected</SharedTextBase>
+			<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
 		</div>
 	</UCard>
 </template>

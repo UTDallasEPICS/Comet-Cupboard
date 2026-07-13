@@ -4,8 +4,9 @@
 			<SharedTextCardTitle>Pending Carts</SharedTextCardTitle>
 		</template>
 		<div>
-			<div v-if="pendingPublicCodesAndAdjQTY.length === 0" class="flex grow flex-row items-center justify-center">
-				<p class="text-center text-black">There are no carts</p>
+			<div v-if="pendingPublicCodesAndAdjQTY.length === 0" class="flex grow flex-col items-center justify-center">
+				<SharedTextBase class="text-center text-black">No pending carts</SharedTextBase>
+				<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
 			</div>
 			<div v-else>
 				<UButton

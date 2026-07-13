@@ -1,9 +1,9 @@
 <template>
 	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
 		<template #body>
-			<div class="mt-auto flex flex-row items-center gap-2">
+			<div class="my-auto flex flex-row items-center gap-4 pr-2">
 				<SharedTextBase>QTY: {{ quantity }}</SharedTextBase>
-				<SharedButtonPositiveAction text="Add" class="w-16" @click="addToCart" />
+				<SharedButtonPositiveAction text="Add" class="w-20"  @click="addToCart" />
 			</div>
 		</template>
 	</SharedItemCard>

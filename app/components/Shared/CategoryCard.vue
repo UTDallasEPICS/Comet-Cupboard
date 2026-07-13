@@ -6,7 +6,7 @@
 		<div class="text-text-soft flex w-full min-w-32 flex-1 items-center px-4">
 			<SharedTextBase class="font-semibold">{{ categoryName }}</SharedTextBase>
 		</div>
-		<div class="h-full w-48 min-w-20 shrink-0">
+		<div class="h-full w-40 min-w-20 shrink-0 ">
 			<img :alt="categoryName" :src="`/api/public/image/${imgName}`" :style="clipStyle" class="h-full w-full object-cover" />
 		</div>
 	</UButton>
@@ -31,5 +31,5 @@ const props = defineProps({
 })
 
 // Creates a diagonal line styling with specified percentages to adjust the angle
-const clipStyle = "clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%)"
+const clipStyle = "clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%)"
 </script>

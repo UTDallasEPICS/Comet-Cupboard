@@ -17,11 +17,11 @@
 					<SharedTextBase>Qty:</SharedTextBase>
 					<div class="border-text-soft flex flex-row rounded-xl border">
 						<div class="w-12">
-							<p class="ml-2 text-center">{{ props.currentCount }}</p>
+							<SharedTextBase class="ml-2 text-center">{{ props.currentCount }}</SharedTextBase>
 						</div>
 
 						<div :style="clipStyle" class="bg-border-soft flex w-16 items-center justify-center rounded-r-xl">
-							<p class="text-center">{{ displayChange }}</p>
+							<SharedTextBase class="text-center">{{ displayChange }}</SharedTextBase>
 						</div>
 					</div>
 				</div>
@@ -111,5 +111,5 @@ const ensureValid = () => {
 }
 
 // Creates a diagonal line styling with specified percentages to adjust the angle
-const clipStyle = "clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%)"
+const clipStyle = "clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%)"
 </script>

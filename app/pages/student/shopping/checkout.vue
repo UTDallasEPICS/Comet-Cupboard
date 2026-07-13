@@ -17,9 +17,14 @@
 					>
 						<template #Disclosures>
 							<USeparator class="mb-4" />
-
-							<div class="flex flex-col gap-4">
-								<UCard variant="outline" class="border-final-soft-border shadow-md">
+							<UAlert
+								title="Please read the following disclosures before proceeding to checkout."
+								:icon="icons['information']"
+								color="neutral"
+								variant="outline"
+							/>
+							<div class="mt-4 flex flex-col gap-4">
+								<UCard class="h-64 overflow-y-scroll">
 									<template #header>
 										<SharedTextCardTitle>Statement of Understanding</SharedTextCardTitle>
 									</template>
@@ -31,7 +36,7 @@
 										allergies or dietary restrictions.
 									</SharedTextBase>
 								</UCard>
-								<UCard variant="outline" class="border-final-soft-border shadow-md">
+								<UCard class="h-64 overflow-y-scroll">
 									<template #header>
 										<SharedTextCardTitle>Non-Discrimination Clause</SharedTextCardTitle>
 									</template>
@@ -51,7 +56,7 @@
 						<template #EditCart>
 							<USeparator class="mb-4" />
 							<UAlert
-								title="If you have any expired, damaged, or overstocked items, adjust your cart so that the volunteer can correctly verify your cart."
+								title="Please adjust counts per expired, damaged, or overstocked items."
 								:icon="icons['information']"
 								color="neutral"
 								variant="outline"
@@ -132,13 +137,13 @@
 								</ul>
 								<div class="flex flex-row justify-between gap-4">
 									<SharedButtonCancel text="Back" @click="decrementStepper" />
-									<SharedButtonPositiveAction text="Confirm and Submit Cart" @click="submitCart" />
+									<SharedButtonPositiveAction text="Submit Cart" @click="submitCart" />
 								</div>
 							</div>
 						</template>
 
 						<template #Verifying>
-							<USeparator class="m4-6" />
+							<USeparator class="mb-4" />
 
 							<UAlert
 								:title="`Your cart has been submitted and is awaiting verification. A staff member will review the items and finalize your request${loadingDots}`"
@@ -146,6 +151,7 @@
 								color="neutral"
 								variant="outline"
 							/>
+							<UProgress :indeterminate="true" class="mt-4" />
 
 							<div class="mt-4 flex flex-col gap-4">
 								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -168,7 +174,7 @@
 										/>
 									</li>
 								</ul>
-								<div class="flex flex-row justify-start gap-4">
+								<div class="flex flex-row justify-center gap-4">
 									<SharedButtonCancel text="Cancel Request" @click="cancelCart" />
 								</div>
 							</div>
@@ -179,22 +185,26 @@
 
 							<template v-if="cartRejected">
 								<UCard variant="outline">
-									<template #header>
-										<p class="">Status: <span class="text-negative-red">Rejected</span></p>
-									</template>
-									<SharedTextBase>Reason: {{ cartVerificationReason }}</SharedTextBase>
+									<div class="flex flex-col items-center justify-center gap-4">
+										<SharedTextBase>Your cart was <span class="text-negative-red">Rejected</span>.</SharedTextBase>
+										<SharedTextBase>Volunteer Message: {{ cartVerificationReason }}</SharedTextBase>
+										<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+									</div>
 								</UCard>
-								<SharedButtonCancel text="Back to Shopping" @click="goToShopping" />
+								<div class="mt-4 flex flex-row justify-center gap-4">
+									<SharedButtonNavigateTo text="Back to Shopping" class="w-48" @click="goToShopping" />
+								</div>
 							</template>
 							<template v-else>
 								<UCard variant="outline">
-									<template #header>
-										<p class="">Status: <span class="text-utd-green">Accepted</span></p>
-									</template>
-									<SharedTextBase>Reason: {{ cartVerificationReason }}</SharedTextBase>
+									<div class="flex flex-col items-center justify-center gap-4">
+										<SharedTextBase>Your cart was <span class="text-utd-green">Accepted</span>.</SharedTextBase>
+										<SharedTextBase>Volunteer Message: {{ cartVerificationReason }}</SharedTextBase>
+										<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+									</div>
 								</UCard>
-								<div class="flex flex-row justify-end">
-									<SharedButtonPositiveAction text="Back to Dashboard" @click="navigateTo('/student')" />
+								<div class="mt-4 flex flex-row justify-center gap-4">
+									<SharedButtonNavigateTo text="Back to Dashboard" class="w-48" @click="navigateTo('/student')" />
 								</div>
 							</template>
 						</template>
