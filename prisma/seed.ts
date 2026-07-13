@@ -52,8 +52,8 @@ const validUsers = [
 const populateLocations = async () => {
 	const locationImages = readdirSync("./test-images/_location_images")
 	const locationData = [
-		{ name: "Police Station", address: "100 N Floyd Road", description: "https://police.utdallas.edu" },
-		{ name: "Activity Center", address: "800 Campbell Rd", description: "https://urec.utdallas.edu" },
+		{ name: "Police Station", address: "100 N Floyd Road" },
+		{ name: "Activity Center", address: "800 Campbell Rd" },
 	]
 	const promises = locationData.map(async (location) => {
 		const imgName = locationImages.find((image) => image.split(".")[0] === location.name.replace(/\s/g, "_").toLowerCase())
@@ -69,14 +69,14 @@ const populateLocations = async () => {
 
 const emergencyBags = [
 	{
-		bagCategory: BagCategory.NONVEGETARIAN_AND_NON_PEANUT_BUTTER,
+		bagCategory: BagCategory.NEITHER,
 		expiryDate: new Date("2026-07-28"),
 		label: "12345",
 		locationName: "Police Station",
 		private: true,
 	},
-	{ bagCategory: BagCategory.VEGETARIAN_AND_NON_PEANUT_BUTTER, expiryDate: new Date("2027-01-01"), label: "15453", private: false },
-	{ bagCategory: BagCategory.NONVEGETARIAN_AND_PEANUT_BUTTER, expiryDate: new Date("2026-09-30"), label: "54321", private: false },
+	{ bagCategory: BagCategory.VEGETARIAN, expiryDate: new Date("2027-01-01"), label: "15453", private: false },
+	{ bagCategory: BagCategory.PEANUT_BUTTER, expiryDate: new Date("2026-09-30"), label: "54321", private: false },
 ]
 
 const createUsers = async () => {

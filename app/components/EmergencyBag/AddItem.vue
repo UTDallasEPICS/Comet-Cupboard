@@ -69,7 +69,7 @@ const addItemToBag = (item: Item) => {
 	if (!bagItems.value) return
 	const existingItem = bagItems.value.find((bi) => bi.itemID === item.itemID)
 	if (existingItem) {
-		if (existingItem.count >= item.quantityAvailable) return
+		if (existingItem.count >= item.quantity) return
 		existingItem.count++
 	} else {
 		bagItems.value.push({
@@ -91,7 +91,7 @@ const increaseItemCount = (itemID: string) => {
 	const item = bagItems.value.find((bi) => bi.itemID === itemID)
 	const inventoryItem = itemData.value.find((item) => item.itemID === itemID)
 	if (item) {
-		if (item.count >= inventoryItem.quantityAvailable) return
+		if (item.count >= inventoryItem.quantity) return
 		item.count++
 	}
 }
