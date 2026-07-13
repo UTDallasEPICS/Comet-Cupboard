@@ -11,6 +11,7 @@ export const icons = {
 	sort: "i-lucide-arrow-up-down",
 	sortAsc: "i-lucide-arrow-up-narrow-wide",
 	sortDesc: "i-lucide-arrow-down-wide-narrow",
+	sortFilter: "i-lucide-sliders-horizontal",
 	ellipsesActions: "i-lucide-ellipsis",
 	chevronDown: "i-lucide-chevron-down",
 	student: "i-lucide-user",
@@ -22,6 +23,7 @@ export const icons = {
 	locations: "i-lucide-map-pin",
 	verifyCart: "i-lucide-check-circle",
 	data: "i-lucide-chart-column-big",
+	emergencyBag: "i-lucide-shopping-bag",
 	management: "i-lucide-settings",
 	sources: "i-lucide-database",
 	categories: "i-lucide-tags",
@@ -33,5 +35,5 @@ export const icons = {
 	instagram: "i-lucide-instagram",
 	information: "i-lucide-info",
 	profile: "i-lucide-circle-user",
-	move: "i-lucide-arrow-left-right"
+	move: "i-lucide-arrow-left-right",
 }

@@ -15,7 +15,7 @@ const schema = z
 
 export default defineSafeHandler(async (event) => {
 	const { itemID, incrementChange } = await validateBody(event, schema)
-	const netID = event.context.user.netID
+	const publicCode = event.context.userSession.publicCode
 
 	if (incrementChange === 0) {
 		return "No changes made"
@@ -23,8 +23,8 @@ export default defineSafeHandler(async (event) => {
 
 	await prisma.$transaction(async (tx) => {
 		const cart = await tx.cart.findUnique({
-			where: { cartID: netID },
-			select: { cartID: true, pending: true },
+			where: { publicCode: publicCode },
+			select: { publicCode: true, pending: true },
 		})
 
 		if (!cart) {
@@ -40,20 +40,20 @@ export default defineSafeHandler(async (event) => {
 
 		if (incrementChange > 0) {
 			return await tx.cartItem.upsert({
-				where: { cartItemID: { cartID: cart.cartID, itemID: itemID } },
+				where: { cartItemID: { publicCode: cart.publicCode, itemID: itemID } },
 				update: { count: { increment: incrementChange } },
-				create: { cartID: cart.cartID, itemID: itemID, count: incrementChange },
+				create: { publicCode: cart.publicCode, itemID: itemID, count: incrementChange },
 			})
 		} else {
 			try {
 				const updatedItem = await tx.cartItem.update({
-					where: { cartItemID: { cartID: cart.cartID, itemID: itemID } },
+					where: { cartItemID: { publicCode: cart.publicCode, itemID: itemID } },
 					data: { count: { increment: incrementChange } },
 				})
 
 				if (updatedItem.count <= 0) {
 					await tx.cartItem.delete({
-						where: { cartItemID: { cartID: cart.cartID, itemID: itemID } },
+						where: { cartItemID: { publicCode: cart.publicCode, itemID: itemID } },
 					})
 					return null
 				}

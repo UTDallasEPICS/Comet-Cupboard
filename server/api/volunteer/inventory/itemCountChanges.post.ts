@@ -15,7 +15,7 @@ const schema = z
 
 export default defineSafeHandler(async (event) => {
 	const { sourceID, fieldMap } = await validateBody(event, schema)
-	const netID = event.context.user.netID
+	const publicCode = event.context.userSession.publicCode
 
 	const transactionResult = await prisma.$transaction(async (tx) => {
 		const foundSource = await tx.source.findUnique({ where: { sourceID: sourceID } })
@@ -25,7 +25,7 @@ export default defineSafeHandler(async (event) => {
 
 		const inventoryChangeSession = await tx.inventoryChangeSession.findUnique({
 			where: {
-				netID: netID,
+				publicCode: publicCode,
 			},
 			include: {
 				InventoryChangeSessionItems: {
@@ -70,7 +70,7 @@ export default defineSafeHandler(async (event) => {
 
 		await tx.inventoryChangeSession.delete({
 			where: {
-				netID: netID,
+				publicCode: publicCode,
 			},
 		})
 

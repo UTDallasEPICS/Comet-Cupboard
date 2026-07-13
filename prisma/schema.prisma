@@ -21,24 +21,34 @@ enum BagCategory {
     NONVEGETARIAN_AND_NON_PEANUT_BUTTER
 }
 
-model RoleRequest {
-    userID String   @id @map("user_id")
-    User   User     @relation(fields: [userID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
-    role   RoleType @map("role")
+model User {
+    userID      String       @id @map("userID")
+    role        RoleType     @map("role")
+    Orders      Order[]
+    userSession UserSession?
 
-    @@map("role_request")
+    @@map("user")
 }
 
-model User {
-    netID                  String                  @id @map("net_id")
-    role                   RoleType                @map("role")
+model UserSession {
+    userID                 String                  @id @map("userID")
+    User                   User                    @relation(fields: [userID], references: [userID], onDelete: Cascade, onUpdate: Cascade)
+    publicCode             String                  @unique @map("public_code")
+    publicIcon             String                  @map("public_icon")
     roleRequest            RoleRequest?
     Cart                   Cart?
-    Orders                 Order[]
     QueueEntry             QueueEntry?
     InventoryChangeSession InventoryChangeSession?
 
-    @@map("user")
+    @@map("user_session")
+}
+
+model RoleRequest {
+    publicCode  String      @id @map("public_code")
+    UserSession UserSession @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
+    role        RoleType    @map("role")
+
+    @@map("role_request")
 }
 
 model Category {
@@ -64,7 +74,6 @@ model Item {
     CartItems                   CartItem[]
     OrderItems                  OrderItem[]
     archived                    Boolean                      @default(false) @map("archived")
-    createdAt                   DateTime                     @default(now()) @map("created_at")
     EmergencyBagItems           EmergencyBagItem[]
     IssuedEmergencyBagItems     IssuedEmergencyBagItem[]
 
@@ -104,51 +113,51 @@ model Source {
 }
 
 model InventoryChangeSession {
-    User                        User                         @relation(fields: [netID], references: [netID], onDelete: NoAction, onUpdate: Cascade)
-    netID                       String                       @id @map("net_id")
+    publicCode                  String                       @id @map("public_code")
+    UserSession                 UserSession                  @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
     InventoryChangeSessionItems InventoryChangeSessionItem[]
 
     @@map("inventory_change_session")
 }
 
 model InventoryChangeSessionItem {
-    InventoryChangeSession   InventoryChangeSession @relation(fields: [inventoryChangeSessionID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
-    inventoryChangeSessionID String                 @map("inventory_change_session_id")
-    Item                     Item                   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-    itemID                   String                 @map("item_id")
-    count                    Int                    @map("count")
+    InventoryChangeSession InventoryChangeSession @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
+    publicCode             String                 @map("public_code")
+    Item                   Item                   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+    itemID                 String                 @map("item_id")
+    count                  Int                    @map("count")
 
-    @@id(name: "inventoryChangeSessionItemID", [inventoryChangeSessionID, itemID])
+    @@id(name: "inventoryChangeSessionItemID", [publicCode, itemID])
     @@map("inventory_change_session_item")
 }
 
 model Cart {
-    User      User       @relation(fields: [cartID], references: [netID], onDelete: Cascade, onUpdate: Cascade)
-    cartID    String     @id @map("cart_id")
-    createdAt DateTime   @default(now()) @map("created_at")
-    CartItems CartItem[]
-    pending   Boolean    @default(false) @map("pending")
+    UserSession UserSession @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
+    publicCode  String      @id @map("public_code")
+    createdAt   DateTime    @default(now()) @map("created_at")
+    CartItems   CartItem[]
+    pending     Boolean     @default(false) @map("pending")
 
     @@map("cart")
 }
 
 model CartItem {
+    Cart            Cart   @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
+    publicCode      String @map("public_code")
     Item            Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
     itemID          String @map("item_id")
-    Cart            Cart   @relation(fields: [cartID], references: [cartID], onDelete: Cascade, onUpdate: Cascade)
-    cartID          String @map("cart_id")
     count           Int    @map("count")
     // Fields to track adjustments to decrease from total count
     countAdjustment Int    @default(0) @map("count_adjustment")
 
-    @@id(name: "cartItemID", [itemID, cartID])
+    @@id(name: "cartItemID", [itemID, publicCode])
     @@map("cart_item")
 }
 
 model Order {
     orderID       String      @id @default(cuid()) @map("order_id")
-    User          User        @relation(fields: [netID], references: [netID], onDelete: NoAction, onUpdate: Cascade)
-    netID         String      @map("net_id")
+    User          User        @relation(fields: [userID], references: [userID], onDelete: NoAction, onUpdate: Cascade)
+    userID        String      @map("userID")
     cartCreatedAt DateTime    @map("cart_created_at")
     createdAt     DateTime    @default(now()) @map("created_at")
     OrderItems    OrderItem[]
@@ -177,11 +186,10 @@ model Deal {
 }
 
 model QueueEntry {
-    netID      String   @id @map("net_id")
-    publicCode String   @map("public_code")
-    joinedAt   DateTime @default(now()) @map("joined_at")
-    position   Int      @map("position")
-    User       User     @relation(fields: [netID], references: [netID])
+    UserSession UserSession @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
+    publicCode  String      @id @map("public_code")
+    joinedAt    DateTime    @default(now()) @map("joined_at")
+    position    Int         @map("position")
 
     @@map("queue_entry")
 }
@@ -235,8 +243,8 @@ model IssuedEmergencyBag {
     bagDescription    String?                  @default("") @map("bag_description")
     expiryDate        DateTime                 @map("expiry_date")
     //5 digit ID for volunteers/students
-    label             String                  
-    private           Boolean            @default(false) 
+    label             String
+    private           Boolean                  @default(false)
 
     @@map("issued_emergency_bag")
 }

@@ -15,13 +15,13 @@
 			<div class="mt-auto flex flex-col items-end gap-2">
 				<div class="flex flex-row items-center gap-2">
 					<SharedTextBase>Qty:</SharedTextBase>
-					<div class="border-final-text-soft flex flex-row rounded-xl border">
+					<div class="border-text-soft flex flex-row rounded-xl border">
 						<div class="w-12">
-							<p class="ml-2 text-center">{{ props.currentCount }}</p>
+							<SharedTextBase class="ml-2 text-center">{{ props.currentCount }}</SharedTextBase>
 						</div>
 
-						<div :style="clipStyle" class="bg-final-border-soft flex w-16 items-center justify-center rounded-r-xl">
-							<p class="text-center">{{ displayChange }}</p>
+						<div :style="clipStyle" class="bg-border-soft flex w-16 items-center justify-center rounded-r-xl">
+							<SharedTextBase class="text-center">{{ displayChange }}</SharedTextBase>
 						</div>
 					</div>
 				</div>
@@ -83,7 +83,6 @@ const props = defineProps({
 })
 
 const inventoryStore = useInventoryStore()
-const { changeInventorySessionItemCount } = inventoryStore
 
 const editMenuItems = ref<DropdownMenuItem[]>([
 	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${props.category}/${props.itemID}/edit`) },
@@ -93,11 +92,11 @@ const editMenuItems = ref<DropdownMenuItem[]>([
 const adjustAmount = ref(1)
 
 const increment = async () => {
-	await changeInventorySessionItemCount(props.itemID, adjustAmount.value)
+	await inventoryStore.changeInventorySessionItemCount(props.itemID, adjustAmount.value)
 }
 
 const decrement = async () => {
-	await changeInventorySessionItemCount(props.itemID, -adjustAmount.value)
+	await inventoryStore.changeInventorySessionItemCount(props.itemID, -adjustAmount.value)
 }
 
 const displayChange = computed(() => {
@@ -112,5 +111,5 @@ const ensureValid = () => {
 }
 
 // Creates a diagonal line styling with specified percentages to adjust the angle
-const clipStyle = "clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%)"
+const clipStyle = "clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%)"
 </script>

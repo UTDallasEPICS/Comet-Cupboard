@@ -1,11 +1,30 @@
 <template>
 	<UContainer>
-		<div v-if="cartItems.length === 0" class="py-12 text-center">
-			<SharedTextBase>Your cart is empty</SharedTextBase>
-		</div>
-		<div v-else>
+		<template v-if="!cartStore.cart">
+			<template v-if="queueStore.queueStatus">
+				<div class="flex w-full flex-col items-center gap-2">
+					<SharedTextBase>Currently waiting in queue{{ loadingDots }}</SharedTextBase>
+					<SharedButtonNavigateTo text="Go to Queue" to="/student/queue" />
+				</div>
+			</template>
+			<template v-else>
+				<div class="flex w-full flex-col items-center gap-4">
+					<SharedTextBase>You need to join queue before shopping</SharedTextBase>
+					<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+					<SharedButtonNavigateTo text="Go to Queue" to="/student/queue" />
+				</div>
+			</template>
+		</template>
+		<template v-else-if="cartStore.cartItems.length === 0">
+			<div class="flex w-full flex-col items-center gap-4">
+				<SharedTextBase>Your cart is empty</SharedTextBase>
+				<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+				<SharedButtonNavigateTo text="Browse Items" to="/student/shopping" />
+			</div>
+		</template>
+		<template v-else>
 			<ul class="flex w-full max-w-md flex-col items-center gap-4">
-				<li v-for="cartItem in cartItems" :key="cartItem.itemID">
+				<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
 					<ShoppingCartItemCard
 						class="w-full"
 						:count="cartItem.count"
@@ -20,28 +39,30 @@
 									}
 								: {}
 						"
-						@update:cart="getCart"
+						@update:cart="cartStore.getCart"
 					/>
 				</li>
 			</ul>
 
 			<div class="flex justify-center pt-6">
-				<SharedButtonPositiveAction text="Proceed to Checkout" @click="proceedToCheckout" />
+				<SharedButtonNavigateTo text="Proceed to Checkout" class="w-48" @click="proceedToCheckout" />
 			</div>
-		</div>
+		</template>
 	</UContainer>
 </template>
 
 <script setup lang="ts">
-const store = useCartStore()
-const { getCart, resetCartView } = store
-const { cartItems } = storeToRefs(store)
+const cartStore = useCartStore()
+
+const queueStore = useQueueStore()
+
+const { loadingDots } = useLoadingDots()
 
 const proceedToCheckout = async () => {
-	if (cartItems.value.length === 0) {
+	if (cartStore.cartItems.length === 0) {
 		return
 	}
-	resetCartView()
+	cartStore.resetCartView()
 	await navigateTo("/student/shopping/checkout")
 }
 </script>

@@ -15,14 +15,16 @@ const schema = z
 			"NONVEGETARIAN_AND_NON_PEANUT_BUTTER",
 		]),
 		expiryDate: z.string().datetime(),
-		items: z.array(
-			z.object({
-				itemID: z.string(),
-				count: z.number().int().min(1),
-			})
-		).min(1, "At least one item required"),
+		items: z
+			.array(
+				z.object({
+					itemID: z.string(),
+					count: z.number().int().min(1),
+				})
+			)
+			.min(1, "At least one item required"),
 		isPrivate: z.boolean().optional().default(false),
-		bagDescription: z.string().optional().default(''),
+		bagDescription: z.string().optional().default(""),
 	})
 	.strict()
 	.required()
@@ -53,7 +55,7 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
-    for (const item of items) {
+	for (const item of items) {
 		await prisma.item.update({
 			where: { itemID: item.itemID },
 			data: {

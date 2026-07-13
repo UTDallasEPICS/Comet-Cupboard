@@ -3,14 +3,25 @@ import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
 
 export default defineSafeHandler(async (event) => {
-	const netID = event.context.user.netID
+	const publicCode = event.context.userSession.publicCode
 
 	const existingEntry = await prisma.queueEntry.findUnique({
-		where: { netID: netID },
+		where: { publicCode: publicCode },
+		include: {
+			UserSession: {
+				select: {
+					publicIcon: true,
+				},
+			},
+		},
 	})
 	if (!existingEntry) {
 		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "User is not in the queue" })
 	}
-
-	return existingEntry
+	const formattedEntry = {
+		position: existingEntry.position,
+		publicCode: existingEntry.publicCode,
+		publicIcon: existingEntry.UserSession.publicIcon,
+	}
+	return formattedEntry
 })

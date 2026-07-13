@@ -1,6 +1,6 @@
 <template>
 	<UHeader
-		class="bg-final-utd-green"
+		class="bg-utd-green"
 		:toggle="false"
 		:ui="{
 			container: 'mx-0 w-full max-w-none',
@@ -9,82 +9,90 @@
 	>
 		<template #left>
 			<USlideover
-				v-if="true"
+				v-if="permissionsStore.loggedIn"
 				side="left"
-				title="Navigation Menu"
 				:overlay="false"
 				:ui="{
-					content: 'bg-final-page-bg',
-					header: 'bg-final-utd-orange',
-					title: 'text-white',
-					close: 'text-white hover:bg-transparent hover:text-black focus-visible:bg-transparent focus-visible:text-black focus-visible:ring-0 active:bg-transparent',
-				}"
-				:close="{
-					size: 'xl',
+					content: 'bg-page-bg',
+					header: 'bg-utd-orange',
 				}"
 			>
-				<UButton
-					variant="ghost"
-					size="xl"
-					:icon="icons['hamburger']"
-					:ui="{
-						leadingIcon: 'size-8',
-					}"
-				/>
+				<UButton variant="ghost" class="hover:bg-transparent active:bg-transparent" size="xl" :icon="icons['hamburger']" />
+
+				<template #header="{ close }">
+					<div class="flex w-full flex-row items-center justify-between">
+						<img src="/CometCupboardLogo2.png" class="aspect-auto h-8" />
+						<UButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" :icon="icons['close']" @click="close" />
+					</div>
+				</template>
+
 				<template #body>
 					<UNavigationMenu :items="items" orientation="vertical" class="w-full" />
 				</template>
 			</USlideover>
-			<div class="relative ml-4 overflow-hidden">
+			<div class="relative ml-2 overflow-hidden">
 				<NuxtLink to="/" class="focus:outline-none">
-					<img src="/CometCupboardLogo1.png" class="h-10" />
+					<img src="/CometCupboardLogo1.png" class="h-8" />
 				</NuxtLink>
 			</div>
 		</template>
 
 		<template #right>
-			<div class="flex flex-row gap-4">
+			<div class="flex flex-row gap-2">
 				<USlideover
 					v-if="showInventoryChangesIcon"
 					side="right"
-					title="Preview Inventory Changes"
 					:overlay="false"
 					:ui="{
-						content: 'max-w-112 mt-16 bg-final-page-bg',
-						header: 'bg-final-utd-orange',
-						title: 'text-white',
-						close: 'text-white hover:bg-transparent hover:text-black focus-visible:bg-transparent focus-visible:text-black focus-visible:ring-0 active:bg-transparent',
-					}"
-					:close="{
-						size: 'xl',
+						content: 'max-w-112 mt-16 bg-page-bg',
+						header: 'bg-utd-orange',
 					}"
 				>
-					<UChip :show="numberOfChanges > 0" :text="numberOfChanges" size="3xl">
-						<UButton :icon="icons['inventory']" class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent" />
+					<UChip
+						:show="inventoryStore.numberOfChanges > 0"
+						:text="inventoryStore.numberOfChanges"
+						:ui="{
+							base: 'top-2 right-2 h-[20px] min-w-[20px] text-[20px] ring-0 text-sm',
+						}"
+					>
+						<UButton
+							variant="ghost"
+							:icon="icons['inventory']"
+							class="text-white hover:bg-transparent focus-visible:ring-0 active:bg-transparent"
+						/>
 					</UChip>
+
+					<template #header="{ close }">
+						<div class="flex w-full flex-row items-center justify-between">
+							<SharedTextBase class="font-semibold text-white">Inventory Changes</SharedTextBase>
+							<UButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" :icon="icons['close']" @click="close" />
+						</div>
+					</template>
+
 					<template #body>
 						<InventoryReviewChangesDrawer />
 					</template>
 				</USlideover>
 				<USlideover
 					v-if="showCartIcon"
-					v-model:open="cartView"
+					v-model:open="cartStore.cartView"
 					side="right"
-					title="Preview Cart"
 					:overlay="false"
 					:ui="{
-						content: 'max-w-112 mt-16 bg-final-page-bg',
-						header: 'bg-final-utd-orange',
-						title: 'text-white',
-						close: 'text-white hover:bg-transparent hover:text-black focus-visible:bg-transparent focus-visible:text-black focus-visible:ring-0 active:bg-transparent',
-					}"
-					:close="{
-						size: 'xl',
+						content: 'max-w-112 mt-16 bg-page-bg',
+						header: 'bg-utd-orange',
 					}"
 				>
 					<UButton variant="ghost" class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent">
-						<ShoppingCartIcon :cart-view="cartView" :cart-disabled="false" :cart-total-count="cartTotalCount" />
+						<ShoppingCartIcon :cart-view="cartStore.cartView" :cart-disabled="false" :cart-total-count="cartStore.cartTotalCount" />
 					</UButton>
+
+					<template #header="{ close }">
+						<div class="flex w-full flex-row items-center justify-between">
+							<SharedTextBase class="font-semibold text-white">Your Cart</SharedTextBase>
+							<UButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" :icon="icons['close']" @click="close" />
+						</div>
+					</template>
 					<template #body>
 						<ShoppingCartDrawer />
 					</template>
@@ -96,15 +104,21 @@
 						sideOffset: 8,
 					}"
 				>
-					<UButton v-if="canStudentAccess" variant="ghost" :icon="icons['profile']" size="xl" />
+					<UButton v-if="permissionsStore.canStudentAccess" variant="ghost" :icon="icons['profile']" size="lg" />
 
 					<template #content>
 						<div class="flex w-64 flex-col items-start gap-2 p-4">
-							<SharedTextBase>John Doe</SharedTextBase>
-							<SharedTextBase>John.Doe1@utdallas.edu</SharedTextBase>
-							<SharedTextBase class="text-final-utd-orange">{{ roleText }}</SharedTextBase>
+							<UUser
+								:name="userSessionInfoStore.publicCode"
+								:description="userID"
+								:avatar="{
+									icon: userSessionInfoStore.publicIcon,
+								}"
+								size="lg"
+							/>
+							<SharedTextBase class="text-utd-orange">{{ permissionsStore.roleText }}</SharedTextBase>
 							<USeparator />
-							<UButton variant="outline" :icon="icons['logout']" class="w-full" @click="logout"> Logout </UButton>
+							<UButton variant="outline" color="neutral" :icon="icons['logout']" class="w-full" @click="logout"> Logout </UButton>
 						</div>
 					</template>
 				</UPopover>
@@ -118,14 +132,14 @@ import type { NavigationMenuItem } from "@nuxt/ui"
 
 const cartStore = useCartStore()
 const inventoryStore = useInventoryStore()
-const permissions = usePermissionsStore()
-const { cart, cartView, cartTotalCount } = storeToRefs(cartStore)
-const { canStudentAccess, canVolunteerAccess, canAdminAccess, roleText } = storeToRefs(permissions)
-const { inventoryChanges, numberOfChanges } = storeToRefs(inventoryStore)
+const permissionsStore = usePermissionsStore()
+const userSessionInfoStore = useUserSessionInfoStore()
+
+const userID = useCookie("userID")
 
 const route = useRoute()
 const showCartIcon = computed(() => {
-	return cart.value != null && route.path.startsWith("/student") && route.path !== "/student/shopping/checkout"
+	return route.path.startsWith("/student") && route.path !== "/student/shopping/checkout"
 })
 
 const showInventoryChangesIcon = computed(() => {
@@ -137,7 +151,7 @@ const { logout } = useLogout()
 const items = ref<NavigationMenuItem[]>(
 	[
 		// Student Group
-		canStudentAccess.value && {
+		permissionsStore.canStudentAccess && {
 			label: "Student",
 			icon: icons["student"],
 			open: true,
@@ -145,7 +159,7 @@ const items = ref<NavigationMenuItem[]>(
 		},
 
 		// Volunteer Group
-		canVolunteerAccess.value && {
+		permissionsStore.canVolunteerAccess && {
 			label: "Volunteer",
 			icon: icons["volunteer"],
 			open: true,
@@ -153,7 +167,7 @@ const items = ref<NavigationMenuItem[]>(
 		},
 
 		// Admin Group
-		canAdminAccess.value && {
+		permissionsStore.canAdminAccess && {
 			label: "Admin",
 			icon: icons["admin"],
 			open: true,

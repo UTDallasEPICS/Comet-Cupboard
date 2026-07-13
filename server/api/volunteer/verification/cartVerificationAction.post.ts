@@ -9,7 +9,7 @@ import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 const schema = z
 	.object({
-		cartID: z.string(),
+		publicCode: z.string(),
 		action: z.enum(["ACCEPT", "REJECT"]),
 		reason: z.string().optional(),
 	})
@@ -17,12 +17,12 @@ const schema = z
 	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { cartID, action, reason } = await validateBody(event, schema)
+	const { publicCode, action, reason } = await validateBody(event, schema)
 
 	const transactionResult = await prisma.$transaction(async (tx) => {
 		const pendingCart = await tx.cart.findUnique({
-			where: { cartID: cartID, pending: true },
-			include: { CartItems: true },
+			where: { publicCode: publicCode, pending: true },
+			include: { CartItems: true, UserSession: { select: { userID: true } } },
 		})
 
 		if (!pendingCart) {
@@ -51,14 +51,14 @@ export default defineSafeHandler(async (event) => {
 
 			await tx.order.create({
 				data: {
-					netID: pendingCart.cartID,
+					userID: pendingCart.UserSession.userID,
 					OrderItems: { create: orderItems },
 					cartCreatedAt: pendingCart.createdAt,
 				},
 			})
 
 			try {
-				await tx.cart.delete({ where: { cartID } })
+				await tx.cart.delete({ where: { publicCode } })
 			} catch (error: unknown) {
 				if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
 					throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Cart not found" })
@@ -66,15 +66,15 @@ export default defineSafeHandler(async (event) => {
 				throw error
 			}
 
-			publishEvent(createEvent("cart.verification.decision", { netID: cartID, decision: "ACCEPT", reason }))
-			publishEvent(createEvent("cartSession.removed", { cartID }))
-			publishEvent(createEvent("verifyCartList.cart.removed", { cartID }))
+			publishEvent(createEvent("cart.verification.decision", { publicCode: publicCode, decision: "ACCEPT", reason, userID: pendingCart.UserSession.userID }))
+			publishEvent(createEvent("cartSession.removed", { publicCode }))
+			publishEvent(createEvent("verifyCartList.cart.removed", { publicCode }))
 
 			return "Successfully accepted cart"
 		} else {
 			try {
 				await tx.cart.update({
-					where: { cartID },
+					where: { publicCode },
 					data: { pending: false },
 				})
 			} catch (error: unknown) {
@@ -84,8 +84,8 @@ export default defineSafeHandler(async (event) => {
 				throw error
 			}
 
-			publishEvent(createEvent("cart.verification.decision", { netID: cartID, decision: "REJECT", reason }))
-			publishEvent(createEvent("verifyCartList.cart.removed", { cartID }))
+			publishEvent(createEvent("cart.verification.decision", { publicCode: publicCode, decision: "REJECT", reason, userID: pendingCart.UserSession.userID }))
+			publishEvent(createEvent("verifyCartList.cart.removed", { publicCode }))
 
 			return "Successfully rejected cart"
 		}

@@ -3,22 +3,13 @@ let eventStream: EventSource | null = null
 const listeners: ((event: AppEvent) => void)[] = []
 
 export const useVolunteerEventStream = () => {
-	const queue = useQueueStore()
-	const { handleVolunteerQueueEvent } = queue
-	const cartSessions = useCartSessionsStore()
-	const { handleCartSessionEvent } = cartSessions
+	const cartSessionsStore = useCartSessionsStore()
 	const toast = useToast()
 	const config = useRuntimeConfig()
 
-	const dispatchVolunteerQueueEvent = async (event: AppEvent) => {
-		if (["queue.queueUpdated", "queue.entryApproved", "queue.entryRemoved", "queue.entryAdded"].includes(event.type)) {
-			await handleVolunteerQueueEvent(event)
-		}
-	}
-
 	const dispatchCartSessionEvent = async (event: AppEvent) => {
 		if (["cartSession.created", "cartSession.removed"].includes(event.type)) {
-			await handleCartSessionEvent(event)
+			await cartSessionsStore.handleCartSessionEvent(event)
 		}
 	}
 
@@ -31,10 +22,10 @@ export const useVolunteerEventStream = () => {
 		eventStream = new EventSource(`${config.public.LOCAL_URL}api/volunteer/events/volunteer`)
 
 		eventStream.onopen = () => {
-			toast.add({
-				title: "Connected",
-				description: "Real-time updates are now enabled.",
-			})
+			// toast.add({
+			// 	title: "Connected",
+			// 	description: "Real-time updates are now enabled.",
+			// })
 		}
 
 		eventStream.onmessage = (e) => {
@@ -44,7 +35,6 @@ export const useVolunteerEventStream = () => {
 				// dispatch to all registered listeners
 				listeners.forEach((listener) => listener(event))
 
-				dispatchVolunteerQueueEvent(event)
 				dispatchCartSessionEvent(event)
 			} catch (error) {}
 		}

@@ -6,6 +6,7 @@ import { defineSafeHandler } from "#server/utils/handler"
 export default defineSafeHandler((event) => {
 	const eventStream = createEventStream(event)
 	const eventStreamID = nanoid()
+	const userID = event.context.userSession.userID
 
 	// Send a heartbeat event every 60 seconds to detect disconnections and clean up resources
 	const heartbeatInterval = setInterval(async () => {
@@ -14,17 +15,17 @@ export default defineSafeHandler((event) => {
 		} catch {
 			clearInterval(heartbeatInterval)
 			eventStream.close()
-			connectionsByRole.volunteer.removeConnection(event.context.user.netID, eventStreamID)
+			connectionsByRole.volunteer.removeConnection(userID, eventStreamID)
 		}
 	}, 60 * 1000)
 
 	eventStream.onClosed(async () => {
 		clearInterval(heartbeatInterval)
 		await eventStream.close()
-		connectionsByRole.volunteer.removeConnection(event.context.user.netID, eventStreamID)
+		connectionsByRole.volunteer.removeConnection(userID, eventStreamID)
 	})
 
-	connectionsByRole.volunteer.addConnection(event.context.user.netID, eventStreamID, eventStream)
+	connectionsByRole.volunteer.addConnection(userID, eventStreamID, eventStream)
 
 	return eventStream.send()
 })

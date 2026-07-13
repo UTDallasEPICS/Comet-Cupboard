@@ -1,21 +1,22 @@
 <template>
 	<UCard class="min-w-72">
 		<template #header>
-			<p>Pending Carts</p>
+			<SharedTextCardTitle>Pending Carts</SharedTextCardTitle>
 		</template>
 		<div>
-			<div v-if="pendingCartIDsAndAdjQTY.length === 0" class="flex grow flex-row items-center justify-center">
-				<p class="text-center text-black">There are no carts</p>
+			<div v-if="pendingPublicCodesAndAdjQTY.length === 0" class="flex grow flex-col items-center justify-center">
+				<SharedTextBase class="text-center text-black">No pending carts</SharedTextBase>
+				<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
 			</div>
-			<div v-else class="flex flex-col gap-4">
+			<div v-else>
 				<UButton
-					v-for="pendingCart in pendingCartIDsAndAdjQTY"
-					:key="pendingCart.cartID"
-					variant="outline"
-					class="h-12 justify-between"
-					@click="emit('update:select-cart', pendingCart.cartID)"
+					v-for="pendingCart in pendingPublicCodesAndAdjQTY"
+					:key="pendingCart.publicCode"
+					variant="ghost"
+					class="h-12 w-full"
+					@click="emit('update:select-cart', pendingCart.publicCode)"
 				>
-					<p>{{ pendingCart.cartID }}</p>
+					<UUser :name="pendingCart.publicCode" :avatar="{ icon: pendingCart.publicIcon }" size="lg" />
 				</UButton>
 			</div>
 		</div>
@@ -41,12 +42,12 @@ const { data: pendingCarts } = await useFetch("/api/volunteer/cart/carts", {
 
 const pendingCartsList = ref(pendingCarts.value)
 
-const pendingCartIDsAndAdjQTY = computed(() => {
+const pendingPublicCodesAndAdjQTY = computed(() => {
 	if (!pendingCartsList.value) {
 		return []
 	}
 	return pendingCartsList.value.map((pendingCart) => {
-		return { cartID: pendingCart.cartID, adjQTY: cartCountAdjustment(pendingCart) }
+		return { publicCode: pendingCart.publicCode, publicIcon: pendingCart.publicIcon }
 	})
 })
 
@@ -60,9 +61,9 @@ const unsubscribe = onEvent((event) => {
 			break
 		}
 		case "verifyCartList.cart.removed": {
-			const cartIDToRemove = event.payload.cartID
+			const publicCodeToRemove = event.payload.publicCode
 			pendingCartsList.value = pendingCartsList.value.filter((pendingCart) => {
-				return pendingCart.cartID != cartIDToRemove
+				return pendingCart.publicCode != publicCodeToRemove
 			})
 			break
 		}

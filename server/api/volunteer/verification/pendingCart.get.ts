@@ -6,23 +6,30 @@ import { validateQuery } from "#server/utils/validation"
 
 const schema = z
 	.object({
-		cartID: z.string(),
+		publicCode: z.string(),
 	})
 	.strict()
 	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { cartID } = validateQuery(event, schema)
+	const { publicCode } = validateQuery(event, schema)
 
 	const pendingCart = await prisma.cart.findUnique({
 		where: {
-			cartID: cartID,
+			publicCode: publicCode,
 			pending: true,
 		},
-		include: { CartItems: { include: { Item: { include: { Deal: true } } } } },
+		include: { CartItems: { include: { Item: { include: { Deal: true } } } }, UserSession: { select: { publicIcon: true } } },
 	})
 	if (!pendingCart) {
 		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Failed to find pending cart" })
 	}
-	return pendingCart
+
+	const formattedPendingCart = {
+		...pendingCart,
+		UserSession: undefined,
+		publicIcon: pendingCart.UserSession.publicIcon,
+	}
+
+	return formattedPendingCart
 })

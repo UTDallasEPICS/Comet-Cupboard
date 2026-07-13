@@ -32,7 +32,7 @@ export const validateParams = <T>(event: H3Event, schema: z.ZodSchema<T>): T => 
 export const validateFormData = async <T>(event: H3Event, schema: z.ZodSchema<T>): Promise<T> => {
 	const formData = await readFormData(event)
 	const data: Record<string, any> = {}
-	
+
 	formData.forEach((value, key) => {
 		// If the key already exists and isn't an array, convert to array
 		if (key in data) {
@@ -44,6 +44,6 @@ export const validateFormData = async <T>(event: H3Event, schema: z.ZodSchema<T>
 			data[key] = value
 		}
 	})
-	
+
 	return validate(schema, data)
 }

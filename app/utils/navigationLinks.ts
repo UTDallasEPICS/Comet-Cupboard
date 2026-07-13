@@ -58,11 +58,10 @@ export const roleLinks: Record<Role, AppLink[]> = {
 		{
 			label: "Emergency Bags",
 			description: "Add, Edit, Remove, View Emergency Bags",
-			icon: icons["management"],
-			to: "/volunteer/emergency-bag/manage"
-		}
+			icon: icons["emergencyBag"],
+			to: "/volunteer/emergency-bag/manage",
+		},
 	],
-
 	admin: [
 		{
 			label: "Dashboard",
@@ -75,12 +74,6 @@ export const roleLinks: Record<Role, AppLink[]> = {
 			description: "View and analyze system data",
 			icon: icons["data"],
 			to: "/admin/data-analytics",
-		},
-		{
-			label: "Emergency Bags",
-			description: "Add, Edit, Remove, View Emergency Bags",
-			icon: icons["management"],
-			to: "/volunteer/emergency-bag/manage",
 		},
 		{
 			label: "Management",
@@ -110,7 +103,7 @@ export const roleLinks: Record<Role, AppLink[]> = {
 					description: "Add or edit locations",
 					icon: icons["locations"],
 					to: "/admin/manage/locations",
-				}
+				},
 			],
 		},
 	],
