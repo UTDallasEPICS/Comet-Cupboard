@@ -3,7 +3,7 @@ import { unlink, writeFile } from "node:fs/promises"
 import { nanoid } from "nanoid"
 import { z } from "zod"
 
-const uploadDirectory = process.env.IMAGE_UPLOAD_DIRECTORY
+const uploadDirectory = process.env.IMAGE_UPLOAD_DIRECTORY ?? "images"
 const MAX_FILE_SIZE = 2 * 1024 * 1024
 
 export const imageSchema = z.object({

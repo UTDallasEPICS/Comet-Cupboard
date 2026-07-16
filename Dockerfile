@@ -33,10 +33,11 @@ COPY --from=builder /app/prisma.config.ts ./
 RUN npm i -g pnpm
 
 # Install Prisma without running any scripts to avoid running nuxt scripts
-RUN pnpm i --dev --ignore-scripts --frozen-lockfile
+RUN pnpm i --ignore-scripts --frozen-lockfile
 # Run the build scripts needed for prisma to work (for migrations and seeding)
 RUN pnpm rebuild esbuild better-sqlite3 @prisma/engines prisma
 ENV DATABASE_URL="file:./prisma/dev.db"
+ENV IMAGE_UPLOAD_DIRECTORY="images"
 RUN pnpm prisma generate
 COPY --from=builder /app/entrypoint.sh /entrypoint
 
