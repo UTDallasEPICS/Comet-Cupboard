@@ -22,7 +22,7 @@
 										<SharedTextCardTitle class="group-hover:underline">
 											{{ location.name }}
 										</SharedTextCardTitle>
-										<UIcon name="i-heroicons-arrow-top-right-on-square" class="text-sm opacity-50" />
+										<UIcon name="i-lucide-square-arrow-up-right" class="text-sm opacity-50" />
 									</a>
 									<SharedTextCardTitle v-else>
 										{{ location.name }}
@@ -54,7 +54,7 @@
 				<footer class="mt-12">
 					<USeparator class="mb-6" />
 					<div class="flex items-start gap-3">
-						<UIcon name="i-heroicons-information-circle" class="mt-0.5 text-xl text-gray-400" />
+						<UIcon name="i-lucide-info" class="mt-0.5 text-xl text-gray-400" />
 						<SharedTextBase class="text-sm text-gray-600"> <strong>*</strong> Not 100% nut-free </SharedTextBase>
 					</div>
 				</footer>
