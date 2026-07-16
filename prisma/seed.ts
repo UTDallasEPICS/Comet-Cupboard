@@ -10,9 +10,9 @@ const connectionString = `${process.env.DATABASE_URL}`
 const adapter = new PrismaBetterSqlite3({ url: connectionString })
 const prisma = new PrismaClient({ adapter })
 
-const uploadDirectory = process.env.IMAGE_UPLOAD_DIRECTORY
+const uploadDirectory = process.env.IMAGE_UPLOAD_DIRECTORY ?? "images"
 if (!existsSync(uploadDirectory)) {
-	mkdirSync(uploadDirectory)
+	mkdirSync(uploadDirectory, { recursive: true })
 }
 
 const sources = []
