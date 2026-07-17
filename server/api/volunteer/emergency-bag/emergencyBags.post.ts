@@ -9,6 +9,7 @@ const schema = z
 		bagCategory: z.array(z.enum(["VEGETARIAN", "PEANUT_BUTTER"])),
 		expiryDate: z.coerce.date(),
 		privacy: z.enum(["PUBLIC", "PRIVATE"]),
+		bagDescription: z.string().nullable().optional(),
 		items: z.array(
 			z.object({
 				itemID: z.string(),
@@ -19,27 +20,19 @@ const schema = z
 	.strict()
 	.required()
 
-function toBagCategory(selected: string[]): "NEITHER" | "VEGETARIAN" | "PEANUT_BUTTER" | "VEGETARIAN_AND_PEANUT_BUTTER" {
-	const isVeg = selected.includes("VEGETARIAN")
-	const isPB = selected.includes("PEANUT_BUTTER")
-
-	if (isVeg && isPB) return "VEGETARIAN_AND_PEANUT_BUTTER"
-	if (isVeg) return "VEGETARIAN"
-	if (isPB) return "PEANUT_BUTTER"
-	return "NEITHER"
-}
-
 export default defineSafeHandler(async (event) => {
-	const { bagCategory, expiryDate, privacy, items } = await validateBody(event, schema)
+	const { bagCategory, expiryDate, privacy, bagDescription, items } = await validateBody(event, schema)
 
 	const label = generateRandomLabel()
 
 	const newBag = await prisma.emergencyBag.create({
 		data: {
-			bagCategory: toBagCategory(bagCategory),
+			isVegetarian: bagCategory.includes("VEGETARIAN"),
+			hasPeanutButter: bagCategory.includes("PEANUT_BUTTER"),
 			expiryDate: new Date(expiryDate),
 			privacy: privacy,
 			label,
+			bagDescription,
 			EmergencyBagItems: {
 				createMany: {
 					data: items.map((item) => ({

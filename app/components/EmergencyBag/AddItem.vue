@@ -11,7 +11,7 @@
 								side: 'bottom',
 							}"
 						>
-							<UButton class="bg-final-utd-green rounded-lg px-4 py-2"> Add Items</UButton>
+							<UButton class="bg-utd-green rounded-lg px-4 py-2"> Add Items</UButton>
 							<template #content>
 								<UInput v-model="searchQuery" icon="i-lucide-search" variant="outline" class="w-full" placeholder="Search..." />
 								<div class="max-h-64 w-64 overflow-y-auto">

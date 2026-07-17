@@ -31,7 +31,7 @@
 				<UTextarea
 					v-if="bagDetails.selectedPrivacy === 'PRIVATE'"
 					v-model="bagDetails.bagDescription"
-					placeholder="Optional bag description"
+					U="Optional bag description"
 					class="mt-2 w-full"
 					:rows="4"
 				/>

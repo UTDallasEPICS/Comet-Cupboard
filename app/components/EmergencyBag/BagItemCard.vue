@@ -5,9 +5,9 @@
 		</template>
 		<template #body>
 			<div class="flex items-center gap-4">
-				<UButton class="bg-final-utd-green rounded-2xl text-white hover:bg-green-700" :icon="icons['add']" @click="emit('increment', itemID)" />
+				<UButton class="bg-utd-green rounded-2xl text-white hover:bg-green-700" :icon="icons['add']" @click="emit('increment', itemID)" />
 				<p>{{ itemCount }}</p>
-				<UButton class="bg-final-utd-green rounded-2xl text-white hover:bg-green-700" :icon="icons['subtract']" @click="emit('decrement', itemID)" />
+				<UButton class="bg-utd-green rounded-2xl text-white hover:bg-green-700" :icon="icons['subtract']" @click="emit('decrement', itemID)" />
 			</div>
 		</template>
 	</SharedItemCard>

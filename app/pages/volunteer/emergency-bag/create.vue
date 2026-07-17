@@ -16,11 +16,11 @@
 			</div>
 		</div>
 		<div class="my-4 flex justify-between">
-			<UButton leading-icon="i-lucide-arrow-left" class="bg-final-utd-orange" :disabled="!stepper?.hasPrev" @click="stepper?.prev()"> Back </UButton>
+			<UButton leading-icon="i-lucide-arrow-left" class="bg-utd-orange" :disabled="!stepper?.hasPrev" @click="stepper?.prev()"> Back </UButton>
 
 			<UButton
 				:trailing-icon="stepper?.hasNext ? 'i-lucide-arrow-right' : ''"
-				:class="stepper?.hasNext ? 'bg-final-utd-orange' : 'bg-final-utd-green'"
+				:class="stepper?.hasNext ? 'bg-utd-orange' : 'bg-utd-green'"
 				@click="stepper?.hasNext ? stepper?.next() : submitBag()"
 			>
 				{{ stepper?.hasNext ? "Next" : "Confirm Bag" }}
@@ -81,6 +81,7 @@ const submitBag = async () => {
 				bagCategory: bagDetails.value.selectedCategory,
 				expiryDate: bagDetails.value.expirationDate.toDate(getLocalTimeZone()).toISOString(),
 				privacy: bagDetails.value.selectedPrivacy,
+				bagDescription: bagDetails.value.selectedPrivacy === "PRIVATE" ? bagDetails.value.bagDescription : "",
 				items: bagItems.value.map((item) => ({
 					itemID: item.itemID,
 					count: item.count,
