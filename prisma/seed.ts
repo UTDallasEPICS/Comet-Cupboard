@@ -3,7 +3,7 @@ import { nanoid } from "nanoid"
 import { existsSync, mkdirSync, readdirSync } from "fs"
 import "dotenv/config"
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
-import { PrismaClient, RoleType, BagCategory } from "./generated/prisma/client"
+import { PrismaClient, RoleType } from "./generated/prisma/client"
 import { uploadImage, processImage } from "../server/utils/image"
 
 const connectionString = `${process.env.DATABASE_URL}`
@@ -69,14 +69,15 @@ const populateLocations = async () => {
 
 const emergencyBags = [
 	{
-		bagCategory: BagCategory.NEITHER,
+		isVegetarian: false,
+		hasPeanutButter: false,
 		expiryDate: new Date("2026-07-28"),
 		label: "12345",
 		locationName: "Police Station",
 		private: true,
 	},
-	{ bagCategory: BagCategory.VEGETARIAN, expiryDate: new Date("2027-01-01"), label: "15453", private: false },
-	{ bagCategory: BagCategory.PEANUT_BUTTER, expiryDate: new Date("2026-09-30"), label: "54321", private: false },
+	{ isVegetarian: false, hasPeanutButter: false, expiryDate: new Date("2027-01-01"), label: "15453", private: false },
+	{ isVegetarian: true, hasPeanutButter: false, expiryDate: new Date("2026-09-30"), label: "54321", private: false },
 ]
 
 const createUsers = async () => {

@@ -71,7 +71,7 @@
 
 			<template #content="{ close }">
 				<UCard>
-					<h3 class="text-lg font-semibold text-red-600">Confirm Delete</h3>
+					<header class="text-lg font-semibold text-red-600">Confirm Delete</header>
 
 					<p class="mt-2 text-sm text-gray-600">Are you sure you want to delete this bag?</p>
 

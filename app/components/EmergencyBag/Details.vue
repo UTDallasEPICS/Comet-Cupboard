@@ -2,15 +2,13 @@
 	<div class="flex justify-center">
 		<div class="flex w-full max-w-100 flex-col gap-4">
 			<UCard>
-				<template #header>
-					<h2 class="text-xl font-bold">Category</h2>
-				</template>
-				<UCheckboxGroup v-model="bagDetails.selectedCategory" size="md" variant="card" :items="labels" />
+				<header class="mb-4 text-xl font-bold">Select Labels</header>
+
+				<UCheckboxGroup v-model="bagDetails.selectedCategory" size="xl" :items="labels" />
 			</UCard>
 			<UCard>
-				<template #header>
-					<h2 class="text-xl font-bold">Expiration Date</h2>
-				</template>
+				<header class="mb-4 text-xl font-bold">Expiration Date <span class="text-red-500">*</span></header>
+
 				<UInputDate ref="inputDate" v-model="bagDetails.expirationDate" class="">
 					<template #leading>
 						<UPopover :reference="inputDate?.inputsRef[3]?.$el">
@@ -24,14 +22,13 @@
 				</UInputDate>
 			</UCard>
 			<UCard>
-				<template #header>
-					<h2 class="text-xl font-bold">Privacy</h2>
-				</template>
+				<header class="mb-4 text-xl font-bold">Privacy</header>
+
 				<URadioGroup v-model="bagDetails.selectedPrivacy" size="md" variant="card" :items="privacy" />
 				<UTextarea
 					v-if="bagDetails.selectedPrivacy === 'PRIVATE'"
 					v-model="bagDetails.bagDescription"
-					U="Optional bag description"
+					u="Optional bag description"
 					class="mt-2 w-full"
 					:rows="4"
 				/>
@@ -50,8 +47,8 @@ const bagDetails = defineModel<{
 const inputDate = useTemplateRef("inputDate")
 
 const labels = [
-	{ label: "Vegetarian", value: "VEGETARIAN", color: "#ADBC76" },
-	{ label: "Peanut Butter", value: "PEANUT_BUTTER", color: "#F6D6A2" },
+	{ label: "Vegetarian", value: "VEGETARIAN" },
+	{ label: "Peanut Butter", value: "PEANUT_BUTTER" },
 ]
 
 const privacy = [

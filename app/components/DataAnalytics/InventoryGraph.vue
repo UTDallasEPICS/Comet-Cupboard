@@ -1,22 +1,24 @@
 <template>
 	<div>
 		<div class="mb-4 flex items-center justify-between">
-			<h1 class="text-4xl font-bold text-black">Current Inventory</h1>
+			<header class="text-4xl font-bold text-black">Current Inventory</header>
 		</div>
 	</div>
-	<div class="mt-4 flex min-h-32 w-full items-center justify-center rounded-3xl border bg-white">
-		<DataAnalyticsDataCardComponent v-if="!drilledDown" title="Total Inventory" :value="totalInventory" />
-		<DataAnalyticsDataCardComponent v-if="drilledDown" title="Total Count" :value="itemCount" />
-	</div>
+	<UCard class="mt-4 flex min-h-32 w-full items-center justify-center">
+		<div class="flex">
+			<DataAnalyticsDataCardComponent v-if="!drilledDown" title="Total Inventory" :value="totalInventory" />
+			<DataAnalyticsDataCardComponent v-if="drilledDown" title="Total Count" :value="itemCount" />
+		</div>
+	</UCard>
 	<div class="mt-10 flex flex-row gap-10">
 		<DataAnalyticsVerticalDataComponent v-if="!drilledDown" title="Category Quantity" :items="sortedCategories" :count-toggle="true" />
 		<DataAnalyticsVerticalDataComponent v-if="drilledDown" title="Item Concentration" :items="itemConcentration" :count-toggle="true" />
 		<div class="min-h-140 w-full min-w-0">
-			<button v-if="drilledDown" class="absolute rounded-lg border border-solid px-3 py-1 m-4" style="cursor: pointer" @click="resetChart">Back</button>
-			<div class="h-full w-full border border-gray-300 px-8">
-					<USwitch v-model="sortByCount" class="justify-self-end mt-4" label="Sort by count" />
+			<button v-if="drilledDown" class="absolute m-4 rounded-lg px-3 py-1" style="cursor: pointer" @click="resetChart">Back</button>
+			<UCard class="h-full w-full border border-gray-300 px-8">
+				<USwitch v-model="sortByCount" class="mt-4 justify-self-end" label="Sort by count" />
 				<canvas ref="barContainer" />
-			</div>
+			</UCard>
 		</div>
 	</div>
 </template>
@@ -76,16 +78,17 @@ watch(sortByCount, () => {
 })
 
 const sortedCategories = computed(() => {
-	return Object.entries(inventoryData.value).map(([category, items]) => {
-		const count = Object.values(items).reduce((sum, qty) => sum + qty, 0)
+	return Object.entries(inventoryData.value)
+		.map(([category, items]) => {
+			const count = Object.values(items).reduce((sum, qty) => sum + qty, 0)
 
-		return {
-			label: category,
-			count,
-			percentage: (((count / totalInventory.value) * 100).toFixed(1))
-		}
-	})
-	.sort((a, b) => b.count - a.count)
+			return {
+				label: category,
+				count,
+				percentage: ((count / totalInventory.value) * 100).toFixed(1),
+			}
+		})
+		.sort((a, b) => b.count - a.count)
 })
 
 const totalInventory = computed(() => {
@@ -111,9 +114,9 @@ const itemConcentration = computed(() => {
 
 	return Object.entries(currentCategoryItems.value)
 		.map(([label, count]) => ({
-			label, 
-			count, 
-			percentage: ((( count / itemCount.value)) * 100).toFixed(1), 
+			label,
+			count,
+			percentage: ((count / itemCount.value) * 100).toFixed(1),
 		}))
 		.sort((a, b) => b.count - a.count)
 })

@@ -1,41 +1,41 @@
 <template>
 	<div>
 		<div class="mb-4 flex items-center justify-between">
-			<h1 class="text-4xl font-bold text-black">Items Distributed</h1>
+			<header class="text-4xl font-bold text-black">Items Distributed</header>
 
-			<DataAnalyticsOptionButton :grouping="grouping" :date-range="displayRange" :show-time-level="true" :show-date-range="true">
-				<div class="flex flex-col p-4">
-					<div class="justify-left flex flex-col">
-						<p class="my-2 text-sm font-bold">Time Level</p>
-						<USelect v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" class="w-full" />
-					</div>
-
-					<div class="justify-left flex flex-col">
-						<p class="my-2 text-sm font-bold">Time Range</p>
-						<UInputDate ref="inputDate" v-model="modelValue" range>
-							<template #trailing>
-								<UPopover :reference="inputDate?.inputsRef[0]?.$el">
-									<UButton color="neutral" variant="link" size="sm" icon="i-lucide-calendar" aria-label="Select a date range" class="px-0" />
-
-									<template #content>
-										<UCalendar v-model="modelValue" class="p-2" :number-of-months="2" range />
-									</template>
-								</UPopover>
-							</template>
-						</UInputDate>
-					</div>
+			<div class="flex gap-4">
+				<div class="flex w-40 flex-col items-center">
+					<p class="place-self-start text-xl font-bold">Time Level</p>
+					<USelect v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" class="w-full" />
 				</div>
-			</DataAnalyticsOptionButton>
+
+				<div class="justify-left flex flex-col">
+					<p class="place-self-start text-xl font-bold">Time Range</p>
+					<UInputDate ref="inputDate" v-model="modelValue" range>
+						<template #trailing>
+							<UPopover :reference="inputDate?.inputsRef[0]?.$el">
+								<UButton color="neutral" variant="link" size="sm" icon="i-lucide-calendar" aria-label="Select a date range" class="px-0" />
+
+								<template #content>
+									<UCalendar v-model="modelValue" class="p-2" :number-of-months="2" range />
+								</template>
+							</UPopover>
+						</template>
+					</UInputDate>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="mt-4 flex min-h-32 w-full items-center justify-center rounded-3xl border bg-white">
-		<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Total Items Distributed" :value="totalItemsDistributed" />
-		<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Total Distribution Events" :value="totalDistributionEvents" />
-		<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Largest Distribution Count" :value="largestDistributionCount" />
-		<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Average Distribution Size" :value="averageDistributionSize" />
-
-		<DataAnalyticsDataCardComponent v-if="firstDrillDown || secondDrillDown" title="Total Inventory" :value="totalItemsDistributed" />
-	</div>
+	<UCard class="mt-4 flex min-h-32 w-full items-center justify-center">
+		<div class="flex">
+			<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Total Items Distributed" :value="totalItemsDistributed" />
+			<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Total Distribution Events" :value="totalDistributionEvents" />
+			<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Largest Distribution Count" :value="largestDistributionCount" />
+			<DataAnalyticsDataCardComponent v-if="!firstDrillDown && !secondDrillDown" title="Average Distribution Size" :value="averageDistributionSize" />
+			
+			<DataAnalyticsDataCardComponent v-if="firstDrillDown || secondDrillDown" title="Total Inventory" :value="totalItemsDistributed" />
+		</div>
+	</UCard>
 	<div>
 		<div class="mt-10 flex flex-row gap-10">
 			<DataAnalyticsVerticalDataComponent title="Top Distributed Categories" :items="topDistributedCategories" :count-toggle="true" />
@@ -48,10 +48,10 @@
 				>
 					Back
 				</button>
-				<div class="h-full w-full border border-gray-300 px-8">
+				<UCard class="h-full w-full border px-8">
 					<USwitch v-if="firstDrillDown || secondDrillDown" class="mt-4 justify-self-end" v-model="sortByCount" label="Sort by count" />
 					<canvas ref="barContainer" class="mt-4" />
-				</div>
+				</UCard>
 			</div>
 		</div>
 	</div>

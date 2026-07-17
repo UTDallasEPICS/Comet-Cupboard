@@ -4,24 +4,28 @@
 			<UCard>
 				<template #header>
 					<div class="flex justify-between">
-						<h2 class="text-xl font-bold">Current Bag</h2>
+						<header class="text-xl w-full font-bold">Current Bag <span class="text-red-500">*</span></header>
+
 						<UPopover
 							:content="{
 								align: 'end',
 								side: 'bottom',
 							}"
 						>
-							<UButton class="bg-utd-green rounded-lg px-4 py-2"> Add Items</UButton>
+							<UInput v-model="searchQuery" icon="i-lucide-search" variant="outline" class="w-full" placeholder="" />
 							<template #content>
 								<UInput v-model="searchQuery" icon="i-lucide-search" variant="outline" class="w-full" placeholder="Search..." />
 								<div class="max-h-64 w-64 overflow-y-auto">
 									<div v-for="item in filteredItems" :key="item.itemID" @click="addItemToBag(item)">
-										<div class="flex w-full cursor-pointer items-center gap-2 py-1 hover:bg-gray-100">
-											<img
-												:src="`/api/public/image/${item.imgName}`"
-												class="border-final-border-soft ml-2 aspect-square w-8 rounded-lg border object-cover"
-											/>
-											{{ item.name }}
+										<div class="flex items-center justify-between">
+											<div class="flex w-full cursor-pointer items-center gap-2 py-1 hover:bg-gray-100">
+												<img :src="`/api/public/image/${item.imgName}`" class="ml-2 aspect-square w-8 rounded-lg" />
+												{{ item.name }}
+											</div>
+											<div class="flex">
+												<p>Qty:</p>
+												{{ item.quantity }}
+											</div>
 										</div>
 										<USeparator />
 									</div>
@@ -39,6 +43,7 @@
 						:item-deal="item.itemDeal"
 						:item-id="item.itemID"
 						:item-count="item.count"
+						:item-quantity="item.quantity"
 						@increment="increaseItemCount(item.itemID)"
 						@decrement="decreaseItemCount(item.itemID)"
 						@remove="removeItemFromBag(item.itemID)"
@@ -56,9 +61,12 @@ const bagItems = defineModel<{
 	count: number
 	name: string
 	imgName: string
+	quantity: number
 }>("bagItems")
 
-const { data: itemData } = await useFetch("/api/student/inventory/items")
+const { data: itemData } = await useFetch("/api/student/inventory/items", {
+	query: { checkAvailability: "true" },
+})
 
 const filteredItems = computed(() => {
 	const query = searchQuery.value.toLowerCase()
@@ -67,9 +75,11 @@ const filteredItems = computed(() => {
 
 const addItemToBag = (item: Item) => {
 	if (!bagItems.value) return
+	const available = Math.max(0, item.quantity)
+	if (available === 0) return
 	const existingItem = bagItems.value.find((bi) => bi.itemID === item.itemID)
 	if (existingItem) {
-		if (existingItem.count >= item.quantity) return
+		if (existingItem.count >= available) return
 		existingItem.count++
 	} else {
 		bagItems.value.push({
@@ -77,6 +87,7 @@ const addItemToBag = (item: Item) => {
 			count: 1,
 			name: item.name,
 			imgName: item.imgName,
+			quantity: available,
 		})
 	}
 }
@@ -90,8 +101,9 @@ const increaseItemCount = (itemID: string) => {
 	if (!bagItems.value) return
 	const item = bagItems.value.find((bi) => bi.itemID === itemID)
 	const inventoryItem = itemData.value.find((item) => item.itemID === itemID)
-	if (item) {
-		if (item.count >= inventoryItem.quantity) return
+	if (item && inventoryItem) {
+		const available = Math.max(0, inventoryItem.quantity)
+		if (item.count >= available) return
 		item.count++
 	}
 }

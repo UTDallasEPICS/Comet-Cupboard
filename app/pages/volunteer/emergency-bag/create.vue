@@ -1,9 +1,6 @@
 <template>
-	<UContainer class="py-8">
-		<header>
-			<SharedButtonNavigateBack text="Back to Dashboard" :to="{ path: '/volunteer' }" />
-			<SharedTextPageTitle>Create Emergency Bags</SharedTextPageTitle>
-		</header>
+	<UContainer>
+		<NuxtLayout name="main" title="Create Emergency Bags" :back-navigation="{ text: 'Back to Dashboard', to: '/volunteer' }" />
 		<div class="flex justify-center">
 			<div class="flex w-full max-w-100 flex-col gap-4">
 				<UStepper ref="stepper" :items="steps">
@@ -16,11 +13,19 @@
 			</div>
 		</div>
 		<div class="my-4 flex justify-between">
-			<UButton leading-icon="i-lucide-arrow-left" class="bg-utd-orange" :disabled="!stepper?.hasPrev" @click="stepper?.prev()"> Back </UButton>
+			<UButton
+				leading-icon="i-lucide-arrow-left"
+				color="neutral"
+				:class="stepper?.hasPrev ? 'bg-utd-orange' : 'bg-gray-500'"
+				:disabled="!stepper?.hasPrev"
+				@click="stepper?.prev()"
+			>
+				Back
+			</UButton>
 
 			<UButton
 				:trailing-icon="stepper?.hasNext ? 'i-lucide-arrow-right' : ''"
-				:class="stepper?.hasNext ? 'bg-utd-orange' : 'bg-utd-green'"
+				class="bg-utd-green"
 				@click="stepper?.hasNext ? stepper?.next() : submitBag()"
 			>
 				{{ stepper?.hasNext ? "Next" : "Confirm Bag" }}

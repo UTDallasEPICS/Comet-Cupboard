@@ -48,14 +48,24 @@ export default defineSafeHandler(async (event) => {
 	})
 
 	for (const item of items) {
-		await prisma.item.update({
-			where: { itemID: item.itemID },
+		const updateResult = await prisma.item.updateMany({
+			where: {
+				itemID: item.itemID,
+				quantity: { gte: item.count },
+			},
 			data: {
 				quantity: {
 					decrement: item.count,
 				},
 			},
 		})
+
+		if (updateResult.count === 0) {
+			throw createError({
+				statusCode: 409,
+				statusMessage: `Not enough "${item.itemID}" in stock`,
+			})
+		}
 	}
 
 	return newBag
