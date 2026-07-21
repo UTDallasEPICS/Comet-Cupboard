@@ -3,38 +3,48 @@
 		<div class="flex w-full max-w-100 flex-col gap-4">
 			<UCard>
 				<template #header>
-					<div class="flex justify-between">
-						<header class="text-xl w-full font-bold">Current Bag <span class="text-red-500">*</span></header>
+					<div class="flex justify-between gap-4">
+						<header class="w-full text-xl font-bold text-nowrap">Current Bag <span class="text-red-500">*</span></header>
+						<div class="relative w-72">
+							<UPopover v-model:open="open" :dismissible="false" :ui="{ content: 'w-(--reka-popper-anchor-width) ' }">
+								<template #anchor>
+									<UInput
+										v-model="searchQuery"
+										icon="i-lucide-search"
+										variant="outline"
+										class="w-full"
+										placeholder="Search..."
+										@focus="open = true"
+										@blur="open = false"
+									/>
+								</template>
 
-						<UPopover
-							:content="{
-								align: 'end',
-								side: 'bottom',
-							}"
-						>
-							<UInput v-model="searchQuery" icon="i-lucide-search" variant="outline" class="w-full" placeholder="" />
-							<template #content>
-								<UInput v-model="searchQuery" icon="i-lucide-search" variant="outline" class="w-full" placeholder="Search..." />
-								<div class="max-h-64 w-64 overflow-y-auto">
-									<div v-for="item in filteredItems" :key="item.itemID" @click="addItemToBag(item)">
-										<div class="flex items-center justify-between">
-											<div class="flex w-full cursor-pointer items-center gap-2 py-1 hover:bg-gray-100">
-												<img :src="`/api/public/image/${item.imgName}`" class="ml-2 aspect-square w-8 rounded-lg" />
-												{{ item.name }}
+								<template #content>
+									<div class="absolute right-0 max-h-64 w-64 overflow-y-auto bg-white">
+										<div v-for="item in filteredItems" :key="item.itemID" @click="addItemToBag(item)">
+											<div class="flex items-center justify-between hover:bg-gray-100">
+												<div class="flex w-full cursor-pointer items-center gap-2 py-1">
+													<img :src="`/api/public/image/${item.imgName}`" class="ml-2 aspect-square w-8 rounded-lg" />
+													{{ item.name }}
+												</div>
+												<div class="flex">
+													<p>Qty:</p>
+													{{ item.quantity }}
+												</div>
 											</div>
-											<div class="flex">
-												<p>Qty:</p>
-												{{ item.quantity }}
-											</div>
+											<USeparator />
 										</div>
-										<USeparator />
 									</div>
-								</div>
-							</template>
-						</UPopover>
+								</template>
+							</UPopover>
+						</div>
 					</div>
 				</template>
 				<div class="flex flex-col gap-4">
+					<div v-if="bagItems.length === 0" class="flex flex-col items-center justify-center gap-y-4">
+						<SharedTextBase> No items in current bag </SharedTextBase>
+						<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+					</div>
 					<EmergencyBagItemCard
 						v-for="item in bagItems"
 						:key="item.itemID"
@@ -49,6 +59,9 @@
 						@remove="removeItemFromBag(item.itemID)"
 					/>
 				</div>
+				<div class="flex justify-center">
+					<p v-if="hasError" class="mt-4 text-sm text-red-500">Please add at least one item to your bag</p>
+				</div>
 			</UCard>
 		</div>
 	</div>
@@ -56,6 +69,7 @@
 
 <script lang="ts" setup>
 const searchQuery = ref("")
+const open = ref(false)
 const bagItems = defineModel<{
 	itemID: string
 	count: number
@@ -63,6 +77,24 @@ const bagItems = defineModel<{
 	imgName: string
 	quantity: number
 }>("bagItems")
+
+const hasError = ref(false)
+
+watch(
+	() => bagItems.value?.length,
+	(newLength) => {
+		if (newLength > 0) {
+			hasError.value = false
+		}
+	}
+)
+
+defineExpose({
+	validate: () => {
+		hasError.value = !bagItems.value || bagItems.value.length === 0
+		return !hasError.value
+	},
+})
 
 const { data: itemData } = await useFetch("/api/student/inventory/items", {
 	query: { checkAvailability: "true" },

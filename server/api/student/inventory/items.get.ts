@@ -25,6 +25,5 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
-	console.log("items api: ", items)
 	return items
 })

@@ -3,12 +3,19 @@
 		<NuxtLayout name="main" title="Manage Emergency Bags" :back-navigation="{ text: 'Back to Dashboard', to: '/volunteer' }" />
 		<div class="mt-4 flex w-full items-center justify-center">
 			<UCard>
-				<div class="w-full">
+				<div class="mb-2 flex w-full justify-between">
 					<UButton
 						label="Create new bag"
 						color="neutral"
 						variant="outline"
 						trailing-icon="i-lucide-plus"
+						@click="navigateTo('/volunteer/emergency-bag/create')"
+					/>
+					<UButton
+						label="Edit Bag"
+						class="bg-utd-orange text-white"
+						variant="outline"
+						trailing-icon="i-lucide-square-pen"
 						@click="navigateTo('/volunteer/emergency-bag/create')"
 					/>
 					<UPopover>
@@ -30,80 +37,27 @@
 							</div>
 						</template>
 					</UPopover>
-					<!-- <UButton label="Delete Bag" class="bg-red-500" trailing-icon="i-lucide-trash" @click="deleteBag" /> -->
-					<UTable
-						v-model:expanded="expanded"
-						v-model:row-selection="selected"
-						sticky
-						:data="tableData"
-						:columns="columns"
-						:ui="{ tr: 'data-[expanded=true]:bg-elevated/50' }"
-						class="flex-1"
-						@select="(_, row) => row.toggleExpanded()"
-					>
-						<template #expanded="{ row }">
-							<div class="flex w-full justify-center">
-								<div class="mr-40 flex flex-col items-center justify-between">
-									<header class="text-lg font-bold">Items:</header>
-									<div class="w-100">
-										<UCarousel
-											v-slot="{ item }"
-											class="mb-6"
-											loop
-											arrows
-											dots
-											:items="row.original.items"
-											:ui="{
-												item: 'basis-1/3',
-											}"
-										>
-											<EmergencyBagCarouselCards
-												:key="item.itemID"
-												:name="item.name"
-												:img-name="item.imgName"
-												:item-deal="item.itemDeal"
-												:item-id="item.itemID"
-												:item-count="item.count"
-											/>
-										</UCarousel>
-									</div>
-								</div>
-								<div class="flex flex-col gap-2">
-									<div class="flex gap-2 text-lg">
-										<header class="text-lg font-bold">BagID:</header>
-										<span>{{ row.original.bagID }}</span>
-									</div>
-									<div class="flex items-center gap-2 text-lg">
-										<header class="text-lg font-bold">Location:</header>
-										<span>{{ !row.original.location ? "Unassigned" : row.original.location }}</span>
-									</div>
-									<div class="flex items-center gap-2 text-lg">
-										<header class="text-lg font-bold">Labels:</header>
-										<div class="flex items-center justify-center gap-1">
-											<UBadge v-if="row.original.label.length === 0" class="rounded-full bg-gray-400 font-bold" label="Neither" />
+				</div>
+				<!-- <UButton label="Delete Bag" class="bg-red-500" trailing-icon="i-lucide-trash" @click="deleteBag" /> -->
 
-											<UBadge
-												v-for="label in row.original.label"
-												:key="label"
-												:label="label"
-												:class="label === 'Vegetarian' ? 'rounded-full bg-green-700 font-bold' : 'rounded-full bg-yellow-600 font-bold'"
-											/>
-										</div>
-									</div>
-									<div class="flex items-center gap-2 text-lg">
-										<header class="text-lg font-bold">Privacy:</header>
-										<span>{{ row.original.privacy }}</span>
-									</div>
-									<div class="flex items-center gap-2 text-lg">
-										<header class="text-lg font-bold">Expiration Date:</header>
-										<span>{{ row.original.expirationDate.split("T")[0] }}</span>
-									</div>
-									<header class="mt-4 text-lg font-bold">Bag Description:</header>
-									<p class="text-lg">{{ row.original.bagDescription }}</p>
-								</div>
-							</div>
-						</template>
-					</UTable>
+				<div v-if="emergencyBags.length === 0" class="flex flex-col items-center justify-center gap-y-4">
+					<SharedTextBase> No bags have been created </SharedTextBase>
+					<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+					<UButton
+						label="Create new bag"
+						color="neutral"
+						variant="outline"
+						trailing-icon="i-lucide-plus"
+						@click="navigateTo('/volunteer/emergency-bag/create')"
+					/>
+				</div>
+				<div class="flex flex-col gap-2">
+					<EmergencyBagTableBagCard
+						v-for="bag in emergencyBags"
+						:key="bag.bagID"
+						v-model:selected="selected[bag.bagID]"
+						:bag="bag"
+					/>
 				</div>
 			</UCard>
 		</div>
@@ -114,13 +68,8 @@
 import { h, resolveComponent } from "vue"
 
 const UButton = resolveComponent("UButton")
-const UBadge = resolveComponent("UBadge")
-const UCheckbox = resolveComponent("UCheckbox")
-
 const targetLocation = ref<string | null>(null)
-
-const expanded = ref({})
-const selected = ref({})
+const selected = ref<Record<string, boolean>>({})
 
 const { data: emergencyBags, refresh } = await useFetch("/api/volunteer/emergency-bag/emergencyBags")
 
@@ -156,105 +105,9 @@ const items = computed<DropdownMenuItem[]>(() =>
 		}))
 )
 
-const columns = [
-	{
-		id: "select",
-		header: ({ table }) =>
-			h(UCheckbox, {
-				modelValue: table.getIsSomePageRowsSelected() ? "indeterminate" : table.getIsAllPageRowsSelected(),
-				"onUpdate:modelValue": (value: boolean | "indeterminate") => table.toggleAllPageRowsSelected(!!value),
-				"aria-label": "Select all",
-			}),
-		cell: ({ row }) =>
-			h(UCheckbox, {
-				modelValue: row.getIsSelected(),
-				"onUpdate:modelValue": (value: boolean | "indeterminate") => row.toggleSelected(!!value),
-				"aria-label": "Select row",
-			}),
-	},
-	{
-		accessorKey: "bagID",
-		header: "Bag ID",
-		cell: ({ row }) => `${row.getValue("bagID")}`,
-	},
-	{
-		accessorKey: "location",
-		header: "Location",
-		meta: {
-			class: {
-				th: "text-center",
-				td: "text-center",
-			},
-		},
-		cell: ({ row }) => row.original.location ?? "Unassigned",
-	},
-	{
-		accessorKey: "expirationDate",
-		header: "Expiration Date",
-		meta: {
-			class: {
-				th: "text-center",
-				td: "text-center",
-			},
-		},
-		cell: ({ row }) => {
-			return new Date(row.getValue("expirationDate")).toLocaleString("en-US", {
-				day: "numeric",
-				month: "short",
-				year: "numeric",
-			})
-		},
-	},
-	{
-		accessorKey: "privacy",
-		header: "Privacy",
-		meta: {
-			class: {
-				th: "text-center",
-				td: "text-center",
-			},
-		},
-		cell: ({ row }) => row.original.privacy,
-	},
-	{
-		accessorKey: "items",
-		header: "Item Count",
-		meta: {
-			class: {
-				th: "text-center",
-				td: "text-center",
-			},
-		},
-		cell: ({ row }) => row.original.items.length,
-	},
-	// {
-	// 	accessorKey: "label",
-	// 	header: "Label",
-	// 	cell: ({ row }) => {
-	// 		const labels = row.original.label
-	// 		if (labels.length === 0) {
-	// 			return h(UBadge, { class: "rounded-full font-bold bg-gray-400", label: "Neither" })
-	// 		}
-
-	// 		return h(
-	// 			"div",
-	// 			{ class: "flex gap-1 items-center" },
-	// 			labels.map((label) => {
-	// 				if (label === "Vegetarian") {
-	// 					return h(UBadge, { class: "rounded-full font-bold bg-green-700", label: "Vegetarian" })
-	// 				}
-	// 				if (label === "Peanut Butter") {
-	// 					return h(UBadge, { class: "rounded-full font-bold bg-yellow-600", label: "Peanut Butter" })
-	// 				}
-	// 			})
-	// 		)
-	// 	},
-	// },
-]
-
 const selectedBags = computed(() =>
-	tableData.value
-		.filter((_, index) => selected.value[index])
+	(emergencyBags.value ?? [])
+		.filter((bag) => selected.value[bag.bagID])
 		.map((bag) => ({
 			bagID: bag.bagID,
 			currentLocation: bag.location,

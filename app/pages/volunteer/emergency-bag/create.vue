@@ -3,10 +3,10 @@
 		<NuxtLayout name="main" title="Create Emergency Bags" :back-navigation="{ text: 'Back to Dashboard', to: '/volunteer' }" />
 		<div class="flex justify-center">
 			<div class="flex w-full max-w-100 flex-col gap-4">
-				<UStepper ref="stepper" :items="steps">
+				<UStepper ref="stepper" disabled :items="steps">
 					<template #content="{ item }">
-						<EmergencyBagAddItem v-if="item.label === 'Add'" v-model:bag-items="bagItems" />
-						<EmergencyBagDetails v-if="item.label === 'Details'" v-model:bag-details="bagDetails" />
+						<EmergencyBagAddItem v-if="item.label === 'Add'" ref="addItemRef" v-model:bag-items="bagItems" />
+						<EmergencyBagDetails v-if="item.label === 'Details'" ref="detailsRef" v-model:bag-details="bagDetails" />
 						<EmergencyBagConfirmBag v-if="item.label === 'Confirm'" :bag-items="bagItems" :bag-details="bagDetails" />
 					</template>
 				</UStepper>
@@ -18,7 +18,7 @@
 				color="neutral"
 				:class="stepper?.hasPrev ? 'bg-utd-orange' : 'bg-gray-500'"
 				:disabled="!stepper?.hasPrev"
-				@click="stepper?.prev()"
+				@click="prevStepper()"
 			>
 				Back
 			</UButton>
@@ -26,7 +26,7 @@
 			<UButton
 				:trailing-icon="stepper?.hasNext ? 'i-lucide-arrow-right' : ''"
 				class="bg-utd-green"
-				@click="stepper?.hasNext ? stepper?.next() : submitBag()"
+				@click="stepper?.hasNext ? nextStepper() : submitBag()"
 			>
 				{{ stepper?.hasNext ? "Next" : "Confirm Bag" }}
 			</UButton>
@@ -36,7 +36,11 @@
 
 <script lang="ts" setup>
 import { getLocalTimeZone } from "@internationalized/date"
+
 const stepper = ref()
+const addItemRef = useTemplateRef("addItemRef")
+const detailsRef = useTemplateRef("detailsRef")
+
 const bagItems = ref<
 	{
 		itemID: string
@@ -59,25 +63,26 @@ const steps = [
 	{ label: "Confirm", icon: "i-lucide-circle-check-big", description: "Confirm Bag" },
 ]
 
+const currentStepIndex = ref(0)
+
+const stepValidators = [() => addItemRef.value?.validate() ?? true, () => detailsRef.value?.validate() ?? true, () => true]
+
+const nextStepper = async () => {
+	const isValid = await stepValidators[currentStepIndex.value]?.()
+	if (!isValid) return
+	currentStepIndex.value++
+	stepper.value?.next()
+}
+
+const prevStepper = () => {
+	currentStepIndex.value--
+	stepper.value?.prev()
+}
+
 const submitBag = async () => {
-	if (bagItems.value.length === 0) {
-		alert("Please add items to the bag")
-		stepper.value?.prev()
-		stepper.value?.prev()
-		return false
-	}
-
-	if (!bagDetails.value.expirationDate) {
-		alert("Please select an expiration date")
-		stepper.value?.prev()
-		return false
-	}
-
-	if (!bagDetails.value.selectedPrivacy) {
-		alert("Please select a privacy type")
-		stepper.value?.prev()
-		return false
-	}
+	const addValid = addItemRef.value?.validate() ?? true
+	const detailsValid = await (detailsRef.value?.validate() ?? true)
+	if (!addValid || !detailsValid) return false
 
 	try {
 		const createBag = await $fetch("/api/volunteer/emergency-bag/emergencyBags", {
@@ -85,7 +90,7 @@ const submitBag = async () => {
 			body: {
 				bagCategory: bagDetails.value.selectedCategory,
 				expiryDate: bagDetails.value.expirationDate.toDate(getLocalTimeZone()).toISOString(),
-				privacy: bagDetails.value.selectedPrivacy,
+				privacy: bagDetails.value.isPrivate ? "PRIVATE" : "PUBLIC",
 				bagDescription: bagDetails.value.selectedPrivacy === "PRIVATE" ? bagDetails.value.bagDescription : "",
 				items: bagItems.value.map((item) => ({
 					itemID: item.itemID,
