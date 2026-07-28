@@ -25,7 +25,6 @@ export const useStudentEventStream = () => {
 			const { decision } = event.payload
 			if (decision === "ACCEPT") {
 				await permissionsStore.setPermissionsFromServer()
-				refreshCookie("userID")
 				refreshCookie("AccessPermission")
 
 				await navigateTo("/volunteer")

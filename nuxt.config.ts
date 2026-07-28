@@ -3,7 +3,7 @@ export default defineNuxtConfig({
 	devtools: { enabled: true },
 	modules: ["@nuxt/eslint", "@pinia/nuxt", "@nuxt/ui"],
 	css: ["~/assets/css/main.css"],
-	runtimeConfig: { public: { LOCAL_URL: "" } },
+	runtimeConfig: { EPICS_SSO_BASE_URL: "", NODE_ENV: "", public: { LOCAL_URL: "" } },
 	features: { inlineStyles: false },
 	ui: {
 		colorMode: false,

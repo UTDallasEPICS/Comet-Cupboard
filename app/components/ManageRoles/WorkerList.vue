@@ -10,7 +10,7 @@ const toast = useToast()
 
 const permissionsStore = usePermissionsStore()
 
-const currentUserUserID = useCookie("userID")
+const currentUserSession = useUserSessionInfoStore()
 
 const { data: workerUsers, refresh } = await useFetch("/api/admin/user/workerUsers", {
 	method: "GET",
@@ -44,7 +44,7 @@ const getActionItems = (row) => {
 					color: "error",
 				})
 			}
-		} else if (currentUserUserID.value === row.original.userID) {
+		} else if (currentUserSession.userID === row.original.userID) {
 			items.push({
 				label: "SELF DEMOTE TO ADMIN",
 				onClick: () => headAdminSelfDemote(row),

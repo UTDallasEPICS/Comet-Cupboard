@@ -13,7 +13,6 @@
 
 					<div class="mt-4 flex flex-row gap-4">
 						<SharedButtonNavigateTo text="Student Login" to="/login" />
-						<SharedButtonNavigateTo text="Volunteer Login" to="/vol-login" />
 					</div>
 				</div>
 			</UContainer>
