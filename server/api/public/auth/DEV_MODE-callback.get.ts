@@ -22,7 +22,6 @@ export default defineSafeHandler(async (event) => {
 	}
 
 	const { username } = validateQuery(event, schema)
-	console.log("DEV_MODE-callback.get.ts: username = ", username)
 	const profile = {
 		displayName: username,
 		firstName: "Penguinistrator",

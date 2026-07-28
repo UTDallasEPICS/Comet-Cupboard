@@ -56,20 +56,11 @@ model UserSession {
     User                   User                    @relation(fields: [userID], references: [userID], onDelete: Cascade, onUpdate: Cascade)
     publicCode             String                  @unique @map("public_code")
     publicIcon             String                  @map("public_icon")
-    roleRequest            RoleRequest?
     Cart                   Cart?
     QueueEntry             QueueEntry?
     InventoryChangeSession InventoryChangeSession?
 
     @@map("user_session")
-}
-
-model RoleRequest {
-    publicCode  String      @id @map("public_code")
-    UserSession UserSession @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
-    role        RoleType    @map("role")
-
-    @@map("role_request")
 }
 
 model Category {
