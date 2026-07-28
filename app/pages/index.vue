@@ -12,7 +12,12 @@
 					<SharedTextHeroDescription class="mt-4 text-white"> Supporting academic success by meeting basic needs. </SharedTextHeroDescription>
 
 					<div class="mt-4 flex flex-row gap-4">
-						<SharedButtonNavigateTo text="Student Login" to="/login" />
+						<SharedButtonNavigateTo text="Login with SSO" @click="startLogin" />
+						<UForm v-if="isDevMode" @submit="startDevLogin">
+							<UFormField>
+								<UInput v-model="devUsernameInput" placeholder="NONPROD Dev Username" class="w-64" @keyup.enter="startDevLogin" />
+							</UFormField>
+						</UForm>
 					</div>
 				</div>
 			</UContainer>
@@ -48,3 +53,16 @@
 		</section>
 	</div>
 </template>
+
+<script lang="ts" setup>
+const startLogin = async () => {
+	await navigateTo("/api/public/auth/login", { external: true })
+}
+
+const isDevMode = useRuntimeConfig().public.NODE_ENV === "nonprod"
+const devUsernameInput = ref("")
+
+const startDevLogin = async () => {
+	await navigateTo(`/api/public/auth/DEV_MODE-callback?username=${devUsernameInput.value}`, { external: true })
+}
+</script>

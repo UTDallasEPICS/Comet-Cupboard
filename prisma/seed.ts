@@ -40,13 +40,10 @@ const populateItems = async () => {
 }
 
 const validUsers = [
-	{ userID: "stu000000", role: RoleType.STUDENT },
-	{ userID: "stu000001", role: RoleType.STUDENT },
-	{ userID: "stu000002", role: RoleType.STUDENT },
-	{ userID: "vol000000", role: RoleType.VOLUNTEER },
-	{ userID: "vol000001", role: RoleType.VOLUNTEER },
-	{ userID: "adm000000", role: RoleType.ADMIN },
-	{ userID: "had000000", role: RoleType.HEAD_ADMIN },
+	{ userID: "stu000000@utdallas.edu", displayName: "Tobor", role: RoleType.STUDENT },
+	{ userID: "vol000000@utdallas.edu", displayName: "Temoc", role: RoleType.VOLUNTEER },
+	{ userID: "adm000000@utdallas.edu", displayName: "Perlica", role: RoleType.ADMIN },
+	{ userID: "had000000@utdallas.edu", displayName: "Penguinistrator", role: RoleType.HEAD_ADMIN },
 ]
 
 const populateLocations = async () => {

@@ -32,7 +32,7 @@ export default defineSafeHandler(async (event) => {
 		})
 	})
 
-	const NODE_ENV = useRuntimeConfig(event).NODE_ENV
+	const NODE_ENV = useRuntimeConfig(event).public.NODE_ENV
 
 	setCookie(event, "better-auth.session-token", "", {
 		httpOnly: true,

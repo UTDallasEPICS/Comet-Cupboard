@@ -11,7 +11,7 @@ export const useUserSessionInfoStore = defineStore("userSessionInfo", () => {
 			})
 
 			userID.value = userSessionInfo.userID
-			displayName.value = userSessionInfo.displayName
+			displayName.value = userSessionInfo.User.displayName
 			publicCode.value = userSessionInfo.publicCode
 			publicIcon.value = userSessionInfo.publicIcon
 		} catch (error) {
