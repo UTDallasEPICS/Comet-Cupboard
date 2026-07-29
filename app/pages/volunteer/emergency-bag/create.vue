@@ -53,7 +53,7 @@ const bagItems = ref<
 const bagDetails = ref({
 	selectedCategory: [],
 	expirationDate: null,
-	selectedPrivacy: null,
+	isPrivate: null,
 	bagDescription: "",
 })
 
@@ -91,7 +91,7 @@ const submitBag = async () => {
 				bagCategory: bagDetails.value.selectedCategory,
 				expiryDate: bagDetails.value.expirationDate.toDate(getLocalTimeZone()).toISOString(),
 				privacy: bagDetails.value.isPrivate ? "PRIVATE" : "PUBLIC",
-				bagDescription: bagDetails.value.selectedPrivacy === "PRIVATE" ? bagDetails.value.bagDescription : "",
+				bagDescription: bagDetails.value.isPrivate ? bagDetails.value.bagDescription : "",
 				items: bagItems.value.map((item) => ({
 					itemID: item.itemID,
 					count: item.count,

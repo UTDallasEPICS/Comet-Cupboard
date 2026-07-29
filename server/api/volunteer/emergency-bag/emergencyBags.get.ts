@@ -13,21 +13,6 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
-	const rows = emBags.map((row) => ({
-		bagID: row.label,
-		location: row.locationName,
-		isVegetarian: row.isVegetarian,
-		hasPeanutButter: row.hasPeanutButter,
-		expirationDate: row.expiryDate,
-		privacy: row.privacy,
-		bagDescription: row.bagDescription,
-		items: row.EmergencyBagItems.map((bagItem) => ({
-			itemID: bagItem.itemID,
-			name: bagItem.Item.name,
-			count: bagItem.count,
-			imgName: bagItem.Item.imgName,
-		})),
-	}))
-
-	return rows
+	console.log(emBags)
+	return emBags
 })

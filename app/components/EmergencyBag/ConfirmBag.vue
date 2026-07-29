@@ -23,14 +23,16 @@
 						<p class="font-bold">Expiration Date:</p>
 						<span>{{ bagDetails.expirationDate }}</span>
 					</div>
-					<div class="mb-4 flex gap-2">
-						<p class="font-bold">Privacy:</p>
-						<span>{{ bagDetails.selectedPrivacy }}</span>
-					</div>
-					<div v-if="bagDetails.selectedPrivacy === 'PRIVATE'" class="flex flex-col">
-						<p class="font-bold">Bag Description:</p>
-						<div class="w-full">
-							<span class="break-words">{{ bagDetails.bagDescription }}</span>
+					<div v-if="bagDetails.isPrivate" class="mb-4 flex flex-col">
+						<div class="flex gap-2">
+							<p class="font-bold">Privacy:</p>
+							<p>Private</p>
+						</div>
+						<div class="flex flex-col">
+							<p class="font-bold">Bag Description:</p>
+							<div class="w-full">
+								<span class="break-words">{{ bagDetails.bagDescription }}</span>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -67,7 +69,7 @@ const props = defineProps<{
 	bagDetails: {
 		selectedCategory: []
 		expirationDate: null
-		selectedPrivacy: null
+		isPrivate: null
 		bagDescription: ""
 	}
 }>()

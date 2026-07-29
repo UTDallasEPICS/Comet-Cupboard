@@ -4,7 +4,7 @@
 			<div :class="['flex min-h-screen shrink-0 flex-col border-r border-gray-400 shadow-xl', sidebarOpen ? 'w-48' : 'w-12']">
 				<UCollapsible :open="sidebarOpen" class="flex w-full flex-col">
 					<div class="group flex h-12 items-center">
-						<span v-if="sidebarOpen" class="text-lg font-bold px-2">Data Pages</span>
+						<span v-if="sidebarOpen" class="px-2 text-lg font-bold">Data Pages</span>
 						<div class="ml-auto flex w-12 justify-center">
 							<UButton
 								class="w-min"

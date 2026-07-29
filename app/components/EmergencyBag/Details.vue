@@ -48,7 +48,7 @@ const permissionsStore = usePermissionsStore()
 const bagDetails = defineModel<{
 	selectedCategory: string[]
 	expirationDate: Date
-	isPrivate: false
+	isPrivate: boolean
 	bagDescription: string
 }>("bagDetails", { required: true })
 const inputDate = useTemplateRef("inputDate")

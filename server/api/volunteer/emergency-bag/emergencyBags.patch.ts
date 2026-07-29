@@ -15,7 +15,7 @@ export default defineSafeHandler(async (event) => {
 
 	const moveBag = await prisma.emergencyBag.updateMany({
 		where: {
-			label: { in: bagIDs },
+			bagID: { in: bagIDs },
 		},
 		data: {
 			locationName: location,

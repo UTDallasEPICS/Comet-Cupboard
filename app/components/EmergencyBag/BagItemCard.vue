@@ -24,8 +24,8 @@ const props = defineProps<{
 	name: string
 	imgName: string
 	itemID: string
-	itemDeal: Object
-	itemCount: Number
-	itemQuantity: Number
+	itemDeal: object
+	itemCount: number
+	itemQuantity: number
 }>()
 </script>

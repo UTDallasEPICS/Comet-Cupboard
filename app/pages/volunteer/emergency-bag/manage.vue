@@ -1,21 +1,15 @@
 <template>
 	<UContainer>
 		<NuxtLayout name="main" title="Manage Emergency Bags" :back-navigation="{ text: 'Back to Dashboard', to: '/volunteer' }" />
-		<div class="mt-4 flex w-full items-center justify-center">
-			<UCard>
-				<div class="mb-2 flex w-full justify-between">
+		<div class="flex items-center justify-center">
+			<UCard class="w-full max-w-100">
+				<div class="mb-2 flex justify-between">
 					<UButton
+						v-if="emergencyBags.length >= 1"
 						label="Create new bag"
 						color="neutral"
 						variant="outline"
 						trailing-icon="i-lucide-plus"
-						@click="navigateTo('/volunteer/emergency-bag/create')"
-					/>
-					<UButton
-						label="Edit Bag"
-						class="bg-utd-orange text-white"
-						variant="outline"
-						trailing-icon="i-lucide-square-pen"
 						@click="navigateTo('/volunteer/emergency-bag/create')"
 					/>
 					<UPopover>
@@ -52,12 +46,7 @@
 					/>
 				</div>
 				<div class="flex flex-col gap-2">
-					<EmergencyBagTableBagCard
-						v-for="bag in emergencyBags"
-						:key="bag.bagID"
-						v-model:selected="selected[bag.bagID]"
-						:bag="bag"
-					/>
+					<EmergencyBagTableBagCard v-for="bag in emergencyBags" :key="bag.bagID" v-model:selected="selected[bag.bagID]" :bag="bag" />
 				</div>
 			</UCard>
 		</div>
@@ -74,24 +63,6 @@ const selected = ref<Record<string, boolean>>({})
 const { data: emergencyBags, refresh } = await useFetch("/api/volunteer/emergency-bag/emergencyBags")
 
 const { data: locations } = await useFetch("/api/volunteer/location")
-
-console.log("API: ", emergencyBags.value)
-console.log("Location API: ", locations.value)
-
-const tableData = computed(() =>
-	(emergencyBags.value ?? []).map((bag) => {
-		const label: string[] = []
-		if (bag.isVegetarian) label.push("Vegetarian")
-		if (bag.hasPeanutButter) label.push("Peanut Butter")
-
-		return {
-			...bag,
-			label,
-		}
-	})
-)
-
-console.log("Data: ", tableData.value)
 
 const items = computed<DropdownMenuItem[]>(() =>
 	locations.value
@@ -110,7 +81,7 @@ const selectedBags = computed(() =>
 		.filter((bag) => selected.value[bag.bagID])
 		.map((bag) => ({
 			bagID: bag.bagID,
-			currentLocation: bag.location,
+			currentLocation: bag.locationName,
 		}))
 )
 
