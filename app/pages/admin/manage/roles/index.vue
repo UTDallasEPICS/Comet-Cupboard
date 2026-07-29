@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<NuxtLayout name="main" title="Manage Roles" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }" :refresh-page-timer="60">
+			<USeparator class="my-4" />
 			<section>
 				<UCard>
 					<SharedTextSectionTitle> Volunteers and Admins </SharedTextSectionTitle>

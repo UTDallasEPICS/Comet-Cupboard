@@ -53,6 +53,7 @@
 									}
 								: {}
 						"
+						:quantity="cartItem.Item.quantity"
 						@update:cart="cartStore.getCart"
 					/>
 				</template>

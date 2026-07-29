@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<NuxtLayout name="main" title="Claim Emergency Bag">
+			<USeparator class="my-4" />
 			<section>
 				<UCard>
 					<template #header>

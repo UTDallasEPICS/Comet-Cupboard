@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<NuxtLayout name="main" title="Admin Dashboard">
+			<USeparator class="my-4" />
 			<section>
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<li v-for="link in adminLinks" :key="link.label">

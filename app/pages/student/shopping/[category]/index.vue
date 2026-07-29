@@ -9,14 +9,17 @@
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">
-								<SharedTextBase class="w-full text-center">Sort/Filter Options</SharedTextBase>
+								<SharedTextBase class="w-full font-semibold">Filter</SharedTextBase>
 								<USeparator />
 								<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="vertical" />
+								<SharedTextBase class="w-full font-semibold">Sort</SharedTextBase>
+								<USeparator />
 								<USelect v-model="sortOption" :items="sortOptions" class="w-full max-w-md grow" />
 							</div>
 						</template>
 					</UPopover>
 				</div>
+				<USeparator class="my-4" />
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<li v-for="item in filtered" :key="item.itemID">
 						<ShoppingItemCard

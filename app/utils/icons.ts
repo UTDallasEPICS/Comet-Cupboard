@@ -5,6 +5,7 @@ export const icons = {
 	add: "i-lucide-plus",
 	subtract: "i-lucide-minus",
 	close: "i-lucide-x",
+	delete: "i-lucide-trash-2",
 	back: "i-lucide-arrow-left",
 	refresh: "i-lucide-refresh-cw",
 	edit: "i-lucide-edit",

@@ -5,6 +5,7 @@
 			:title="`Edit ${item?.name} Deal`"
 			:back-navigation="{ text: `Back to ${currentCategory}`, to: `/volunteer/inventory/${currentCategory}` }"
 		>
+			<USeparator class="my-4" />
 			<section>
 				<div class="mx-auto w-min">
 					<img

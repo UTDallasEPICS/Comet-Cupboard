@@ -89,7 +89,6 @@ const { data: cart } = await useAsyncData(
 		const response = await $fetch("/api/volunteer/verification/pendingCart", {
 			query: { publicCode: props.publicCode },
 		})
-		console.log("response", response)
 		return response
 	},
 	{

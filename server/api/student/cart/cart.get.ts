@@ -13,7 +13,6 @@ export default defineSafeHandler(async (event) => {
 			CartItems: {
 				include: {
 					Item: {
-						omit: { quantity: true },
 						include: {
 							Deal: true,
 						},

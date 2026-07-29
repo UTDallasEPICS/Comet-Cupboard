@@ -1,18 +1,16 @@
 <template>
-	<UButton
-		variant="solid"
+	<SharedButtonBaseCustomColor
+		custom-color="utd-green"
+		content-color="white"
 		:ui="{
-			base: `bg-${color} hover:bg-${color}/75 active:bg-${color}/75 disabled:bg-${color} aria-disabled:bg-${color} outline-${color}/25 rounded-3xl justify-center items-center w-32`,
 			...props.ui,
 		}"
 	>
 		{{ props.text }}
-	</UButton>
+	</SharedButtonBaseCustomColor>
 </template>
 
 <script setup lang="ts">
-const color = "utd-green"
-
 const props = defineProps({
 	text: {
 		type: String,

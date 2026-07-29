@@ -1,51 +1,96 @@
 <template>
-	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
-		<template #header-actions>
-			<UDropdownMenu
-				:items="editMenuItems"
-				:content="{
-					align: 'end',
-					side: 'bottom',
+	<UCollapsible v-model:open="isOpen" class="w-full min-w-72" disabled>
+		<UChip
+			:text="changeCount > 0 ? `+${changeCount}` : `${changeCount}`"
+			:show="changeCount != 0"
+			:ui="{
+				base: 'h-[24px] min-w-[24px] text-[12px]',
+			}"
+			class="w-full"
+		>
+			<UCard
+				:class="`${changeCount != 0 ? 'border-utd-orange' : ''} relative w-full min-w-72 shadow-md`"
+				:ui="{
+					body: 'p-0 py-0 sm:p-0 sm:py-0',
 				}"
 			>
-				<UButton :icon="icons['edit']" size="xs" variant="ghost" />
-			</UDropdownMenu>
-		</template>
-		<template #body>
-			<div class="mt-auto flex flex-col items-end gap-2">
+				<div class="absolute top-2 right-2 flex flex-row gap-2">
+					<SharedDealBadge :item-deal="itemDeal" />
+					<UDropdownMenu
+						:items="editMenuItems"
+						:content="{
+							align: 'end',
+							side: 'bottom',
+						}"
+					>
+						<UButton :icon="icons['ellipsesActions']" size="sm" color="neutral" variant="ghost" />
+					</UDropdownMenu>
+				</div>
+
 				<div class="flex flex-row items-center gap-2">
-					<SharedTextBase>Qty:</SharedTextBase>
-					<div class="border-text-soft flex flex-row rounded-xl border">
-						<div class="w-12">
-							<SharedTextBase class="ml-2 text-center">{{ props.currentCount }}</SharedTextBase>
+					<img
+						:src="`/api/public/image/${imgName}`"
+						:alt="name"
+						class="border-border-soft aspect-square h-full w-20 rounded-l-lg border object-cover"
+					/>
+
+					<div class="flex w-full flex-col p-2">
+						<div class="flex flex-row items-center justify-between">
+							<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
 						</div>
 
-						<div :style="clipStyle" class="bg-border-soft flex w-16 items-center justify-center rounded-r-xl">
-							<SharedTextBase class="text-center">{{ displayChange }}</SharedTextBase>
+						<div class="flex flex-row items-center justify-between">
+							<UBadge :label="`QTY: ${currentCount}`" variant="outline" color="neutral" />
 						</div>
 					</div>
 				</div>
-				<div>
-					<div class="flex items-center gap-1">
-						<UButton :icon="icons['subtract']" size="xs" variant="soft" @click="decrement" />
-						<UInputNumber
-							v-model="adjustAmount"
-							class="w-12"
-							:increment="false"
-							:decrement="false"
-							:min="1"
-							:max="99"
-							:ui="{
-								base: 'text-center',
-							}"
-							@blur="ensureValid"
-						/>
-						<UButton :icon="icons['add']" size="xs" variant="soft" @click="increment" />
-					</div>
+				<UButton :icon="icons['chevronDown']" size="sm" variant="ghost" color="neutral" class="absolute right-2 bottom-2" @click="isOpen = !isOpen" />
+			</UCard>
+		</UChip>
+		<template #content>
+			<div class="border-utd-green flex h-min gap-1 rounded-3xl">
+				<div class="border-utd-green ml-auto flex w-fit items-center overflow-hidden rounded-md border bg-white">
+					<SharedButtonBaseCustomColor
+						custom-color="utd-green"
+						content-color="white"
+						button-variant="ghost"
+						:ui="{
+							base: 'rounded-none px-2 h-full',
+						}"
+						:icon="icons.subtract"
+						size="sm"
+						@click="decrement"
+					/>
+					<UInputNumber
+						v-model="adjustAmount"
+						:increment="false"
+						:decrement="false"
+						:min="1"
+						:max="99"
+						class="w-10"
+						:ui="{
+							root: 'border-0 shadow-none',
+							base: 'text-center',
+						}"
+						variant="ghost"
+						color="neutral"
+						@blur="ensureValid"
+					/>
+					<SharedButtonBaseCustomColor
+						custom-color="utd-green"
+						content-color="white"
+						button-variant="ghost"
+						:ui="{
+							base: 'rounded-none px-2 h-full',
+						}"
+						:icon="icons.add"
+						size="sm"
+						@click="increment"
+					/>
 				</div>
 			</div>
 		</template>
-	</SharedItemCard>
+	</UCollapsible>
 </template>
 
 <script lang="ts" setup>
@@ -84,6 +129,8 @@ const props = defineProps({
 
 const inventoryStore = useInventoryStore()
 
+const isOpen = ref(false)
+
 const editMenuItems = ref<DropdownMenuItem[]>([
 	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${props.category}/${props.itemID}/edit`) },
 	{ label: "Item Deal", onClick: () => navigateTo(`/volunteer/inventory/${props.category}/${props.itemID}/deal`) },
@@ -109,7 +156,4 @@ const ensureValid = () => {
 		adjustAmount.value = 1
 	}
 }
-
-// Creates a diagonal line styling with specified percentages to adjust the angle
-const clipStyle = "clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%)"
 </script>

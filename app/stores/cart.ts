@@ -19,7 +19,7 @@ export const useCartStore = defineStore("cart", () => {
 		if (cart.value === null || "CartItems" in cart.value === false) {
 			return {}
 		}
-		const items = cart.value?.CartItems.sort((a, b) => {
+		const items = cart.value.CartItems.sort((a, b) => {
 			const categoryCompare = a.Item.categoryName.localeCompare(b.Item.categoryName)
 			if (categoryCompare !== 0) {
 				return categoryCompare
@@ -31,11 +31,11 @@ export const useCartStore = defineStore("cart", () => {
 		return Object.groupBy(items, (cartItem) => cartItem.Item.categoryName)
 	})
 
-	const cartIsEmpty = computed(() => {
+	const itemIDtoCartItemMap = computed(() => {
 		if (cart.value === null || "CartItems" in cart.value === false) {
-			return true
+			return {}
 		}
-		return categorizedCartItems.value && Object.keys(categorizedCartItems.value).length === 0
+		return Object.fromEntries(cart.value.CartItems.map((cartItem) => [cartItem.Item.itemID, cartItem]))
 	})
 
 	const cartTotalCount = computed(() => {
@@ -47,6 +47,10 @@ export const useCartStore = defineStore("cart", () => {
 				return cartItem.count
 			})
 			.reduce((a: number, b: number) => a + b, 0)
+	})
+
+	const cartIsEmpty = computed(() => {
+		return cartTotalCount.value === 0
 	})
 
 	const pending = computed(() => {
@@ -70,5 +74,5 @@ export const useCartStore = defineStore("cart", () => {
 		}
 	}
 
-	return { cart, cartView, cartIsEmpty, cartTotalCount, pending, getCart, resetCartView, handleCartEvent, categorizedCartItems }
+	return { cart, cartView, cartIsEmpty, cartTotalCount, pending, getCart, resetCartView, handleCartEvent, categorizedCartItems, itemIDtoCartItemMap }
 })

@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<NuxtLayout name="main" title="Shopping Categories" :back-navigation="{ text: 'Back to Dashboard', to: '/student' }">
+			<USeparator class="my-4" />
 			<section>
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<li>

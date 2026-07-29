@@ -5,6 +5,7 @@
 			:title="`Edit ${currentCategory.name}`"
 			:back-navigation="{ text: 'Back to Manage Categories', to: '/admin/manage/categories' }"
 		>
+			<USeparator class="my-4" />
 			<section>
 				<div class="mx-auto w-min">
 					<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">

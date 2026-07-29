@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<NuxtLayout name="main" title="Manage Categories" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
+			<USeparator class="my-4" />
 			<section>
 				<UCard>
 					<SharedTextSectionTitle> Categories </SharedTextSectionTitle>

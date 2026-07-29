@@ -16,11 +16,32 @@ export const useInventoryStore = defineStore("inventory", () => {
 		return inventoryChanges.value.InventoryChangeSessionItems
 	})
 
+	const inventoryChangesItemsCategorized = computed(() => {
+		if (inventoryChanges.value === null || "InventoryChangeSessionItems" in inventoryChanges.value === false) {
+			return {}
+		}
+
+		const items = inventoryChanges.value.InventoryChangeSessionItems.sort((a, b) => {
+			const categoryCompare = a.Item.categoryName.localeCompare(b.Item.categoryName)
+			if (categoryCompare !== 0) {
+				return categoryCompare
+			}
+
+			return a.Item.name.localeCompare(b.Item.name)
+		})
+
+		return Object.groupBy(items, (inventoryItem) => inventoryItem.Item.categoryName)
+	})
+
 	const numberOfChanges = computed(() => {
 		if (inventoryChanges.value === null || "InventoryChangeSessionItems" in inventoryChanges.value === false) {
 			return 0
 		}
 		return inventoryChanges.value.InventoryChangeSessionItems.length
+	})
+
+	const hasInventoryChanges = computed(() => {
+		return numberOfChanges.value > 0
 	})
 
 	const changeInventorySessionItemCount = async (itemID: string, increment: number) => {
@@ -57,6 +78,8 @@ export const useInventoryStore = defineStore("inventory", () => {
 		inventoryChanges,
 		getInventoryChanges,
 		inventoryChangesItems,
+		inventoryChangesItemsCategorized,
+		hasInventoryChanges,
 		numberOfChanges,
 		changeInventorySessionItemCount,
 		submitChanges,
