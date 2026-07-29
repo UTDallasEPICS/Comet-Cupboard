@@ -1,12 +1,36 @@
 <template>
 	<div>
-		<NuxtLayout name="main" title="Manage Roles" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }" :refresh-page-timer="60">
-			<USeparator class="my-4" />
+		<NuxtLayout name="main" title="Manage Roles" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
 			<section>
-				<UCard>
-					<SharedTextSectionTitle> Volunteers and Admins </SharedTextSectionTitle>
-					<UTable :data="workerUsers" :columns="tableColumns" empty="No worker users currently available" />
-				</UCard>
+				<div class="flex flex-row flex-nowrap items-center gap-2">
+					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search users by name or email" class="grow" />
+					<UPopover>
+						<UButton :icon="icons['sortFilter']" variant="ghost" color="neutral" size="md" />
+
+						<template #content>
+							<div class="flex w-64 flex-col items-start gap-2 p-4">
+								<SharedTextBase class="w-full font-semibold">Filter</SharedTextBase>
+								<USeparator />
+								<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="vertical" />
+							</div>
+						</template>
+					</UPopover>
+				</div>
+				<USeparator class="my-4" />
+				<UPagination
+					v-model:page="page"
+					:items-per-page="pageSize"
+					:total="filtered.length"
+					class="w-full"
+					:ui="{
+						list: 'flex items-center justify-center gap-1',
+					}"
+				/>
+				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<li v-for="user in paginatedUsers" :key="user.userID">
+						<ManageUserRoleItemCard :user-i-d="user.userID" :display-name="user.displayName" :role="user.role" />
+					</li>
+				</ul>
 			</section>
 		</NuxtLayout>
 	</div>
@@ -15,114 +39,49 @@
 <script lang="ts" setup>
 definePageMeta({ layout: false })
 
-const toast = useToast()
-
-const permissionsStore = usePermissionsStore()
-
-const currentUserSession = useUserSessionInfoStore()
-
-const { data: workerUsers, refresh } = await useFetch("/api/admin/user/workerUsers", {
+const { data: users } = await useFetch("/api/admin/user/users", {
 	method: "GET",
 })
 
-const UButton = resolveComponent("UButton")
-const UCheckbox = resolveComponent("UCheckbox")
-const UDropdownMenu = resolveComponent("UDropdownMenu")
+const toggleOptions = ref(["Student", "Volunteer", "Admin", "Head Admin"])
+const toggleItems = ref([])
 
-const getActionItems = (row) => {
-	const items = [{ type: "label", label: "Actions" }, { type: "separator" }]
+const shownUsers = computed(() => {
+	return users.value.filter((user) => {
+		return (
+			(!toggleItems.value.includes("Student") || user.role === "STUDENT") &&
+			(!toggleItems.value.includes("Volunteer") || user.role === "VOLUNTEER") &&
+			(!toggleItems.value.includes("Admin") || user.role === "ADMIN") &&
+			(!toggleItems.value.includes("Head Admin") || user.role === "HEAD_ADMIN")
+		)
+	})
+})
 
-	if (permissionsStore.canHeadAdminAccess) {
-		if (row.original.role !== "HEAD_ADMIN") {
-			if (row.original.role !== "STUDENT") {
-				items.push({
-					label: "Set to Student",
-					onClick: () => setUserToRoleHeadAdminFunction(row, "STUDENT"),
-				})
-			}
-			if (row.original.role !== "VOLUNTEER") {
-				items.push({
-					label: "Set to Volunteer",
-					onClick: () => setUserToRoleHeadAdminFunction(row, "VOLUNTEER"),
-				})
-			}
-			if (row.original.role !== "ADMIN") {
-				items.push({
-					label: "Set to Admin",
-					onClick: () => setUserToRoleHeadAdminFunction(row, "ADMIN"),
-					color: "error",
-				})
-			}
-		} else if (currentUserSession.userID === row.original.userID) {
-			items.push({
-				label: "SELF DEMOTE TO ADMIN",
-				onClick: () => headAdminSelfDemote(row),
-				color: "error",
-			})
-		}
-	} else if (permissionsStore.canAdminAccess) {
-		if (row.original.role === "VOLUNTEER") {
-			items.push({
-				label: "Demote to Student",
-				onClick: () => demoteVolunteertoStudent(row),
-			})
-		}
+const sortedUsers = computed(() => {
+	if (!shownUsers.value) {
+		return []
 	}
+	const sorted = [...shownUsers.value]
+	sorted.sort((a, b) => a.userID.localeCompare(b.userID))
+	return sorted
+})
 
-	if (items.length === 2) {
-		items.push({
-			label: "No actions available",
-			disabled: true,
-		})
-	}
+const { query, filtered } = useFuzzySearch(sortedUsers, { searchKeys: ["userID", "displayName"] })
 
-	return items
-}
+const page = ref(1)
+const pageSize = 25
 
-const columnsDef = [
-	{ header: "Net ID", accessorKey: "userID", type: "text", sortable: true },
-	{ header: "Role", accessorKey: "role", type: "text", sortable: true },
-	{ id: "actions", type: "actions", items: getActionItems, meta: { class: { td: "text-right" } } },
-]
-const tableColumns = buildNuxtUITable(columnsDef, { UButton, UCheckbox, UDropdownMenu })
+const paginatedUsers = computed(() => {
+	const start = (page.value - 1) * pageSize
+	return filtered.value.slice(start, start + pageSize)
+})
 
-const demoteVolunteertoStudent = async (row) => {
-	try {
-		await $fetch("/api/admin/user/demoteVolunteer", {
-			method: "POST",
-			body: {
-				userID: row.original.userID,
-			},
-		})
-		await refresh()
-	} catch (e) {}
-}
-
-const setUserToRoleHeadAdminFunction = async (row, role) => {
-	try {
-		await $fetch("/api/head-admin/user/role", {
-			method: "POST",
-			body: {
-				userID: row.original.userID,
-				newRole: role,
-			},
-		})
-		await refresh()
-	} catch (e) {}
-}
-
-const headAdminSelfDemote = async (row) => {
-	try {
-		await $fetch("/api/head-admin/user/selfDemote", {
-			method: "POST",
-		})
-		await refresh()
-	} catch (e) {
-		toast.add({
-			title: "Error",
-			description: e.data?.message || "An error occurred while trying to self-demote. Please try again later.",
-			color: "error",
-		})
-	}
-}
+// reset page to 1 when query or toggleItems changes
+watch(
+	[query, toggleItems],
+	() => {
+		page.value = 1
+	},
+	{ deep: true }
+)
 </script>
