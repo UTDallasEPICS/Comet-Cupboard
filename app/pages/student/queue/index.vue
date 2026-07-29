@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<NuxtLayout name="main" title="Queue" :back-navigation="{ text: 'Back to Dashboard', to: '/student' }">
+			<USeparator class="my-4" />
 			<section>
 				<UCard>
 					<SharedTextSectionTitle class="mb-4"> Your Status </SharedTextSectionTitle>

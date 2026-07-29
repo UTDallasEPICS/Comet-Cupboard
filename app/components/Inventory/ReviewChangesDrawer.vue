@@ -1,6 +1,6 @@
 <template>
 	<UContainer>
-		<div v-if="inventoryItemsMap.length === 0" class="py-12 text-center">
+		<div v-if="inventoryStore.hasInventoryChanges === false" class="py-12 text-center">
 			<SharedTextBase>No changes to review</SharedTextBase>
 		</div>
 		<div v-else>
@@ -19,19 +19,38 @@
 					<UInput v-model="fieldInputs[fieldName]" :placeholder="'Enter data'" />
 				</UFormGroup>
 			</div> -->
-			<ul class="mt-4 flex w-full max-w-md flex-col items-center gap-4">
-				<li v-for="item in inventoryItemsMap" :key="item.id">
+
+			<SharedGroupedCollapsible :groups="inventoryStore.inventoryChangesItemsCategorized" :get-key="(item) => item.itemID" :default-open="true">
+				<template #header="{ group, open }">
+					<div class="flex flex-col gap-2">
+						<SharedButtonPositiveAction
+							:text="group"
+							:trailing-icon="icons['chevronDown']"
+							block
+							class="group w-full rounded-lg"
+							:ui="{
+								trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200',
+							}"
+						/>
+					</div>
+				</template>
+
+				<template #item="{ item: inventoryItem }">
 					<InventoryReviewItemCard
-						:key="item.id"
-						:name="item.name"
-						:img-name="item.imgName"
-						:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
-						:item-i-d="item.id"
-						:quantity="item.oldCount"
-						:change-count="item.changeCount"
+						:key="inventoryItem.id"
+						:name="inventoryItem.Item.name"
+						:img-name="inventoryItem.Item.imgName"
+						:item-deal="
+							inventoryItem.Item.Deal
+								? { actualCount: inventoryItem.Item.Deal.actualCount, adjustedCount: inventoryItem.Item.Deal.adjustedCount }
+								: {}
+						"
+						:item-i-d="inventoryItem.id"
+						:quantity="inventoryItem.Item.quantity"
+						:change-count="inventoryItem.count"
 					/>
-				</li>
-			</ul>
+				</template>
+			</SharedGroupedCollapsible>
 
 			<div class="flex justify-center pt-6">
 				<SharedButtonPositiveAction v-if="!selectedSource" text="No source selected" disabled />
@@ -48,24 +67,4 @@ const { data: items } = await useFetch("/api/student/inventory/items")
 const fields = ref<string[]>([])
 const fieldInputs = ref<Record<string, string>>({})
 const inventoryStore = useInventoryStore()
-
-const inventoryItemsMap = computed(() => {
-	return (
-		items.value
-			?.filter((item) => {
-				return inventoryStore.inventoryChangesItems.some((change) => change.itemID === item.itemID)
-			})
-			.map((item) => {
-				const change = inventoryStore.inventoryChangesItems.find((c) => c.itemID === item.itemID)
-				return {
-					id: item.itemID,
-					name: item.name,
-					imgName: item.imgName,
-					Deal: item.Deal,
-					oldCount: item.quantity,
-					changeCount: change ? change.count : 0,
-				}
-			}) || []
-	)
-})
 </script>

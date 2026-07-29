@@ -16,7 +16,7 @@ const schema = z
 export default defineSafeHandler(async (event) => {
 	const { filename } = validateParams(event, schema)
 
-	const baseDir = process.env.IMAGE_UPLOAD_DIRECTORY!
+	const baseDir = process.env.IMAGE_UPLOAD_DIRECTORY ?? "images"
 	const resolvedPath = path.resolve(baseDir, filename)
 
 	// Ensure the resolved path is within the base directory to prevent directory traversal attacks

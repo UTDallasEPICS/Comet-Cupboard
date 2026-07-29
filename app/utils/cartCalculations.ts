@@ -30,8 +30,8 @@ export const pendingCartWarnings = (cart) => {
 	if (cartCountAdjustment(cart) > 6) {
 		warnings.push("Cart exceeds 6 item limit")
 	}
-	if (cart.CartItems.filter((cartItem) => cartItem.countAdjustment > 0).length > 0) {
-		const adjustedItems = cart.CartItems.filter((cartItem) => cartItem.countAdjustment > 0)
+	if (cart.CartItems.filter((cartItem) => cartItem.countAdjustment != 0).length > 0) {
+		const adjustedItems = cart.CartItems.filter((cartItem) => cartItem.countAdjustment != 0)
 		const adjustedItemsnames = adjustedItems.map((item) => item.Item.name).join(", ")
 		warnings.push("Cart has expired/damaged/overstocked items: " + adjustedItemsnames)
 	}

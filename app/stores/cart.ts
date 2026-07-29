@@ -15,20 +15,42 @@ export const useCartStore = defineStore("cart", () => {
 		}
 	}
 
-	const cartItems = computed(() => {
+	const categorizedCartItems = computed(() => {
 		if (cart.value === null || "CartItems" in cart.value === false) {
-			return []
+			return {}
 		}
-		return cart.value.CartItems
+		const items = cart.value.CartItems.sort((a, b) => {
+			const categoryCompare = a.Item.categoryName.localeCompare(b.Item.categoryName)
+			if (categoryCompare !== 0) {
+				return categoryCompare
+			}
+
+			return a.Item.name.localeCompare(b.Item.name)
+		})
+
+		return Object.groupBy(items, (cartItem) => cartItem.Item.categoryName)
+	})
+
+	const itemIDtoCartItemMap = computed(() => {
+		if (cart.value === null || "CartItems" in cart.value === false) {
+			return {}
+		}
+		return Object.fromEntries(cart.value.CartItems.map((cartItem) => [cartItem.Item.itemID, cartItem]))
 	})
 
 	const cartTotalCount = computed(() => {
 		if (cart.value === null || "CartItems" in cart.value === false) {
 			return 0
 		}
-		return (cart.value.CartItems as Array<{ count: number }>).map((cartItem) => {
-			return cartItem.count
-		}).reduce((a: number, b: number) => a + b, 0)
+		return (cart.value.CartItems as Array<{ count: number }>)
+			.map((cartItem) => {
+				return cartItem.count
+			})
+			.reduce((a: number, b: number) => a + b, 0)
+	})
+
+	const cartIsEmpty = computed(() => {
+		return cartTotalCount.value === 0
 	})
 
 	const pending = computed(() => {
@@ -52,5 +74,5 @@ export const useCartStore = defineStore("cart", () => {
 		}
 	}
 
-	return { cart, cartView, cartItems, cartTotalCount, pending, getCart, resetCartView, handleCartEvent }
+	return { cart, cartView, cartIsEmpty, cartTotalCount, pending, getCart, resetCartView, handleCartEvent, categorizedCartItems, itemIDtoCartItemMap }
 })

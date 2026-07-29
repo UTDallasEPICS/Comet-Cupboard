@@ -1,0 +1,13 @@
+packages:
+  - '.'
+allowBuilds:
+  better-sqlite3: true
+  prisma: true
+  esbuild: true
+  sharp: true
+  '@prisma/engines': true
+  '@parcel/watcher': false
+  unrs-resolver: false
+  vue-demi: false
+publicHoistPattern:
+  - '*tailwind*'

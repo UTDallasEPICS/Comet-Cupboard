@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<NuxtLayout name="main" title="Verify Carts" :back-navigation="{ text: `Back to Dashboard`, to: `/volunteer` }">
+			<USeparator class="my-4" />
 			<div class="flex grow">
 				<div class="flex grow flex-row flex-wrap justify-center md:my-8 md:flex-nowrap md:justify-normal">
 					<div

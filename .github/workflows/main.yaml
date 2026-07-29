@@ -1,0 +1,88 @@
+name: Build and Publish Docker Image (Main)
+
+on:
+    push:
+        branches:
+            - main
+
+permissions:
+    contents: write # required for git tags & GitHub releases
+    packages: write # required for pushing to GHCR
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        concurrency:
+            group: release
+            cancel-in-progress: false
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - name: Determine next release version
+              id: version
+              run: |
+                  git fetch --tags
+
+                  # Get latest numeric vN tag (ignore non-numeric tags)
+                  LAST_TAG=$(git tag --list 'v*' \
+                    | sed 's/^v//' \
+                    | grep -E '^[0-9]+$' \
+                    | sort -n \
+                    | tail -n 1)
+
+                  if [ -z "$LAST_TAG" ]; then
+                    NEXT_VERSION="v1"
+                    echo "No existing releases found. Starting at v1."
+                  else
+                    NEXT_VERSION="v$((LAST_TAG + 1))"
+                    echo "Latest release was v$LAST_TAG. Next is $NEXT_VERSION."
+                  fi
+
+                  echo "version=$NEXT_VERSION" >> $GITHUB_OUTPUT
+
+            - name: Build Docker image
+              run: |
+                  REPO_NAME="${GITHUB_REPOSITORY##*/}"
+                  REPO_NAME=$(echo $REPO_NAME | tr '[:upper:]' '[:lower:]')
+                  docker build . \
+                    --file Dockerfile \
+                    --tag "$REPO_NAME" \
+                    --label "org.opencontainers.image.revision=${GITHUB_SHA}" \
+                    --label "org.opencontainers.image.version=${{ steps.version.outputs.version }}"
+
+            - name: Log into GitHub registry
+              run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            - name: Tag and push Docker image
+              run: |
+                  REPO_NAME="${GITHUB_REPOSITORY##*/}"
+                  REPO_NAME=$(echo $REPO_NAME | tr '[:upper:]' '[:lower:]')
+                  IMAGE_ID="ghcr.io/${{ github.repository_owner }}/$REPO_NAME"
+                  IMAGE_ID=$(echo $IMAGE_ID | tr '[:upper:]' '[:lower:]')
+
+                  VERSION="${{ steps.version.outputs.version }}"
+                  VERSION_NUM="${VERSION#v}"
+
+                  docker tag "$REPO_NAME" "$IMAGE_ID:$VERSION_NUM"
+                  docker push "$IMAGE_ID:$VERSION_NUM"
+
+                  echo "Pushed image:"
+                  echo " - $IMAGE_ID:$VERSION_NUM"
+
+            - name: Create Git tag and GitHub Release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  VERSION="${{ steps.version.outputs.version }}"
+
+                  git tag "$VERSION"
+                  git push origin "$VERSION"
+
+                  gh release create "$VERSION" \
+                    --title "Release $VERSION" \
+                    --notes "Built from commit ${GITHUB_SHA}"
+
+                  echo "Release $VERSION created."

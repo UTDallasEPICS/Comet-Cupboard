@@ -18,12 +18,18 @@ Ensure Node.js, npm, Visual Studio Code, Git are installed. Ensure that everyone
 
 Usually, you can get away with using Git Bash (on its own or within VS Code) as your terminal.
 
+### Install pnpm as your package manager
+
+```bash
+npm install -g pnpm
+```
+
 ### Install the repo
 
 ```bash
 git clone https://github.com/UTDallasEPICS/Comet-Cupboard.git
 cd Comet-Cupboard
-npm install
+pnpm install
 ```
 
 ### Set up environment variables
@@ -37,16 +43,13 @@ cp .env.example .env
 
 ```bash
 # Initialize the database and test data seeding
-npm run dev-prisma
+pnpm run dev-prisma
 ```
 
 ### Running the Application
 
 ```bash
-# Pick your favorite way to run (-o flag will automatically open a new tab)
-npx nuxt dev -o
-npm run dev
-npm run dev -- -o
+pnpm run dev
 ```
 
 ### Useful Dev Tips
@@ -54,14 +57,14 @@ npm run dev -- -o
 #### Prettier Formatting
 
 ```bash
-npm run format
+pnpm run format
 ```
 
 #### Prisma
 
 ```bash
 # Prisma GUI to view database
-npx prisma studio
+pnpm dlx prisma studio
 ```
 
 #### Postman

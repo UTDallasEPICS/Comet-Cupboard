@@ -6,16 +6,21 @@ import { RoleType } from "../../../../prisma/generated/prisma/client"
 
 const schema = z.object({
 	userID: z.string(),
+	newRole: z.enum([RoleType.STUDENT, RoleType.VOLUNTEER]),
 })
 
 export default defineSafeHandler(async (event) => {
-	const { userID } = await validateBody(event, schema)
+	const { userID, newRole } = await validateBody(event, schema)
 
 	const transactionResult = await prisma.$transaction(async (tx) => {
-		const user = await tx.user.findUnique({ where: { userID: userID, role: RoleType.VOLUNTEER } })
+		const user = await tx.user.findUnique({
+			where: {
+				userID: userID,
+			},
+		})
 
 		if (!user) {
-			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Volunteer user not found" })
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "User not found" })
 		}
 
 		await tx.user.update({
@@ -23,11 +28,11 @@ export default defineSafeHandler(async (event) => {
 				userID: userID,
 			},
 			data: {
-				role: RoleType.STUDENT,
+				role: newRole,
 			},
 		})
 
-		return "Volunteer demoted to student"
+		return "User role updated successfully"
 	})
 
 	return transactionResult
