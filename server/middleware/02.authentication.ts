@@ -33,33 +33,44 @@ export default defineSafeHandler(async (event) => {
 		})
 
 		if (authSession && authSession.expiresAt > new Date()) {
-			event.context.userSession = {
-				userID: authSession.User.userID,
-				publicCode: authSession.User.userID,
-				publicIcon: "",
-				User: {
-					userID: authSession.User.userID,
-					displayName: authSession.User.displayName,
-					role: authSession.User.role,
+			const userSession = await prisma.userSession.findUnique({
+				where: {
+					userID: authSession?.userID,
 				},
-			}
-			if (authSession.User.role === RoleType.STUDENT) {
-				event.context.permissions[AccessPermission.STUDENT] = true
-			}
-			if (authSession.User.role === RoleType.VOLUNTEER) {
-				event.context.permissions[AccessPermission.STUDENT] = true
-				event.context.permissions[AccessPermission.VOLUNTEER] = true
-			}
-			if (authSession.User.role === RoleType.ADMIN) {
-				event.context.permissions[AccessPermission.STUDENT] = true
-				event.context.permissions[AccessPermission.VOLUNTEER] = true
-				event.context.permissions[AccessPermission.ADMIN] = true
-			}
-			if (authSession.User.role === RoleType.HEAD_ADMIN) {
-				event.context.permissions[AccessPermission.STUDENT] = true
-				event.context.permissions[AccessPermission.VOLUNTEER] = true
-				event.context.permissions[AccessPermission.ADMIN] = true
-				event.context.permissions[AccessPermission.HEAD_ADMIN] = true
+				select: {
+					publicCode: true,
+					publicIcon: true,
+				},
+			})
+			if (userSession) {
+				event.context.userSession = {
+					userID: authSession.User.userID,
+					publicCode: userSession.publicCode,
+					publicIcon: userSession.publicIcon,
+					User: {
+						userID: authSession.User.userID,
+						displayName: authSession.User.displayName,
+						role: authSession.User.role,
+					},
+				}
+				if (authSession.User.role === RoleType.STUDENT) {
+					event.context.permissions[AccessPermission.STUDENT] = true
+				}
+				if (authSession.User.role === RoleType.VOLUNTEER) {
+					event.context.permissions[AccessPermission.STUDENT] = true
+					event.context.permissions[AccessPermission.VOLUNTEER] = true
+				}
+				if (authSession.User.role === RoleType.ADMIN) {
+					event.context.permissions[AccessPermission.STUDENT] = true
+					event.context.permissions[AccessPermission.VOLUNTEER] = true
+					event.context.permissions[AccessPermission.ADMIN] = true
+				}
+				if (authSession.User.role === RoleType.HEAD_ADMIN) {
+					event.context.permissions[AccessPermission.STUDENT] = true
+					event.context.permissions[AccessPermission.VOLUNTEER] = true
+					event.context.permissions[AccessPermission.ADMIN] = true
+					event.context.permissions[AccessPermission.HEAD_ADMIN] = true
+				}
 			}
 		}
 	}

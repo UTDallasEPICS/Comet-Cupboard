@@ -67,8 +67,22 @@
 								class="mt-4"
 							/>
 							<div class="mt-4 flex flex-col gap-4">
-								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
+								<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+									<template #header="{ group, open }">
+										<div class="flex flex-col gap-2">
+											<SharedButtonPositiveAction
+												:text="group"
+												:trailing-icon="icons['chevronDown']"
+												block
+												class="group w-full rounded-lg"
+												:ui="{
+													trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200',
+												}"
+											/>
+										</div>
+									</template>
+
+									<template #item="{ item: cartItem }">
 										<ShoppingCartAdjustCountItemCard
 											:item-deal="
 												cartItem.Item.Deal
@@ -90,8 +104,9 @@
 												}
 											"
 										/>
-									</li>
-								</ul>
+									</template>
+								</SharedGroupedCollapsible>
+
 								<div class="flex flex-row justify-between gap-4">
 									<SharedButtonCancel text="Back" @click="decrementStepper" />
 									<SharedButtonPositiveAction text="Next" @click="incrementStepper" />
@@ -115,8 +130,22 @@
 								class="mt-4"
 							/>
 							<div class="mt-4 flex flex-col gap-4">
-								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
+								<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+									<template #header="{ group, open }">
+										<div class="flex flex-col gap-2">
+											<SharedButtonPositiveAction
+												:text="group"
+												:trailing-icon="icons['chevronDown']"
+												block
+												class="group w-full rounded-lg"
+												:ui="{
+													trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200',
+												}"
+											/>
+										</div>
+									</template>
+
+									<template #item="{ item: cartItem }">
 										<ShoppingCartReviewItemCard
 											:item-deal="
 												cartItem.Item.Deal
@@ -133,8 +162,8 @@
 											:name="cartItem.Item.name"
 											:count-adjustment="countAdjustments[cartItem.itemID] || 0"
 										/>
-									</li>
-								</ul>
+									</template>
+								</SharedGroupedCollapsible>
 								<div class="flex flex-row justify-between gap-4">
 									<SharedButtonCancel text="Back" @click="decrementStepper" />
 									<SharedButtonPositiveAction text="Submit Cart" @click="submitCart" />
@@ -154,8 +183,22 @@
 							<UProgress :indeterminate="true" class="mt-4" />
 
 							<div class="mt-4 flex flex-col gap-4">
-								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
+								<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+									<template #header="{ group, open }">
+										<div class="flex flex-col gap-2">
+											<SharedButtonPositiveAction
+												:text="group"
+												:trailing-icon="icons['chevronDown']"
+												block
+												class="group w-full rounded-lg"
+												:ui="{
+													trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200',
+												}"
+											/>
+										</div>
+									</template>
+
+									<template #item="{ item: cartItem }">
 										<ShoppingCartReviewItemCard
 											:item-deal="
 												cartItem.Item.Deal
@@ -172,8 +215,8 @@
 											:name="cartItem.Item.name"
 											:count-adjustment="cartItem.countAdjustment"
 										/>
-									</li>
-								</ul>
+									</template>
+								</SharedGroupedCollapsible>
 								<div class="flex flex-row justify-center gap-4">
 									<SharedButtonCancel text="Cancel Request" @click="cancelCart" />
 								</div>
@@ -283,13 +326,18 @@ const countAdjustments = ref<Record<string, number>>({})
 
 const combineCartAndTemporaryAdjustments = computed(() => {
 	return {
-		CartItems: cartStore.cartItems.map((cartItem) => {
-			const adjustment = countAdjustments.value[cartItem.itemID] || 0
-			return {
-				...cartItem,
-				countAdjustment: adjustment,
-			}
-		}),
+		CartItems:
+			cartStore.categorizedCartItems && Object.keys(cartStore.categorizedCartItems).length > 0
+				? Object.values(cartStore.categorizedCartItems)
+						.flatMap((items) => items)
+						.map((cartItem) => {
+							const adjustment = countAdjustments.value[cartItem.itemID] || 0
+							return {
+								...cartItem,
+								countAdjustment: adjustment,
+							}
+						})
+				: [],
 	}
 })
 
@@ -312,16 +360,21 @@ const incrementStepper = () => {
 }
 
 const submitCart = async () => {
-	if (cartStore.cartItems.length === 0) {
+	if (cartStore.cartIsEmpty) {
 		return
 	}
 
-	const allCartItemAdjustments = cartStore.cartItems.map((cartItem) => {
-		return {
-			itemID: cartItem.itemID,
-			countAdjustment: countAdjustments.value[cartItem.itemID] || 0,
-		}
-	})
+	const allCartItemAdjustments =
+		cartStore.categorizedCartItems && Object.keys(cartStore.categorizedCartItems).length > 0
+			? Object.values(cartStore.categorizedCartItems)
+					.flatMap((items) => items)
+					.map((cartItem) => {
+						return {
+							itemID: cartItem.itemID,
+							countAdjustment: countAdjustments.value[cartItem.itemID] || 0,
+						}
+					})
+			: []
 
 	// send the cart to verification
 	await $fetch("/api/student/verification/cartRequestVerification", {
