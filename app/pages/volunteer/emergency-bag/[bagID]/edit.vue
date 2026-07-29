@@ -13,7 +13,6 @@
 						:key="item.itemID"
 						:name="item.Item.name"
 						:img-name="item.Item.imgName"
-						:item-deal="item.Item.itemDeal"
 						:item-count="item.count"
 						:item-quantity="item.Item.quantity"
 						@remove="removeItemFromBag(item.itemID)"
@@ -65,7 +64,7 @@ const decreaseItemCount = (itemID: string) => {
 
 	const item = emergencyBag.value.EmergencyBagItems.find((bi) => bi.itemID === itemID)
 	if (item.count === 1) {
-		removeItemFromBag(itemID)
+		return
 	} else {
 		item.count--
 	}

@@ -5,23 +5,26 @@
 				<UCheckbox :model-value="selected" @update:model-value="emit('update:selected', $event)" />
 				<div class="flex flex-col items-start">
 					<div class="flex items-center gap-1">
-						<UIcon v-if="props.bag.privacy === 'PRIVATE'" name="i-lucide-hat-glasses" />
-						<span>{{ props.bag.label }}</span>
+						<UIcon v-if="props.bag.privacy === 'PRIVATE'" name="i-lucide-hat-glasses"/>
+						<span class="font-bold">{{ props.bag.label }}</span>
 					</div>
-					<span>{{ props.bag.expiryDate.split("T")[0] }}</span>
+					<div class="flex items-center gap-1">
+					<UIcon name="i-lucide-calendar"/>
+					<span> Expiration: {{ props.bag.expiryDate.split("T")[0] }}</span>
+					</div>
 
 					<UBadge v-if="props.bag.isVegetarian === false && props.bag.hasPeanutButter === false" class="rounded-full bg-gray-400 font-bold"
 						>Neither</UBadge
 					>
 					<div class="flex gap-1">
-						<UBadge v-if="props.bag.isVegetarian === true" class="rounded-full bg-green-700 font-bold">Vegetarian</UBadge>
-						<UBadge v-if="props.bag.hasPeanutButter === true" class="rounded-full bg-yellow-600 font-bold">Peanut Butter</UBadge>
+						<UBadge v-if="props.bag.isVegetarian === true" leadingIcon="i-lucide-leaf" class="rounded-full border border-green-500 bg-badge-vege text-green-950 font-bold">Vegetarian</UBadge>
+						<UBadge v-if="props.bag.hasPeanutButter === true" leadingIcon="i-lucide-nut" class="min-w-29 rounded-full border border-amber-500 bg-badge-pb text-amber-800 font-bold">Peanut Butter</UBadge>
 					</div>
 				</div>
 			</div>
 
 			<div class="flex flex-col items-end justify-between">
-				<span>{{ props.bag.locationName ?? "Unassigned" }}</span>
+				<UBadge leadingIcon="i-lucide-map-pin" class="bg-gray-100 text-black">{{ props.bag.locationName ?? "Unassigned" }}</UBadge>
 
 				<UButton
 					class="w-min"

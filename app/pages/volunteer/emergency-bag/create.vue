@@ -5,6 +5,7 @@
 			<div class="flex w-full max-w-100 flex-col gap-4">
 				<UStepper ref="stepper" disabled :items="steps">
 					<template #content="{ item }">
+						<USeparator class="mb-4" />
 						<EmergencyBagAddItem v-if="item.label === 'Add'" ref="addItemRef" v-model:bag-items="bagItems" />
 						<EmergencyBagDetails v-if="item.label === 'Details'" ref="detailsRef" v-model:bag-details="bagDetails" />
 						<EmergencyBagConfirmBag v-if="item.label === 'Confirm'" :bag-items="bagItems" :bag-details="bagDetails" />

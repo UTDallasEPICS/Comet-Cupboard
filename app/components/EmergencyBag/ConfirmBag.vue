@@ -49,7 +49,6 @@
 					:key="item.itemID"
 					:name="item.name"
 					:img-name="item.imgName"
-					:item-deal="item.itemDeal"
 					:item-id="item.itemID"
 					:item-count="item.count"
 				/>
