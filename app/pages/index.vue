@@ -60,9 +60,11 @@ const startLogin = async () => {
 }
 
 const isDevMode = useRuntimeConfig().public.NODE_ENV === "nonprod"
+console.log(useRuntimeConfig().public)
 const devUsernameInput = ref("")
 
 const startDevLogin = async () => {
 	await navigateTo(`/api/public/auth/DEV_MODE-callback?username=${devUsernameInput.value}`, { external: true })
 }
+
 </script>
