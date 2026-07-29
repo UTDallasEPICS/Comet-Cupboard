@@ -31,5 +31,5 @@ const props = defineProps({
 })
 
 // Creates a diagonal line styling with specified percentages to adjust the angle
-const clipStyle = "clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%)"
+const clipStyle = "clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%)"
 </script>

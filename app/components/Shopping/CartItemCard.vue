@@ -1,14 +1,32 @@
 <template>
-	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
-		<template #header-actions>
-			<UButton variant="ghost" :icon="icons['close']" class="shrink-0" color="neutral" size="xs" @click="removeCartItem" />
-		</template>
-		<template #body>
-			<div class="flex flex-col justify-end">
-				<SharedIncrementDecrementPill :count="props.count" :min="1" @increment="increment" @decrement="decrement" />
+	<UCard
+		class="relative w-full min-w-72 shadow-md"
+		:ui="{
+			body: 'p-0 py-0 sm:p-0 sm:py-0',
+		}"
+	>
+		<SharedDealBadge :item-deal="itemDeal" class="absolute top-2 right-2" />
+		<div class="flex flex-row items-center gap-2">
+			<img :src="`/api/public/image/${imgName}`" :alt="name" class="border-border-soft aspect-square h-full w-20 rounded-lg border object-cover" />
+
+			<div class="flex w-full flex-col p-2">
+				<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
+				<div class="flex flex-row items-center justify-between">
+					<UBadge :label="`QTY: ${quantity}`" variant="outline" color="neutral" />
+				</div>
 			</div>
-		</template>
-	</SharedItemCard>
+		</div>
+		<div class="absolute right-2 bottom-2 flex flex-row items-center justify-between gap-2">
+			<UButton
+				variant="ghost"
+				color="error"
+				:icon="icons['delete']"
+				size="sm"
+				@click="removeCartItem"
+			/>
+			<SharedIncrementDecrementPill :count="props.count" :min="1" :max="quantity" @increment="increment" @decrement="decrement" />
+		</div>
+	</UCard>
 </template>
 
 <script setup lang="ts">
@@ -17,6 +35,7 @@ const props = defineProps({
 	imgName: { type: String, required: true },
 	itemID: { type: String, required: true },
 	itemDeal: { type: Object, default: () => ({}) },
+	quantity: { type: Number, required: true },
 	count: { type: Number, default: 0 },
 })
 

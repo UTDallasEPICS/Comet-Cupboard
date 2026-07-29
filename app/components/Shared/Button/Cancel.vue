@@ -1,12 +1,13 @@
 <template>
-	<UButton
-		variant="solid"
+	<SharedButtonBaseCustomColor
+		custom-color="cancel-gray"
+		content-color="white"
 		:ui="{
-			base: 'bg-cancel-gray rounded-3xl justify-center items-center w-32',
+			...props.ui,
 		}"
 	>
 		{{ props.text }}
-	</UButton>
+	</SharedButtonBaseCustomColor>
 </template>
 
 <script setup lang="ts">
@@ -14,6 +15,10 @@ const props = defineProps({
 	text: {
 		type: String,
 		required: true,
+	},
+	ui: {
+		type: Object,
+		default: () => ({}),
 	},
 })
 </script>

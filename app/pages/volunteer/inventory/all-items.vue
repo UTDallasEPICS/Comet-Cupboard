@@ -9,16 +9,37 @@
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">
-								<SharedTextBase class="w-full text-center">Sort/Filter Options</SharedTextBase>
+								<SharedTextBase class="w-full font-semibold">Filter</SharedTextBase>
 								<USeparator />
 								<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="vertical" />
+								<SharedTextBase class="w-full font-semibold">Sort</SharedTextBase>
+								<USeparator />
 								<USelect v-model="sortOption" :items="sortOptions" class="w-full max-w-md grow" />
 							</div>
 						</template>
 					</UPopover>
 				</div>
+				<USeparator class="my-4" />
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					<li v-for="item in filtered" :key="item.itemID">
+					<li v-for="item in shownActiveItems" :key="item.itemID">
+						<InventoryItemCard
+							:change-count="inventoryStore.inventoryChangesItems.find((i) => i.itemID === item.itemID)?.count || 0"
+							:current-count="item.quantity"
+							:img-name="item.imgName"
+							:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
+							:item-i-d="item.itemID"
+							:name="item.name"
+							:category="item.categoryName"
+						/>
+					</li>
+				</ul>
+
+				<USeparator class="my-4" />
+
+				<SharedTextSectionTitle>Archived Items</SharedTextSectionTitle>
+
+				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<li v-for="item in shownArchivedItems" :key="item.itemID">
 						<InventoryItemCard
 							:change-count="inventoryStore.inventoryChangesItems.find((i) => i.itemID === item.itemID)?.count || 0"
 							:current-count="item.quantity"
@@ -47,12 +68,16 @@ const { data: items } = await useFetch("/api/student/inventory/items", {
 	query: { checkAvailability: "false", includeArchived: true },
 })
 
-const toggleOptions = ref(["Deal", "Archived"])
+const toggleOptions = ref(["In Stock", "Deal", "Archived"])
 const toggleItems = ref([])
 
 const shownItems = computed(() => {
 	return items.value.filter((item) => {
-		return (!toggleItems.value.includes("Deal") || item.Deal !== null) && (!toggleItems.value.includes("Archived") || item.archived === true)
+		return (
+			(!toggleItems.value.includes("Deal") || item.Deal !== null) &&
+			(!toggleItems.value.includes("Archived") || item.archived === true) &&
+			(!toggleItems.value.includes("In Stock") || item.quantity > 0)
+		)
 	})
 })
 
@@ -70,4 +95,16 @@ const sortedItems = computed(() => {
 })
 
 const { query, filtered } = useFuzzySearch(sortedItems, { searchKeys: ["name"] })
+
+const shownActiveItems = computed(() => {
+	return filtered.value.filter((item) => {
+		return item.archived === false
+	})
+})
+
+const shownArchivedItems = computed(() => {
+	return filtered.value.filter((item) => {
+		return item.archived === true
+	})
+})
 </script>

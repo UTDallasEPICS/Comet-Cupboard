@@ -8,7 +8,6 @@ const schema = z
 		includeArchived: z.enum(["true", "false"]).default("false"),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { includeArchived } = validateQuery(event, schema)

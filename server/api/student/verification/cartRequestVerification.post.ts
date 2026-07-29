@@ -12,7 +12,7 @@ const schema = z
 		adjustments: z.array(
 			z.object({
 				itemID: z.string().min(1),
-				countAdjustment: z.number().int().min(0),
+				countAdjustment: z.number().int().max(0),
 			})
 		),
 	})
@@ -52,7 +52,7 @@ export default defineSafeHandler(async (event) => {
 				})
 			}
 			const adjustedCountOff = adjustment.countAdjustment
-			if (adjustedCountOff > cartItem.count) {
+			if (Math.abs(adjustedCountOff) > cartItem.count) {
 				throw createError({
 					statusCode: StatusCodes.BAD_REQUEST,
 					statusMessage: "Adjusted count for item exceeds quantity in cart",

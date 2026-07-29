@@ -109,8 +109,8 @@
 					<template #content>
 						<div class="flex w-64 flex-col items-start gap-2 p-4">
 							<UUser
-								:name="userSessionInfoStore.publicCode"
-								:description="userID"
+								:name="userSessionInfoStore.displayName"
+								:description="userSessionInfoStore.publicCode"
 								:avatar="{
 									icon: userSessionInfoStore.publicIcon,
 								}"
@@ -134,8 +134,6 @@ const cartStore = useCartStore()
 const inventoryStore = useInventoryStore()
 const permissionsStore = usePermissionsStore()
 const userSessionInfoStore = useUserSessionInfoStore()
-
-const userID = useCookie("userID")
 
 const route = useRoute()
 const showCartIcon = computed(() => {

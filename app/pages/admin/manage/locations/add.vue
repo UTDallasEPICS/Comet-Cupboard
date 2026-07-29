@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<NuxtLayout name="main" title="Add Location" :back-navigation="{ text: 'Back to Manage Locations', to: '/admin/manage/locations' }">
+			<USeparator class="my-4" />
 			<section>
 				<div class="mx-auto w-min">
 					<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
