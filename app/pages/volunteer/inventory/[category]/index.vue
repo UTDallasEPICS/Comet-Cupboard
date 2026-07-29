@@ -79,12 +79,16 @@ const { data: items } = await useFetch("/api/student/inventory/items", {
 	query: { checkAvailability: "false", includeArchived: true },
 })
 
-const toggleOptions = ref(["Deal", "Archived"])
+const toggleOptions = ref(["In Stock", "Deal", "Archived"])
 const toggleItems = ref([])
 
 const shownItems = computed(() => {
 	return items.value.filter((item) => {
-		return (!toggleItems.value.includes("Deal") || item.Deal !== null) && (!toggleItems.value.includes("Archived") || item.archived === true)
+		return (
+			(!toggleItems.value.includes("Deal") || item.Deal !== null) &&
+			(!toggleItems.value.includes("Archived") || item.archived === true) &&
+			(!toggleItems.value.includes("In Stock") || item.quantity > 0)
+		)
 	})
 })
 

@@ -25,9 +25,8 @@
 							/>
 							<div class="mt-4 flex flex-col gap-4">
 								<UCard class="h-64 overflow-y-scroll">
-									<template #header>
-										<SharedTextCardTitle>Statement of Understanding</SharedTextCardTitle>
-									</template>
+									<SharedTextCardTitle>Statement of Understanding</SharedTextCardTitle>
+									<USeparator class="my-2" />
 									<SharedTextBase>
 										I assume any and all risks associated with consuming the items I have selected from the Comet Cupboard. I agree to
 										release UT Dallas from liability if I sustain any health or medical issues as a result of consuming foods taken from the
@@ -37,9 +36,8 @@
 									</SharedTextBase>
 								</UCard>
 								<UCard class="h-64 overflow-y-scroll">
-									<template #header>
-										<SharedTextCardTitle>Non-Discrimination Clause</SharedTextCardTitle>
-									</template>
+									<SharedTextCardTitle>Non-Discrimination Clause</SharedTextCardTitle>
+									<USeparator class="my-2" />
 									<SharedTextBase>
 										UTD Comet Cupboard does not and shall not discriminate on the basis of race, color, religion (creed), gender, gender
 										expression, age, national origin (ancestry), disability, marital status, sexual orientation, or military status, in any

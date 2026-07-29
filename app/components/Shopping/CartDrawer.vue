@@ -23,6 +23,17 @@
 			</div>
 		</template>
 		<template v-else>
+			<UAlert :icon="icons['information']" color="neutral" variant="outline">
+				<template #title>
+					<SharedTextBase>Friendly reminders!</SharedTextBase>
+					<ul class="ml-4 list-disc">
+						<li><SharedTextBaseSecondary>Only 1 cart checkout per week.</SharedTextBaseSecondary></li>
+						<li><SharedTextBaseSecondary>Only at most 6 total items in your cart after adjustments and deals are applied.</SharedTextBaseSecondary></li>
+						<li><SharedTextBaseSecondary>Only at most 1 total item per category after adjustments and deals are applied.</SharedTextBaseSecondary></li>
+					</ul>
+				</template>
+			</UAlert>
+			<USeparator class="my-4" />
 			<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
 				<template #header="{ group, open }">
 					<div class="flex flex-col gap-2">

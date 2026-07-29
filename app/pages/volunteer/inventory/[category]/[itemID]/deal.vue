@@ -14,23 +14,32 @@
 						class="border-border-soft aspect-square h-full rounded-lg border object-cover"
 					/>
 
-					<URadioGroup v-model="selectedDealOption" class="mt-4" :items="dealOptions" />
-
+					<UCard class="mt-4">
+						<URadioGroup v-model="selectedDealOption" :items="dealOptions" />
+					</UCard>
 					<UForm :validate="validate" :state="state" class="mt-4 w-96 space-y-4" @submit="onSubmit" @error="onError">
-						<div v-if="selectedDealOption == 'Deal is X for Y'">
-							<UFormField id="newDealActualCount" name="newDealActualCount" label="Actual Count" description="The number of items in the deal">
-								<UInputNumber v-model="state.newDealActualCount" placeholder="Enter actual count" :min="1" :max="99" />
-							</UFormField>
-							<UFormField
-								id="newDealAdjustedCount"
-								name="newDealAdjustedCount"
-								label="Adjusted Count"
-								description="The number of items the actual count is being adjusted to in the deal"
-							>
-								<UInputNumber v-model="state.newDealAdjustedCount" placeholder="Enter adjusted count" :min="0" :max="99" />
-							</UFormField>
-						</div>
-
+						<UCard v-if="selectedDealOption == 'Deal is X for Y'">
+							<div>
+								<UFormField
+									id="newDealActualCount"
+									name="newDealActualCount"
+									label="Actual Count"
+									description="The number of items in the deal"
+									required
+								>
+									<UInputNumber v-model="state.newDealActualCount" placeholder="Enter actual count" :min="1" :max="99" />
+								</UFormField>
+								<UFormField
+									id="newDealAdjustedCount"
+									name="newDealAdjustedCount"
+									label="Adjusted Count"
+									description="The number of items the actual count is being adjusted to in the deal"
+									required
+								>
+									<UInputNumber v-model="state.newDealAdjustedCount" placeholder="Enter adjusted count" :min="0" :max="99" />
+								</UFormField>
+							</div>
+						</UCard>
 						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
 							<SharedButtonPositiveAction type="submit" text="Submit" />
 						</footer>
