@@ -48,10 +48,14 @@ const amountInCart = computed(() => {
 })
 
 const addToCart = async () => {
-	await $fetch("/api/student/cart/cartItemCount", {
-		method: "POST",
-		body: { itemID: props.itemID, incrementChange: 1 },
-	})
-	await cartStore.getCart()
+	try {
+		await $fetch("/api/student/cart/cartItemCount", {
+			method: "POST",
+			body: { itemID: props.itemID, incrementChange: 1 },
+		})
+		await cartStore.getCart()
+	} catch (error) {
+		cartStore.cartView = true
+	}
 }
 </script>

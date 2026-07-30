@@ -61,11 +61,6 @@ definePageMeta({ layout: false })
 const queueStore = useQueueStore()
 const cartStore = useCartStore()
 
-onMounted(async () => {
-	await queueStore.getQueue()
-	await queueStore.updateQueueStatus()
-})
-
 const joinQueue = async () => {
 	await $fetch("/api/student/queue/join", {
 		method: "POST",
