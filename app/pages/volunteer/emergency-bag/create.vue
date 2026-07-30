@@ -1,43 +1,45 @@
 <template>
-	<UContainer>
-		<NuxtLayout name="main" title="Create Emergency Bags" :back-navigation="{ text: 'Back to Dashboard', to: '/volunteer' }" />
-		<div class="flex justify-center">
-			<div class="flex w-full max-w-100 flex-col gap-4">
-				<UStepper ref="stepper" disabled :items="steps">
-					<template #content="{ item }">
-						<USeparator class="mb-4" />
-						<EmergencyBagAddItem v-if="item.label === 'Add'" ref="addItemRef" v-model:bag-items="bagItems" />
-						<EmergencyBagDetails v-if="item.label === 'Details'" ref="detailsRef" v-model:bag-details="bagDetails" />
-						<EmergencyBagConfirmBag v-if="item.label === 'Confirm'" :bag-items="bagItems" :bag-details="bagDetails" />
-					</template>
-				</UStepper>
+	<div>
+		<NuxtLayout name="main" title="Create Emergency Bags" :back-navigation="{ text: 'Back to Dashboard', to: '/volunteer' }">
+			<div class="flex justify-center">
+				<div class="flex w-full max-w-100 flex-col">
+					<UStepper ref="stepper" disabled :items="steps">
+						<template #content="{ item }">
+							<USeparator class="mb-4" />
+							<EmergencyBagAddItem v-if="item.label === 'Add'" ref="addItemRef" v-model:bag-items="bagItems" />
+							<EmergencyBagDetails v-if="item.label === 'Details'" ref="detailsRef" v-model:bag-details="bagDetails" />
+							<EmergencyBagConfirmBag v-if="item.label === 'Confirm'" :bag-items="bagItems" :bag-details="bagDetails" />
+						</template>
+					</UStepper>
+				</div>
 			</div>
-		</div>
-		<div class="my-4 flex justify-between">
-			<UButton
-				leading-icon="i-lucide-arrow-left"
-				color="neutral"
-				:class="stepper?.hasPrev ? 'bg-utd-orange' : 'bg-gray-500'"
-				:disabled="!stepper?.hasPrev"
-				@click="prevStepper()"
-			>
-				Back
-			</UButton>
+			<div class="my-4 flex justify-between">
+				<UButton
+					v-if="stepper?.hasPrev"
+					leading-icon="i-lucide-arrow-left"
+					color="neutral"
+					:class="stepper?.hasPrev ? 'bg-utd-orange' : 'bg-gray-500'"
+					:disabled="!stepper?.hasPrev"
+					@click="prevStepper()"
+				>
+					Back
+				</UButton>
 
-			<UButton
-				:trailing-icon="stepper?.hasNext ? 'i-lucide-arrow-right' : ''"
-				class="bg-utd-green"
-				@click="stepper?.hasNext ? nextStepper() : submitBag()"
-			>
-				{{ stepper?.hasNext ? "Next" : "Confirm Bag" }}
-			</UButton>
-		</div>
-	</UContainer>
+				<UButton
+					:trailing-icon="stepper?.hasNext ? 'i-lucide-arrow-right' : ''"
+					class="bg-utd-green ml-auto"
+					@click="stepper?.hasNext ? nextStepper() : submitBag()"
+				>
+					{{ stepper?.hasNext ? "Next" : "Confirm Bag" }}
+				</UButton>
+			</div>
+		</NuxtLayout>
+	</div>
 </template>
 
 <script lang="ts" setup>
 import { getLocalTimeZone } from "@internationalized/date"
-
+definePageMeta({ layout: false })
 const stepper = ref()
 const addItemRef = useTemplateRef("addItemRef")
 const detailsRef = useTemplateRef("detailsRef")

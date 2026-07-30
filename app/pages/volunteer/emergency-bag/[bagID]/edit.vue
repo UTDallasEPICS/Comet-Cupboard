@@ -29,6 +29,7 @@
 </template>
 
 <script lang="ts" setup>
+definePageMeta({ layout: false })
 const route = useRoute()
 const bagID = route.params.bagID
 const emergencyBag = ref()

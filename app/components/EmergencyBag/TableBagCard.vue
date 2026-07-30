@@ -5,26 +5,30 @@
 				<UCheckbox :model-value="selected" @update:model-value="emit('update:selected', $event)" />
 				<div class="flex flex-col items-start">
 					<div class="flex items-center gap-1">
-						<UIcon v-if="props.bag.privacy === 'PRIVATE'" name="i-lucide-hat-glasses"/>
+						<UIcon v-if="props.bag.privacy === 'PRIVATE'" name="i-lucide-hat-glasses" />
 						<span class="font-bold">{{ props.bag.label }}</span>
 					</div>
 					<div class="flex items-center gap-1">
-					<UIcon name="i-lucide-calendar"/>
-					<span> Expiration: {{ props.bag.expiryDate.split("T")[0] }}</span>
+						<UIcon name="i-lucide-calendar" />
+						<span> Expiration: {{ props.bag.expiryDate.split("T")[0] }}</span>
 					</div>
 
 					<UBadge v-if="props.bag.isVegetarian === false && props.bag.hasPeanutButter === false" class="rounded-full bg-gray-400 font-bold"
 						>Neither</UBadge
 					>
 					<div class="flex gap-1">
-						<UBadge v-if="props.bag.isVegetarian === true" leadingIcon="i-lucide-leaf" class="rounded-full border border-green-500 bg-badge-vege text-green-950 font-bold">Vegetarian</UBadge>
-						<UBadge v-if="props.bag.hasPeanutButter === true" leadingIcon="i-lucide-nut" class="min-w-29 rounded-full border border-amber-500 bg-badge-pb text-amber-800 font-bold">Peanut Butter</UBadge>
+						<UBadge v-if="props.bag.isVegetarian === true" class="bg-badge-vege rounded-full border border-green-500 font-bold text-green-950"
+							>Vegetarian</UBadge
+						>
+						<UBadge v-if="props.bag.hasPeanutButter === true" class="bg-badge-pb rounded-full border border-amber-500 font-bold text-amber-800"
+							>Peanut Butter</UBadge
+						>
 					</div>
 				</div>
 			</div>
 
 			<div class="flex flex-col items-end justify-between">
-				<UBadge leadingIcon="i-lucide-map-pin" class="bg-gray-100 text-black">{{ props.bag.locationName ?? "Unassigned" }}</UBadge>
+				<UBadge leading-icon="i-lucide-map-pin" class="bg-gray-100 text-nowrap text-black">{{ props.bag.locationName ?? "Unassigned" }}</UBadge>
 
 				<UButton
 					class="w-min"
@@ -39,19 +43,50 @@
 
 		<UCollapsible v-model:open="expand">
 			<template #content>
-				<div v-for="item in bag.EmergencyBagItems" :key="item.itemID" class="flex items-center justify-between pt-4">
-					<div class="flex items-center gap-2">
-						<img :src="`/api/public/image/${item.Item.imgName}`" :alt="item.Item.name" class="ml-2 aspect-square w-8 rounded-lg" />
-						<span> {{ item.Item.name }}</span>
+				<USeparator class="mt-2" />
+				<p class="p-2 font-bold">Items ({{ bag.EmergencyBagItems.length }})</p>
+				<ul class="grid gap-2 sm:grid-cols-1 lg:grid-cols-1">
+					<div v-for="item in bag.EmergencyBagItems" :key="item.itemID" class="border-border-soft rounded-lg border">
+						<div class="flex flex-row items-center gap-2 px-2">
+							<img
+								:src="`/api/public/image/${item.Item.imgName}`"
+								:alt="item.Item.name"
+								class="border-border-soft aspect-square w-15 rounded-l-lg"
+							/>
+							<div class="flex w-full flex-col p-2">
+								<div class="flex flex-row items-center justify-between">
+									<SharedTextCardTitle>{{ item.Item.name }}</SharedTextCardTitle>
+								</div>
+
+								<div class="flex flex-row items-center justify-between">
+									<UBadge :label="`QTY: ${item.count}`" variant="outline" color="neutral" />
+								</div>
+							</div>
+						</div>
 					</div>
-					<span> Qty:{{ item.count }}</span>
-				</div>
-				<div class="max-w-sm rounded-lg p-2">
+					<div v-if="props.bag.privacy === 'PUBLIC'" class="flex justify-end">
+						<UButton
+							label="Edit Bag"
+							class="bg-utd-orange text-white"
+							variant="outline"
+							trailing-icon="i-lucide-square-pen"
+							@click="navigateTo(`/volunteer/emergency-bag/${props.bag.bagID}/edit`)"
+						/>
+					</div>
+				</ul>
+				<div class="mt-2 max-w-sm">
 					<div v-if="props.bag.privacy === 'PRIVATE'">
-						<span class="break-words"
-							><span class="font-bold">Note:</span>
-							{{ props.bag.bagDescription }}
-						</span>
+						<div class="flex items-center justify-center gap-4 rounded-lg border border-blue-400 bg-blue-50 p-2">
+							<div>
+								<UIcon name="i-lucide-info" class="size-7 text-blue-500" />
+							</div>
+							<div class="flex">
+								<span class="font-bold"
+									>Note:<span class="wrap-break ml-1 font-normal">{{ props.bag.bagDescription }}</span></span
+								>
+							</div>
+						</div>
+
 						<div class="flex justify-end pt-2">
 							<UButton
 								label="Edit Bag"

@@ -1,5 +1,5 @@
 <template>
-	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-id="itemID" :item-count="itemCount">
+	<!-- <SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-id="itemID" :item-count="itemCount">
 		<template #header-actions>
 			<UButton variant="ghost" :icon="icons['close']" class="shrink-0" color="neutral" size="xs" @click="emit('remove', itemID)" />
 		</template>
@@ -10,8 +10,8 @@
 				<UButton class="bg-utd-green rounded-2xl text-white hover:bg-green-700" :icon="icons['add']" @click="emit('increment', itemID)" />
 			</div>
 		</template>
-	</SharedItemCard>
-	<!-- <UCard
+	</SharedItemCard> -->
+	<UCard
 		class="relative w-full min-w-72 shadow-md"
 		:ui="{
 			body: 'p-0 py-0 sm:p-0 sm:py-0',
@@ -27,11 +27,18 @@
 				</div>
 			</div>
 		</div>
-		<div class="absolute right-2 bottom-2 flex flex-col items-end justify-between gap-2">
-			<UButton variant="ghost" :icon="icons['close']" class="shrink-0 absolute bottom-12" color="neutral" size="xs" @click="emit('remove', itemID)" />
-			<SharedIncrementDecrementPill :count="itemCount" :min="1" :max="itemQuantity" @increment="increment" @decrement="decrement" />
+		<div class="flex flex-col items-end justify-between gap-2">
+			<UButton variant="ghost" :icon="icons['close']" class="absolute top-2 right-2 shrink-0" color="neutral" size="xs" @click="emit('remove', itemID)" />
+			<SharedIncrementDecrementPill
+				class="absolute right-2 bottom-2"
+				:count="itemCount"
+				:min="1"
+				:max="itemQuantity"
+				@increment="increment"
+				@decrement="decrement"
+			/>
 		</div>
-	</UCard> -->
+	</UCard>
 </template>
 
 <script lang="ts" setup>
@@ -49,4 +56,12 @@ const props = defineProps<{
 	itemCount: number
 	itemQuantity: number
 }>()
+
+function increment() {
+	emit("increment", props.itemID)
+}
+
+function decrement() {
+	emit("decrement", props.itemID)
+}
 </script>
