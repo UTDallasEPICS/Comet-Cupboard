@@ -7,7 +7,6 @@ export const icons = {
 	close: "i-lucide-x",
 	delete: "i-lucide-trash-2",
 	back: "i-lucide-arrow-left",
-	refresh: "i-lucide-refresh-cw",
 	edit: "i-lucide-edit",
 	sort: "i-lucide-arrow-up-down",
 	sortAsc: "i-lucide-arrow-up-narrow-wide",
