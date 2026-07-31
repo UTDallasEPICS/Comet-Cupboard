@@ -211,7 +211,7 @@ model Location {
     name                String               @id @map("name")
     EmergencyBags       EmergencyBag[]
     IssuedEmergencyBags IssuedEmergencyBag[]
-    address             String               @map("address")
+    description         String               @map("description")
     archived            Boolean              @default(false) @map("archived")
     imgName             String               @map("img_name")
 

@@ -10,34 +10,32 @@ const schema = imageSchema
 	.extend({
 		originalName: z.string().default(""),
 		name: z.string().min(1, "Location name cannot be empty"),
-		address: z.string().min(1, "Address cannot be empty"),
-		description: z.string().url("Must be a valid URL").or(z.literal("")),
+		description: z.string().or(z.literal("")),
 		archived: z.enum(["true", "false"]),
 	})
 	.strict()
 	.partial({
 		name: true,
-		address: true,
 		description: true,
 		archived: true,
 		image: true,
 	})
 	.refine(
-		({ originalName, name, address, archived, image }) => {
+		({ originalName, name, description, archived, image }) => {
 			if (originalName === "") {
-				if (!name || !address || !archived || !image) {
+				if (!name || !description || !archived || !image) {
 					return false
 				}
 			}
 			return true
 		},
 		{
-			message: "name, address, archived, and image are required when creating a new location",
+			message: "name, description, archived, and image are required when creating a new location",
 		}
 	)
 
 export default defineSafeHandler(async (event) => {
-	const { originalName, name, address, description, archived, image } = await validateFormData(event, schema)
+	const { originalName, name, description, archived, image } = await validateFormData(event, schema)
 
 	const result = await prisma.$transaction(async (tx) => {
 		let oldImgName = ""
@@ -63,7 +61,6 @@ export default defineSafeHandler(async (event) => {
 					location = await tx.location.create({
 						data: {
 							name: name,
-							address: address || "",
 							imgName: newImgName || oldImgName,
 							description: description || "",
 							archived: archived === "true",
@@ -74,7 +71,6 @@ export default defineSafeHandler(async (event) => {
 						where: { name: originalName },
 						data: {
 							...(name !== undefined && { name }),
-							...(address !== undefined && { address }),
 							...(description !== undefined && { description }),
 							...(newImgName !== undefined && { imgName: newImgName }),
 							...(archived !== undefined && { archived: archived === "true" }),
@@ -91,7 +87,6 @@ export default defineSafeHandler(async (event) => {
 			location = await tx.location.create({
 				data: {
 					name: name!,
-					address: address!,
 					imgName: newImgName!,
 					description: description || "",
 					archived: archived === "true",

@@ -1,10 +1,23 @@
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
+import { z } from "zod"
+import { validateQuery } from "#server/utils/validation"
 
-export default defineSafeHandler(async () => {
+const schema = z
+	.object({
+		includeArchived: z.enum(["true", "false"]).default("false"),
+	})
+	.strict()
+
+export default defineSafeHandler(async (event) => {
+	const { includeArchived } = validateQuery(event, schema)
+
 	try {
 		//Apply conditional filtering
 		const locations = await prisma.location.findMany({
+			where: {
+				...(includeArchived === "false" ? { archived: false } : {}),
+			},
 			orderBy: { name: "asc" },
 		})
 
@@ -29,7 +42,6 @@ export default defineSafeHandler(async () => {
 
 			return {
 				name: loc.name,
-				address: loc.address,
 				imgName: loc.imgName,
 				description: loc.description,
 				emergencyBags: totalBags,
