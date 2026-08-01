@@ -27,6 +27,8 @@ export default defineSafeHandler(async (event) => {
 
 	const EPICS_SSO_BASE_URL = useRuntimeConfig(event).EPICS_SSO_BASE_URL
 
+	console.log("Before token response fetch")
+
 	const tokenResponse = await $fetch(`${EPICS_SSO_BASE_URL}/api/sso/token`, {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
@@ -38,12 +40,19 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
+	console.log("After token response fetch")
+	console.log("Token response:", tokenResponse)
+
 	const profile = tokenResponse as { displayName: string; firstName: string; lastName: string; email: string }
 	const user = await findOrCreateStudentUserFromProfile(profile)
+
+	console.log("User after findOrCreateStudentUserFromProfile:", user)
 
 	const existingUserSession = await prisma.userSession.findUnique({
 		where: { userID: user.userID },
 	})
+
+	console.log("Existing user session:", existingUserSession)
 
 	if (!existingUserSession) {
 		let publicCode = generatePublicCodeName()
