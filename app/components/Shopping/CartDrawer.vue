@@ -10,7 +10,7 @@
 			<template v-else>
 				<div class="flex w-full flex-col items-center gap-4">
 					<SharedTextBase>You need to join queue before shopping</SharedTextBase>
-					<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+					<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 					<SharedButtonNavigateTo text="Go to Queue" to="/student/queue" />
 				</div>
 			</template>
@@ -18,7 +18,7 @@
 		<template v-else-if="cartStore.cartIsEmpty">
 			<div class="flex w-full flex-col items-center gap-4">
 				<SharedTextBase>Your cart is empty</SharedTextBase>
-				<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+				<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 				<SharedButtonNavigateTo text="Browse Items" to="/student/shopping" />
 			</div>
 		</template>

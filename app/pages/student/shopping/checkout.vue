@@ -229,7 +229,7 @@
 									<div class="flex flex-col items-center justify-center gap-4">
 										<SharedTextBase>Your cart was <span class="text-negative-red">Rejected</span>.</SharedTextBase>
 										<SharedTextBase>Volunteer Message: {{ cartVerificationReason }}</SharedTextBase>
-										<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+										<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 									</div>
 								</UCard>
 								<div class="mt-4 flex flex-row justify-center gap-4">
@@ -241,7 +241,7 @@
 									<div class="flex flex-col items-center justify-center gap-4">
 										<SharedTextBase>Your cart was <span class="text-utd-green">Accepted</span>.</SharedTextBase>
 										<SharedTextBase>Volunteer Message: {{ cartVerificationReason }}</SharedTextBase>
-										<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+										<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 									</div>
 								</UCard>
 								<div class="mt-4 flex flex-row justify-center gap-4">

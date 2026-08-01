@@ -20,4 +20,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 	queueStore.queueStatus = bootstrapData.queueStatus ?? null
 
 	cartStore.cart = bootstrapData.cart ?? null
+
+	// fetch inventory changes if page is currently volunteer pages
+	const currentRoute = useRoute()
+	if (currentRoute.path.startsWith("/volunteer")) {
+		const inventoryStore = useInventoryStore()
+		await inventoryStore.getInventoryChanges()
+	}
 })
