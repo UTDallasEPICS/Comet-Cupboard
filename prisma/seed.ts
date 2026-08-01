@@ -40,20 +40,17 @@ const populateItems = async () => {
 }
 
 const validUsers = [
-	{ userID: "stu000000", role: RoleType.STUDENT },
-	{ userID: "stu000001", role: RoleType.STUDENT },
-	{ userID: "stu000002", role: RoleType.STUDENT },
-	{ userID: "vol000000", role: RoleType.VOLUNTEER },
-	{ userID: "vol000001", role: RoleType.VOLUNTEER },
-	{ userID: "adm000000", role: RoleType.ADMIN },
-	{ userID: "had000000", role: RoleType.HEAD_ADMIN },
+	{ userID: "stu000000@utdallas.edu", displayName: "Tobor", role: RoleType.STUDENT },
+	{ userID: "vol000000@utdallas.edu", displayName: "Temoc", role: RoleType.VOLUNTEER },
+	{ userID: "adm000000@utdallas.edu", displayName: "Perlica", role: RoleType.ADMIN },
+	{ userID: "had000000@utdallas.edu", displayName: "Penguinistrator", role: RoleType.HEAD_ADMIN },
 ]
 
 const populateLocations = async () => {
 	const locationImages = readdirSync("./test-images/_location_images")
 	const locationData = [
-		{ name: "Police Station", address: "100 N Floyd Road" },
-		{ name: "Activity Center", address: "800 Campbell Rd" },
+		{ name: "Police Station", description: "100 N Floyd Road" },
+		{ name: "Activity Center", description: "800 Campbell Rd" },
 	]
 	const promises = locationData.map(async (location) => {
 		const imgName = locationImages.find((image) => image.split(".")[0] === location.name.replace(/\s/g, "_").toLowerCase())

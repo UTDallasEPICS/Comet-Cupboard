@@ -95,15 +95,6 @@ export const publishEvent = async (event: AppEvent) => {
 				})
 			)
 			break
-		case "volunteerRequest.decision":
-			connectionsByRole.student.messageToUser(
-				event.payload.userID,
-				JSON.stringify({
-					type: "volunteerRequest.decision",
-					payload: event.payload,
-				})
-			)
-			break
 		default:
 			console.warn(`Unhandled event type: ${event.type}`)
 	}

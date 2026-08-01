@@ -10,45 +10,42 @@
 		</template>
 		<div v-if="validPublicCode" class="flex h-full flex-col gap-y-4">
 			<SharedWarningsList v-if="pendingCartWarnings(cart).length > 0" :warnings="pendingCartWarnings(cart)" />
-			<div class="grid justify-items-center gap-4" :style="{ gridTemplateColumns: 'repeat(auto-fill, minmax(288px, 1fr))' }">
-				<UCollapsible v-for="category in Object.keys(categoryCartItems)" :key="category" class="w-full" :default-open="true">
-					<UButton
-						:label="category"
-						color="primary"
-						variant="ghost"
-						:trailing-icon="icons['chevronDown']"
-						block
-						class="group"
-						:ui="{
-							trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200',
-						}"
-					/>
-					<USeparator type="solid" size="sm" color="primary" />
 
-					<template #content>
-						<div class="m-1 grid place-items-center gap-4" style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr))">
-							<ShoppingCartReviewItemCard
-								v-for="cartItem in categoryCartItems[category]"
-								:key="cartItem.itemID"
-								:item-deal="
-									cartItem.Item.Deal
-										? {
-												actualCount: cartItem.Item.Deal.actualCount,
-												adjustedCount: cartItem.Item.Deal.adjustedCount,
-											}
-										: {}
-								"
-								class="w-full"
-								:count="cartItem.count"
-								:img-name="cartItem.Item.imgName"
-								:item-i-d="cartItem.itemID"
-								:name="cartItem.Item.name"
-								:count-adjustment="cartItem.countAdjustment"
-							/>
-						</div>
-					</template>
-				</UCollapsible>
-			</div>
+			<SharedGroupedCollapsible :groups="categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+				<template #header="{ group, open }">
+					<div class="flex flex-col gap-2">
+						<SharedButtonPositiveAction
+							:text="group"
+							:trailing-icon="icons['chevronDown']"
+							block
+							class="group w-full rounded-lg"
+							:ui="{
+								trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200',
+							}"
+						/>
+					</div>
+				</template>
+
+				<template #item="{ item: cartItem }">
+					<ShoppingCartReviewItemCard
+						:item-deal="
+							cartItem.Item.Deal
+								? {
+										actualCount: cartItem.Item.Deal.actualCount,
+										adjustedCount: cartItem.Item.Deal.adjustedCount,
+									}
+								: {}
+						"
+						class="w-full"
+						:count="cartItem.count"
+						:img-name="cartItem.Item.imgName"
+						:item-i-d="cartItem.itemID"
+						:name="cartItem.Item.name"
+						:count-adjustment="cartItem.countAdjustment"
+					/>
+				</template>
+			</SharedGroupedCollapsible>
+
 			<div class="flex flex-col items-end">
 				<SharedTextBase class="text-right text-nowrap">Total Count: {{ cartTotalCount }}</SharedTextBase>
 				<SharedTextBase class="text-right text-nowrap">Adjusted Count: {{ cartAdjustedCount }}</SharedTextBase>
@@ -61,7 +58,7 @@
 		</div>
 		<div v-else class="flex flex-col items-center justify-center gap-4">
 			<SharedTextBase class="text-center">No carts currently selected</SharedTextBase>
-			<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+			<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 		</div>
 	</UCard>
 </template>
@@ -92,7 +89,6 @@ const { data: cart } = await useAsyncData(
 		const response = await $fetch("/api/volunteer/verification/pendingCart", {
 			query: { publicCode: props.publicCode },
 		})
-		console.log("response", response)
 		return response
 	},
 	{
@@ -100,6 +96,22 @@ const { data: cart } = await useAsyncData(
 		watch: [() => props.publicCode],
 	}
 )
+
+const categorizedCartItems = computed(() => {
+	if (cart.value === null || "CartItems" in cart.value === false) {
+		return {}
+	}
+	const items = cart.value?.CartItems.sort((a, b) => {
+		const categoryCompare = a.Item.categoryName.localeCompare(b.Item.categoryName)
+		if (categoryCompare !== 0) {
+			return categoryCompare
+		}
+
+		return a.Item.name.localeCompare(b.Item.name)
+	})
+
+	return Object.groupBy(items, (cartItem) => cartItem.Item.categoryName)
+})
 
 const categoryCartItems = computed(() => {
 	if (!cart || !cart.value || !cart.value.CartItems) {

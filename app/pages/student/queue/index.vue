@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<NuxtLayout name="main" title="Queue" :back-navigation="{ text: 'Back to Dashboard', to: '/student' }">
+			<USeparator class="my-4" />
 			<section>
 				<UCard>
 					<SharedTextSectionTitle class="mb-4"> Your Status </SharedTextSectionTitle>
@@ -46,7 +47,7 @@
 					</div>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">
 						<SharedTextBase> No students in queue </SharedTextBase>
-						<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+						<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 					</div>
 				</UCard>
 			</section>
@@ -59,11 +60,6 @@ definePageMeta({ layout: false })
 
 const queueStore = useQueueStore()
 const cartStore = useCartStore()
-
-onMounted(async () => {
-	await queueStore.getQueue()
-	await queueStore.updateQueueStatus()
-})
 
 const joinQueue = async () => {
 	await $fetch("/api/student/queue/join", {

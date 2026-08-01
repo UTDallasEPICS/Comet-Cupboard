@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<NuxtLayout name="main" title="Emergency Bag Locations" :back-navigation="{ text: 'Back to Home', to: '/' }" :refresh-page-timer="60">
+		<NuxtLayout name="main" title="Emergency Bag Locations" :back-navigation="{ text: 'Back to Home', to: '/' }">
+			<USeparator class="my-4" />
 			<section>
 				<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 					<UCard v-for="location in activeLocations" :key="location.name" class="flex h-full flex-col" :ui="{ body: { class: 'flex-grow' } }">

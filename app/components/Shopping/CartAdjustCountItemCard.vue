@@ -1,35 +1,49 @@
 <template>
-	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
-		<template #body>
-			<div class="flex flex-col justify-center">
-				<div class="flex flex-row justify-end gap-4">
-					<SharedTextBase class="text-end">Quantity:</SharedTextBase>
-					<div class="w-20">
-						<SharedTextBase class="text-center">{{ props.count }}</SharedTextBase>
+	<UCollapsible v-model:open="isOpen" class="w-full min-w-72" disabled>
+		<UCard
+			class="relative w-full min-w-72 shadow-md"
+			:ui="{
+				body: 'p-0 py-0 sm:p-0 sm:py-0',
+			}"
+		>
+			<SharedDealBadge :item-deal="itemDeal" class="absolute top-2 right-2" />
+
+			<div class="flex flex-row items-center gap-2">
+				<img :src="`/api/public/image/${imgName}`" :alt="name" class="border-border-soft aspect-square h-full w-20 rounded-l-lg border object-cover" />
+
+				<div class="flex w-full flex-col p-2">
+					<div class="flex flex-row items-center justify-between">
+						<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
+					</div>
+
+					<div class="flex flex-row items-center gap-2">
+						<UBadge :label="`In cart: ${count}`" variant="outline" color="neutral" />
+						<UBadge :label="`Final count: ${finalCount.count}`" variant="outline" color="neutral" />
 					</div>
 				</div>
-				<div class="flex flex-row justify-end gap-4">
-					<SharedTextBase>Adjust Count:</SharedTextBase>
-					<SharedIncrementDecrementPill
-						class="w-20"
-						:count="props.countAdjustment"
-						:min="0"
-						:max="props.count"
-						@increment="increment"
-						@decrement="decrement"
-					/>
-				</div>
 			</div>
-		</template>
-		<template #footer>
-			<div class="flex flex-row justify-end gap-4">
-				<SharedTextBase class="text-end">Final Count:</SharedTextBase>
-				<div class="w-20">
-					<SharedTextBase class="text-center">{{ finalCount.count }}</SharedTextBase>
+			<UButton :icon="icons['chevronDown']" size="sm" variant="ghost" color="neutral" class="absolute right-2 bottom-2" @click="isOpen = !isOpen" />
+		</UCard>
+		<template #content>
+			<UCard class="mt-1">
+				<div class="flex flex-col gap-2">
+					<div class="flex flex-row items-center justify-between">
+						<SharedTextBaseSecondary>In cart:</SharedTextBaseSecondary>
+						<SharedTextBaseSecondary>{{ count }}</SharedTextBaseSecondary>
+					</div>
+					<div class="flex flex-row items-center justify-between">
+						<SharedTextBaseSecondary>Adjusted:</SharedTextBaseSecondary>
+						<SharedIncrementDecrementPill :count="props.countAdjustment" :min="-count" :max="0" @increment="increment" @decrement="decrement" />
+					</div>
+					<USeparator />
+					<div class="flex flex-row items-center justify-between">
+						<SharedTextBaseSecondary>Count after Deals:</SharedTextBaseSecondary>
+						<SharedTextBaseSecondary>{{ finalCount.count }}</SharedTextBaseSecondary>
+					</div>
 				</div>
-			</div>
+			</UCard>
 		</template>
-	</SharedItemCard>
+	</UCollapsible>
 </template>
 
 <script setup>
@@ -41,6 +55,8 @@ const props = defineProps({
 	count: { type: Number, default: 0 },
 	countAdjustment: { type: Number, default: 0 },
 })
+
+const isOpen = ref(false)
 
 const emit = defineEmits(["update:modelValue"])
 

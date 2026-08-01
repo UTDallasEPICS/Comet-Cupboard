@@ -2,13 +2,27 @@
 	<div>
 		<NuxtLayout name="main" title="Manage Locations" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
 			<section>
-				<UCard>
-					<SharedTextSectionTitle> Locations </SharedTextSectionTitle>
-					<div class="w-full">
-						<SharedButtonPositiveAction class="ml-auto block" text="Add Location" @click="navigateTo('/admin/manage/locations/add')" />
-					</div>
-					<UTable :data="locations" :columns="tableColumns" empty="No locations currently available" />
-				</UCard>
+				<div class="flex flex-row flex-nowrap items-center gap-2">
+					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search locations" class="relative grow">
+						<UButton :icon="icons['add']" variant="ghost" color="neutral" class="absolute right-0" :to="`/admin/manage/locations/add`" />
+					</UInput>
+				</div>
+				<USeparator class="my-4" />
+				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<li v-for="location in shownActiveLocations" :key="location.locationID">
+						<ManageLocationItemCard :name="location.name" :img-name="location.imgName" :description="location.description" />
+					</li>
+				</ul>
+
+				<USeparator class="my-4" />
+
+				<SharedTextSectionTitle>Archived Locations</SharedTextSectionTitle>
+
+				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<li v-for="location in shownArchivedLocations" :key="location.locationID">
+						<ManageLocationItemCard :name="location.name" :img-name="location.imgName" :description="location.description" />
+					</li>
+				</ul>
 			</section>
 		</NuxtLayout>
 	</div>
@@ -21,33 +35,26 @@ const { data: locations } = await useFetch("/api/public/location/locations", {
 	query: { includeArchived: true },
 })
 
-const UButton = resolveComponent("UButton")
-const UCheckbox = resolveComponent("UCheckbox")
-const UDropdownMenu = resolveComponent("UDropdownMenu")
+const sortedLocations = computed(() => {
+	if (!locations.value) {
+		return []
+	}
+	const sorted = [...locations.value]
+	sorted.sort((a, b) => a.name.localeCompare(b.name))
+	return sorted
+})
 
-const columnsDef = [
-	{ header: "Image", accessorKey: "imgName", type: "image" },
-	{ header: "Name", accessorKey: "name", type: "text", sortable: true },
-	{ header: "Address", accessorKey: "address", type: "text", sortable: true },
-	{ header: "Description", accessorKey: "description", type: "text" },
-	{
-		header: "Archived",
-		accessorKey: "archived",
-		type: "checkbox",
-		sortable: true,
-		disabled: true,
-		size: "xl",
-	},
-	{
-		id: "edit",
-		type: "edit",
-		onClick: (row) => navigateTo(`/admin/manage/locations/${row.original.name}/edit`),
-	},
-]
+const { query, filtered } = useFuzzySearch(sortedLocations, { searchKeys: ["name"] })
 
-const tableColumns = buildNuxtUITable(columnsDef, {
-	UButton,
-	UCheckbox,
-	UDropdownMenu,
+const shownActiveLocations = computed(() => {
+	return filtered.value.filter((location) => {
+		return location.archived === false
+	})
+})
+
+const shownArchivedLocations = computed(() => {
+	return filtered.value.filter((location) => {
+		return location.archived === true
+	})
 })
 </script>

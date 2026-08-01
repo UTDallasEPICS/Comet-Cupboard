@@ -8,7 +8,6 @@ const schema = z
 		pending: z.string().default("false"),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { pending } = validateQuery(event, schema)

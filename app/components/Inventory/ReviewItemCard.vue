@@ -1,30 +1,27 @@
 <template>
-	<SharedItemCard :name="name" :img-name="imgName" :item-deal="itemDeal" :item-i-d="itemID">
-		<template #body>
-			<div class="flex flex-col justify-end">
-				<div class="flex flex-row justify-end gap-4">
-					<SharedTextBase>Current Qty:</SharedTextBase>
-					<div class="w-20">
-						<SharedTextBase class="text-center">{{ quantity }}</SharedTextBase>
-					</div>
+	<UCard
+		:class="`${changeCount != 0 ? '' : ''} relative w-full min-w-72 shadow-md`"
+		:ui="{
+			body: 'p-0 py-0 sm:p-0 sm:py-0',
+		}"
+	>
+		<SharedDealBadge :item-deal="itemDeal" class="absolute top-2 right-2" />
+
+		<div class="flex flex-row items-center gap-2">
+			<img :src="`/api/public/image/${imgName}`" :alt="name" class="border-border-soft aspect-square h-full w-20 rounded-l-lg border object-cover" />
+
+			<div class="flex w-full flex-col p-2">
+				<div class="flex flex-row items-center justify-between">
+					<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
 				</div>
-				<div class="flex flex-row justify-end gap-4">
-					<SharedTextBase>Change:</SharedTextBase>
-					<div class="w-20">
-						<SharedTextBase class="text-center">{{ changeCount }}</SharedTextBase>
-					</div>
-				</div>
-			</div>
-		</template>
-		<template #footer>
-			<div class="flex flex-row justify-end gap-4">
-				<SharedTextBase class="text-end">Final Qty:</SharedTextBase>
-				<div class="w-20">
-					<SharedTextBase class="text-center">{{ quantity + changeCount }}</SharedTextBase>
+
+				<div class="flex flex-row items-center gap-2">
+					<UBadge :label="`QTY: ${quantity}`" variant="outline" color="neutral" />
+					<UBadge :label="changeCount > 0 ? `+${changeCount}` : `${changeCount}`" color="secondary" variant="solid" />
 				</div>
 			</div>
-		</template>
-	</SharedItemCard>
+		</div>
+	</UCard>
 </template>
 
 <script lang="ts" setup>

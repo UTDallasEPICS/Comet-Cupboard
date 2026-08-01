@@ -13,7 +13,7 @@ export const cartItemCountAdjustment = (cartItem: {
 	Item: { Deal: { actualCount: number; adjustedCount: number } }
 }) => {
 	// apply adjustments like expired/damaged/overstocked first
-	let count = cartItem.count - cartItem.countAdjustment
+	let count = cartItem.count + cartItem.countAdjustment
 	let dealCount = 0
 	// apply deals if present
 	if ("Item" in cartItem && "Deal" in cartItem.Item && cartItem.Item.Deal) {
@@ -30,10 +30,10 @@ export const pendingCartWarnings = (cart) => {
 	if (cartCountAdjustment(cart) > 6) {
 		warnings.push("Cart exceeds 6 item limit")
 	}
-	if (cart.CartItems.filter((cartItem) => cartItem.countAdjustment > 0).length > 0) {
-		const adjustedItems = cart.CartItems.filter((cartItem) => cartItem.countAdjustment > 0)
+	if (cart.CartItems.filter((cartItem) => cartItem.countAdjustment != 0).length > 0) {
+		const adjustedItems = cart.CartItems.filter((cartItem) => cartItem.countAdjustment != 0)
 		const adjustedItemsnames = adjustedItems.map((item) => item.Item.name).join(", ")
-		warnings.push("Cart has expired/damaged/overstocked items: " + adjustedItemsnames)
+		warnings.push("Cart has expired / damaged / overstocked items: " + adjustedItemsnames)
 	}
 	const categories: { [key: string]: number } = {}
 	const warningCategories: Set<string> = new Set()

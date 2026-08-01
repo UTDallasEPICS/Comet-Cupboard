@@ -25,9 +25,8 @@
 							/>
 							<div class="mt-4 flex flex-col gap-4">
 								<UCard class="h-64 overflow-y-scroll">
-									<template #header>
-										<SharedTextCardTitle>Statement of Understanding</SharedTextCardTitle>
-									</template>
+									<SharedTextCardTitle>Statement of Understanding</SharedTextCardTitle>
+									<USeparator class="my-2" />
 									<SharedTextBase>
 										I assume any and all risks associated with consuming the items I have selected from the Comet Cupboard. I agree to
 										release UT Dallas from liability if I sustain any health or medical issues as a result of consuming foods taken from the
@@ -37,9 +36,8 @@
 									</SharedTextBase>
 								</UCard>
 								<UCard class="h-64 overflow-y-scroll">
-									<template #header>
-										<SharedTextCardTitle>Non-Discrimination Clause</SharedTextCardTitle>
-									</template>
+									<SharedTextCardTitle>Non-Discrimination Clause</SharedTextCardTitle>
+									<USeparator class="my-2" />
 									<SharedTextBase>
 										UTD Comet Cupboard does not and shall not discriminate on the basis of race, color, religion (creed), gender, gender
 										expression, age, national origin (ancestry), disability, marital status, sexual orientation, or military status, in any
@@ -67,8 +65,22 @@
 								class="mt-4"
 							/>
 							<div class="mt-4 flex flex-col gap-4">
-								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
+								<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+									<template #header="{ group, open }">
+										<div class="flex flex-col gap-2">
+											<SharedButtonPositiveAction
+												:text="group"
+												:trailing-icon="icons['chevronDown']"
+												block
+												class="group w-full rounded-lg"
+												:ui="{
+													trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200',
+												}"
+											/>
+										</div>
+									</template>
+
+									<template #item="{ item: cartItem }">
 										<ShoppingCartAdjustCountItemCard
 											:item-deal="
 												cartItem.Item.Deal
@@ -90,8 +102,9 @@
 												}
 											"
 										/>
-									</li>
-								</ul>
+									</template>
+								</SharedGroupedCollapsible>
+
 								<div class="flex flex-row justify-between gap-4">
 									<SharedButtonCancel text="Back" @click="decrementStepper" />
 									<SharedButtonPositiveAction text="Next" @click="incrementStepper" />
@@ -115,8 +128,22 @@
 								class="mt-4"
 							/>
 							<div class="mt-4 flex flex-col gap-4">
-								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
+								<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+									<template #header="{ group, open }">
+										<div class="flex flex-col gap-2">
+											<SharedButtonPositiveAction
+												:text="group"
+												:trailing-icon="icons['chevronDown']"
+												block
+												class="group w-full rounded-lg"
+												:ui="{
+													trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200',
+												}"
+											/>
+										</div>
+									</template>
+
+									<template #item="{ item: cartItem }">
 										<ShoppingCartReviewItemCard
 											:item-deal="
 												cartItem.Item.Deal
@@ -133,8 +160,8 @@
 											:name="cartItem.Item.name"
 											:count-adjustment="countAdjustments[cartItem.itemID] || 0"
 										/>
-									</li>
-								</ul>
+									</template>
+								</SharedGroupedCollapsible>
 								<div class="flex flex-row justify-between gap-4">
 									<SharedButtonCancel text="Back" @click="decrementStepper" />
 									<SharedButtonPositiveAction text="Submit Cart" @click="submitCart" />
@@ -154,8 +181,22 @@
 							<UProgress :indeterminate="true" class="mt-4" />
 
 							<div class="mt-4 flex flex-col gap-4">
-								<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-									<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
+								<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+									<template #header="{ group, open }">
+										<div class="flex flex-col gap-2">
+											<SharedButtonPositiveAction
+												:text="group"
+												:trailing-icon="icons['chevronDown']"
+												block
+												class="group w-full rounded-lg"
+												:ui="{
+													trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200',
+												}"
+											/>
+										</div>
+									</template>
+
+									<template #item="{ item: cartItem }">
 										<ShoppingCartReviewItemCard
 											:item-deal="
 												cartItem.Item.Deal
@@ -172,8 +213,8 @@
 											:name="cartItem.Item.name"
 											:count-adjustment="cartItem.countAdjustment"
 										/>
-									</li>
-								</ul>
+									</template>
+								</SharedGroupedCollapsible>
 								<div class="flex flex-row justify-center gap-4">
 									<SharedButtonCancel text="Cancel Request" @click="cancelCart" />
 								</div>
@@ -188,7 +229,7 @@
 									<div class="flex flex-col items-center justify-center gap-4">
 										<SharedTextBase>Your cart was <span class="text-negative-red">Rejected</span>.</SharedTextBase>
 										<SharedTextBase>Volunteer Message: {{ cartVerificationReason }}</SharedTextBase>
-										<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+										<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 									</div>
 								</UCard>
 								<div class="mt-4 flex flex-row justify-center gap-4">
@@ -200,7 +241,7 @@
 									<div class="flex flex-col items-center justify-center gap-4">
 										<SharedTextBase>Your cart was <span class="text-utd-green">Accepted</span>.</SharedTextBase>
 										<SharedTextBase>Volunteer Message: {{ cartVerificationReason }}</SharedTextBase>
-										<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+										<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 									</div>
 								</UCard>
 								<div class="mt-4 flex flex-row justify-center gap-4">
@@ -283,13 +324,18 @@ const countAdjustments = ref<Record<string, number>>({})
 
 const combineCartAndTemporaryAdjustments = computed(() => {
 	return {
-		CartItems: cartStore.cartItems.map((cartItem) => {
-			const adjustment = countAdjustments.value[cartItem.itemID] || 0
-			return {
-				...cartItem,
-				countAdjustment: adjustment,
-			}
-		}),
+		CartItems:
+			cartStore.categorizedCartItems && Object.keys(cartStore.categorizedCartItems).length > 0
+				? Object.values(cartStore.categorizedCartItems)
+						.flatMap((items) => items)
+						.map((cartItem) => {
+							const adjustment = countAdjustments.value[cartItem.itemID] || 0
+							return {
+								...cartItem,
+								countAdjustment: adjustment,
+							}
+						})
+				: [],
 	}
 })
 
@@ -312,16 +358,21 @@ const incrementStepper = () => {
 }
 
 const submitCart = async () => {
-	if (cartStore.cartItems.length === 0) {
+	if (cartStore.cartIsEmpty) {
 		return
 	}
 
-	const allCartItemAdjustments = cartStore.cartItems.map((cartItem) => {
-		return {
-			itemID: cartItem.itemID,
-			countAdjustment: countAdjustments.value[cartItem.itemID] || 0,
-		}
-	})
+	const allCartItemAdjustments =
+		cartStore.categorizedCartItems && Object.keys(cartStore.categorizedCartItems).length > 0
+			? Object.values(cartStore.categorizedCartItems)
+					.flatMap((items) => items)
+					.map((cartItem) => {
+						return {
+							itemID: cartItem.itemID,
+							countAdjustment: countAdjustments.value[cartItem.itemID] || 0,
+						}
+					})
+			: []
 
 	// send the cart to verification
 	await $fetch("/api/student/verification/cartRequestVerification", {

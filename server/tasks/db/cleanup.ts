@@ -8,13 +8,12 @@ export default defineTask({
 	async run({ payload, context }) {
 		console.log(`${new Date().toISOString()}: Starting DB cleanup task...`)
 		try {
-			const deletedRoleRequests = await prisma.roleRequest.deleteMany()
 			const deletedCartSessions = await prisma.cart.deleteMany()
 			const deletedQueueEntries = await prisma.queueEntry.deleteMany()
 			const deletedInventoryChangeSessions = await prisma.inventoryChangeSession.deleteMany()
 			const deletedUserSessions = await prisma.userSession.deleteMany()
 			console.log(
-				`Deleted ${deletedRoleRequests.count} role requests, ${deletedCartSessions.count} cart sessions, ${deletedQueueEntries.count} queue entries, ${deletedInventoryChangeSessions.count} inventory change sessions, and ${deletedUserSessions.count} user sessions`
+				`Deleted ${deletedCartSessions.count} cart sessions, ${deletedQueueEntries.count} queue entries, ${deletedInventoryChangeSessions.count} inventory change sessions, and ${deletedUserSessions.count} user sessions`
 			)
 		} catch (error) {
 			console.error("Error during DB cleanup:", error)

@@ -1,15 +1,15 @@
 export const useLogout = () => {
 	const permissionsStore = usePermissionsStore()
 	const userSessionStore = useUserSessionInfoStore()
-	const userIDCookie = useCookie("userID")
+	const authSessionCookie = useCookie("better-auth.session-token")
 
 	const logout = async () => {
 		// Delete user session (ignore errors)
 		try {
-			await $fetch("/api/public/account/logout", { method: "POST" })
+			await $fetch("/api/public/auth/logout")
 		} catch (error) {}
 
-		userIDCookie.value = null
+		authSessionCookie.value = null
 		permissionsStore.clearPermissions()
 		userSessionStore.clearUserSessionInfo()
 		await navigateTo("/")

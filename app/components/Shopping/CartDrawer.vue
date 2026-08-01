@@ -10,21 +10,46 @@
 			<template v-else>
 				<div class="flex w-full flex-col items-center gap-4">
 					<SharedTextBase>You need to join queue before shopping</SharedTextBase>
-					<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+					<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 					<SharedButtonNavigateTo text="Go to Queue" to="/student/queue" />
 				</div>
 			</template>
 		</template>
-		<template v-else-if="cartStore.cartItems.length === 0">
+		<template v-else-if="cartStore.cartIsEmpty">
 			<div class="flex w-full flex-col items-center gap-4">
 				<SharedTextBase>Your cart is empty</SharedTextBase>
-				<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+				<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 				<SharedButtonNavigateTo text="Browse Items" to="/student/shopping" />
 			</div>
 		</template>
 		<template v-else>
-			<ul class="flex w-full max-w-md flex-col items-center gap-4">
-				<li v-for="cartItem in cartStore.cartItems" :key="cartItem.itemID">
+			<UAlert :icon="icons['information']" color="neutral" variant="outline">
+				<template #title>
+					<SharedTextBase>Friendly reminders!</SharedTextBase>
+					<ul class="ml-4 list-disc">
+						<li><SharedTextBaseSecondary>Only 1 cart checkout per week.</SharedTextBaseSecondary></li>
+						<li><SharedTextBaseSecondary>Only at most 6 total items in your cart after adjustments and deals are applied.</SharedTextBaseSecondary></li>
+						<li><SharedTextBaseSecondary>Only at most 1 total item per category after adjustments and deals are applied.</SharedTextBaseSecondary></li>
+					</ul>
+				</template>
+			</UAlert>
+			<USeparator class="my-4" />
+			<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+				<template #header="{ group, open }">
+					<div class="flex flex-col gap-2">
+						<SharedButtonPositiveAction
+							:text="group"
+							:trailing-icon="icons['chevronDown']"
+							block
+							class="group w-full rounded-lg"
+							:ui="{
+								trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200',
+							}"
+						/>
+					</div>
+				</template>
+
+				<template #item="{ item: cartItem }">
 					<ShoppingCartItemCard
 						class="w-full"
 						:count="cartItem.count"
@@ -39,10 +64,11 @@
 									}
 								: {}
 						"
+						:quantity="cartItem.Item.quantity"
 						@update:cart="cartStore.getCart"
 					/>
-				</li>
-			</ul>
+				</template>
+			</SharedGroupedCollapsible>
 
 			<div class="flex justify-center pt-6">
 				<SharedButtonNavigateTo text="Proceed to Checkout" class="w-48" @click="proceedToCheckout" />
@@ -53,13 +79,11 @@
 
 <script setup lang="ts">
 const cartStore = useCartStore()
-
 const queueStore = useQueueStore()
-
 const { loadingDots } = useLoadingDots()
 
 const proceedToCheckout = async () => {
-	if (cartStore.cartItems.length === 0) {
+	if (cartStore.cartIsEmpty) {
 		return
 	}
 	cartStore.resetCartView()

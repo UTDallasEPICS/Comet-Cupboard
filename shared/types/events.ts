@@ -25,14 +25,11 @@ export interface EventMap {
 	"cartSession.removed": { publicCode: string }
 
 	/* cart verification */
-	"cart.verification.decision": { publicCode: string; decision: Decision; reason?: string, userID: string }
+	"cart.verification.decision": { publicCode: string; decision: Decision; reason?: string; userID: string }
 
 	/* verify cart list */
 	"verifyCartList.cart.added": { cart: any }
 	"verifyCartList.cart.removed": { publicCode: string }
-
-	/* volunteer */
-	"volunteerRequest.decision": { publicCode: string; decision: Decision, userID: string }
 }
 
 export type AppEvent = {

@@ -27,12 +27,28 @@ enum Privacy {
 }
 
 model User {
-    userID      String       @id @map("userID")
-    role        RoleType     @map("role")
+    userID      String        @id @map("userID")
+    displayName String        @default("") @map("display_name")
+    role        RoleType      @map("role")
     Orders      Order[]
     userSession UserSession?
+    authSession AuthSession[]
 
     @@map("user")
+}
+
+model AuthSession {
+    id        String   @id @default(cuid()) @map("id")
+    token     String   @unique @map("token")
+    userID    String   @map("user_id")
+    User      User     @relation(fields: [userID], references: [userID], onDelete: Cascade, onUpdate: Cascade)
+    expiresAt DateTime @map("expires_at")
+    ipAddress String?  @map("ip_address")
+    userAgent String?  @map("user_agent")
+
+    @@index([userID])
+    @@index([expiresAt])
+    @@map("auth_session")
 }
 
 model UserSession {
@@ -40,20 +56,11 @@ model UserSession {
     User                   User                    @relation(fields: [userID], references: [userID], onDelete: Cascade, onUpdate: Cascade)
     publicCode             String                  @unique @map("public_code")
     publicIcon             String                  @map("public_icon")
-    roleRequest            RoleRequest?
     Cart                   Cart?
     QueueEntry             QueueEntry?
     InventoryChangeSession InventoryChangeSession?
 
     @@map("user_session")
-}
-
-model RoleRequest {
-    publicCode  String      @id @map("public_code")
-    UserSession UserSession @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
-    role        RoleType    @map("role")
-
-    @@map("role_request")
 }
 
 model Category {
@@ -204,7 +211,7 @@ model Location {
     name                String               @id @map("name")
     EmergencyBags       EmergencyBag[]
     IssuedEmergencyBags IssuedEmergencyBag[]
-    address             String               @map("address")
+    description         String               @map("description")
     archived            Boolean              @default(false) @map("archived")
     imgName             String               @map("img_name")
 
