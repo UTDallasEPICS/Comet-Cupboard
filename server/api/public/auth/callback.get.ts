@@ -29,16 +29,22 @@ export default defineSafeHandler(async (event) => {
 
 	console.log("Before token response fetch")
 
-	const tokenResponse = await $fetch(`${EPICS_SSO_BASE_URL}/api/sso/token`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: {
-			client_id: transaction.client_id,
-			redirect_get_callback: transaction.redirect_get_callback,
-			code,
-			code_verifier: transaction.verifier,
-		},
-	})
+	let tokenResponse
+	try {
+		tokenResponse = await $fetch(`${EPICS_SSO_BASE_URL}/api/sso/token`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: {
+				client_id: transaction.client_id,
+				redirect_get_callback: transaction.redirect_get_callback,
+				code,
+				code_verifier: transaction.verifier,
+			},
+		})
+	} catch (error) {
+		console.error("Error fetching token response:", error)
+		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: "Failed to fetch token response" })
+	}
 
 	console.log("After token response fetch")
 	console.log("Token response:", tokenResponse)
