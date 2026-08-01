@@ -25,7 +25,7 @@ export default defineSafeHandler(async (event) => {
 		throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Invalid or expired transaction state" })
 	}
 
-	const EPICS_SSO_BASE_URL = useRuntimeConfig(event).EPICS_SSO_BASE_URL
+	const EPICS_SSO_BASE_URL = useRuntimeConfig(event).EPICS_SSO_INTERNAL_URL
 
 	console.log("Before token response fetch")
 
