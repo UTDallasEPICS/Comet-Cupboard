@@ -83,7 +83,9 @@ export default defineSafeHandler(async (event) => {
 
 	const userRole = user.role
 
-	if (userRole === RoleType.ADMIN || userRole === RoleType.HEAD_ADMIN) {
+	if (userRole === RoleType.HEAD_ADMIN) {
+		return sendRedirect(event, "/head-admin", 302)
+	} else if (userRole === RoleType.ADMIN) {
 		return sendRedirect(event, "/admin", 302)
 	} else if (userRole === RoleType.VOLUNTEER) {
 		return sendRedirect(event, "/volunteer", 302)

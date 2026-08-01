@@ -16,6 +16,7 @@
 					content: 'bg-page-bg',
 					header: 'bg-utd-orange',
 				}"
+				v-model:open="openNavigationMenu"
 			>
 				<UButton variant="ghost" class="hover:bg-transparent active:bg-transparent" size="xl" :icon="icons['hamburger']" />
 
@@ -174,6 +175,28 @@ const items = ref<NavigationMenuItem[]>(
 				open: true,
 			})),
 		},
+
+		// Head Admin Group
+		permissionsStore.canHeadAdminAccess && {
+			label: "Head Admin",
+			icon: icons["headAdmin"],
+			open: true,
+			children: roleLinks["headAdmin"].map((item) => ({
+				...item,
+				open: true,
+			})),
+		},
 	].filter(Boolean) as NavigationMenuItem[]
 ) // filter out nulls
+
+const openNavigationMenu = ref(false)
+// auto close the navigation menu when the route changes
+// auto close the cart drawer when the route changes
+watch(
+	() => route.fullPath,
+	() => {
+		openNavigationMenu.value = false
+		cartStore.cartView = false
+	}
+)
 </script>

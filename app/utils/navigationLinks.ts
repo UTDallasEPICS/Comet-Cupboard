@@ -1,4 +1,4 @@
-type Role = "student" | "volunteer" | "admin"
+type Role = "student" | "volunteer" | "admin" | "headAdmin"
 
 interface AppLink {
 	label: string
@@ -59,14 +59,14 @@ export const roleLinks: Record<Role, AppLink[]> = {
 			label: "Create Emergency Bags",
 			description: "Add, Edit, Remove, View Emergency Bags",
 			icon: icons["shoppingBag"],
-			to: "/volunteer/emergency-bag/create"
+			to: "/volunteer/emergency-bag/create",
 		},
 		{
 			label: "Manage Emergency Bags",
 			description: "Add, Edit, Remove, View Emergency Bags",
 			icon: icons["management"],
-			to: "/volunteer/emergency-bag/manage"
-		}
+			to: "/volunteer/emergency-bag/manage",
+		},
 	],
 	admin: [
 		{
@@ -74,12 +74,6 @@ export const roleLinks: Record<Role, AppLink[]> = {
 			description: "Administrative overview",
 			icon: icons["home"],
 			to: "/admin",
-		},
-		{
-			label: "Data",
-			description: "View and analyze system data",
-			icon: icons["data"],
-			to: "/admin/data-analytics",
 		},
 		{
 			label: "Management",
@@ -111,6 +105,20 @@ export const roleLinks: Record<Role, AppLink[]> = {
 					to: "/admin/manage/locations",
 				},
 			],
+		},
+	],
+	headAdmin: [
+		{
+			label: "Dashboard",
+			description: "Head administrative overview",
+			icon: icons["home"],
+			to: "/head-admin",
+		},
+		{
+			label: "Data",
+			description: "View and analyze system data",
+			icon: icons["data"],
+			to: "/head-admin/data-analytics",
 		},
 	],
 }

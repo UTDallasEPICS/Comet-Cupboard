@@ -49,8 +49,8 @@ const validUsers = [
 const populateLocations = async () => {
 	const locationImages = readdirSync("./test-images/_location_images")
 	const locationData = [
-		{ name: "Police Station", address: "100 N Floyd Road" },
-		{ name: "Activity Center", address: "800 Campbell Rd" },
+		{ name: "Police Station", description: "100 N Floyd Road" },
+		{ name: "Activity Center", description: "800 Campbell Rd" },
 	]
 	const promises = locationData.map(async (location) => {
 		const imgName = locationImages.find((image) => image.split(".")[0] === location.name.replace(/\s/g, "_").toLowerCase())

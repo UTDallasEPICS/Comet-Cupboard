@@ -58,7 +58,7 @@
 		</div>
 		<div v-else class="flex flex-col items-center justify-center gap-4">
 			<SharedTextBase class="text-center">No carts currently selected</SharedTextBase>
-			<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+			<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 		</div>
 	</UCard>
 </template>

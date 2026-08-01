@@ -43,10 +43,4 @@ const archivedCategories = computed(() => {
 		return category.archived === true
 	})
 })
-
-const inventoryStore = useInventoryStore()
-
-onMounted(async () => {
-	await inventoryStore.getInventoryChanges()
-})
 </script>

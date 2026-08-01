@@ -7,6 +7,7 @@ import { getRandomProfileIcon } from "#server/utils/profileIcons"
 import { z } from "zod"
 import { StatusCodes } from "http-status-codes"
 import { validateQuery } from "#server/utils/validation"
+import { RoleType } from "../../../../prisma/generated/prisma/client"
 
 const schema = z
 	.object({
@@ -92,5 +93,15 @@ export default defineSafeHandler(async (event) => {
 		path: "/",
 	})
 
-	return sendRedirect(event, "/student", 302)
+	const userRole = user.role
+
+	if (userRole === RoleType.HEAD_ADMIN) {
+		return sendRedirect(event, "/head-admin", 302)
+	} else if (userRole === RoleType.ADMIN) {
+		return sendRedirect(event, "/admin", 302)
+	} else if (userRole === RoleType.VOLUNTEER) {
+		return sendRedirect(event, "/volunteer", 302)
+	} else {
+		return sendRedirect(event, "/student", 302)
+	}
 })

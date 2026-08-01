@@ -47,7 +47,7 @@
 			<UContainer class="relative flex flex-col items-center gap-4 text-center">
 				<SharedTextSectionTitle> Find an Emergency Bag </SharedTextSectionTitle>
 				<SharedTextBase class="max-w-xl"> Check availability at locations across campus </SharedTextBase>
-				<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+				<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 				<SharedButtonNavigateTo text="View Locations" to="/public/emergency-bag/locations" />
 			</UContainer>
 		</section>

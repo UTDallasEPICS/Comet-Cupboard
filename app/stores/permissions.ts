@@ -3,23 +3,20 @@ export const usePermissionsStore = defineStore("permissions", () => {
 
 	const setPermissionsFromServer = async () => {
 		try {
-			await $fetch("/api/public/account/updatePermissions", {
+			const permissions = await $fetch("/api/public/account/updatePermissions", {
 				method: "GET",
 			})
-			const accessCookiePermission = useCookie("AccessPermission")
-			const permissions = accessCookiePermission.value && typeof accessCookiePermission.value === "object" ? accessCookiePermission.value : {}
-			access.value = permissions || {}
+			if (!permissions || typeof permissions !== "object") {
+				throw new Error("Invalid permissions data")
+			}
+			access.value = permissions
 		} catch (error) {
 			access.value = {}
-			const accessCookiePermission = useCookie("AccessPermission")
-			accessCookiePermission.value = null
 		}
 	}
 
 	const clearPermissions = () => {
 		access.value = {}
-		const accessCookiePermission = useCookie("AccessPermission")
-		accessCookiePermission.value = null
 	}
 
 	// head admins > admins > volunteers > students
@@ -37,5 +34,5 @@ export const usePermissionsStore = defineStore("permissions", () => {
 		return "No Role"
 	})
 
-	return { setPermissionsFromServer, clearPermissions, canStudentAccess, canVolunteerAccess, canAdminAccess, canHeadAdminAccess, roleText, loggedIn }
+	return { setPermissionsFromServer, clearPermissions, access, canStudentAccess, canVolunteerAccess, canAdminAccess, canHeadAdminAccess, roleText, loggedIn }
 })

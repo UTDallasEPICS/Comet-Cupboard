@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<NuxtLayout name="main" title="Student Dashboard">
+		<NuxtLayout name="main" title="Student Dashboard" :tutorial-data="tutorials['student']">
 			<USeparator class="my-4" />
 			<section>
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

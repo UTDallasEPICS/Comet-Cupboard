@@ -3,9 +3,11 @@
 		<header class="mb-4">
 			<div class="flex flex-row items-center">
 				<SharedButtonNavigateBack v-if="backNavigation" :text="backNavigation.text" :to="backNavigation.to" />
-				<SharedRefreshPageTimer v-if="refreshPageTimer !== undefined" :seconds="refreshPageTimer" class="ml-auto" />
 			</div>
-			<SharedTextPageTitle>{{ props.title }}</SharedTextPageTitle>
+			<div class="flex flex-row flex-nowrap items-center gap-2">
+				<SharedTextPageTitle>{{ props.title }}</SharedTextPageTitle>
+				<SharedTutorial v-if="props.tutorialData" :tutorial="props.tutorialData" />
+			</div>
 		</header>
 
 		<slot />
@@ -19,6 +21,15 @@ const props = defineProps<{
 		text: string
 		to: string
 	}
-	refreshPageTimer?: number
+	tutorialData?: {
+		title: string
+		tutorialPages: {
+			title: string
+			content: {
+				imageURL: string
+				description: string
+			}[]
+		}[]
+	}
 }>()
 </script>
