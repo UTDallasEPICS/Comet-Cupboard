@@ -1,41 +1,41 @@
 <template>
 	<div>
 		<div class="mb-4 flex items-center justify-between">
-			<h1 class="text-4xl font-bold text-black">Source Contribution</h1>
+			<header class="text-4xl font-bold text-black">Source Contribution</header>
 
-			<DataAnalyticsOptionButton :date-range="displayRange" :show-time-level="false" :show-date-range="true">
-				<div class="flex flex-col p-4">
-					<div class="justify-left flex flex-col">
-						<p class="my-2 text-sm font-bold">Time Range</p>
-						<UInputDate ref="inputDate" v-model="modelValue" range>
-							<template #trailing>
-								<UPopover :reference="inputDate?.inputsRef[0]?.$el">
-									<UButton color="neutral" variant="link" size="sm" icon="i-lucide-calendar" aria-label="Select a date range" class="px-0" />
+			<div class="justify-left flex flex-col">
+				<p class="place-self-start text-xl font-bold">Time Range</p>
+				<UInputDate ref="inputDate" v-model="modelValue" range>
+					<template #trailing>
+						<UPopover :reference="inputDate?.inputsRef[0]?.$el">
+							<UButton color="neutral" variant="link" size="sm" icon="i-lucide-calendar" aria-label="Select a date range" class="px-0" />
 
-									<template #content>
-										<UCalendar v-model="modelValue" class="p-2" :number-of-months="2" range />
-									</template>
-								</UPopover>
+							<template #content>
+								<UCalendar v-model="modelValue" class="p-2" :number-of-months="2" range />
 							</template>
-						</UInputDate>
-					</div>
-				</div>
-			</DataAnalyticsOptionButton>
+						</UPopover>
+					</template>
+				</UInputDate>
+			</div>
 		</div>
 	</div>
-	<div class="mt-4 flex min-h-32 w-full items-center justify-center rounded-3xl border bg-white">
-		<DataAnalyticsDataCardComponent title="Total Source Contributions" :value="totalSourceContributions" />
-		<!-- <DataAnalyticsDataCardComponent v-if="!drilledDown" title="Average Contribution Size" :value="totalInventory" /> -->
-	</div>
+	<UCard class="mt-4 flex min-h-32 w-full items-center justify-center">
+		<div class="flex">
+			<DataAnalyticsDataCardComponent title="Total Source Contributions" :value="totalSourceContributions" />
+			<!-- <DataAnalyticsDataCardComponent v-if="!drilledDown" title="Average Contribution Size" :value="totalInventory" /> -->
+		</div>
+	</UCard>
 	<div>
 		<div class="mt-10 flex flex-row gap-10">
 			<DataAnalyticsVerticalDataComponent title="Source Share %" :items="sourceContributionShare" :count-toggle="true" />
 			<div class="min-h-140 w-full min-w-0">
-				<button v-if="drilledDown" class="absolute rounded-lg border border-solid px-3 py-1 m-4" style="cursor: pointer" @click="resetChart">Back</button>
-				<div class="h-full w-full border border-gray-300 px-8">
-					<USwitch v-if="drilledDown" class="justify-self-end mt-4" v-model="sortByCount" label="Sort by count" />
+				<button v-if="drilledDown" class="absolute m-4 rounded-lg border border-solid px-3 py-1" style="cursor: pointer" @click="resetChart">
+					Back
+				</button>
+				<UCard class="h-full w-full border border-gray-300 px-8">
+					<USwitch v-if="drilledDown" class="mt-4 justify-self-end" v-model="sortByCount" label="Sort by count" />
 					<canvas ref="barContainer" class="mt-4" />
-				</div>
+				</UCard>
 			</div>
 		</div>
 	</div>
@@ -156,7 +156,7 @@ const sourceContributionShare = computed(() => {
 	if (!totalSourceContributions.value) return []
 
 	return Object.entries(sourceTotals.value)
-		.map(([ label, count ]) => ({
+		.map(([label, count]) => ({
 			label,
 			count,
 			percentage: ((count / totalSourceContributions.value) * 100).toFixed(1),
@@ -207,7 +207,7 @@ const showDrillDownView = (categoryName: string) => {
 	chart.value.options.plugins.title = {
 		display: true,
 		text: categoryName + " Contribution",
-		...titleOptions
+		...titleOptions,
 	}
 	chart.value.update()
 }
@@ -258,11 +258,11 @@ onMounted(async () => {
 			plugins: {
 				legend: {
 					display: true,
-					position: 'right',
+					position: "right",
 				},
 				title: {
 					display: true,
-					...titleOptions
+					...titleOptions,
 				},
 			},
 			responsive: true,
