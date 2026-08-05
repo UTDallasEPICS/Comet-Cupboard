@@ -13,10 +13,10 @@ export default defineSafeHandler((event) => {
 	} else if (requestPath.startsWith("/api/head-admin") || requestPath.startsWith("/head-admin")) {
 		requiredAccessPermission = AccessPermission.HEAD_ADMIN
 	}
+	else if (requestPath.startsWith("/api/_auth/session")) {
+		requiredAccessPermission = AccessPermission.PUBLIC
+	}
 
-	console.log("REQUIRED ACCESS PERMISSION: ", requiredAccessPermission)
-	console.log("REQUEST PATH: ", requestPath)
-	console.log("PERMISSIONS: ", event.context.permissions)
 
 	if (!event.context.permissions[requiredAccessPermission]) {
 		throw createError({ statusCode: StatusCodes.FORBIDDEN, statusMessage: ReasonPhrases.FORBIDDEN })

@@ -20,65 +20,49 @@ declare module "h3" {
 export default defineSafeHandler(async (event) => {
 	event.context.permissions = {}
 	event.context.permissions[AccessPermission.PUBLIC] = true
-	console.log("BEFORE BCOOKIES")
-	const cookies = parseCookies(event)
-	console.log("COOKIES: ", cookies)
-	const sessionToken = cookies["better-auth.session-token"]
-	console.log("sessionToken Cookie: ", sessionToken)
-	if (sessionToken) {
-		const authSession = await prisma.authSession.findUnique({
+
+	const session = await getUserSession(event)
+	const isLoggedIn = session?.user !== undefined
+
+	if (isLoggedIn) {
+		const userID = session.secure.userID
+		const userSession = await prisma.userSession.findUnique({
 			where: {
-				token: sessionToken,
+				userID: userID,
 			},
 			include: {
 				User: true,
-			},
+			}
 		})
 
-		console.log("AUTH SESSION: ", authSession)
-
-		if (authSession && authSession.expiresAt > new Date()) {
-			const userSession = await prisma.userSession.findUnique({
-				where: {
-					userID: authSession?.userID,
+		if (userSession) {
+			event.context.userSession = {
+				userID: userID,
+				publicCode: userSession.publicCode,
+				publicIcon: userSession.publicIcon,
+				User: {
+					userID: userSession.User.userID,
+					displayName: userSession.User.displayName,
+					role: userSession.User.role,
 				},
-				select: {
-					publicCode: true,
-					publicIcon: true,
-				},
-			})
-
-			console.log("USER SESSION: ", userSession)
-			
-			if (userSession) {
-				event.context.userSession = {
-					userID: authSession.User.userID,
-					publicCode: userSession.publicCode,
-					publicIcon: userSession.publicIcon,
-					User: {
-						userID: authSession.User.userID,
-						displayName: authSession.User.displayName,
-						role: authSession.User.role,
-					},
-				}
-				if (authSession.User.role === RoleType.STUDENT) {
-					event.context.permissions[AccessPermission.STUDENT] = true
-				}
-				if (authSession.User.role === RoleType.VOLUNTEER) {
-					event.context.permissions[AccessPermission.STUDENT] = true
-					event.context.permissions[AccessPermission.VOLUNTEER] = true
-				}
-				if (authSession.User.role === RoleType.ADMIN) {
-					event.context.permissions[AccessPermission.STUDENT] = true
-					event.context.permissions[AccessPermission.VOLUNTEER] = true
-					event.context.permissions[AccessPermission.ADMIN] = true
-				}
-				if (authSession.User.role === RoleType.HEAD_ADMIN) {
-					event.context.permissions[AccessPermission.STUDENT] = true
-					event.context.permissions[AccessPermission.VOLUNTEER] = true
-					event.context.permissions[AccessPermission.ADMIN] = true
-					event.context.permissions[AccessPermission.HEAD_ADMIN] = true
-				}
+			}
+			if (userSession.User.role === RoleType.STUDENT) {
+				event.context.permissions[AccessPermission.STUDENT] = true
+			}
+			if (userSession.User.role === RoleType.VOLUNTEER) {
+				event.context.permissions[AccessPermission.STUDENT] = true
+				event.context.permissions[AccessPermission.VOLUNTEER] = true
+			}
+			if (userSession.User.role === RoleType.ADMIN) {
+				event.context.permissions[AccessPermission.STUDENT] = true
+				event.context.permissions[AccessPermission.VOLUNTEER] = true
+				event.context.permissions[AccessPermission.ADMIN] = true
+			}
+			if (userSession.User.role === RoleType.HEAD_ADMIN) {
+				event.context.permissions[AccessPermission.STUDENT] = true
+				event.context.permissions[AccessPermission.VOLUNTEER] = true
+				event.context.permissions[AccessPermission.ADMIN] = true
+				event.context.permissions[AccessPermission.HEAD_ADMIN] = true
 			}
 		}
 	}

@@ -53,32 +53,14 @@ export default defineSafeHandler(async (event) => {
 		})
 	}
 
-	const sessionToken = `auth_${user.userID}`
-	// Set expiration to 7 days from now
-	const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
-
-	await prisma.authSession.upsert({
-		where: { token: sessionToken },
-		update: {
-			userID: user.userID,
-			expiresAt,
-			ipAddress: getRequestIP(event, { xForwardedFor: true }),
-			userAgent: getHeader(event, "user-agent") ?? null,
+	await setUserSession(event, {
+		user: {
+			displayName: user.displayName,
+			role: user.role,
 		},
-		create: {
-			token: sessionToken,
+		secure: {
 			userID: user.userID,
-			expiresAt,
-			ipAddress: getRequestIP(event, { xForwardedFor: true }),
-			userAgent: getHeader(event, "user-agent") ?? null,
-		},
-	})
-
-	setCookie(event, "better-auth.session-token", sessionToken, {
-		httpOnly: true,
-		sameSite: "lax",
-		secure: NODE_ENV === "prod",
-		path: "/",
+		}
 	})
 
 	const userRole = user.role

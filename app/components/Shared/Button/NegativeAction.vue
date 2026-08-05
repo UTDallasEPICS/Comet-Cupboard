@@ -1,6 +1,6 @@
 <template>
 	<SharedButtonBaseCustomColor
-		custom-color="negative-red"
+		custom-color="error"
 		content-color="white"
 		:ui="{
 			...props.ui,

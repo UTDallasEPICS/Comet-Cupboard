@@ -20,28 +20,13 @@ enum Privacy {
 }
 
 model User {
-    userID      String        @id @map("userID")
-    displayName String        @default("") @map("display_name")
-    role        RoleType      @map("role")
+    userID      String       @id @map("userID")
+    displayName String       @default("") @map("display_name")
+    role        RoleType     @map("role")
     Orders      Order[]
     userSession UserSession?
-    authSession AuthSession[]
 
     @@map("user")
-}
-
-model AuthSession {
-    id        String   @id @default(cuid()) @map("id")
-    token     String   @unique @map("token")
-    userID    String   @map("user_id")
-    User      User     @relation(fields: [userID], references: [userID], onDelete: Cascade, onUpdate: Cascade)
-    expiresAt DateTime @map("expires_at")
-    ipAddress String?  @map("ip_address")
-    userAgent String?  @map("user_agent")
-
-    @@index([userID])
-    @@index([expiresAt])
-    @@map("auth_session")
 }
 
 model UserSession {
