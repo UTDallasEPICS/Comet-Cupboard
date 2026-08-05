@@ -27,6 +27,7 @@
 		"mime-types": "^3.0.2",
 		"nanoid": "^5.0.7",
 		"nuxt": "^4.1.0",
+		"nuxt-auth-utils": "0.5.30",
 		"pinia": "^3.0.2",
 		"pnpm": "^11.18.0",
 		"sharp": "^0.34.5",

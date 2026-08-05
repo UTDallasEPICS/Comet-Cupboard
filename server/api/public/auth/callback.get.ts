@@ -27,8 +27,6 @@ export default defineSafeHandler(async (event) => {
 
 	const EPICS_SSO_BASE_URL = useRuntimeConfig(event).EPICS_SSO_INTERNAL_URL
 
-	console.log("Before token response fetch")
-
 	let tokenResponse
 	try {
 		tokenResponse = await $fetch(`${EPICS_SSO_BASE_URL}/api/sso/token`, {
@@ -46,19 +44,22 @@ export default defineSafeHandler(async (event) => {
 		throw createError({ statusCode: StatusCodes.INTERNAL_SERVER_ERROR, statusMessage: "Failed to fetch token response" })
 	}
 
-	console.log("After token response fetch")
-	console.log("Token response:", tokenResponse)
-
 	const profile = tokenResponse as { displayName: string; firstName: string; lastName: string; email: string }
 	const user = await findOrCreateStudentUserFromProfile(profile)
 
-	console.log("User after findOrCreateStudentUserFromProfile:", user)
+	await setUserSession(event, {
+		user: {
+			displayName: user.displayName,
+			role: user.role,
+		},
+		secure: {
+			userID: user.userID,
+		}
+	})
 
 	const existingUserSession = await prisma.userSession.findUnique({
 		where: { userID: user.userID },
 	})
-
-	console.log("Existing user session:", existingUserSession)
 
 	if (!existingUserSession) {
 		let publicCode = generatePublicCodeName()
@@ -78,35 +79,6 @@ export default defineSafeHandler(async (event) => {
 			},
 		})
 	}
-
-	const sessionToken = `auth_${user.userID}`
-	const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
-
-	await prisma.authSession.upsert({
-		where: { token: sessionToken },
-		update: {
-			userID: user.userID,
-			expiresAt,
-			ipAddress: getRequestIP(event, { xForwardedFor: true }),
-			userAgent: getHeader(event, "user-agent") ?? null,
-		},
-		create: {
-			token: sessionToken,
-			userID: user.userID,
-			expiresAt,
-			ipAddress: getRequestIP(event, { xForwardedFor: true }),
-			userAgent: getHeader(event, "user-agent") ?? null,
-		},
-	})
-
-	const NODE_ENV = useRuntimeConfig(event).public.NODE_ENV
-
-	setCookie(event, "better-auth.session-token", sessionToken, {
-		httpOnly: true,
-		sameSite: "lax",
-		secure: NODE_ENV === "prod",
-		path: "/",
-	})
 
 	const userRole = user.role
 
