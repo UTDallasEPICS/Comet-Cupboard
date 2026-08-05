@@ -1,10 +1,10 @@
 <template>
-	<UCard class="min-w-72 border-[#e4701e]">
+	<UCard class="min-w-72 border-utd-orange">
 		<template #header>
 			<div class="flex justify-between items-center">
-				<h2 class="flex text-l font-bold">
+				<header class="flex text-l font-bold">
 					{{ title }}
-				</h2>
+				</header>
 				<USwitch
 					v-if="countToggle"
 					v-model="showCount"

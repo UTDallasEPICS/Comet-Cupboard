@@ -1,42 +1,42 @@
 <template>
 	<div>
 		<div class="mb-4 flex items-center justify-between">
-			<h1 class="text-4xl font-bold text-black">Visitors</h1>
+			<header class="text-4xl font-bold text-black">Visitors</header>
 
-			<DataAnalyticsOptionButton :grouping="grouping" :date-range="displayRange" :show-time-level="true" :show-date-range="true">
-				<div class="flex flex-col p-4">
-					<div class="justify-left flex flex-col">
-						<p class="my-2 text-sm font-bold">Time Level</p>
-						<USelect v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" class="w-full" />
-					</div>
-
-					<div class="justify-left flex flex-col">
-						<p class="my-2 text-sm font-bold">Time Range</p>
-						<UInputDate ref="inputDate" v-model="modelValue" range>
-							<template #trailing>
-								<UPopover :reference="inputDate?.inputsRef[0]?.$el">
-									<UButton color="neutral" variant="link" size="sm" icon="i-lucide-calendar" aria-label="Select a date range" class="px-0" />
-
-									<template #content>
-										<UCalendar v-model="modelValue" class="p-2" :number-of-months="2" range />
-									</template>
-								</UPopover>
-							</template>
-						</UInputDate>
-					</div>
+			<div class="flex gap-4">
+				<div class="flex w-40 flex-col items-center">
+					<p class="place-self-start text-xl font-bold">Time Level</p>
+					<USelect v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" class="w-full" />
 				</div>
-			</DataAnalyticsOptionButton>
+
+				<div class="justify-left flex flex-col">
+					<p class="place-self-start text-xl font-bold">Time Range</p>
+					<UInputDate ref="inputDate" v-model="modelValue" range>
+						<template #trailing>
+							<UPopover :reference="inputDate?.inputsRef[0]?.$el">
+								<UButton color="neutral" variant="link" size="sm" icon="i-lucide-calendar" aria-label="Select a date range" class="px-0" />
+
+								<template #content>
+									<UCalendar v-model="modelValue" class="p-2" :number-of-months="2" range />
+								</template>
+							</UPopover>
+						</template>
+					</UInputDate>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="mt-4 mb-10 flex min-h-32 w-full items-center justify-center rounded-3xl border bg-white">
-		<DataAnalyticsDataCardComponent title="Total Visitors" :value="totalVisitors" />
-		<DataAnalyticsDataCardComponent title="Total Unique Visitors" :value="totalUniqueVisitors" />
-		<DataAnalyticsDataCardComponent title="Peak Visitor Count" :value="peakVisitors" />
-		<DataAnalyticsDataCardComponent title="Average Visitors" :value="avgVisitors" />
-	</div>
-	<div class="w-full gap-10 border border-gray-300 px-8">
+	<UCard class="mt-4 flex min-h-32 w-full items-center justify-center">
+		<div class="flex">
+			<DataAnalyticsDataCardComponent title="Total Visitors" :value="totalVisitors" />
+			<DataAnalyticsDataCardComponent title="Total Unique Visitors" :value="totalUniqueVisitors" />
+			<DataAnalyticsDataCardComponent title="Peak Visitor Count" :value="peakVisitors" />
+			<DataAnalyticsDataCardComponent title="Average Visitors" :value="avgVisitors" />
+		</div>
+	</UCard>
+	<UCard class="w-full mt-4 border px-8">
 		<canvas ref="lineContainer" class="mt-4" />
-	</div>
+	</UCard>
 </template>
 
 <script lang="ts" setup>

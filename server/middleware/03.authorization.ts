@@ -14,6 +14,10 @@ export default defineSafeHandler((event) => {
 		requiredAccessPermission = AccessPermission.HEAD_ADMIN
 	}
 
+	console.log("REQUIRED ACCESS PERMISSION: ", requiredAccessPermission)
+	console.log("REQUEST PATH: ", requestPath)
+	console.log("PERMISSIONS: ", event.context.permissions)
+
 	if (!event.context.permissions[requiredAccessPermission]) {
 		throw createError({ statusCode: StatusCodes.FORBIDDEN, statusMessage: ReasonPhrases.FORBIDDEN })
 	}

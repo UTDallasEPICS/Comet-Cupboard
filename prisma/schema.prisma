@@ -14,13 +14,6 @@ enum RoleType {
     HEAD_ADMIN
 }
 
-enum BagCategory {
-    NEITHER
-    VEGETARIAN
-    PEANUT_BUTTER
-    VEGETARIAN_AND_PEANUT_BUTTER
-}
-
 enum Privacy {
     PUBLIC
     PRIVATE
@@ -222,7 +215,8 @@ model EmergencyBag {
     bagID             String             @id @default(cuid()) @map("bag_id")
     Location          Location?          @relation(fields: [locationName], references: [name], onDelete: Restrict, onUpdate: Cascade)
     locationName      String?
-    bagCategory       BagCategory        @default(NEITHER) @map("bag_category")
+    isVegetarian      Boolean            @default(false) @map("is_vegetarian")
+    hasPeanutButter   Boolean            @default(false) @map("has_peanut_butter")
     privacy           Privacy            @default(PUBLIC) @map("privacy")
     EmergencyBagItems EmergencyBagItem[]
     bagDescription    String?            @default("") @map("bag_description")
@@ -250,7 +244,6 @@ model IssuedEmergencyBag {
     bagID             String                   @id @default(cuid()) @map("bag_id")
     Location          Location                 @relation(fields: [location], references: [name], onDelete: Restrict, onUpdate: Cascade)
     location          String
-    bagCategory       BagCategory              @map("bag_category")
     EmergencyBagItems IssuedEmergencyBagItem[]
     bagDescription    String?                  @default("") @map("bag_description")
     expiryDate        DateTime                 @map("expiry_date")
