@@ -20,8 +20,11 @@ declare module "h3" {
 export default defineSafeHandler(async (event) => {
 	event.context.permissions = {}
 	event.context.permissions[AccessPermission.PUBLIC] = true
+	console.log("BEFORE BCOOKIES")
 	const cookies = parseCookies(event)
+	console.log("COOKIES: ", cookies)
 	const sessionToken = cookies["better-auth.session-token"]
+	console.log("sessionToken Cookie: ", sessionToken)
 	if (sessionToken) {
 		const authSession = await prisma.authSession.findUnique({
 			where: {
@@ -31,6 +34,8 @@ export default defineSafeHandler(async (event) => {
 				User: true,
 			},
 		})
+
+		console.log("AUTH SESSION: ", authSession)
 
 		if (authSession && authSession.expiresAt > new Date()) {
 			const userSession = await prisma.userSession.findUnique({
@@ -42,6 +47,9 @@ export default defineSafeHandler(async (event) => {
 					publicIcon: true,
 				},
 			})
+
+			console.log("USER SESSION: ", userSession)
+			
 			if (userSession) {
 				event.context.userSession = {
 					userID: authSession.User.userID,
