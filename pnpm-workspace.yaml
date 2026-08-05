@@ -9,5 +9,7 @@ allowBuilds:
   '@parcel/watcher': false
   unrs-resolver: false
   vue-demi: false
+minimumReleaseAgeExclude:
+  - nuxt-auth-utils@0.5.30
 publicHoistPattern:
   - '*tailwind*'
