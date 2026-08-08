@@ -43,7 +43,9 @@
 										/>
 									</div>
 
-									<SharedTextBaseSecondary class="mt-2 text-xs"> Check that you're not creating a duplicate category. </SharedTextBaseSecondary>
+									<SharedTextBaseSecondary class="mt-2 text-xs">
+										Check that you're not creating a duplicate category.
+									</SharedTextBaseSecondary>
 								</div>
 							</UFormField>
 						</UCard>

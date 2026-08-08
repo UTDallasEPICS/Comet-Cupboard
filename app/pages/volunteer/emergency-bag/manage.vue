@@ -11,7 +11,7 @@
 									:icon="icons['add']"
 									variant="ghost"
 									color="neutral"
-									class="absolute right-0"
+									class="absolute bg-utd-green text-white right-0"
 									@click="navigateTo('/volunteer/emergency-bag/create')"
 								/>
 							</UInput>

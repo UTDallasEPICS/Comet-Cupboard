@@ -37,7 +37,10 @@
 			</SharedGroupedCollapsible>
 
 			<UCard class="mt-4">
-				<SharedTextCardTitle> Source Information </SharedTextCardTitle>
+				<div class="flex items-center justify-between">
+					<SharedTextCardTitle> Source Information </SharedTextCardTitle>
+					<UButton class="text-xs" @click="navigateTo('/admin/manage/sources')">Add Source</UButton>
+				</div>
 				<USelectMenu
 					v-model="selectedSource"
 					:items="sources || []"

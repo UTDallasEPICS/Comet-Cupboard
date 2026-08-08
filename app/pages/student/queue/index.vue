@@ -17,7 +17,7 @@
 							<SharedButtonCancel text="Leave Queue" class="my-auto h-min" @click="leaveQueue" />
 						</div>
 						<div v-else-if="cartStore.cart" class="flex flex-col items-center justify-center gap-4">
-							<SharedTextBase> You already have an active cart. </SharedTextBase>
+							<SharedTextBase> You currently have an active cart. </SharedTextBase>
 							<SharedButtonNavigateTo text="Browse Items" to="/student/shopping" />
 						</div>
 						<div v-else class="flex flex-col items-center justify-center gap-4">
