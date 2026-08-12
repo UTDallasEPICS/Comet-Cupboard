@@ -249,3 +249,27 @@ model IssuedEmergencyBagItem {
     @@id(name: "emergencyBagItemID", [itemID, bagID])
     @@map("issued_emergency_bag_item")
 }
+
+model TutorialGroup {
+    id    String         @id @default(cuid())
+    name  String
+    pages TutorialPage[]
+
+    @@map("tutorial_group")
+}
+
+model TutorialPage {
+    id      String         @id @default(cuid())
+    name    String
+    groupID String
+    group   TutorialGroup  @relation(fields: [groupID], references: [id])
+    steps   TutorialStep[]
+}
+
+model TutorialStep {
+    id          String       @id @default(cuid())
+    imageURL    String
+    description String
+    pageID      String
+    page        TutorialPage @relation(fields: [pageID], references: [id])
+}

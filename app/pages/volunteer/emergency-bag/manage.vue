@@ -52,7 +52,7 @@
 					</div>
 					<!-- <UButton label="Delete Bag" class="bg-red-500" trailing-icon="i-lucide-trash" @click="deleteBag" /> -->
 
-					<div v-if="emergencyBags.length === 0" class="flex flex-col items-center justify-center gap-y-4">
+					<div v-if="emergencyBags.length === 0" class="flex flex-col items-center justify-center pt-4 gap-y-4">
 						<SharedTextBase> No bags have been created </SharedTextBase>
 						<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
 						<UButton

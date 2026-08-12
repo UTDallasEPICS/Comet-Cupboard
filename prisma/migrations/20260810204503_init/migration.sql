@@ -186,6 +186,29 @@ CREATE TABLE "issued_emergency_bag_item" (
     CONSTRAINT "issued_emergency_bag_item_bag_id_fkey" FOREIGN KEY ("bag_id") REFERENCES "issued_emergency_bag" ("bag_id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- CreateTable
+CREATE TABLE "tutorial_group" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "TutorialPage" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "groupID" TEXT NOT NULL,
+    CONSTRAINT "TutorialPage_groupID_fkey" FOREIGN KEY ("groupID") REFERENCES "tutorial_group" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "TutorialStep" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "imageURL" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "pageID" TEXT NOT NULL,
+    CONSTRAINT "TutorialStep_pageID_fkey" FOREIGN KEY ("pageID") REFERENCES "TutorialPage" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "user_session_public_code_key" ON "user_session"("public_code");
 
