@@ -1,25 +1,28 @@
 import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
-import { validateBody } from "#server/utils/validation"
+import { imageSchema, deleteImage, uploadImage, processImage } from "#server/utils/image"
 
-const schema = z
-	.object({
+const schema = imageSchema
+	.extend({
 		pageID: z.string().min(1),
-		description: z.string().min(1),
-		imageURL: z.string(),
+		description: z.string().min(1, "Description cannot be empty"),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { pageID, description, imageURL } = await validateBody(event, schema)
+	const { pageID, description, image } = await validateFormData(event, schema)
+
+	let newImgName = undefined
+	if (image) {
+		newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
+	}
 
 	const step = await prisma.tutorialStep.create({
 		data: {
 			pageID,
 			description,
-			imageURL,
+			imageURL: newImgName,
 		},
 	})
 

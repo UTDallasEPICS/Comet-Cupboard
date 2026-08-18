@@ -281,6 +281,17 @@ const createOrders = async () => {
 	})
 }
 
+const createTutorialGroups = async () => {
+	const groupNames = ["Student", "Volunteer", "Admin", "Head Admin"]
+
+	const groups = await prisma.tutorialGroup.createMany({
+		data: groupNames.map((name) => ({ name })),
+		skipDuplicates: true,
+	})
+
+	return groups
+}
+
 const main = async () => {
 	await populateItems()
 	await createSources()
@@ -292,6 +303,7 @@ const main = async () => {
 	await createOrders()
 
 	await createLocations()
+	await createTutorialGroups()
 	// await createEmergencyBags()
 	// await createEmergencyBagItems()
 

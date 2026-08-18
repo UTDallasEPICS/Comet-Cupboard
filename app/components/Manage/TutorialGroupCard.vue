@@ -5,78 +5,74 @@
 			body: 'p-0 py-0 sm:p-0 sm:py-0',
 		}"
 	>
-		<UButton
-			class="absolute top-2 right-2"
-			variant="ghost"
-			color="neutral"
-			size="sm"
-			:icon="icons['edit']"
-			@click="navigateTo(`/admin/manage/tutorials/${id}/edit`)"
-		/>
-
 		<div class="flex flex-row items-center gap-2">
 			<div class="flex w-full flex-col p-2">
-				<div class="flex flex-row items-center justify-between">
-					<SharedTextBase class="font-semibold">{{ name }} Tutorials</SharedTextBase>
+				<div class="flex flex-col items-center justify-between">
+					<SharedTextBase class="flex flex-row gap-1 p-4 font-semibold"><UIcon :name="icon" class="size-5" /> {{ name }} Tutorials</SharedTextBase>
+					<USeparator class="mt-2 mb-4 px-8" />
 				</div>
 			</div>
 		</div>
 		<div>
-			<div class="flex flex-row items-center justify-between px-2">
-				<SharedTextBase class="font-semibold"> {{ pages.length }} Pages</SharedTextBase>
-				<UButton
-					class="w-min"
-					color="neutral"
-					variant="ghost"
-					trailing-icon="i-lucide-chevron-down"
-					:ui="{ trailingIcon: ['transition-transform duration-200', expand ? 'rotate-180' : ''] }"
-					@click="expand = !expand"
-				/>
-			</div>
-			<USeparator class="mt-2 mb-4" />
-			<UCollapsible v-model:open="expand">
-				<template #content>
-					<div v-if="pages.length === 0" class="flex flex-col items-center justify-center gap-y-4 pt-4">
-						<SharedTextBase> There are no pages in this group </SharedTextBase>
-						<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
-					</div>
+			<USection>
+				<div v-if="pages.length === 0" class="flex flex-col items-center justify-center gap-y-4">
+					<SharedTextBase> There are no tutorials in this group </SharedTextBase>
+				</div>
 
-					<ul class="flex flex-col gap-1 px-4 pb-2">
-						<li v-for="page in pages" :key="page.id" class="text-md flex flex-row items-center justify-between">
-							{{ page.name }}
-							<div class="flex flex-row items-center gap-2">
-								<SharedTextBaseSecondary>{{ page.steps?.length ?? 0 }} Steps</SharedTextBaseSecondary>
-								<UButton
-									class="w-min"
-									color="neutral"
-									variant="ghost"
-									trailing-icon="i-lucide-arrow-right"
-									@click="navigateTo(`/admin/manage/tutorials/${id}/${id}/add`)"
-								/>
-							</div>
-						</li>
-					</ul>
-					<div class="flex justify-center p-2">
+				<ul class="flex flex-col gap-1 px-4 pb-2">
+					<li v-for="page in pages" :key="page.id" class="text-md flex flex-row items-center justify-between">
+						<SharedTutorial :tutorial="getPreviewTutorial(page)" :initial-page="0" :edit-page-url="`/admin/manage/tutorials/${id}/${page.id}/edit`">
+							<UButton class="flex-1" color="primary" variant="outline" size="xl">
+								<div class="flex w-full items-center justify-between">
+									<span class="text-black">{{ page.name }}</span>
+									<UIcon name="i-lucide-chevron-right" />
+								</div>
+							</UButton>
+						</SharedTutorial>
 						<UButton
-							label="Create new page"
+							class="w-min"
 							color="neutral"
-							variant="outline"
-							class="w-max"
-							trailing-icon="i-lucide-plus"
-							@click="navigateTo(`/admin/manage/tutorials/${id}/add`)"
+							variant="ghost"
+							size="xl"
+							:icon="icons['edit']"
+							@click="navigateTo(`/admin/manage/tutorials/${id}/${page.id}/edit`)"
 						/>
-					</div>
-				</template>
-			</UCollapsible>
+					</li>
+				</ul>
+				<div class="flex justify-center p-4">
+					<UButton
+						label="Create new tutorial"
+						color="neutral"
+						variant="outline"
+						class="w-max"
+						trailing-icon="i-lucide-plus"
+						@click="navigateTo(`/admin/manage/tutorials/${id}/add`)"
+					/>
+				</div>
+			</USection>
 		</div>
 	</UCard>
 </template>
 
 <script setup lang="ts">
-const expand = ref(false)
 const props = defineProps({
 	id: { type: String, required: true },
 	name: { type: String, required: true },
 	pages: { type: Array, default: () => [] },
+	icon: { type: String, required: true },
+})
+
+const emit = defineEmits<{
+	refresh: []
+}>()
+
+const getPreviewTutorial = (page: any) => ({
+	title: page.name,
+	tutorialPages: [
+		{
+			title: page.name,
+			content: page.steps,
+		},
+	],
 })
 </script>

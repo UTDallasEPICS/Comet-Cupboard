@@ -73,7 +73,7 @@ const onSubmit = async (event) => {
 		await $fetch("/api/admin/tutorial/pages", {
 			method: "POST",
 			body: {
-				id: tutorialID,
+				groupID: tutorialID,
 				name: event.data.name,
 			},
 		})

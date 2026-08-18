@@ -1,6 +1,12 @@
 <template>
 	<div>
-		<NuxtLayout name="main" title="Admin Dashboard">
+		<NuxtLayout name="main" :tutorial-data="tutorialData">
+			<div class="flex flex-row items-center gap-2">
+				<SharedTextPageTitle> Admin Dashboard </SharedTextPageTitle>
+				<SharedTutorial v-if="tutorialData" :tutorial="tutorialData">
+					<UButton :icon="icons['information']" color="neutral" variant="ghost" />
+				</SharedTutorial>
+			</div>
 			<USeparator class="my-4" />
 			<section>
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -34,4 +40,6 @@ const adminLinks = roleLinks["admin"]
 	.filter((link) => {
 		return link.label != "Dashboard"
 	})
+
+const { data: tutorialData } = await useTutorialForGroup("Admin")
 </script>

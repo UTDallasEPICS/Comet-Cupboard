@@ -18,7 +18,7 @@ const schema = z
 export default defineSafeHandler(async (event) => {
 	const { id, name } = await validateBody(event, schema)
 
-	const updateGroupName = await prisma.tutorialGroup.update({
+	const updatePageName = await prisma.tutorialPage.update({
 		where: {
 			id,
 		},
@@ -27,5 +27,5 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
-	return updateGroupName
+	return updatePageName
 })

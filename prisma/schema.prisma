@@ -252,7 +252,7 @@ model IssuedEmergencyBagItem {
 
 model TutorialGroup {
     id    String         @id @default(cuid())
-    name  String
+    name  String         @unique
     pages TutorialPage[]
 
     @@map("tutorial_group")
@@ -262,7 +262,7 @@ model TutorialPage {
     id      String         @id @default(cuid())
     name    String
     groupID String
-    group   TutorialGroup  @relation(fields: [groupID], references: [id])
+    group   TutorialGroup  @relation(fields: [groupID], references: [id], onDelete: Cascade)
     steps   TutorialStep[]
 }
 
@@ -271,5 +271,5 @@ model TutorialStep {
     imageURL    String
     description String
     pageID      String
-    page        TutorialPage @relation(fields: [pageID], references: [id])
+    page        TutorialPage @relation(fields: [pageID], references: [id], onDelete: Cascade)
 }
