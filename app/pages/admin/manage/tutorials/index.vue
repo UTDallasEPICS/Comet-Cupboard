@@ -5,7 +5,7 @@
 				<USeparator class="my-4" />
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<li v-for="groupConfig in groupConfigs" :key="groupConfig.name">
-						<TutorialGroupCard
+						<ManageTutorialGroupCard
 							v-if="findGroup(groupConfig.name)"
 							:id="findGroup(groupConfig.name).id"
 							:name="findGroup(groupConfig.name).name"
@@ -21,8 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import TutorialGroupCard from "~/components/Manage/TutorialGroupCard.vue"
-
 definePageMeta({ layout: false })
 
 const { data: groups, refresh } = await useFetch("/api/admin/tutorial/groups")

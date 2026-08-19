@@ -5,25 +5,12 @@
 			<section>
 				<div class="mx-auto w-min">
 					<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
-						<!-- <UCard>
-							<UFormField
-								id="image"
-								name="image"
-								label="Category Image"
-								description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels"
-								required
-							>
-								<div class="flex flex-col gap-2">
-									<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
-								</div>
-							</UFormField>
-						</UCard> -->
 						<UCard>
 							<UFormField
-								id="pageName"
-								name="pageName"
+								id="name"
+								name="name"
 								label="Page Name"
-								description="Page name must be at most 20 characters and only contain letters and spaces"
+								description="Page name must be at most 30 characters and only contain letters and spaces"
 								required
 							>
 								<UInput v-model="state.name" placeholder="Enter page name" />
@@ -54,13 +41,11 @@ const currentGroup = computed(() => {
 	return groups.value?.find((group) => group.id === tutorialID)
 })
 
-console.log(currentGroup.value)
-
 const formSchema = z.object({
 	name: z
 		.string()
 		.min(1, "Item name is required")
-		.max(20, "Item name must be at most 20 characters")
+		.max(30, "Item name must be at most 30 characters")
 		.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
 })
 
@@ -80,7 +65,7 @@ const onSubmit = async (event) => {
 
 		navigateTo(`/admin/manage/tutorials`)
 	} catch (error) {
-		console.log(error)
+		console.error(error)
 	}
 }
 </script>

@@ -9,7 +9,7 @@ const schema = z
 		name: z
 			.string()
 			.min(1)
-			.max(20)
+			.max(30)
 			.regex(/^[A-Za-z ]+$/),
 	})
 	.strict()

@@ -9,7 +9,11 @@ export default defineSafeHandler(async (event) => {
 		include: {
 			pages: {
 				include: {
-					steps: true,
+					steps: {
+						orderBy: {
+							stepOrdering: "asc",
+						},
+					},
 				},
 			},
 		},

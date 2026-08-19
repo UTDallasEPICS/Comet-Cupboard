@@ -40,8 +40,6 @@ const pageID = route.params.pageID as string
 
 const { data: page, refresh } = await useFetch(`/api/admin/tutorial/tutorialPages/${pageID}`)
 
-console.log(page.value)
-
 const currentCarouselNumber = ref(0)
 const currentStep = computed(() => page.value?.steps[currentCarouselNumber.value])
 

@@ -28,8 +28,8 @@
 					<UFormField label="Privacy" class="text-xl">
 						<UCheckbox v-model="bagDetails.isPrivate" label="Make this bag private" class="mt-2" />
 						<UTextarea
+							v-if="bagDetails.isPrivate"
 							v-model="bagDetails.bagDescription"
-							:disabled="!bagDetails.isPrivate"
 							placeholder="Please enter a bag description..."
 							class="mt-2 w-full"
 							:rows="4"

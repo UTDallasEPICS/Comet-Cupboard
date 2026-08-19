@@ -76,16 +76,8 @@
 				</ul>
 				<div class="mt-2 max-w-sm">
 					<div v-if="props.bag.privacy === 'PRIVATE'">
-						<div class="flex items-center justify-center gap-4 rounded-lg border border-blue-400 bg-blue-50 p-2">
-							<div>
-								<UIcon name="i-lucide-info" class="size-7 text-blue-500" />
-							</div>
-							<div class="flex">
-								<span class="font-bold"
-									>Note:<span class="wrap-break ml-1 font-normal">{{ props.bag.bagDescription }}</span></span
-								>
-							</div>
-						</div>
+						<UAlert :icon="icons['information']" :title="props.bag.bagDescription" color="neutral" variant="outline" class="border-blue-400 bg-blue-50 p-2" />
+						
 
 						<div class="flex justify-end pt-2">
 							<UButton

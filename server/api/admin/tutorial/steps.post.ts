@@ -18,13 +18,28 @@ export default defineSafeHandler(async (event) => {
 		newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
 	}
 
-	const step = await prisma.tutorialStep.create({
-		data: {
-			pageID,
-			description,
-			imageURL: newImgName,
-		},
+	const transaction = await prisma.$transaction(async (tx) => {
+		// Get the current maximum stepOrdering for the given pageID
+		const maxStepOrdering = await tx.tutorialStep.aggregate({
+			where: { pageID },
+			_max: { stepOrdering: true },
+		})
+
+		// Determine the new stepOrdering value
+		const stepOrdering = (maxStepOrdering._max.stepOrdering ?? 0) + 1
+
+		// Create the new tutorial step
+		const newStep = await tx.tutorialStep.create({
+			data: {
+				pageID,
+				description,
+				imageURL: newImgName,
+				stepOrdering,
+			},
+		})
+
+		return newStep
 	})
 
-	return step
+	return transaction
 })

@@ -270,6 +270,7 @@ model TutorialStep {
     id          String       @id @default(cuid())
     imageURL    String
     description String
+    stepOrdering   Int
     pageID      String
     page        TutorialPage @relation(fields: [pageID], references: [id], onDelete: Cascade)
 }

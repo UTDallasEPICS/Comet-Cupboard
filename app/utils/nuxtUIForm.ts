@@ -18,6 +18,7 @@ export const createFormBuilder = <T extends z.ZodTypeAny>(schema: T, defaults?: 
 	}
 
 	const onError = async (event: FormErrorEvent) => {
+		console.log("Form error event errors:", event.errors)
 		if (event?.errors?.[0]?.id) {
 			const el = document.getElementById(event.errors[0].id)
 			el?.focus()

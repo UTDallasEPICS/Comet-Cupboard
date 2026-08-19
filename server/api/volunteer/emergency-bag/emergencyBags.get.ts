@@ -13,6 +13,5 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
-	console.log(emBags)
 	return emBags
 })

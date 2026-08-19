@@ -1,7 +1,6 @@
 <template>
 	<UModal v-model:open="open" :title="tutorial.title" @after:leave="resetTutorial">
 		<slot />
-		<!-- <UButton :icon="icons['information']" color="neutral" variant="ghost" /> -->
 
 		<template #body>
 			<UContainer class="min-h-128 max-w-96 min-w-72">
@@ -59,7 +58,7 @@
 									class="mt-4 flex w-full"
 									@select="currentCarouselNumber = $event"
 								>
-									<img :src="`/api/public/image/${step.imageURL}`" class="mx-auto aspect-auto h-152 rounded-lg" loading="lazy" />
+									<img :src="`/api/public/image/${step.imageURL}`" class="mx-auto aspect-auto w-full rounded-lg" loading="lazy" />
 								</UCarousel>
 
 								<SharedTextBaseSecondary class="mt-2 text-center">

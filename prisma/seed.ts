@@ -285,8 +285,7 @@ const createTutorialGroups = async () => {
 	const groupNames = ["Student", "Volunteer", "Admin", "Head Admin"]
 
 	const groups = await prisma.tutorialGroup.createMany({
-		data: groupNames.map((name) => ({ name })),
-		skipDuplicates: true,
+		data: groupNames.map((name) => ({ name }))
 	})
 
 	return groups
@@ -310,7 +309,7 @@ const main = async () => {
 	// await createIssuedEmergencyBags()
 	// await createIssuedEmergencyBagItems()
 
-	console.log(`Database has been seeded. 🌱`)
+	console.info(`Database has been seeded. 🌱`)
 }
 
 main().catch((err) => {

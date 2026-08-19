@@ -102,7 +102,6 @@ const submitBag = async () => {
 			},
 		})
 
-		console.log("Bag successfully created!", createBag)
 		navigateTo("/volunteer/emergency-bag/manage")
 		return true
 	} catch (err: any) {
