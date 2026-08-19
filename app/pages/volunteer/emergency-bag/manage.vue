@@ -4,14 +4,13 @@
 			<USeparator class="my-4" />
 			<div class="flex items-center justify-center">
 				<UCard class="w-full max-w-100">
-					<div class="mb-2 flex justify-between">
 						<div class="flex flex-row flex-nowrap items-center gap-2">
-							<UInput v-model="searchQuery" type="text" :icon="icons['search']" placeholder="Search items" class="relative grow">
+							<UInput v-model="searchQuery" type="text" :icon="icons['search']" placeholder="Search bags" class="relative grow">
 								<UButton
 									:icon="icons['add']"
 									variant="ghost"
 									color="neutral"
-									class="absolute right-0"
+									class="bg-utd-green absolute right-0 text-white"
 									@click="navigateTo('/volunteer/emergency-bag/create')"
 								/>
 							</UInput>
@@ -30,6 +29,7 @@
 								</template>
 							</UPopover>
 						</div>
+					<div class="w-full flex flex-row justify-end mt-2 mb-4">
 						<UPopover>
 							<UButton label="Move Bag" class="bg-utd-green" trailing-icon="i-lucide-arrow-left-right" />
 
@@ -50,9 +50,8 @@
 							</template>
 						</UPopover>
 					</div>
-					<!-- <UButton label="Delete Bag" class="bg-red-500" trailing-icon="i-lucide-trash" @click="deleteBag" /> -->
 
-					<div v-if="emergencyBags.length === 0" class="flex flex-col items-center justify-center gap-y-4">
+					<div v-if="emergencyBags.length === 0" class="flex flex-col items-center justify-center gap-y-4 pt-4">
 						<SharedTextBase> No bags have been created </SharedTextBase>
 						<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
 						<UButton
@@ -81,8 +80,6 @@ const selected = ref<Record<string, boolean>>({})
 const searchQuery = ref("")
 
 const { data: emergencyBags, refresh } = await useFetch("/api/volunteer/emergency-bag/emergencyBags")
-
-console.log("emergencyBags: ", emergencyBags.value)
 
 const { data: locations } = await useFetch("/api/volunteer/location")
 
@@ -177,7 +174,6 @@ const moveBag = async () => {
 			},
 		})
 
-		console.log("Bag successfully moved!", moveBag)
 		await refresh()
 		selected.value = {}
 	} catch (err: any) {
@@ -185,27 +181,4 @@ const moveBag = async () => {
 		alert(`Error: ${err.message || "Failed to move bag"}`)
 	}
 }
-
-// const deleteBag = async () => {
-// 	if (selectedBags.value.length === 0) {
-// 		alert("Please select at least one bag to delete")
-// 		return
-// 	}
-
-// 	try {
-// 		const moveBag = await $fetch("/api/volunteer/emergency-bag/emergencyBags", {
-// 			method: "DELETE",
-// 			body: {
-// 				bagIDs: selectedBags.value.map((bag) => bag.bagID),
-// 			},
-// 		})
-
-// 		console.log("Bag successfully deleted!", moveBag)
-// 		await refresh()
-// 		selected.value = {}
-// 	} catch (err: any) {
-// 		console.error("Failed to delete bag:", err)
-// 		alert(`Error: ${err.message || "Failed to delete bag"}`)
-// 	}
-// }
 </script>

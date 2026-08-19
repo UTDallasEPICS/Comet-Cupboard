@@ -4,7 +4,7 @@
 			<section>
 				<div class="flex flex-row flex-nowrap items-center gap-2">
 					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search locations" class="relative grow">
-						<UButton :icon="icons['add']" variant="ghost" color="neutral" class="absolute right-0" :to="`/admin/manage/locations/add`" />
+						<UButton :icon="icons['add']" variant="ghost" color="neutral" class="absolute bg-utd-green text-white right-0" :to="`/admin/manage/locations/add`" />
 					</UInput>
 				</div>
 				<USeparator class="my-4" />

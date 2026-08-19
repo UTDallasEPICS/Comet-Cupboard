@@ -249,3 +249,28 @@ model IssuedEmergencyBagItem {
     @@id(name: "emergencyBagItemID", [itemID, bagID])
     @@map("issued_emergency_bag_item")
 }
+
+model TutorialGroup {
+    id    String         @id @default(cuid())
+    name  String         @unique
+    pages TutorialPage[]
+
+    @@map("tutorial_group")
+}
+
+model TutorialPage {
+    id      String         @id @default(cuid())
+    name    String
+    groupID String
+    group   TutorialGroup  @relation(fields: [groupID], references: [id], onDelete: Cascade)
+    steps   TutorialStep[]
+}
+
+model TutorialStep {
+    id          String       @id @default(cuid())
+    imageURL    String
+    description String
+    stepOrdering   Int
+    pageID      String
+    page        TutorialPage @relation(fields: [pageID], references: [id], onDelete: Cascade)
+}

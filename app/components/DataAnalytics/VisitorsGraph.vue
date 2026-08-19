@@ -107,12 +107,6 @@ const updateChart = async () => {
 	visitorData.value = fetchVisitorData
 	uniqueVisitorData.value = fetchUniqueVisitorData
 
-	console.log(visitorData.value)
-	console.log(uniqueVisitorData.value)
-	console.log(totalVisitors.value)
-	console.log(totalUniqueVisitors.value)
-	console.log(peakVisitors.value)
-
 	const dates = Object.keys(visitorData.value).map(formatLabel)
 
 	if (!chart.value) return

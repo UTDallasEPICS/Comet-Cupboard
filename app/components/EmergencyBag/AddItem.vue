@@ -2,27 +2,31 @@
 	<div class="flex justify-center">
 		<div class="flex w-full max-w-100 flex-col">
 			<UCard>
-				<div class="flex justify-between items-center gap-4">
-					<header class="w-full text-xl font-bold text-nowrap">Current Bag <span class="text-red-500">*</span>
-					</header>
-					<div class="relative w-72">
-						<UPopover v-model:open="open" :dismissible="false"
-							:ui="{ content: 'w-(--reka-popper-anchor-width) ' }">
+				<div class="flex flex-row items-center justify-between gap-4">
+					<UFormField label="Current Bag" class="text-xl" required> </UFormField>
+					<div class="relative w-42">
+						<UPopover v-model:open="open" :dismissible="false" :ui="{ content: 'w-(--reka-popper-anchor-width) ' }">
 							<template #anchor>
-								<UInput v-model="searchQuery" icon="i-lucide-search" variant="outline" class="w-full"
-									placeholder="Search..." @focus="open = true" @blur="open = false" />
+								<UInput
+									v-model="searchQuery"
+									icon="i-lucide-search"
+									variant="outline"
+									class="w-full"
+									placeholder="Search..."
+									@focus="open = true"
+									@blur="open = false"
+								/>
 							</template>
 
 							<template #content>
-								<div class="absolute right-0 max-h-64 w-64 overflow-y-auto border border-gray-400 rounded-lg bg-white">
+								<div class="absolute right-0 max-h-64 w-64 overflow-y-auto rounded-lg border border-gray-400 bg-white">
 									<div v-for="item in filteredItems" :key="item.itemID" @click="addItemToBag(item)">
 										<div class="flex items-center justify-between hover:bg-gray-100">
 											<div class="flex w-full cursor-pointer items-center gap-2 py-1">
-												<img :src="`/api/public/image/${item.imgName}`"
-													class="ml-2 aspect-square w-8 rounded-lg" />
+												<img :src="`/api/public/image/${item.imgName}`" class="ml-2 aspect-square w-8 rounded-lg" />
 												{{ item.name }}
 											</div>
-											<div class="flex mr-2">
+											<div class="mr-2 flex">
 												<p>Qty:</p>
 												{{ item.quantity }}
 											</div>
@@ -35,17 +39,25 @@
 					</div>
 				</div>
 
-				<USeparator class="mb-4 mt-2" />
+				<USeparator class="mt-2 mb-4" />
 
 				<div class="flex flex-col gap-4">
 					<div v-if="bagItems.length === 0" class="flex flex-col items-center justify-center gap-y-4">
 						<SharedTextBase> No items in current bag </SharedTextBase>
 						<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
 					</div>
-					<EmergencyBagItemCard v-for="item in bagItems" :key="item.itemID" :name="item.name"
-						:img-name="item.imgName" :item-id="item.itemID" :item-count="item.count"
-						:item-quantity="item.quantity" @increment="increaseItemCount(item.itemID)"
-						@decrement="decreaseItemCount(item.itemID)" @remove="removeItemFromBag(item.itemID)" />
+					<EmergencyBagItemCard
+						v-for="item in bagItems"
+						:key="item.itemID"
+						:name="item.name"
+						:img-name="item.imgName"
+						:item-id="item.itemID"
+						:item-count="item.count"
+						:item-quantity="item.quantity"
+						@increment="increaseItemCount(item.itemID)"
+						@decrement="decreaseItemCount(item.itemID)"
+						@remove="removeItemFromBag(item.itemID)"
+					/>
 				</div>
 				<div class="flex justify-center">
 					<p v-if="hasError" class="mt-4 text-sm text-red-500">Please add at least one item to your bag</p>
@@ -65,7 +77,6 @@ const bagItems = defineModel<{
 	imgName: string
 	quantity: number
 }>("bagItems")
-
 const hasError = ref(false)
 
 watch(

@@ -115,8 +115,6 @@ const updateChart = async () => {
 
 	distributedData.value = formatted
 
-	console.log("distributedData", distributedData.value)
-
 	const dateLabels = Object.keys(distributedData.value)
 
 	const distributedQty = Object.values(distributedData.value).map((date) => {
@@ -233,8 +231,6 @@ const showCategoryDrillDownView = (date: string) => {
 	if (!chart.value) return
 
 	const categoryData = distributedData.value[date]
-
-	console.log("categoryData", categoryData)
 
 	const entries = Object.entries(categoryData).map(([label, data]) => ({
 		label,

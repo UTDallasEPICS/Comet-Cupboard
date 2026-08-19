@@ -1,6 +1,13 @@
 <template>
 	<div>
-		<NuxtLayout name="main" title="Student Dashboard" :tutorial-data="tutorials['student']">
+		<NuxtLayout name="main" :tutorial-data="tutorialData">
+			<div class="flex flex-row items-center gap-2">
+				<SharedTextPageTitle> Student Dashboard </SharedTextPageTitle>
+				<SharedTutorial v-if="tutorialData" :tutorial="tutorialData">
+					<UButton :icon="icons['information']" color="neutral" variant="ghost" />
+				</SharedTutorial>
+			</div>
+
 			<USeparator class="my-4" />
 			<section>
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -22,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+
 definePageMeta({ layout: false })
 
 const studentLinks = roleLinks["student"]
@@ -34,4 +42,6 @@ const studentLinks = roleLinks["student"]
 	.filter((link) => {
 		return link.label != "Dashboard"
 	})
+
+const { data: tutorialData } = await useTutorialForGroup("Student")
 </script>

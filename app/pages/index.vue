@@ -60,7 +60,6 @@ const startLogin = async () => {
 }
 
 const isDevMode = useRuntimeConfig().public.NODE_ENV === "nonprod"
-console.log(useRuntimeConfig().public)
 const devUsernameInput = ref("")
 
 const startDevLogin = async () => {

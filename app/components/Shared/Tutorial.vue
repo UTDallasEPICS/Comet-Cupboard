@@ -1,6 +1,6 @@
 <template>
-	<UModal :title="tutorial.title" @after:leave="resetTutorial">
-		<UButton :icon="icons['information']" color="neutral" variant="ghost" />
+	<UModal v-model:open="open" :title="tutorial.title" @after:leave="resetTutorial">
+		<slot />
 
 		<template #body>
 			<UContainer class="min-h-128 max-w-96 min-w-72">
@@ -36,22 +36,47 @@
 								{{ activePage.title }}
 							</SharedTextBase>
 
-							<UCarousel v-slot="{ item }" :items="activePage.content" arrows class="mt-4 flex w-full" @select="currentCarouselNumber = $event">
-								<img :src="item.imageURL" class="mx-auto aspect-auto h-152 rounded-lg" loading="lazy" />
-							</UCarousel>
+							<div v-if="activePage.content.length === 0" class="flex flex-col items-center justify-center gap-4 py-8 text-center">
+								<SharedTextBaseSecondary> This tutorial doesn't have any steps yet. </SharedTextBaseSecondary>
 
-							<SharedTextBaseSecondary class="mt-2 text-center">
-								{{ currentStep?.description }}
-							</SharedTextBaseSecondary>
-
-							<SharedTextBase class="mt-2 text-center">
-								{{ currentCarouselNumber + 1 }} /
-								{{ activePage.content.length }}
-							</SharedTextBase>
-
-							<div v-if="currentCarouselNumber === activePage.content.length - 1" class="flex justify-center">
-								<UButton color="secondary" variant="solid" size="xl" class="mt-4" @click="pop"> Back to Tutorials </UButton>
+								<UButton
+									v-if="props.editPageUrl"
+									color="neutral"
+									variant="outline"
+									:leading-icon="icons['add']"
+									@click="navigateTo(props.editPageUrl)"
+								>
+									Add steps to tutorial
+								</UButton>
 							</div>
+
+							<template v-else>
+								<UCarousel
+									v-slot="{ item: step }"
+									:items="activePage.content"
+									arrows
+									class="mt-4 flex w-full"
+									@select="currentCarouselNumber = $event"
+								>
+									<img :src="`/api/public/image/${step.imageURL}`" class="mx-auto aspect-auto w-full rounded-lg" loading="lazy" />
+								</UCarousel>
+
+								<SharedTextBaseSecondary class="mt-2 text-center">
+									{{ currentStep?.description }}
+								</SharedTextBaseSecondary>
+
+								<SharedTextBase class="mt-2 text-center">
+									{{ currentCarouselNumber + 1 }} /
+									{{ activePage.content.length }}
+								</SharedTextBase>
+
+								<div
+									v-if="props.initialPage === undefined && currentCarouselNumber === activePage.content.length - 1"
+									class="flex justify-center"
+								>
+									<UButton color="secondary" variant="solid" size="xl" class="mt-4" @click="pop"> Back to Tutorial Pages </UButton>
+								</div>
+							</template>
 						</div>
 					</section>
 				</Transition>
@@ -72,9 +97,13 @@ const props = defineProps<{
 			}[]
 		}[]
 	}
+	initialPage?: number
+	editPageUrl?: string
 }>()
 
-const stack = ref<(number | "home")[]>(["home"])
+const open = ref(false)
+
+const stack = ref<(number | "home")[]>([props.initialPage ?? "home"])
 
 const currentCarouselNumber = ref(0)
 
@@ -105,7 +134,7 @@ const pop = () => {
 }
 
 const resetTutorial = () => {
-	stack.value = ["home"]
+	stack.value = [props.initialPage ?? "home"]
 	currentCarouselNumber.value = 0
 }
 </script>

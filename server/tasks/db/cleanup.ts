@@ -6,13 +6,13 @@ export default defineTask({
 		description: "Run database cleanup",
 	},
 	async run({ payload, context }) {
-		console.log(`${new Date().toISOString()}: Starting DB cleanup task...`)
+		console.info(`${new Date().toISOString()}: Starting DB cleanup task...`)
 		try {
 			const deletedCartSessions = await prisma.cart.deleteMany()
 			const deletedQueueEntries = await prisma.queueEntry.deleteMany()
 			const deletedInventoryChangeSessions = await prisma.inventoryChangeSession.deleteMany()
 			const deletedUserSessions = await prisma.userSession.deleteMany()
-			console.log(
+			console.info(
 				`Deleted ${deletedCartSessions.count} cart sessions, ${deletedQueueEntries.count} queue entries, ${deletedInventoryChangeSessions.count} inventory change sessions, and ${deletedUserSessions.count} user sessions`
 			)
 		} catch (error) {

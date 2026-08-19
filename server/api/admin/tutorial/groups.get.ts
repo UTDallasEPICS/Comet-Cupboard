@@ -1,17 +1,23 @@
-//import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
 
 export default defineSafeHandler(async (event) => {
-	const emBags = await prisma.emergencyBag.findMany({
+	const groups = await prisma.tutorialGroup.findMany({
+		orderBy: {
+			name: "asc",
+		},
 		include: {
-			EmergencyBagItems: {
+			pages: {
 				include: {
-					Item: true,
+					steps: {
+						orderBy: {
+							stepOrdering: "asc",
+						},
+					},
 				},
 			},
 		},
 	})
 
-	return emBags
+	return groups
 })

@@ -83,11 +83,6 @@ const updateChart = async () => {
 	// stores api data
 	sourceData.value = sourceContributionData
 
-	console.log(sourceData.value)
-	console.log(sourceTotals.value)
-	console.log(sourceContributionShare.value)
-	console.log("currentCategoryData: ", currentCategoryData.value)
-
 	// builds overview x-axis labels (categories)
 	const categories = [...new Set(Object.values(sourceContributionData).flatMap(Object.keys))]
 

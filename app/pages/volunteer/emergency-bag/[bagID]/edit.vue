@@ -41,8 +41,6 @@ watchEffect(() => {
 	emergencyBag.value = data.value
 })
 
-console.log("API Return:", emergencyBag.value)
-
 const removeItemFromBag = (itemID: string) => {
 	if (!emergencyBag.value.EmergencyBagItems) return
 	emergencyBag.value.EmergencyBagItems = emergencyBag.value.EmergencyBagItems.filter((item) => item.itemID != itemID)
@@ -86,7 +84,7 @@ const editBag = async () => {
 			},
 		})
 	} catch (err: any) {
-		console.log("Failed to edit bag: ", err)
+		console.error("Failed to edit bag: ", err)
 	}
 }
 </script>

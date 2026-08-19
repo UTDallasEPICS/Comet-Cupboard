@@ -30,9 +30,7 @@
 										/>
 									</div>
 
-									<SharedTextBaseSecondary class="mt-2 text-xs">
-										Check that you're not creating a duplicate source.
-									</SharedTextBaseSecondary>
+									<SharedTextBaseSecondary class="mt-2 text-xs"> Check that you're not creating a duplicate source. </SharedTextBaseSecondary>
 								</div>
 							</UFormField>
 						</UCard>
@@ -84,10 +82,10 @@ const mostSimilarItems = computed(() => {
 
 const onSubmit = async (event) => {
 	try {
-        const payload = {
-            name: event.data.sourceName,
-            archived: false,
-        }
+		const payload = {
+			name: event.data.sourceName,
+			archived: false,
+		}
 
 		await $fetch("/api/admin/inventory/source", {
 			method: "PUT",
