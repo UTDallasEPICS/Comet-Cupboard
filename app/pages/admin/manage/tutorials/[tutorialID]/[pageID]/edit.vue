@@ -2,7 +2,8 @@
 	<div>
 		<NuxtLayout name="main" :title="`Edit ${currentPage.name} Page`" :back-navigation="{ text: `Back to Tutorials`, to: `/admin/manage/tutorials` }">
 			<USeparator class="my-4" />
-			<div class="flex flex-col justify-center items-center gap-4">
+			<div class="flex flex-col items-center justify-center gap-4">
+				<UButton label="Delete Page" color="error" variant="outline" :icon="icons['delete']" @click="isDeleteModalOpen = true" />
 				<section>
 					<ManageTutorialNameEditor :original-name="originalName" :pageID="pageID" @name-changed="refresh" />
 				</section>
@@ -32,6 +33,17 @@
 								class="text-black"
 							/>
 						</div>
+						<UModal v-model:open="isDeleteModalOpen" title="Delete page?">
+							<template #body>
+								<p>Are you sure you want to delete the {{ currentPage.name }} page?</p>
+							</template>
+							<template #footer>
+								<div class="flex w-full justify-between">
+									<SharedButtonCancel text="Cancel" @click="isDeleteModalOpen = false" />
+									<UButton label="Delete Page" color="error" variant="solid" @click="deletePage" />
+								</div>
+							</template>
+						</UModal>
 					</div>
 				</section>
 			</div>
@@ -103,5 +115,20 @@ const handleStepChanged = async (changeInformation) => {
 
 	// Increment only this step's key
 	stepRefreshKeys.value[stepID] = (stepRefreshKeys.value[stepID] ?? 0) + 1
+}
+
+const isDeleteModalOpen = ref(false)
+
+const deletePage = async () => {
+	try {
+		await $fetch("/api/admin/tutorial/pages", {
+			method: "DELETE",
+			body: { pageID: pageID },
+		})
+		isDeleteModalOpen.value = false
+		await navigateTo("/admin/manage/tutorials")
+	} catch (error) {
+		console.error(error)
+	}
 }
 </script>
