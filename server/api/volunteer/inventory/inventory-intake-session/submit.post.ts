@@ -4,6 +4,8 @@ import { z } from "zod"
 import { validateBody } from "#server/utils/validation"
 import { Prisma } from "../../../../../prisma/generated/prisma/client"
 import { StatusCodes } from "http-status-codes"
+import { publishEvent } from "#server/utils/eventBus"
+import { createEvent } from "#server/utils/eventsFactory"
 
 const schema = z.object({
 	inventoryIntakeSessionID: z.string(),
@@ -79,6 +81,9 @@ export default defineSafeHandler(async (event) => {
 				userID: event.context.userSession.userID,
 			},
 		})
+
+		publishEvent(createEvent("inventoryIntakeSession.submitted", { inventoryIntakeSessionID: inventoryIntakeSessionID }))
+
 		return "Inventory intake session completed successfully"
 	})
 })

@@ -139,6 +139,22 @@ export const publishEvent = async (event: AppEvent) => {
 				})
 			)
 			break
+		case "inventoryIntakeSession.specificItemAmountChange":
+			connectionsByRole.volunteer.broadcast(
+				JSON.stringify({
+					type: "inventoryIntakeSession.specificItemAmountChange",
+					payload: event.payload,
+				})
+			)
+			break
+		case "inventoryIntakeSession.submitted":
+			connectionsByRole.volunteer.broadcast(
+				JSON.stringify({
+					type: "inventoryIntakeSession.submitted",
+					payload: event.payload,
+				})
+			)
+			break
 		default:
 			console.warn(`Unhandled event type: ${event.type}`)
 	}

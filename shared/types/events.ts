@@ -34,6 +34,16 @@ export interface EventMap {
 	/* verify cart list */
 	"verifyCartList.cart.added": { cart: any }
 	"verifyCartList.cart.removed": { publicCode: string }
+
+	/* global inventory intake session */
+	"inventoryIntakeSession.specificItemAmountChange": {
+		inventoryIntakeSessionID: string
+		specificItemID: string
+		productName: string
+		imgName: string
+		amountChanged: number
+	}
+	"inventoryIntakeSession.submitted": { inventoryIntakeSessionID: string }
 }
 
 export type AppEvent = {
