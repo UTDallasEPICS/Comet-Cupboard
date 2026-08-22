@@ -22,7 +22,7 @@ export default defineSafeHandler(async (event) => {
 	const transactionResult = await prisma.$transaction(async (tx) => {
 		const pendingCart = await tx.cart.findUnique({
 			where: { publicCode: publicCode, pending: true },
-			include: { CartItems: true, UserSession: { select: { userID: true } } },
+			include: { cartItems: true, userSession: { select: { userID: true } } },
 		})
 
 		if (!pendingCart) {
@@ -30,30 +30,34 @@ export default defineSafeHandler(async (event) => {
 		}
 
 		if (action === "ACCEPT") {
-			const orderItems = pendingCart.CartItems.map((cartItem) => ({
-				itemID: cartItem.itemID,
+			const orderItems = pendingCart.cartItems.map((cartItem) => ({
+				specificItemID: cartItem.specificItemID,
 				count: cartItem.count,
 			}))
 
 			for (const orderItem of orderItems) {
-				try {
-					await tx.item.update({
-						where: { itemID: orderItem.itemID },
-						data: { quantity: { decrement: orderItem.count } },
-					})
-				} catch (error: unknown) {
-					if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
-						throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Item not found" })
-					}
-					throw error
+				const specificItem = await tx.specificItem.findUnique({ where: { specificItemID: orderItem.specificItemID }, select: { quantity: true } })
+				if (!specificItem || Number(specificItem.quantity) < orderItem.count) {
+					throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Insufficient inventory to accept cart" })
 				}
+				await tx.specificItem.update({
+					where: { specificItemID: orderItem.specificItemID },
+					data: { quantity: specificItem.quantity - orderItem.count },
+				})
 			}
 
 			await tx.order.create({
 				data: {
-					userID: pendingCart.UserSession.userID,
-					OrderItems: { create: orderItems },
+					userID: pendingCart.userSession.userID,
+					orderItems: { create: orderItems },
 					cartCreatedAt: pendingCart.createdAt,
+				},
+			})
+			await tx.auditLog.create({
+				data: {
+					action: "VERIFY_CART_APPROVED",
+					message: `Cart ${publicCode} approved${reason ? `: ${reason}` : ""}`,
+					userID: event.context.userSession.userID,
 				},
 			})
 
@@ -66,7 +70,9 @@ export default defineSafeHandler(async (event) => {
 				throw error
 			}
 
-			publishEvent(createEvent("cart.verification.decision", { publicCode: publicCode, decision: "ACCEPT", reason, userID: pendingCart.UserSession.userID }))
+			publishEvent(
+				createEvent("cart.verification.decision", { publicCode: publicCode, decision: "ACCEPT", reason, userID: pendingCart.userSession.userID })
+			)
 			publishEvent(createEvent("cartSession.removed", { publicCode }))
 			publishEvent(createEvent("verifyCartList.cart.removed", { publicCode }))
 
@@ -84,7 +90,17 @@ export default defineSafeHandler(async (event) => {
 				throw error
 			}
 
-			publishEvent(createEvent("cart.verification.decision", { publicCode: publicCode, decision: "REJECT", reason, userID: pendingCart.UserSession.userID }))
+			await tx.auditLog.create({
+				data: {
+					action: "VERIFY_CART_REJECTED",
+					message: `Cart ${publicCode} rejected${reason ? `: ${reason}` : ""}`,
+					userID: event.context.userSession.userID,
+				},
+			})
+
+			publishEvent(
+				createEvent("cart.verification.decision", { publicCode: publicCode, decision: "REJECT", reason, userID: pendingCart.userSession.userID })
+			)
 			publishEvent(createEvent("verifyCartList.cart.removed", { publicCode }))
 
 			return "Successfully rejected cart"

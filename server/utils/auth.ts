@@ -13,7 +13,7 @@ export const findOrCreateStudentUserFromProfile = async (profile: SsoProfile) =>
 		return existingUser
 	}
 
-	return prisma.user.create({
+	return await prisma.user.create({
 		data: {
 			userID: normalizedEmail,
 			displayName: profile.displayName.trim(),

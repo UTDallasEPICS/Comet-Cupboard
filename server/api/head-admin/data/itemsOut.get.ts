@@ -20,22 +20,26 @@ export default defineSafeHandler(async (event) => {
 
 	const { timeLevel, startDate, endDate } = result.data
 
-	if(startDate) {
+	if (startDate) {
 		startDate.setHours(0, 0, 0, 0)
 	}
 
-	if(endDate) {
+	if (endDate) {
 		endDate.setHours(23, 59, 59, 999)
 	}
 
 	const order = await prisma.order.findMany({
 		include: {
-			OrderItems: {
+			orderItems: {
 				include: {
-					Item: {
-						select: {
-							categoryName: true,
-							name: true,
+					specificItem: {
+						include: {
+							item: {
+								select: {
+									itemName: true,
+									category: { select: { categoryName: true } },
+								},
+							},
 						},
 					},
 				},
@@ -53,11 +57,11 @@ export default defineSafeHandler(async (event) => {
 	})
 
 	const rows = order.flatMap((order) => {
-		return order.OrderItems.map((item) => ({
+		return order.orderItems.map((item) => ({
 			date: order.createdAt,
 			distributionCount: item.count,
-			itemCategory: item.Item.categoryName,
-			itemName: item.Item.name,
+			itemCategory: item.specificItem.item.category.categoryName,
+			itemName: item.specificItem.item.itemName,
 		}))
 	})
 
@@ -65,10 +69,10 @@ export default defineSafeHandler(async (event) => {
 		return {}
 	}
 
-	const firstDate = startDate ?? new Date(rows[0]?.date)
-	const lastDate = endDate ?? new Date(rows[rows.length - 1]?.date)
+	const firstDate = startDate ?? new Date(rows[0]!.date)
+	const lastDate = endDate ?? new Date(rows[rows.length - 1]!.date)
 	const lastTimeLevel = getTimeLevel(lastDate, timeLevel)
-	const distributionsByTimeLevel = {}
+	const distributionsByTimeLevel: Record<string, Record<string, { total: number; items: Record<string, number> }>> = {}
 	let curDate = new Date(firstDate)
 	while (curDate <= lastDate || getTimeLevel(curDate, timeLevel) === lastTimeLevel) {
 		const level = getTimeLevel(curDate, timeLevel)
@@ -97,18 +101,19 @@ export default defineSafeHandler(async (event) => {
 		const level = getTimeLevel(row.date, timeLevel)
 		const category = row.itemCategory
 		const item = row.itemName
+		const levelTotals = distributionsByTimeLevel[level]!
 
-		if (!(category in distributionsByTimeLevel[level])) {
-			distributionsByTimeLevel[level][category] = { total: 0, items: {} }
+		if (!(category in levelTotals)) {
+			levelTotals[category] = { total: 0, items: {} }
 		}
 
-		distributionsByTimeLevel[level][category].total += row.distributionCount
+		levelTotals[category]!.total += row.distributionCount
 
-		if (!(item in distributionsByTimeLevel[level][category].items)) {
-			distributionsByTimeLevel[level][category].items[item] = 0
+		if (!(item in levelTotals[category]!.items)) {
+			levelTotals[category]!.items[item] = 0
 		}
 
-		distributionsByTimeLevel[level][category].items[item] += row.distributionCount
+		levelTotals[category]!.items[item]! += row.distributionCount
 	}
 
 	return distributionsByTimeLevel

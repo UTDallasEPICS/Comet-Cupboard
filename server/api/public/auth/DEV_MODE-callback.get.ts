@@ -60,7 +60,7 @@ export default defineSafeHandler(async (event) => {
 		},
 		secure: {
 			userID: user.userID,
-		}
+		},
 	})
 
 	const userRole = user.role

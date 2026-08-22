@@ -10,9 +10,10 @@ export default defineSafeHandler(async (event) => {
 			userID: true,
 			publicCode: true,
 			publicIcon: true,
-			User: {
+			user: {
 				select: {
 					displayName: true,
+					role: true,
 				},
 			},
 		},

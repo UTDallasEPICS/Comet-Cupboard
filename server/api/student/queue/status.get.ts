@@ -8,7 +8,7 @@ export default defineSafeHandler(async (event) => {
 	const existingEntry = await prisma.queueEntry.findUnique({
 		where: { publicCode: publicCode },
 		include: {
-			UserSession: {
+			userSession: {
 				select: {
 					publicIcon: true,
 				},
@@ -21,7 +21,10 @@ export default defineSafeHandler(async (event) => {
 	const formattedEntry = {
 		position: existingEntry.position,
 		publicCode: existingEntry.publicCode,
-		publicIcon: existingEntry.UserSession.publicIcon,
+		publicIcon: existingEntry.userSession.publicIcon,
+		queuePingSentAt: existingEntry.queuePingSentAt,
+		queuePingAcknowledgedAt: existingEntry.queuePingAcknowledgedAt,
+		queuePingAcknowledgementMessage: existingEntry.queuePingAcknowledgementMessage,
 	}
 	return formattedEntry
 })

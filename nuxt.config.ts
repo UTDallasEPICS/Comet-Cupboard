@@ -3,7 +3,7 @@ export default defineNuxtConfig({
 	devtools: { enabled: true },
 	modules: ["@nuxt/eslint", "@pinia/nuxt", "@nuxt/ui", "nuxt-auth-utils"],
 	css: ["~/assets/css/main.css"],
-	runtimeConfig: { EPICS_SSO_BASE_URL: "", EPICS_SSO_INTERNAL_URL: "", public: { LOCAL_URL: "", NODE_ENV: "" } },
+	runtimeConfig: { EPICS_SSO_BASE_URL: "", EPICS_SSO_INTERNAL_URL: "", TIME_BASED_ONE_TIME_PASSWORD_SECRET: "", public: { LOCAL_URL: "", NODE_ENV: "" } },
 	features: { inlineStyles: false },
 	ui: {
 		colorMode: false,

@@ -20,6 +20,10 @@ export interface EventMap {
 	"queue.entryApproved": QueueEntryNonSensitive
 	"queue.queueUpdated": QueueEntryNonSensitive[]
 
+	/* queue.notification */
+	"queue.notification.sent": { publicCode: string; sentAt: Date }
+	"queue.notification.acknowledged": { publicCode: string; acknowledgedAt: Date; acknowledgementMessage: string }
+
 	/* cart session */
 	"cartSession.created": { publicCode: string; publicIcon: string }
 	"cartSession.removed": { publicCode: string }

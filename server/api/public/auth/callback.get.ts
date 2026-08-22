@@ -54,7 +54,7 @@ export default defineSafeHandler(async (event) => {
 		},
 		secure: {
 			userID: user.userID,
-		}
+		},
 	})
 
 	const existingUserSession = await prisma.userSession.findUnique({

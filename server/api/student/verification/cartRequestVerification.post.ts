@@ -11,7 +11,7 @@ const schema = z
 	.object({
 		adjustments: z.array(
 			z.object({
-				itemID: z.string().min(1),
+				specificItemID: z.string().min(1),
 				countAdjustment: z.number().int().max(0),
 			})
 		),
@@ -28,12 +28,9 @@ export default defineSafeHandler(async (event) => {
 		const existingCart = await tx.cart.findUnique({
 			where: { publicCode: publicCode, pending: false },
 			include: {
-				CartItems: {
+				cartItems: {
 					include: {
-						Item: {
-							omit: { quantity: true },
-							include: { Deal: true },
-						},
+						specificItem: { include: { item: { include: { deal: true, category: true } } } },
 					},
 				},
 			},
@@ -44,7 +41,7 @@ export default defineSafeHandler(async (event) => {
 		}
 
 		for (const adjustment of adjustments) {
-			const cartItem = existingCart.CartItems.find((cartItem) => cartItem.itemID === adjustment.itemID)
+			const cartItem = existingCart.cartItems.find((cartItem) => cartItem.specificItemID === adjustment.specificItemID)
 			if (!cartItem) {
 				throw createError({
 					statusCode: StatusCodes.BAD_REQUEST,
@@ -60,7 +57,7 @@ export default defineSafeHandler(async (event) => {
 			}
 			try {
 				await tx.cartItem.update({
-					where: { cartItemID: { publicCode: publicCode, itemID: adjustment.itemID } },
+					where: { cartItemID: { publicCode: publicCode, specificItemID: adjustment.specificItemID } },
 					data: {
 						countAdjustment: adjustment.countAdjustment,
 					},
@@ -78,15 +75,12 @@ export default defineSafeHandler(async (event) => {
 				where: { publicCode: publicCode },
 				data: { pending: true },
 				include: {
-					CartItems: {
+					cartItems: {
 						include: {
-							Item: {
-								omit: { quantity: true },
-								include: { Deal: true },
-							},
+							specificItem: { include: { item: { include: { deal: true, category: true } } } },
 						},
 					},
-					UserSession: {
+					userSession: {
 						select: {
 							publicCode: true,
 							publicIcon: true,
@@ -105,7 +99,7 @@ export default defineSafeHandler(async (event) => {
 	const formattedCart = {
 		...cart,
 		publicCode: cart.publicCode,
-		publicIcon: cart.UserSession.publicIcon,
+		publicIcon: cart.userSession.publicIcon,
 	}
 	publishEvent(createEvent("verifyCartList.cart.added", { cart: formattedCart }))
 

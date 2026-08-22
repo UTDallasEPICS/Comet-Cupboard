@@ -4,7 +4,7 @@ export default defineSafeHandler(async () => {
 	const users = await prisma.user.findMany({
 		select: {
 			userID: true,
-            displayName: true,
+			displayName: true,
 			role: true,
 		},
 	})

@@ -15,14 +15,17 @@ export default defineSafeHandler(async (event) => {
 	const { checkAvailability, includeArchived } = validateQuery(event, schema)
 
 	const items = await prisma.item.findMany({
-		where: {
-			...(checkAvailability === "true" ? { quantity: { gt: 0 } } : {}),
-			...(includeArchived === "false" ? { archived: false } : {}),
-		},
+		where: includeArchived === "false" ? { archived: false } : {},
 		include: {
-			Deal: true,
+			deal: true,
+			specificItems: true,
+			category: true,
 		},
 	})
 
 	return items
+		.map((item) => ({
+			...item,
+			specificItems: item.specificItems.filter((specificItem) => checkAvailability === "false" || Number(specificItem.quantity) > 0),
+		}))
 })

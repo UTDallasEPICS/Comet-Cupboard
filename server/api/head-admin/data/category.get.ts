@@ -1,30 +1,34 @@
-import { prisma } from "#server/utils/db";
-import { defineSafeHandler } from "#server/utils/handler";
+import { prisma } from "#server/utils/db"
+import { defineSafeHandler } from "#server/utils/handler"
 
 export default defineSafeHandler(async (event) => {
-    const items = await prisma.item.findMany({
-        orderBy: {
-            name: "asc",
-        },
-    })
+	const items = await prisma.item.findMany({
+		orderBy: {
+			itemName: "asc",
+		},
+		include: {
+			category: true,
+			specificItems: true,
+		},
+	})
 
-    const rows = items.map((row) => {
-        return {
-            itemCategory: row.categoryName,
-            itemName: row.name,
-            itemQuantity: row.quantity
-        }
-    })
+	const rows = items.map((row) => {
+		return {
+			itemCategory: row.category.categoryName,
+			itemName: row.itemName,
+			itemQuantity: row.specificItems.reduce((total, specificItem) => total + Number(specificItem.quantity), 0),
+		}
+	})
 
-    const categoryTotal = {}
+	const categoryTotal: Record<string, Record<string, number>> = {}
 
-    for (const {itemCategory, itemName, itemQuantity} of rows){
-        if (!(itemCategory in categoryTotal)){
-            categoryTotal[itemCategory] = {}
-        }
+	for (const { itemCategory, itemName, itemQuantity } of rows) {
+		if (!(itemCategory in categoryTotal)) {
+			categoryTotal[itemCategory] = {}
+		}
 
-        categoryTotal[itemCategory][itemName] = itemQuantity
-    }
+		categoryTotal[itemCategory]![itemName] = itemQuantity
+	}
 
-    return categoryTotal
+	return categoryTotal
 })

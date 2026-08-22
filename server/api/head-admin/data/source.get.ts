@@ -18,62 +18,64 @@ export default defineSafeHandler(async (event) => {
 
 	const { startDate, endDate } = result.data
 
-	if(startDate) {
+	if (startDate) {
 		startDate.setHours(0, 0, 0, 0)
 	}
 
-	if(endDate) {
+	if (endDate) {
 		endDate.setHours(23, 59, 59, 999)
 	}
 
-	const sources = await prisma.itemCountChange.findMany({
+	const sources = await prisma.completedInventoryIntakeSessionItem.findMany({
 		include: {
-			Item: {
+			completedInventoryIntakeSession: {
 				select: {
-					name: true,
-					categoryName: true,
-					quantity: true,
+					intakeDate: true,
+					sourceName: true,
 				},
 			},
-            Source:{ 
-                select: {
-                    name: true
-                }
-            }
+			specificItem: {
+				include: {
+					item: {
+						select: {
+							itemName: true,
+							category: { select: { categoryName: true } },
+						},
+					},
+				},
+			},
 		},
 		where: {
-			date: {
-				gte: startDate,
-				lte: endDate,
+			completedInventoryIntakeSession: {
+				intakeDate: {
+					gte: startDate,
+					lte: endDate,
+				},
 			},
 		},
 		orderBy: {
-			date: "asc",
+			completedInventoryIntakeSession: { intakeDate: "asc" },
 		},
 	})
 
-    const rows = sources.map((row) => {
-        return {
-            date: row.date,
-            amountChanged: row.amountChanged,
-            itemName: row.Item.name,
-            itemCategory: row.Item.categoryName,
-            sourceName: row.Source.name,
-        }
-    })
+	const rows = sources.map((row) => {
+		return {
+			date: row.completedInventoryIntakeSession.intakeDate,
+			amountChanged: row.amountChanged,
+			itemName: row.specificItem.item.itemName,
+			itemCategory: row.specificItem.item.category.categoryName,
+			sourceName: row.completedInventoryIntakeSession.sourceName,
+		}
+	})
 
-	const total = {}
+	const total: Record<string, Record<string, number>> = {}
 
-    for (const {amountChanged, itemCategory, sourceName} of rows){
-		if (!(sourceName in total)){
+	for (const { amountChanged, itemCategory, sourceName } of rows) {
+		if (!(sourceName in total)) {
 			total[sourceName] = {}
 		}
 
-		if (sourceName in total){
-			total[sourceName][itemCategory] = amountChanged 
-		} else {
-			total[sourceName][itemCategory] += amountChanged
-		}
+		total[sourceName]![itemCategory] = (total[sourceName]![itemCategory] ?? 0) + amountChanged
 	}
 
 	return total

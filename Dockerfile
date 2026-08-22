@@ -37,7 +37,7 @@ RUN pnpm i --ignore-scripts --frozen-lockfile
 # Run the build scripts needed for prisma to work (for migrations and seeding)
 RUN pnpm rebuild esbuild better-sqlite3 @prisma/engines prisma
 ENV DATABASE_URL="file:./prisma/dev.db"
-ENV IMAGE_UPLOAD_DIRECTORY="images"
+ENV FILE_STORAGE_DIRECTORY="storage"
 RUN pnpm prisma generate
 COPY --from=builder /app/entrypoint.sh /entrypoint
 

@@ -54,6 +54,50 @@ export const publishEvent = async (event: AppEvent) => {
 				})
 			)
 			break
+		case "queue.notification.sent":
+			connectionsByRole.volunteer.broadcast(
+				JSON.stringify({
+					type: "queue.notification.sent",
+					payload: {
+						publicCode: event.payload.publicCode,
+						sentAt: event.payload.sentAt,
+					},
+				})
+			)
+			connectionsByRole.student.messageToUser(
+				event.payload.publicCode,
+				JSON.stringify({
+					type: "queue.notification.sent",
+					payload: {
+						publicCode: event.payload.publicCode,
+						sentAt: event.payload.sentAt,
+					},
+				})
+			)
+			break
+		case "queue.notification.acknowledged":
+			connectionsByRole.volunteer.broadcast(
+				JSON.stringify({
+					type: "queue.notification.acknowledged",
+					payload: {
+						publicCode: event.payload.publicCode,
+						acknowledgedAt: event.payload.acknowledgedAt,
+						acknowledgementMessage: event.payload.acknowledgementMessage,
+					},
+				})
+			)
+			connectionsByRole.student.messageToUser(
+				event.payload.publicCode,
+				JSON.stringify({
+					type: "queue.notification.acknowledged",
+					payload: {
+						publicCode: event.payload.publicCode,
+						acknowledgedAt: event.payload.acknowledgedAt,
+						acknowledgementMessage: event.payload.acknowledgementMessage,
+					},
+				})
+			)
+			break
 		case "cartSession.created":
 			connectionsByRole.volunteer.broadcast(
 				JSON.stringify({

@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises"
 import { StatusCodes } from "http-status-codes"
 import { validateParams } from "#server/utils/validation"
 import { defineSafeHandler } from "#server/utils/handler"
+import { imageUploadDirectory } from "#server/utils/image"
 import mime from "mime-types"
 
 const schema = z
@@ -16,7 +17,7 @@ const schema = z
 export default defineSafeHandler(async (event) => {
 	const { filename } = validateParams(event, schema)
 
-	const baseDir = process.env.IMAGE_UPLOAD_DIRECTORY ?? "images"
+	const baseDir = imageUploadDirectory
 	const resolvedPath = path.resolve(baseDir, filename)
 
 	// Ensure the resolved path is within the base directory to prevent directory traversal attacks

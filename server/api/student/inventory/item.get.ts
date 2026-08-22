@@ -19,7 +19,9 @@ export default defineSafeHandler(async (event) => {
 			itemID: itemID,
 		},
 		include: {
-			Deal: true,
+			deal: true,
+			specificItems: true,
+			category: true,
 		},
 	})
 	if (!item) {

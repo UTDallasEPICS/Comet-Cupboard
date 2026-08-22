@@ -19,7 +19,10 @@ export default defineSafeHandler(async (event) => {
 			publicCode: publicCode,
 			pending: true,
 		},
-		include: { CartItems: { include: { Item: { include: { Deal: true } } } }, UserSession: { select: { publicIcon: true } } },
+		include: {
+			cartItems: { include: { specificItem: { include: { item: { include: { deal: true } } } } } },
+			userSession: { select: { publicIcon: true } },
+		},
 	})
 	if (!pendingCart) {
 		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Failed to find pending cart" })
@@ -27,8 +30,8 @@ export default defineSafeHandler(async (event) => {
 
 	const formattedPendingCart = {
 		...pendingCart,
-		UserSession: undefined,
-		publicIcon: pendingCart.UserSession.publicIcon,
+		userSession: undefined,
+		publicIcon: pendingCart.userSession.publicIcon,
 	}
 
 	return formattedPendingCart

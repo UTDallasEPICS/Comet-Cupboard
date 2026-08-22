@@ -23,13 +23,13 @@ export default defineSafeHandler(async (event) => {
 			const queueEntry = await tx.queueEntry.delete({
 				where: { publicCode },
 				include: {
-					UserSession: {
+					userSession: {
 						select: {
 							publicCode: true,
 							publicIcon: true,
 						},
 					},
-				}
+				},
 			})
 			await tx.cart.create({
 				data: {
@@ -37,12 +37,12 @@ export default defineSafeHandler(async (event) => {
 				},
 			})
 
-			publishEvent(createEvent("cartSession.created", { publicCode: publicCode, publicIcon: queueEntry.UserSession.publicIcon }))
+			publishEvent(createEvent("cartSession.created", { publicCode: publicCode, publicIcon: queueEntry.userSession.publicIcon }))
 			publishEvent(
 				createEvent("queue.entryApproved", {
 					publicCode: publicCode,
 					position: queueEntry.position,
-					publicIcon: queueEntry.UserSession.publicIcon
+					publicIcon: queueEntry.userSession.publicIcon,
 				})
 			)
 
