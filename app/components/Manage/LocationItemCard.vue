@@ -11,7 +11,7 @@
 			color="neutral"
 			size="sm"
 			:icon="icons['edit']"
-			@click="navigateTo(`/admin/manage/locations/${name}/edit`)"
+			@click="navigateTo(`/admin/manage/locations/${locationID}/edit`)"
 		/>
 
 		<div class="flex flex-row items-center gap-2">
@@ -32,5 +32,6 @@ const props = defineProps({
 	name: { type: String, required: true },
 	imgName: { type: String, required: true },
 	description: { type: String, required: true },
+	locationID: { type: String, required: true },
 })
 </script>

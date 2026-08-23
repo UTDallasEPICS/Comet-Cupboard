@@ -2,14 +2,16 @@
 	<div>
 		<NuxtLayout
 			name="main"
-			:title="`Edit ${currentCategory.name}`"
+			:title="`Edit ${currentCategory.categoryName}`"
 			:back-navigation="{ text: 'Back to Manage Categories', to: '/admin/manage/categories' }"
 		>
 			<USeparator class="my-4" />
 			<section>
-				<div class="mx-auto w-min">
-					<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
+				<div class="mx-auto w-full max-w-xl">
+					<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
 						<UCard>
+							<SharedTextCardTitle>Category Image</SharedTextCardTitle>
+							<USeparator class="my-4" />
 							<UFormField
 								id="image"
 								name="image"
@@ -24,6 +26,8 @@
 						</UCard>
 
 						<UCard>
+							<SharedTextCardTitle>Category Details</SharedTextCardTitle>
+							<USeparator class="my-4" />
 							<UFormField
 								id="categoryName"
 								name="categoryName"
@@ -42,7 +46,7 @@
 										<UBadge
 											v-for="similarItem in mostSimilarItems"
 											:key="similarItem.id"
-											:label="similarItem.name"
+											:label="similarItem.categoryName"
 											color="neutral"
 											variant="soft"
 										/>
@@ -56,6 +60,8 @@
 						</UCard>
 
 						<UCard>
+							<SharedTextCardTitle>Availability</SharedTextCardTitle>
+							<USeparator class="my-4" />
 							<UFormField id="archived" name="archived" label="Archived" description="Check if the category is archived">
 								<UCheckbox v-model="state.archived" label="Archived" />
 							</UFormField>
@@ -123,11 +129,11 @@ const { schema, state, validate, onError } = createFormBuilder(formSchema, () =>
 				type: originalImage.value.type,
 			})
 		: undefined,
-	categoryName: currentCategory.value?.name || undefined,
+	categoryName: currentCategory.value?.categoryName || undefined,
 	archived: currentCategory.value?.archived || false,
 }))
 
-const { query, filtered } = useFuzzySearch(categories ?? ref([]), { searchKeys: ["name"] })
+const { query, filtered } = useFuzzySearch(categories ?? ref([]), { searchKeys: ["categoryName"] })
 watch(
 	() => state.value.categoryName,
 	(name) => {

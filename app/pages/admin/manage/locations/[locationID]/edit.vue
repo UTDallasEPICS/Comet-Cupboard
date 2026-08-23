@@ -1,140 +1,13 @@
-<!-- <template>
-	<div>
-		<NuxtLayout name="main" :title="`Edit ${currentLocation.name}`" :back-navigation="{ text: 'Back to Manage Locations', to: '/admin/manage/locations' }">
-			<USeparator class="my-4" />
-			<section>
-				<div class="mx-auto w-min">
-					<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
-						<UFormField name="image" label="Location Image" description="JPG or PNG. Max 2MB.">
-							<div class="flex flex-col gap-2">
-								<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
-							</div>
-						</UFormField>
-
-						<UFormField id="name" name="name" label="Location Name">
-							<UInput v-model="state.name" placeholder="Enter location name" />
-						</UFormField>
-
-						<UFormField id="description" name="description" label="Description">
-							<UInput v-model="state.description" placeholder="Enter description" />
-						</UFormField>
-
-						<UFormField id="address" name="address" label="Address">
-							<UInput v-model="state.address" placeholder="Enter address" />
-						</UFormField>
-
-						<UCard :ui="{ header: 'p-2', body: 'p-2' }">
-							<template #header>
-								<SharedTextBase>Existing Locations with Similar Names</SharedTextBase>
-							</template>
-							<template #default>
-								<ul class="space-y-1">
-									<li v-for="item in mostSimilarItems" :key="item.name">
-										<SharedTextBase>{{ item.name }}</SharedTextBase>
-									</li>
-								</ul>
-							</template>
-						</UCard>
-
-						<UFormField id="archived" name="archived" label="Archived">
-							<UCheckbox v-model="state.archived" />
-						</UFormField>
-
-						<footer class="mt-4 flex justify-end">
-							<SharedButtonPositiveAction type="submit" text="Submit" />
-						</footer>
-					</UForm>
-				</div>
-			</section>
-		</NuxtLayout>
-	</div>
-</template>
-
-<script setup lang="ts">
-import * as z from "zod"
-
-definePageMeta({ layout: false })
-
-const route = useRoute()
-const locationName = route.params.locationID as string
-
-const { data: locations } = await useFetch("/api/public/location/locations", {
-	query: { includeArchived: true },
-})
-
-const currentLocation = computed(() => locations.value?.find((l) => l.name === locationName))
-
-// 1. Updated Schema to include the 'image' field for the file upload
-const formSchema = z.object({
-	name: z.string().min(1, "Location name cannot be empty").optional(),
-	address: z.string().min(1, "Address cannot be empty").optional(),
-	description: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
-	image: z.any().optional(), // Added for multipart support
-	archived: z.boolean().optional(),
-})
-
-const { state, validate, onError } = createFormBuilder(formSchema, () => ({
-	name: currentLocation.value?.name,
-	address: currentLocation.value?.address,
-	description: currentLocation.value?.description,
-	image: undefined,
-	archived: currentLocation.value?.archived ?? false,
-}))
-
-// Fuzzy search logic remains the same...
-const { query, filtered } = useFuzzySearch(locations ?? ref([]), {
-	searchKeys: ["name"],
-})
-
-watch(
-	() => state.value.name,
-	(val) => (query.value = val || ""),
-	{ immediate: true }
-)
-
-const mostSimilarItems = computed(() => filtered.value.slice(0, 5))
-
-// 2. Updated onSubmit to use FormData
-const onSubmit = async (event: any) => {
-	try {
-		const formData = new FormData()
-
-		// Required for the backend to identify which record to update
-		formData.append("originalName", locationName)
-
-		// Append text fields from the validated event data
-		if (event.data.name) formData.append("name", event.data.name.trim())
-		if (event.data.address) formData.append("address", event.data.address.trim())
-		if (event.data.description) formData.append("description", event.data.description.trim())
-
-		// Convert boolean to string "true"/"false" to match backend z.enum
-		formData.append("archived", event.data.archived ? "true" : "false")
-
-		// Append the image file if a new one was selected
-		if (event.data.image) {
-			formData.append("image", event.data.image)
-		}
-
-		await $fetch("/api/admin/location/location", {
-			method: "PUT",
-			body: formData, // Sending FormData instead of JSON
-		})
-
-		navigateTo("/admin/manage/locations")
-	} catch (error: any) {
-		console.error("Update failed:", error)
-	}
-}
-</script> -->
-
 <template>
 	<div>
 		<NuxtLayout name="main" :title="`Edit ${currentLocation.name}`" :back-navigation="{ text: 'Back to Manage Locations', to: '/admin/manage/locations' }">
 			<USeparator class="my-4" />
 			<section>
-				<div class="mx-auto w-min">
-					<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
+				<div class="mx-auto w-full max-w-xl">
+					<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
 						<UCard>
+							<SharedTextCardTitle>Location Image</SharedTextCardTitle>
+							<USeparator class="my-4" />
 							<UFormField
 								id="image"
 								name="image"
@@ -147,8 +20,9 @@ const onSubmit = async (event: any) => {
 								</div>
 							</UFormField>
 						</UCard>
-
 						<UCard>
+							<SharedTextCardTitle>Location Details</SharedTextCardTitle>
+							<USeparator class="my-4" />
 							<UFormField
 								id="locationName"
 								name="locationName"
@@ -166,8 +40,8 @@ const onSubmit = async (event: any) => {
 									<div class="flex flex-wrap gap-2">
 										<UBadge
 											v-for="similarItem in mostSimilarItems"
-											:key="similarItem.name"
-											:label="similarItem.name"
+											:key="similarItem.locationName"
+											:label="similarItem.locationName"
 											color="neutral"
 											variant="soft"
 										/>
@@ -180,11 +54,65 @@ const onSubmit = async (event: any) => {
 							</UFormField>
 						</UCard>
 						<UCard>
+							<SharedTextCardTitle>Description</SharedTextCardTitle>
+							<USeparator class="my-4" />
 							<UFormField id="description" name="description" label="Description">
 								<UTextarea v-model="state.description" placeholder="Enter description" class="w-full" />
 							</UFormField>
 						</UCard>
 						<UCard>
+							<SharedTextCardTitle>Map Details</SharedTextCardTitle>
+
+							<USeparator class="my-4" />
+
+							<UFormField
+								name="mapEmbedUrl"
+								label="Optional UTD Campus Map Embed URL"
+								description="Use https://map.concept3d.com/?id=1772#!m/<map-id>"
+							>
+								<UInput v-model="state.mapEmbedUrl" placeholder="https://map.concept3d.com/?id=1772#!m/551906" class="w-full" />
+
+								<UButton variant="link" color="primary" class="mt-2 px-0" @click="showMapDirections = true">
+									<UIcon name="i-lucide-circle-help" class="mr-1" />
+									Click for directions on getting this information
+								</UButton>
+							</UFormField>
+						</UCard>
+
+						<UModal v-model:open="showMapDirections" title="How to Find the Campus Map URL">
+							<template #body>
+								<div class="space-y-4">
+									<div class="space-y-2">
+										<SharedTextCardTitle>Step 1</SharedTextCardTitle>
+
+										<SharedTextBaseSecondary>Find the location on the UTD campus map that you want to link to and click the Share button.</SharedTextBaseSecondary>
+
+										<img
+											src="/CampusURLSharePart1.png"
+											alt="Instructions for finding the UTD campus map location"
+											class="border-border-soft w-full rounded-lg border"
+										/>
+									</div>
+
+									<div class="space-y-2">
+										<SharedTextCardTitle>Step 2</SharedTextCardTitle>
+
+										<SharedTextBaseSecondary
+											>Paste the URL section into the map URL input</SharedTextBaseSecondary
+										>
+
+										<img
+											src="/CampusURLSharePart2.png"
+											alt="Instructions for copying the UTD campus map URL"
+											class="border-border-soft w-full rounded-lg border"
+										/>
+									</div>
+								</div>
+							</template>
+						</UModal>
+						<UCard>
+							<SharedTextCardTitle>Availability</SharedTextCardTitle>
+							<USeparator class="my-4" />
 							<UFormField id="archived" name="archived" label="Archived" description="Check if the location is archived">
 								<UCheckbox v-model="state.archived" label="Archived" />
 							</UFormField>
@@ -205,10 +133,12 @@ import * as z from "zod"
 
 definePageMeta({ layout: false })
 
+const showMapDirections = ref(false)
+
 const route = useRoute()
 const locationID = route.params.locationID as string
 
-const { data: locations } = await useFetch("/api/public/location/locations", {
+const { data: locations } = await useFetch("/api/volunteer/location", {
 	method: "GET",
 	query: {
 		includeArchived: "true",
@@ -216,7 +146,7 @@ const { data: locations } = await useFetch("/api/public/location/locations", {
 })
 
 const currentLocation = computed(() => {
-	return locations.value?.find((location) => location.name === locationID)
+	return locations.value?.find((location) => location.locationID === locationID)
 })
 
 const originalImage = ref<Blob | null>(null)
@@ -240,6 +170,10 @@ const formSchema = imageSchema
 			.max(20, "Location name must be at most 20 characters")
 			.regex(/^[A-Za-z ]+$/, "Location name must only contain letters and spaces"),
 		description: z.string().or(z.literal("")),
+		mapEmbedUrl: z
+			.string()
+			.regex(/^https:\/\/map\.concept3d\.com\/\?id=1772#!m\/\d+$/, "Use a valid UTD Concept3D map URL")
+			.or(z.literal("")),
 		archived: z.boolean().default(false),
 	})
 	.partial({
@@ -255,12 +189,13 @@ const { schema, state, validate, onError } = createFormBuilder(formSchema, () =>
 				type: originalImage.value.type,
 			})
 		: undefined,
-	locationName: currentLocation.value?.name || undefined,
+	locationName: currentLocation.value?.locationName || undefined,
 	description: currentLocation.value?.description || undefined,
+	mapEmbedUrl: currentLocation.value?.mapEmbedUrl || "",
 	archived: currentLocation.value?.archived || false,
 }))
 
-const { query, filtered } = useFuzzySearch(locations ?? ref([]), { searchKeys: ["name"] })
+const { query, filtered } = useFuzzySearch(locations ?? ref([]), { searchKeys: ["locationName"] })
 watch(
 	() => state.value.locationName,
 	(name) => {
@@ -275,13 +210,10 @@ const mostSimilarItems = computed(() => {
 const onSubmit = async (event) => {
 	try {
 		const formData = new FormData()
-		formData.append("originalName", locationID)
-		if (event.data.locationName) {
-			formData.append("name", event.data.locationName)
-		}
-		if (event.data.description) {
-			formData.append("description", event.data.description)
-		}
+		formData.append("locationID", locationID)
+		formData.append("locationName", event.data.locationName || "")
+		formData.append("description", event.data.description || "")
+		formData.append("mapEmbedUrl", event.data.mapEmbedUrl || "")
 		if (event.data.archived !== undefined) {
 			formData.append("archived", event.data.archived.toString())
 		}
