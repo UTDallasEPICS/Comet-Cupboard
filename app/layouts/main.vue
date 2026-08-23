@@ -38,6 +38,4 @@ const props = defineProps<{
 		}[]
 	}
 }>()
-
-console.log("props.tutorialData", props.tutorialData)
 </script>

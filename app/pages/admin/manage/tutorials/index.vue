@@ -25,8 +25,6 @@ definePageMeta({ layout: false })
 
 const { data: groups, refresh } = await useFetch("/api/admin/tutorial/tutorial/all-tutorials")
 
-console.log("groups", groups.value)
-
 const groupConfigs = [
 	{ name: "Student", icon: icons.student },
 	{ name: "Volunteer", icon: icons.volunteer },
