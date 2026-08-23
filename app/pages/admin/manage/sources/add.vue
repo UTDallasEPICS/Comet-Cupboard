@@ -1,11 +1,13 @@
 <template>
 	<div>
-		<NuxtLayout name="main" :title="`Add Source`" :back-navigation="{ text: 'Back to Manage Sources', to: '/admin/manage/sources' }">
+		<NuxtLayout name="main" title="Add Source" :back-navigation="{ text: 'Back to Manage Sources', to: '/admin/manage/sources' }">
 			<USeparator class="my-4" />
 			<section>
-				<div class="mx-auto w-min">
-					<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
+				<div class="mx-auto w-full max-w-xl">
+					<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
 						<UCard>
+							<SharedTextCardTitle>Source Details</SharedTextCardTitle>
+							<USeparator class="my-4" />
 							<UFormField
 								id="sourceName"
 								name="sourceName"
@@ -13,7 +15,7 @@
 								description="Source name must be at most 20 characters and only contain letters and spaces"
 								required
 							>
-								<UInput v-model="state.sourceName" placeholder="Enter source name" />
+								<UInput v-model="state.sourceName" placeholder="Enter source name" class="w-full" />
 
 								<div v-if="mostSimilarItems.length" class="border-border-soft mt-2 rounded-lg border p-2">
 									<div class="mb-2 flex items-center gap-2">
@@ -23,8 +25,8 @@
 									<div class="flex flex-wrap gap-2">
 										<UBadge
 											v-for="similarItem in mostSimilarItems"
-											:key="similarItem.id"
-											:label="similarItem.name"
+											:key="similarItem.sourceID"
+											:label="similarItem.sourceName"
 											color="neutral"
 											variant="soft"
 										/>
@@ -61,14 +63,20 @@ const { schema, state, validate, onError } = createFormBuilder(formSchema, () =>
 	sourceName: undefined,
 }))
 
-const { data: sources } = await useFetch("/api/volunteer/inventory/sources", {
+interface SourceSummary {
+	sourceID: string
+	sourceName: string
+	archived: boolean
+}
+
+const { data: sources } = await useFetch<SourceSummary[]>("/api/volunteer/inventory/source", {
 	method: "GET",
 	query: {
 		includeArchived: "true",
 	},
 })
 
-const { query, filtered } = useFuzzySearch(sources ?? ref([]), { searchKeys: ["name"] })
+const { query, filtered } = useFuzzySearch(sources ?? ref([]), { searchKeys: ["sourceName"] })
 watch(
 	() => state.value.sourceName,
 	(name) => {
@@ -80,10 +88,11 @@ const mostSimilarItems = computed(() => {
 	return filtered.value.slice(0, 5)
 })
 
-const onSubmit = async (event) => {
+const onSubmit = async (event: { data: { sourceName: string } }) => {
 	try {
 		const payload = {
-			name: event.data.sourceName,
+			sourceID: "",
+			sourceName: event.data.sourceName,
 			archived: false,
 		}
 

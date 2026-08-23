@@ -6,28 +6,25 @@ import { validateBody } from "#server/utils/validation"
 
 const schema = z
 	.object({
-		sourceID: z.string(),
+		fieldID: z.string(),
 		fieldName: z.string().min(1, "Field name cannot be empty"),
 		type: z.enum(["TEXT", "NUMBER", "DATE", "BOOLEAN", "CHOICE"]),
 		choices: z.array(z.string().trim().min(1)).optional(),
-		optional: z.boolean().default(false),
+		optional: z.boolean(),
 	})
 	.strict()
 
 export default defineSafeHandler(async (event) => {
-	const { sourceID, fieldName, type, choices, optional } = await validateBody(event, schema)
-
+	const { fieldID, fieldName, type, choices, optional } = await validateBody(event, schema)
 	const choiceMap = type === "CHOICE" ? Object.fromEntries((choices ?? []).map((choice) => [nanoid(), choice])) : {}
 
-	await prisma.field.create({
+	return await prisma.field.update({
+		where: { fieldID },
 		data: {
 			fieldName,
-			sourceID,
 			type,
 			choices: choiceMap,
 			optional,
 		},
 	})
-
-	return "Field added successfully"
 })
