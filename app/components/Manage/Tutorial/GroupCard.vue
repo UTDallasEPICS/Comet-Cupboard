@@ -23,9 +23,9 @@
 							:tutorial="getPreviewTutorial(tutorial)"
 							:edit-tutorial-url="`/admin/manage/tutorials/${tutorialGroupID}/${tutorial.tutorialID}/edit`"
 						>
-							<UButton class="flex-1" color="primary" variant="outline" size="xl">
+							<UButton class="flex-1" color="neutral" variant="subtle" size="xl">
 								<div class="flex w-full items-center justify-between">
-									<span class="text-black">{{ tutorial.tutorialName }}</span>
+									<SharedTextBase class="text-black">{{ tutorial.tutorialName }}</SharedTextBase>
 									<UIcon name="i-lucide-chevron-right" />
 								</div>
 							</UButton>
@@ -44,8 +44,8 @@
 				<div class="flex justify-center p-4">
 					<UButton
 						label="Create new tutorial"
-						color="neutral"
-						variant="outline"
+						color="secondary"
+						variant="solid"
 						class="w-max"
 						trailing-icon="i-lucide-plus"
 						@click="navigateTo(`/admin/manage/tutorials/${tutorialGroupID}/add`)"
