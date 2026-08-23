@@ -23,7 +23,23 @@
 			</UContainer>
 		</section>
 
-		<section class="py-16">
+		<section v-if="announcements?.length" class="py-8">
+			<UContainer>
+				<SharedTextSectionTitle class="text-center"> Announcements </SharedTextSectionTitle>
+				<USeparator class="my-4" />
+				<div class="space-y-2">
+					<UAlert v-for="announcement in announcements" :key="announcement.announcementID" color="secondary" :title="announcement.message">
+						<template #description>
+							<SharedTextBaseSecondary class="text-right text-white"
+								>Posted {{ new Date(announcement.startsAt).toLocaleDateString() }}</SharedTextBaseSecondary
+							>
+						</template>
+					</UAlert>
+				</div>
+			</UContainer>
+		</section>
+
+		<section class="py-8">
 			<UContainer>
 				<div class="mx-auto max-w-4xl text-center">
 					<SharedTextSectionTitle> Comet Cupboard Calendar </SharedTextSectionTitle>
@@ -43,7 +59,7 @@
 
 		<USeparator />
 
-		<section class="relative overflow-hidden bg-gray-50/50 py-16">
+		<section class="relative overflow-hidden bg-gray-50/50 py-8">
 			<UContainer class="relative flex flex-col items-center gap-4 text-center">
 				<SharedTextSectionTitle> Find an Emergency Bag </SharedTextSectionTitle>
 				<SharedTextBase class="max-w-xl"> Check availability at locations across campus </SharedTextBase>
@@ -55,6 +71,8 @@
 </template>
 
 <script lang="ts" setup>
+const { data: announcements } = await useFetch("/api/public/announcements")
+
 const startLogin = async () => {
 	await navigateTo("/api/public/auth/login", { external: true })
 }
@@ -65,5 +83,4 @@ const devUsernameInput = ref("")
 const startDevLogin = async () => {
 	await navigateTo(`/api/public/auth/DEV_MODE-callback?username=${devUsernameInput.value}`, { external: true })
 }
-
 </script>

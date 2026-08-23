@@ -15,7 +15,7 @@
 								:to="`/head-admin/dashboard-links/add?audience=${section.audience}`"
 							/>
 						</div>
-						<USeparator class="mt-2" />
+						<USeparator class="my-4" />
 						<ul v-if="section.customLinks.length > 0" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 							<li v-for="link in section.customLinks" :key="link.label">
 								<DashboardEditCustomLinkCard
@@ -25,7 +25,6 @@
 									:url="link.url"
 									:display-name="link.displayName"
 									:description="link.description"
-									@delete-link="deactivate(link.dashboardLinkID)"
 								/>
 							</li>
 						</ul>
@@ -58,11 +57,4 @@ const sections = computed(() => {
 		{ audience: "HEAD_ADMIN", label: "Head Admin Dashboard", customLinks: customLinksByRole.value["HEAD_ADMIN"] },
 	]
 })
-const deactivate = async (dashboardLinkID: string) => {
-	await $fetch("/api/head-admin/dashboard-links/dashboard-link", {
-		method: "DELETE",
-		query: { dashboardLinkID },
-	})
-	await refresh()
-}
 </script>

@@ -1,12 +1,12 @@
 export const topLabelPlugin = {
 	id: "topLabelPlugin",
-	afterDatasetsDraw(chart) {
+	afterDatasetsDraw(chart: any) {
 		const { ctx } = chart
 
-		chart.data.datasets.forEach((dataset, i) => {
+		chart.data.datasets.forEach((dataset: any, i: number) => {
 			const meta = chart.getDatasetMeta(i)
 
-			meta.data.forEach((bar, index) => {
+			meta.data.forEach((bar: any, index: number) => {
 				const value = dataset.data[index] as number
 				ctx.textAlign = "center"
 				if (value) {
@@ -19,13 +19,13 @@ export const topLabelPlugin = {
 
 export const stackedTopLabelPlugin = {
 	id: "stackedTopLabelPlugin",
-	afterDatasetsDraw(chart) {
+	afterDatasetsDraw(chart: any) {
 		const { ctx } = chart
 
-		chart.data.datasets.forEach((dataset, datasetIndex) => {
+		chart.data.datasets.forEach((dataset: any, datasetIndex: number) => {
 			const meta = chart.getDatasetMeta(datasetIndex)
 
-			meta.data.forEach((bar, index) => {
+			meta.data.forEach((bar: any, index: number) => {
 				const value = dataset.data[index]
 				if (!value) return
 				ctx.textAlign = "center"

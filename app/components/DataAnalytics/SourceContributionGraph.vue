@@ -4,7 +4,7 @@
 			<header class="text-4xl font-bold text-black">Source Contribution</header>
 
 			<div class="justify-left flex flex-col">
-				<p class="place-self-start text-xl font-bold">Time Range</p>
+				<SharedTextBase class="place-self-start text-xl font-bold">Time Range</SharedTextBase>
 				<UInputDate ref="inputDate" v-model="modelValue" range>
 					<template #trailing>
 						<UPopover :reference="inputDate?.inputsRef[0]?.$el">

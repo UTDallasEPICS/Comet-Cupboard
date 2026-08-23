@@ -1,12 +1,12 @@
 <template>
 	<div class="mx-20">
 		<div class="flex flex-col items-center">
-			<div class="h-10 flex items-center text-black justify-center text-l font-bold">
+			<div class="text-l flex h-10 items-center justify-center font-bold text-black">
 				{{ title }}
 			</div>
 
-			<div class="flex text-5xl font-bold text-black justify-center">
-				<span>{{ value }}</span>
+			<div class="flex justify-center text-5xl font-bold text-black">
+				<SharedTextBase class="text-5xl font-bold text-black">{{ value }}</SharedTextBase>
 			</div>
 		</div>
 	</div>

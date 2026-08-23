@@ -8,7 +8,23 @@
 			<USeparator class="my-4" />
 			<section>
 				<div class="mx-auto w-full max-w-xl">
-					<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
+					<div class="flex w-full flex-row items-center justify-center">
+						<UModal v-model:open="isDeleteModalOpen">
+							<UButton label="Delete Custom Link" color="error" variant="outline" :icon="icons['delete']" />
+							<template #content>
+								<UCard>
+									<SharedTextCardTitle>Confirm Deletion?</SharedTextCardTitle>
+									<USeparator class="my-2" />
+									<div class="mt-4 flex flex-row items-center justify-center gap-2">
+										<SharedButtonCancel text="Cancel" @click="isDeleteModalOpen = false" />
+										<SharedButtonNegativeAction text="Confirm Deletion" @click="deactivate(route.params.dashboardLinkID)" />
+									</div>
+								</UCard>
+							</template>
+						</UModal>
+					</div>
+
+					<UForm :validate="validate" :state="state" class="w-full space-y-4 mt-4" @submit="onSubmit" @error="onError">
 						<UCard>
 							<SharedTextCardTitle>Link Details</SharedTextCardTitle>
 							<USeparator class="my-4" />
@@ -80,6 +96,9 @@ definePageMeta({ layout: false })
 
 const route = useRoute()
 const roles = ["STUDENT", "VOLUNTEER", "ADMIN", "HEAD_ADMIN"]
+
+const isDeleteModalOpen = ref(false)
+
 const formSchema = z.object({
 	displayName: z.string().trim().min(1),
 	url: z
@@ -105,6 +124,14 @@ const onSubmit = async (event) => {
 	await $fetch("/api/head-admin/dashboard-links/dashboard-link", {
 		method: "PUT",
 		body: { ...event.data, dashboardLinkID: String(route.params.dashboardLinkID) },
+	})
+	await navigateTo("/head-admin/dashboard-links")
+}
+
+const deactivate = async (dashboardLinkID: string) => {
+	await $fetch("/api/head-admin/dashboard-links/dashboard-link", {
+		method: "DELETE",
+		query: { dashboardLinkID },
 	})
 	await navigateTo("/head-admin/dashboard-links")
 }

@@ -17,8 +17,8 @@
 								<UButton
 									v-for="(tutorial, index) in tutorials"
 									:key="tutorial.tutorialID"
-									color="primary"
-									variant="outline"
+									color="neutral"
+									variant="subtle"
 									size="xl"
 									@click="selectTutorial(index)"
 								>

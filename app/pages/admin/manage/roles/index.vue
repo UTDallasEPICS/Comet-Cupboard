@@ -17,6 +17,12 @@
 					</UPopover>
 				</div>
 				<USeparator class="my-4" />
+
+				<ul class="my-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<li v-for="user in paginatedUsers" :key="user.userID">
+						<ManageUserRoleItemCard :user-i-d="user.userID" :display-name="user.displayName" :role="user.role" />
+					</li>
+				</ul>
 				<UPagination
 					v-model:page="page"
 					:items-per-page="pageSize"
@@ -26,11 +32,6 @@
 						list: 'flex items-center justify-center gap-1',
 					}"
 				/>
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					<li v-for="user in paginatedUsers" :key="user.userID">
-						<ManageUserRoleItemCard :user-i-d="user.userID" :display-name="user.displayName" :role="user.role" />
-					</li>
-				</ul>
 			</section>
 		</NuxtLayout>
 	</div>

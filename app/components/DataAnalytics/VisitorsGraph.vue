@@ -5,12 +5,12 @@
 
 			<div class="flex gap-4">
 				<div class="flex w-40 flex-col items-center">
-					<p class="place-self-start text-xl font-bold">Time Level</p>
+					<SharedTextBase class="place-self-start text-xl font-bold">Time Level</SharedTextBase>
 					<USelect v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" class="w-full" />
 				</div>
 
 				<div class="justify-left flex flex-col">
-					<p class="place-self-start text-xl font-bold">Time Range</p>
+					<SharedTextBase class="place-self-start text-xl font-bold">Time Range</SharedTextBase>
 					<UInputDate ref="inputDate" v-model="modelValue" range>
 						<template #trailing>
 							<UPopover :reference="inputDate?.inputsRef[0]?.$el">
@@ -34,7 +34,7 @@
 			<DataAnalyticsDataCardComponent title="Average Visitors" :value="avgVisitors" />
 		</div>
 	</UCard>
-	<UCard class="w-full mt-4 border px-8">
+	<UCard class="mt-4 w-full border px-8">
 		<canvas ref="lineContainer" class="mt-4" />
 	</UCard>
 </template>

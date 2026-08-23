@@ -15,22 +15,7 @@
 				</SharedTextBase>
 			</div>
 
-			<div class="ml-auto flex gap-1">
-				<UButton icon="i-lucide-edit" variant="ghost" color="neutral" :to="`/head-admin/dashboard-links/${dashboardLinkID}/edit`" />
-				<UModal v-model:open="isDeleteModalOpen">
-					<UButton icon="i-lucide-trash-2" color="error" variant="ghost" />
-					<template #content>
-						<UCard>
-							<SharedTextCardTitle>Confirm Deletion?</SharedTextCardTitle>
-							<USeparator class="my-2" />
-							<div class="mt-4 flex flex-row items-center justify-center gap-2">
-								<SharedButtonCancel text="Cancel" @click="isDeleteModalOpen = false" />
-								<SharedButtonNegativeAction text="Confirm Deletion" @click="emit('deleteLink')" />
-							</div>
-						</UCard>
-					</template>
-				</UModal>
-			</div>
+			<UButton class="ml-auto" icon="i-lucide-edit" variant="ghost" color="neutral" :to="`/head-admin/dashboard-links/${dashboardLinkID}/edit`" />
 		</div>
 	</UCard>
 </template>
