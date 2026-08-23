@@ -104,14 +104,15 @@ export const roleLinks: Record<Role, AppLink[]> = {
 					icon: icons["tutorials"],
 					to: "/admin/manage/tutorials",
 				},
+				{
+					label: "Manage Announcements",
+					description: "Create and manage announcements",
+					icon: icons["announcements"],
+					to: "/admin/announcements",
+				},
 			],
 		},
-		{
-			label: "Create Announcements",
-			description: "Create and manage announcements",
-			icon: icons["announcements"],
-			to: "/admin/announcements",
-		},
+
 		{
 			label: "Historical Inventory Intake Sessions",
 			description: "View past inventory intake sessions",

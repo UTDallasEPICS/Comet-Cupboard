@@ -1,15 +1,21 @@
-// module scope (shared across all composable usages)
 let eventStream: EventSource | null = null
 const listeners: ((event: AppEvent) => void)[] = []
 
 export const useVolunteerEventStream = () => {
 	const cartSessionsStore = useCartSessionsStore()
+	const queueStore = useQueueStore()
 	const toast = useToast()
 	const config = useRuntimeConfig()
 
 	const dispatchCartSessionEvent = async (event: AppEvent) => {
 		if (["cartSession.created", "cartSession.removed"].includes(event.type)) {
 			await cartSessionsStore.handleCartSessionEvent(event)
+		}
+	}
+
+	const dispatchQueueEvent = async (event: AppEvent) => {
+		if (["queue.queueUpdated", "queue.entryApproved", "queue.entryRemoved", "queue.entryAdded", "queue.notification.sent", "queue.notification.acknowledged"].includes(event.type)) {
+			await queueStore.handleQueueEvent(event)
 		}
 	}
 
@@ -36,6 +42,7 @@ export const useVolunteerEventStream = () => {
 				listeners.forEach((listener) => listener(event))
 
 				dispatchCartSessionEvent(event)
+				dispatchQueueEvent(event)
 			} catch (error) {}
 		}
 

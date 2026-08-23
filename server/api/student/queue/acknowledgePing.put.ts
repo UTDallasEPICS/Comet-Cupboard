@@ -16,7 +16,10 @@ export default defineSafeHandler(async (event) => {
 	const { timeEstimateMinutes } = await validateBody(event, schema)
 
 	const publicCode = event.context.userSession.publicCode
-	const queueEntry = await prisma.queueEntry.findUnique({ where: { publicCode } })
+	const queueEntry = await prisma.queueEntry.findUnique({
+		where: { publicCode },
+		include: { userSession: { select: { userID: true } } },
+	})
 	if (!queueEntry) {
 		throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Queue session not found" })
 	}
@@ -38,6 +41,7 @@ export default defineSafeHandler(async (event) => {
 	publishEvent(
 		createEvent("queue.notification.acknowledged", {
 			publicCode,
+			userID: queueEntry.userSession.userID,
 			acknowledgedAt: queuePingAcknowledgedAt,
 			acknowledgementMessage: message,
 		})

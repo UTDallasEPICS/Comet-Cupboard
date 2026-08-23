@@ -41,7 +41,42 @@
 		<template #right>
 			<div class="flex flex-row gap-2">
 				<USlideover
+					v-if="permissionsStore.canStudentAccess"
+					v-model:open="isNotificationDrawerOpen"
+					side="right"
+					:overlay="false"
+					:ui="{ content: 'max-w-112 mt-16 bg-page-bg', header: 'bg-utd-orange' }"
+				>
+					<UChip
+						:show="unreadNotificationCount > 0"
+						:text="unreadNotificationCount"
+						:ui="{ base: 'top-2 right-2 h-[20px] min-w-[20px] text-sm ring-0' }"
+					>
+						<UButton
+							variant="ghost"
+							icon="i-lucide-inbox"
+							class="text-white hover:bg-transparent focus-visible:ring-0 active:bg-transparent"
+							aria-label="Open notifications"
+						/>
+					</UChip>
+					<template #header="{ close }">
+						<div class="flex w-full items-center justify-between">
+							<SharedTextBase class="font-semibold text-white">Notifications</SharedTextBase
+							><UButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" :icon="icons['close']" @click="close" />
+						</div>
+					</template>
+					<template #body>
+						<div v-if="hasActiveQueuePing" class="space-y-3">
+							<SharedTextBase>A volunteer is ready to help you.</SharedTextBase>
+							<UInput v-model.number="timeEstimateMinutes" type="number" min="1" placeholder="Minutes until you arrive (optional)" class="w-full" />
+							<UButton label="Acknowledge" :loading="isAcknowledgingPing" @click="acknowledgeQueuePing" />
+						</div>
+						<SharedTextBase v-else>No notifications</SharedTextBase>
+					</template>
+				</USlideover>
+				<USlideover
 					v-if="showInventoryChangesIcon"
+					v-model:open="inventoryStore.inventoryDrawerOpen"
 					side="right"
 					:overlay="false"
 					:ui="{
@@ -135,6 +170,7 @@ const cartStore = useCartStore()
 const inventoryStore = useInventoryStore()
 const permissionsStore = usePermissionsStore()
 const userSessionInfoStore = useUserSessionInfoStore()
+const queueStore = useQueueStore()
 
 const route = useRoute()
 const showCartIcon = computed(() => {
@@ -146,6 +182,43 @@ const showInventoryChangesIcon = computed(() => {
 })
 
 const { logout } = useLogout()
+const isNotificationDrawerOpen = ref(false)
+const timeEstimateMinutes = ref<number | null>(null)
+const isAcknowledgingPing = ref(false)
+const hasActiveQueuePing = computed(() => Boolean(queueStore.queueStatus?.queuePingSentAt && !queueStore.queueStatus?.queuePingAcknowledgedAt))
+const unreadNotificationCount = computed(() => (hasActiveQueuePing.value ? 1 : 0))
+
+const acknowledgeQueuePing = async () => {
+	isAcknowledgingPing.value = true
+	try {
+		await $fetch("/api/student/queue/acknowledgePing", {
+			method: "PUT",
+			body: timeEstimateMinutes.value ? { timeEstimateMinutes: timeEstimateMinutes.value } : {},
+		})
+		timeEstimateMinutes.value = null
+		await queueStore.updateQueueStatus()
+		isNotificationDrawerOpen.value = false
+	} finally {
+		isAcknowledgingPing.value = false
+	}
+}
+
+let unsubscribeFromStudentEvents: (() => void) | undefined
+
+onMounted(async () => {
+	if (!permissionsStore.canStudentAccess) return
+
+	await queueStore.updateQueueStatus()
+	const { onEvent } = useStudentEventStream()
+	unsubscribeFromStudentEvents = onEvent((event) => {
+		if (event.type === "queue.notification.sent") {
+			isNotificationDrawerOpen.value = true
+			void queueStore.updateQueueStatus()
+		}
+	})
+})
+
+onBeforeUnmount(() => unsubscribeFromStudentEvents?.())
 
 const items = ref<NavigationMenuItem[]>(
 	[

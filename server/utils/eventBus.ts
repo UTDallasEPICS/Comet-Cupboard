@@ -65,7 +65,7 @@ export const publishEvent = async (event: AppEvent) => {
 				})
 			)
 			connectionsByRole.student.messageToUser(
-				event.payload.publicCode,
+				event.payload.userID,
 				JSON.stringify({
 					type: "queue.notification.sent",
 					payload: {
@@ -87,7 +87,7 @@ export const publishEvent = async (event: AppEvent) => {
 				})
 			)
 			connectionsByRole.student.messageToUser(
-				event.payload.publicCode,
+				event.payload.userID,
 				JSON.stringify({
 					type: "queue.notification.acknowledged",
 					payload: {

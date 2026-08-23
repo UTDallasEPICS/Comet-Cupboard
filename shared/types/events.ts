@@ -2,6 +2,9 @@ export interface QueueEntryNonSensitive {
 	position: number
 	publicCode: string
 	publicIcon: string
+	queuePingSentAt?: string | Date | null
+	queuePingAcknowledgedAt?: string | Date | null
+	queuePingAcknowledgementMessage?: string | null
 }
 
 export interface QueueFullPayloadNonSensitive {
@@ -21,8 +24,8 @@ export interface EventMap {
 	"queue.queueUpdated": QueueEntryNonSensitive[]
 
 	/* queue.notification */
-	"queue.notification.sent": { publicCode: string; sentAt: Date }
-	"queue.notification.acknowledged": { publicCode: string; acknowledgedAt: Date; acknowledgementMessage: string }
+	"queue.notification.sent": { publicCode: string; userID: string; sentAt: Date }
+	"queue.notification.acknowledged": { publicCode: string; userID: string; acknowledgedAt: Date; acknowledgementMessage: string }
 
 	/* cart session */
 	"cartSession.created": { publicCode: string; publicIcon: string }
