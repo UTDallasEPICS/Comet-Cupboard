@@ -1,10 +1,11 @@
 <template>
-	<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
+	<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
 		<UCard>
 			<div class="mb-4 flex items-center justify-between">
-				<SharedTextBase class="font-semibold"> Step {{ props.stepIndex }} </SharedTextBase>
+				<SharedTextCardTitle>Step {{ props.stepIndex }}</SharedTextCardTitle>
 				<UButton icon="i-lucide-x" color="error" variant="ghost" size="sm" @click="removeStep" />
 			</div>
+			<USeparator class="mb-4" />
 
 			<UFormField id="image" name="image" label="Step Image" description="JPG or PNG. 2MB Max. Image should be 16:9 (for example 1200x675px)" required>
 				<div class="flex flex-col gap-2">
@@ -36,15 +37,13 @@ import * as z from "zod"
 definePageMeta({ layout: false })
 
 const props = defineProps({
-	stepID: { type: String, required: true },
-	pageID: { type: String, required: true },
+	tutorialStepID: { type: String, required: true },
+	tutorialID: { type: String, required: true },
 	originalDescription: { type: String, required: true },
 	originalImageURL: { type: String, required: false },
 	stepIndex: { type: Number, required: true },
 	isNewStep: { type: Boolean, required: true },
 })
-
-console.log(props)
 
 const emit = defineEmits(["stepChanged"])
 
@@ -102,11 +101,8 @@ const onSubmit = async (event) => {
 	try {
 		const formData = new FormData()
 
-		if (props.isNewStep == true) {
-			formData.append("pageID", props.pageID)
-		} else {
-			formData.append("id", props.stepID)
-		}
+		formData.append("tutorialID", props.tutorialID)
+		formData.append("tutorialStepID", props.isNewStep ? "" : props.tutorialStepID)
 
 		if (event.data.description !== undefined) {
 			formData.append("description", event.data.description)
@@ -115,18 +111,11 @@ const onSubmit = async (event) => {
 			formData.append("image", event.data.image)
 		}
 
-		if (props.isNewStep) {
-			await $fetch("/api/admin/tutorial/steps", {
-				method: "POST",
-				body: formData,
-			})
-		} else {
-			await $fetch("/api/admin/tutorial/steps", {
-				method: "PATCH",
-				body: formData,
-			})
-		}
-		emit("stepChanged", { stepID: props.stepID })
+		await $fetch("/api/admin/tutorial/tutorial/step", {
+			method: "PUT",
+			body: formData,
+		})
+		emit("stepChanged", { tutorialStepID: props.tutorialStepID })
 	} catch (error) {
 		// idk for now
 	}
@@ -135,15 +124,13 @@ const onSubmit = async (event) => {
 const removeStep = async () => {
 	try {
 		if (props.isNewStep == false) {
-			await $fetch("/api/admin/tutorial/steps", {
+			await $fetch("/api/admin/tutorial/tutorial/step", {
 				method: "DELETE",
-				body: {
-					id: props.stepID,
-				},
+				query: { tutorialStepID: props.tutorialStepID },
 			})
 		}
 
-		emit("stepChanged", { stepID: props.stepID })
+		emit("stepChanged", { tutorialStepID: props.tutorialStepID })
 	} catch (error) {
 		console.error("Failed to delete step:", error)
 	}

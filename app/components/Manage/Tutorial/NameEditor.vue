@@ -1,14 +1,16 @@
 <template>
-	<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
+	<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
 		<UCard>
+			<SharedTextCardTitle>Tutorial Details</SharedTextCardTitle>
+			<USeparator class="my-4" />
 			<UFormField
 				id="name"
 				name="name"
-				label="Page Name"
-				description="Page name must be at most 30 characters and only contain letters and spaces"
+				label="Tutorial Name"
+				description="Tutorial name must be at most 30 characters and only contain letters and spaces"
 				required
 			>
-				<UInput v-model="state.name" placeholder="Enter new page name" />
+				<UInput v-model="state.name" placeholder="Enter new tutorial name" class="w-full" />
 			</UFormField>
 			<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
 				<SharedButtonCancel text="Cancel" @click="cancelName" />
@@ -22,7 +24,11 @@
 import * as z from "zod"
 
 const props = defineProps({
-	pageID: {
+	tutorialID: {
+		type: String,
+		required: true,
+	},
+	tutorialGroupID: {
 		type: String,
 		required: true,
 	},
@@ -62,19 +68,19 @@ watchEffect(async () => {
 })
 
 const onSubmit = async (event) => {
-    console.log("Submitting form with state:", state.value);
 	try {
 		const payload = {
-			id: props.pageID,
-			name: state.value.name,
+			tutorialID: props.tutorialID,
+			tutorialGroupID: props.tutorialGroupID,
+			tutorialName: state.value.name,
 		}
 
-		await $fetch("/api/admin/tutorial/pages", {
+		await $fetch("/api/admin/tutorial/tutorial", {
 			method: "PUT",
 			body: payload,
 		})
 
-        emit("nameChanged", state.value.name)
+		emit("nameChanged", state.value.name)
 	} catch (error) {
 		// idk for now
 	}

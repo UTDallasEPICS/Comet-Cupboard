@@ -7,31 +7,37 @@
 	>
 		<div class="p-4">
 			<div class="flex flex-col items-center justify-between gap-2">
-				<SharedTextBase class="flex flex-row gap-1 font-semibold"><UIcon :name="icon" class="size-5" /> {{ name }} Tutorials</SharedTextBase>
+				<SharedTextBase class="flex flex-row gap-1 font-semibold"
+					><UIcon :name="icon" class="size-5" /> {{ tutorialGroupName }} Tutorials</SharedTextBase
+				>
 				<USeparator />
 			</div>
 			<section class="mt-4">
-				<div v-if="pages.length === 0" class="flex flex-col items-center justify-center gap-y-4">
+				<div v-if="tutorials.length === 0" class="flex flex-col items-center justify-center gap-y-4">
 					<SharedTextBase> There are no tutorials in this group </SharedTextBase>
 				</div>
 
 				<ul class="flex flex-col gap-1 px-4 pb-2">
-					<li v-for="page in pages" :key="page.id" class="text-md flex flex-row items-center justify-between">
-						<SharedTutorial :tutorial="getPreviewTutorial(page)" :initial-page="0" :edit-page-url="`/admin/manage/tutorials/${id}/${page.id}/edit`">
+					<li v-for="tutorial in tutorials" :key="tutorial.tutorialID" class="text-md flex flex-row items-center justify-between">
+						<SharedTutorial
+							:tutorial="getPreviewTutorial(tutorial)"
+							:edit-tutorial-url="`/admin/manage/tutorials/${tutorialGroupID}/${tutorial.tutorialID}/edit`"
+						>
 							<UButton class="flex-1" color="primary" variant="outline" size="xl">
 								<div class="flex w-full items-center justify-between">
-									<span class="text-black">{{ page.name }}</span>
+									<span class="text-black">{{ tutorial.tutorialName }}</span>
 									<UIcon name="i-lucide-chevron-right" />
 								</div>
 							</UButton>
 						</SharedTutorial>
+
 						<UButton
 							class="w-min"
 							color="neutral"
 							variant="ghost"
 							size="xl"
 							:icon="icons['edit']"
-							@click="navigateTo(`/admin/manage/tutorials/${id}/${page.id}/edit`)"
+							@click="navigateTo(`/admin/manage/tutorials/${tutorialGroupID}/${tutorial.tutorialID}/edit`)"
 						/>
 					</li>
 				</ul>
@@ -42,7 +48,7 @@
 						variant="outline"
 						class="w-max"
 						trailing-icon="i-lucide-plus"
-						@click="navigateTo(`/admin/manage/tutorials/${id}/add`)"
+						@click="navigateTo(`/admin/manage/tutorials/${tutorialGroupID}/add`)"
 					/>
 				</div>
 			</section>
@@ -52,9 +58,9 @@
 
 <script setup lang="ts">
 const props = defineProps({
-	id: { type: String, required: true },
-	name: { type: String, required: true },
-	pages: { type: Array, default: () => [] },
+	tutorialGroupID: { type: String, required: true },
+	tutorialGroupName: { type: String, required: true },
+	tutorials: { type: Array, default: () => [] },
 	icon: { type: String, required: true },
 })
 
@@ -62,13 +68,8 @@ const emit = defineEmits<{
 	refresh: []
 }>()
 
-const getPreviewTutorial = (page: any) => ({
-	title: page.name,
-	tutorialPages: [
-		{
-			title: page.name,
-			content: page.steps,
-		},
-	],
+const getPreviewTutorial = (tutorial: any) => ({
+	tutorialName: tutorial.tutorialName,
+	tutorialSteps: tutorial.tutorialSteps,
 })
 </script>

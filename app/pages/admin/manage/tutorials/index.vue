@@ -7,9 +7,9 @@
 					<li v-for="groupConfig in groupConfigs" :key="groupConfig.name">
 						<ManageTutorialGroupCard
 							v-if="findGroup(groupConfig.name)"
-							:id="findGroup(groupConfig.name).id"
-							:name="findGroup(groupConfig.name).name"
-							:pages="findGroup(groupConfig.name).pages"
+							:tutorialGroupID="findGroup(groupConfig.name).tutorialGroupID"
+							:tutorialGroupName="findGroup(groupConfig.name).tutorialGroupName"
+							:tutorials="findGroup(groupConfig.name).tutorials"
 							:icon="groupConfig.icon"
 							@refresh="refresh"
 						/>
@@ -23,7 +23,9 @@
 <script setup lang="ts">
 definePageMeta({ layout: false })
 
-const { data: groups, refresh } = await useFetch("/api/admin/tutorial/groups")
+const { data: groups, refresh } = await useFetch("/api/admin/tutorial/tutorial/all-tutorials")
+
+console.log("groups", groups.value)
 
 const groupConfigs = [
 	{ name: "Student", icon: icons.student },
@@ -33,6 +35,6 @@ const groupConfigs = [
 ]
 
 const findGroup = (name: string) => {
-	return groups.value?.find((group) => group.name === name)
+	return groups.value?.find((group) => group.tutorialGroupName === name)
 }
 </script>

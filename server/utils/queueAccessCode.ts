@@ -1,7 +1,7 @@
 import { createHmac } from "node:crypto"
 import z from "zod"
 
-const TIME_BASED_ONE_TIME_PASSWORD_SECRET = process.env.NUXT_TIME_BASED_ONE_TIME_PASSWORD_SECRET
+const TIME_BASED_ONE_TIME_PASSWORD_SECRET = process.env.NUXT_TIME_BASED_ONE_TIME_PASSWORD_SECRET ?? "dev-secret"
 
 const CODE_LENGTH = 6
 const CODE_RANGE = 10 ** CODE_LENGTH

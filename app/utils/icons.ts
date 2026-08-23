@@ -41,4 +41,5 @@ export const icons = {
 	profile: "i-lucide-circle-user",
 	move: "i-lucide-arrow-left-right",
 	tutorials: "i-lucide-info",
+	announcements: "i-lucide-megaphone",
 }

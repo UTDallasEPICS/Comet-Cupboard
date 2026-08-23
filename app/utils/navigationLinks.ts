@@ -56,12 +56,6 @@ export const roleLinks: Record<Role, AppLink[]> = {
 			to: "/volunteer/queue",
 		},
 		{
-			label: "Create Emergency Bags",
-			description: "Add Emergency Bags",
-			icon: icons["shoppingBag"],
-			to: "/volunteer/emergency-bag/create",
-		},
-		{
 			label: "Manage Emergency Bags",
 			description: "View Emergency Bags",
 			icon: icons["management"],
@@ -112,6 +106,18 @@ export const roleLinks: Record<Role, AppLink[]> = {
 				},
 			],
 		},
+		{
+			label: "Create Announcements",
+			description: "Create and manage announcements",
+			icon: icons["announcements"],
+			to: "/admin/announcements",
+		},
+		{
+			label: "Historical Inventory Intake Sessions",
+			description: "View past inventory intake sessions",
+			icon: icons["inventory"],
+			to: "/admin/intake-sessions/historical",
+		},
 	],
 	headAdmin: [
 		{
@@ -125,6 +131,18 @@ export const roleLinks: Record<Role, AppLink[]> = {
 			description: "View and analyze system data",
 			icon: icons["data"],
 			to: "/head-admin/data-analytics",
+		},
+		{
+			label: "Custom Dashboard Links",
+			description: "Manage external dashboard links",
+			icon: "i-lucide-external-link",
+			to: "/head-admin/dashboard-links",
+		},
+		{
+			label: "Audit Log",
+			description: "Inspect application-wide actions",
+			icon: icons["disclosures"],
+			to: "/head-admin/audit-log",
 		},
 	],
 }

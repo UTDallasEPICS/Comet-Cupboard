@@ -1,81 +1,71 @@
 <template>
-	<UModal v-model:open="open" :title="tutorial.title" @after:leave="resetTutorial">
+	<UModal
+		v-model:open="open"
+		:title="`${modalTitle} ${viewModel.isTutorialGroup ? 'Tutorials' : ''}`"
+		@after:leave="resetTutorial"
+		:ui="{
+			body: 'overflow-x-hidden',
+		}"
+	>
 		<slot />
-
 		<template #body>
 			<UContainer class="min-h-128 max-w-96 min-w-72">
 				<Transition name="slide" mode="out-in">
-					<section :key="current">
-						<!-- Home -->
-						<div v-if="current === 'home'">
-							<div class="flex flex-col gap-2">
+					<section :key="viewModel.isTutorialGroup ? (selectedTutorialIndex ?? 'tutorial-list') : 'tutorial'">
+						<div v-if="viewModel.isTutorialGroup && selectedTutorialIndex === null">
+							<div v-if="tutorials.length !== 0" class="flex w-full flex-col gap-2">
 								<UButton
-									v-for="(page, index) in tutorial.tutorialPages"
-									:key="index"
+									v-for="(tutorial, index) in tutorials"
+									:key="tutorial.tutorialID"
 									color="primary"
 									variant="outline"
 									size="xl"
-									@click="push(index)"
+									@click="selectTutorial(index)"
 								>
-									<template #default>
-										<div class="flex w-full items-center justify-between">
-											<SharedTextBase class="text-left">
-												{{ page.title }}
-											</SharedTextBase>
-
-											<UIcon :name="icons['tutorial_right']" class="size-6" />
-										</div>
-									</template>
+									<div class="flex w-full items-center justify-between">
+										<SharedTextBase class="text-left">{{ tutorial.tutorialName }}</SharedTextBase>
+										<UIcon :name="icons['tutorial_right']" class="size-6" />
+									</div>
 								</UButton>
+							</div>
+							<div v-else>
+								<SharedTextBaseSecondary>This tutorial group doesn't have any tutorials yet.</SharedTextBaseSecondary>
 							</div>
 						</div>
-
-						<!-- Tutorial Page -->
-						<div v-else-if="activePage">
-							<SharedTextBase class="text-center">
-								{{ activePage.title }}
-							</SharedTextBase>
-
-							<div v-if="activePage.content.length === 0" class="flex flex-col items-center justify-center gap-4 py-8 text-center">
-								<SharedTextBaseSecondary> This tutorial doesn't have any steps yet. </SharedTextBaseSecondary>
-
-								<UButton
-									v-if="props.editPageUrl"
-									color="neutral"
-									variant="outline"
-									:leading-icon="icons['add']"
-									@click="navigateTo(props.editPageUrl)"
-								>
-									Add steps to tutorial
-								</UButton>
+						<div v-else-if="activeTutorial">
+							<SharedTextBase class="text-center">{{ activeTutorial.tutorialName }}</SharedTextBase>
+							<div v-if="activeTutorial.tutorialSteps.length === 0" class="flex flex-col items-center justify-center gap-4 py-8 text-center">
+								<SharedTextBaseSecondary>This tutorial doesn't have any steps yet.</SharedTextBaseSecondary>
+								<UButton color="secondary" variant="solid" size="xl" class="mt-4" @click="backToTutorials"> Back to Tutorials </UButton>
 							</div>
-
 							<template v-else>
 								<UCarousel
 									v-slot="{ item: step }"
-									:items="activePage.content"
+									:items="activeTutorial.tutorialSteps"
 									arrows
 									class="mt-4 flex w-full"
 									@select="currentCarouselNumber = $event"
 								>
-									<img :src="`/api/public/image/${step.imageURL}`" class="mx-auto aspect-auto w-full rounded-lg" loading="lazy" />
+									<img
+										:src="`/api/public/image/${getTutorialStepImageUrl(step as unknown)}`"
+										class="mx-auto aspect-auto w-full rounded-lg"
+										loading="lazy"
+									/>
 								</UCarousel>
-
-								<SharedTextBaseSecondary class="mt-2 text-center">
-									{{ currentStep?.description }}
-								</SharedTextBaseSecondary>
-
-								<SharedTextBase class="mt-2 text-center">
-									{{ currentCarouselNumber + 1 }} /
-									{{ activePage.content.length }}
-								</SharedTextBase>
-
-								<div
-									v-if="props.initialPage === undefined && currentCarouselNumber === activePage.content.length - 1"
-									class="flex justify-center"
+								<SharedTextBaseSecondary class="mt-2 text-center">{{ currentStep?.description }}</SharedTextBaseSecondary>
+								<SharedTextBase class="mt-2 text-center"
+									>{{ currentCarouselNumber + 1 }} / {{ activeTutorial.tutorialSteps.length }}</SharedTextBase
 								>
-									<UButton color="secondary" variant="solid" size="xl" class="mt-4" @click="pop"> Back to Tutorial Pages </UButton>
-								</div>
+								<UButton
+									v-if="viewModel.isTutorialGroup && currentCarouselNumber === activeTutorial.tutorialSteps.length - 1"
+									color="secondary"
+									variant="solid"
+									size="xl"
+									class="mt-4"
+									@click="backToTutorials"
+								>
+									Back to Tutorials
+								</UButton>
 							</template>
 						</div>
 					</section>
@@ -86,55 +76,42 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-	tutorial: {
-		title: string
-		tutorialPages: {
-			title: string
-			content: {
-				imageURL: string
-				description: string
-			}[]
-		}[]
-	}
-	initialPage?: number
-	editPageUrl?: string
-}>()
+type TutorialStep = { tutorialStepID: string; imageUrl: string; description: string; stepOrdering: number }
+type Tutorial = { tutorialID: string; tutorialName: string; tutorialSteps: TutorialStep[] }
+type TutorialGroup = { tutorialGroupID: string; tutorialGroupName: string; tutorials: Tutorial[] }
+
+const props = defineProps<{ tutorial: Tutorial | TutorialGroup }>()
 
 const open = ref(false)
-
-const stack = ref<(number | "home")[]>([props.initialPage ?? "home"])
-
 const currentCarouselNumber = ref(0)
-
-const current = computed(() => stack.value[stack.value.length - 1])
-
-const activePage = computed(() => {
-	if (current.value === "home") return null
-
-	return props.tutorial.tutorialPages[current.value]
+const selectedTutorialIndex = ref<number | null>(null)
+const viewModel = computed(() => {
+	const tutorial = props.tutorial as Tutorial | TutorialGroup
+	if ("tutorials" in tutorial) {
+		return { isTutorialGroup: true, title: tutorial.tutorialGroupName, tutorials: tutorial.tutorials }
+	}
+	return { isTutorialGroup: false, title: tutorial.tutorialName, tutorials: [tutorial] }
 })
-
-const currentStep = computed(() => {
-	if (!activePage.value) return null
-
-	return activePage.value.content[currentCarouselNumber.value]
+const tutorials = computed(() => viewModel.value.tutorials)
+const modalTitle = computed(() => viewModel.value.title)
+const activeTutorial = computed(() => {
+	if (viewModel.value.isTutorialGroup && selectedTutorialIndex.value === null) return null
+	return tutorials.value[selectedTutorialIndex.value ?? 0]
 })
-
-const push = (pageIndex: number) => {
-	stack.value.push(pageIndex)
+const currentStep = computed(() => activeTutorial.value?.tutorialSteps[currentCarouselNumber.value] ?? null)
+const getTutorialStepImageUrl = (step: unknown) => {
+	return typeof step === "object" && step !== null && "imageUrl" in step && typeof step.imageUrl === "string" ? step.imageUrl : ""
+}
+const selectTutorial = (tutorialIndex: number) => {
+	selectedTutorialIndex.value = tutorialIndex
 	currentCarouselNumber.value = 0
 }
-
-const pop = () => {
-	if (stack.value.length > 1) {
-		stack.value.pop()
-		currentCarouselNumber.value = 0
-	}
+const backToTutorials = () => {
+	selectedTutorialIndex.value = null
+	currentCarouselNumber.value = 0
 }
-
 const resetTutorial = () => {
-	stack.value = [props.initialPage ?? "home"]
+	selectedTutorialIndex.value = null
 	currentCarouselNumber.value = 0
 }
 </script>

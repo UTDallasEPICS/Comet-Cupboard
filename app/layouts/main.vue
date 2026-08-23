@@ -6,7 +6,9 @@
 			</div>
 			<div class="flex flex-row flex-nowrap items-center gap-2">
 				<SharedTextPageTitle>{{ props.title }}</SharedTextPageTitle>
-				<SharedTutorial v-if="props.tutorialData" :tutorial="props.tutorialData" />
+				<SharedTutorial v-if="props.tutorialData" :tutorial="props.tutorialData">
+					<UButton color="neutral" variant="ghost" :icon="icons['information']" />
+				</SharedTutorial>
 			</div>
 		</header>
 
@@ -22,14 +24,20 @@ const props = defineProps<{
 		to: string
 	}
 	tutorialData?: {
-		title: string
-		tutorialPages: {
-			title: string
-			content: {
-				imageURL: string
+		tutorialGroupID: string
+		tutorialGroupName: string
+		tutorials: {
+			tutorialID: string
+			tutorialName: string
+			tutorialSteps: {
+				tutorialStepID: string
+				imageUrl: string
 				description: string
+				stepOrdering: number
 			}[]
 		}[]
 	}
 }>()
+
+console.log("props.tutorialData", props.tutorialData)
 </script>

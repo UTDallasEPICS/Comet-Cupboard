@@ -2,15 +2,14 @@ import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateBody } from "#server/utils/validation"
-
 const schema = z
 	.object({
 		dashboardLinkID: z.string(),
 		displayName: z.string().trim().min(1),
-		url: z
-			.string()
-			.trim()
-			.refine((value) => value.startsWith("/") || URL.canParse(value), "Enter a valid URL or internal route"),
+		url: z.url({
+			protocol: /^https?$/,
+			hostname: z.regexes.domain,
+		}),
 		description: z.string().default(""),
 		dashboardRolePage: z.enum(["STUDENT", "VOLUNTEER", "ADMIN", "HEAD_ADMIN"]),
 		displayOrder: z.number().int().default(0),
