@@ -5,7 +5,7 @@
 			<section>
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<li v-for="link in studentLinks" :key="link.label">
-						<DashboardDefaultLinkCard :to="link.to" :icon="link.icon" :label="link.label" :description="link.description" />
+						<DomainCardDashboardDefaultLinkCard :to="link.to" :icon="link.icon" :label="link.label" :description="link.description" />
 					</li>
 				</ul>
 			</section>
@@ -15,7 +15,7 @@
 				<section>
 					<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="link in customStudentLinks" :key="link.label">
-							<DashboardCustomLinkCard
+							<DomainCardDashboardCustomLinkCard
 								:dashboardLinkID="link.dashboardLinkID"
 								:url="link.url"
 								:display-name="link.displayName"

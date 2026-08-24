@@ -20,7 +20,7 @@
 					<USeparator class="my-4" />
 					<ul v-if="shownActiveCategories.length != 0" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="category in shownActiveCategories" :key="category.categoryID">
-							<ManageCategoryItemCard :name="category.categoryName" :img-name="category.imgName" :category-i-d="category.categoryID" />
+							<DomainCardManageCategoryItemCard :name="category.categoryName" :img-name="category.imgName" :category-i-d="category.categoryID" />
 						</li>
 					</ul>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">
@@ -32,7 +32,7 @@
 					<USeparator class="my-4" />
 					<ul v-if="shownArchivedCategories.length != 0" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="category in shownArchivedCategories" :key="category.categoryID">
-							<ManageCategoryItemCard :name="category.categoryName" :img-name="category.imgName" :category-i-d="category.categoryID" />
+							<DomainCardManageCategoryItemCard :name="category.categoryName" :img-name="category.imgName" :category-i-d="category.categoryID" />
 						</li>
 					</ul>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">

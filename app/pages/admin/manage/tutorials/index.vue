@@ -5,7 +5,7 @@
 				<USeparator class="my-4" />
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<li v-for="groupConfig in groupConfigs" :key="groupConfig.name">
-						<ManageTutorialGroupCard
+						<DomainCardManageTutorialGroupCard
 							v-if="findGroup(groupConfig.name)"
 							:tutorialGroupID="findGroup(groupConfig.name).tutorialGroupID"
 							:tutorialGroupName="findGroup(groupConfig.name).tutorialGroupName"

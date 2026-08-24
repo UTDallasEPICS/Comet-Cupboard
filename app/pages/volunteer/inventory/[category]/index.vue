@@ -34,7 +34,7 @@
 				<SharedLayoutSectionUCard title="Active Items">
 					<ul v-if="shownActiveItems.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="item in shownActiveItems" :key="item.itemID">
-							<InventoryItemCard
+							<DomainCardInventoryItemCard
 								:specific-items="item.specificItems"
 								:change-count="inventoryChangeCount(item)"
 								:current-count="itemQuantityTotal(item)"
@@ -52,7 +52,7 @@
 				<SharedLayoutSectionUCard title="Archived Items" class="mt-4">
 					<ul v-if="shownArchivedItems.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="item in shownArchivedItems" :key="item.itemID">
-							<InventoryItemCard
+							<DomainCardInventoryItemCard
 								:specific-items="item.specificItems"
 								:change-count="inventoryChangeCount(item)"
 								:current-count="itemQuantityTotal(item)"

@@ -16,7 +16,7 @@
 						</template>
 						<ul v-if="section.customLinks.length > 0" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 							<li v-for="link in section.customLinks" :key="link.label">
-								<DashboardEditCustomLinkCard
+								<DomainCardDashboardEditCustomLinkCard
 									v-for="link in section.customLinks"
 									:key="link.dashboardLinkID"
 									:dashboardLinkID="link.dashboardLinkID"

@@ -22,13 +22,14 @@
 				<USeparator class="my-4" />
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<li v-for="item in filtered" :key="item.itemID">
-						<ShoppingItemCard
+						<DomainCardShoppingItemCard
 							type-of-card="SHOPPING"
 							:item-deal="item.deal ? { actualCount: item.deal.actualCount, adjustedCount: item.deal.adjustedCount } : {}"
 							:item-i-d="item.itemID"
 							:name="item.itemName"
 							:quantity="itemQuantityTotal(item)"
 							:specific-items="item.specificItems"
+							@add="cartStore.addCartItem"
 						/>
 					</li>
 				</ul>
@@ -40,6 +41,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: false })
 
+const cartStore = useCartStore()
 const route = useRoute()
 const currentCategory = route.params.category as string
 

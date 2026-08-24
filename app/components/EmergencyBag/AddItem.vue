@@ -51,7 +51,7 @@
 						<SharedTextBase> No items in current bag </SharedTextBase>
 						<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
 					</div>
-					<EmergencyBagItemCard
+					<DomainCardEmergencyBagItemCard
 						v-for="item in bagItems"
 						:key="item.specificItemID"
 						:name="item.name"

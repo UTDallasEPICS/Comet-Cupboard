@@ -43,8 +43,8 @@
 				<UTextarea v-model="reason" placeholder="Add a reason for declining or accepting the cart" class="w-full max-w-96" />
 			</div>
 			<div class="flex flex-row justify-center gap-x-4 sm:justify-end">
-				<SharedButtonNegativeAction text="Decline" @click="rejectCart" />
-				<SharedButtonPositiveAction text="Accept" @click="acceptCart" />
+				<SharedButtonNegativeAction text="Decline" @click="emit('cart-declined', publicCode, reason)" />
+				<SharedButtonPositiveAction text="Accept" @click="emit('cart-accepted', publicCode, reason)" />
 			</div>
 		</div>
 		<div v-else class="flex flex-col items-center justify-center gap-4">
@@ -63,7 +63,11 @@ const props = defineProps({
 	},
 })
 
-const emit = defineEmits(["update:select-cart", "cart-declined", "cart-accepted"])
+const emit = defineEmits<{
+	"update:select-cart": [publicCode: string]
+	"cart-declined": [publicCode: string, reason: string]
+	"cart-accepted": [publicCode: string, reason: string]
+}>()
 
 const reason = ref("")
 
@@ -158,22 +162,4 @@ const cartTotalCount = computed(() => {
 	})
 	return totCount
 })
-
-const rejectCart = async () => {
-	await $fetch("/api/volunteer/verification/cartVerificationAction", {
-		method: "POST",
-		body: { publicCode: props.publicCode, action: "REJECT", reason: reason.value },
-	})
-	reason.value = ""
-	emit("cart-declined", props.publicCode)
-}
-
-const acceptCart = async () => {
-	await $fetch("/api/volunteer/verification/cartVerificationAction", {
-		method: "POST",
-		body: { publicCode: props.publicCode, action: "ACCEPT", reason: reason.value },
-	})
-	reason.value = ""
-	emit("cart-accepted", props.publicCode)
-}
 </script>

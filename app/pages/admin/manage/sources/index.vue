@@ -20,7 +20,7 @@
 					<USeparator class="my-4" />
 					<ul v-if="shownActiveSources.length !== 0" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="source in shownActiveSources" :key="source.sourceID">
-							<ManageSourceItemCard :name="source.sourceName" :source-i-d="source.sourceID" />
+							<DomainCardManageSourceItemCard :name="source.sourceName" :source-i-d="source.sourceID" />
 						</li>
 					</ul>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">
@@ -33,7 +33,7 @@
 					<USeparator class="my-4" />
 					<ul v-if="shownArchivedSources.length !== 0" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="source in shownArchivedSources" :key="source.sourceID">
-							<ManageSourceItemCard :name="source.sourceName" :source-i-d="source.sourceID" />
+							<DomainCardManageSourceItemCard :name="source.sourceName" :source-i-d="source.sourceID" />
 						</li>
 					</ul>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">

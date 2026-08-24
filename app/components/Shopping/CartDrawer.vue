@@ -55,7 +55,7 @@
 				</template>
 
 				<template #item="{ item: cartItem }">
-					<ShoppingCartItemCard
+					<DomainCardShoppingCartItemCard
 						class="w-full"
 						:count="cartItem.count"
 						:img-name="cartItem.specificItem.imgName"
@@ -70,7 +70,9 @@
 								: {}
 						"
 						:quantity="Number(cartItem.specificItem.quantity)"
-						@update:cart="cartStore.getCart"
+						@increment="cartStore.changeCartItemCount(cartItem.specificItemID, 1)"
+						@decrement="cartStore.changeCartItemCount(cartItem.specificItemID, -1)"
+						@remove="cartStore.removeCartItem(cartItem.specificItemID)"
 					/>
 				</template>
 			</SharedLayoutGroupedCollapsible>

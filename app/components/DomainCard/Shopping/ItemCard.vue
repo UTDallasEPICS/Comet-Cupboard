@@ -69,12 +69,7 @@
 										/>
 									</div>
 								</div>
-								<SharedButtonPositiveAction
-									text="Add"
-									class="ml-auto"
-									color="secondary"
-									@click="addSpecificItemToCart(specificItem.specificItemID)"
-								/>
+								<SharedButtonPositiveAction text="Add" class="ml-auto" color="secondary" @click="emit('add', specificItem.specificItemID)" />
 							</div>
 						</div>
 					</div>
@@ -114,6 +109,10 @@ const props = defineProps({
 	},
 })
 
+const emit = defineEmits<{
+	add: [specificItemID: string]
+}>()
+
 const isSpecificItemsOpen = ref(false)
 
 const normalizedSpecificItems = computed(() => (Array.isArray(props.specificItems) ? props.specificItems : []) as Array<Record<string, any>>)
@@ -135,21 +134,5 @@ const amountInCart = computed(() =>
 const specificItemAmountInCart = (specificItemID: string) => {
 	const cartItem = cartStore.itemIDtoCartItemMap[specificItemID]
 	return cartItem ? cartItem.count : 0
-}
-
-const addSpecificItemToCart = async (specificItemID: string) => {
-	try {
-		await $fetch("/api/student/cart/cartItemCount", {
-			method: "POST",
-			body: {
-				specificItemID,
-				incrementChange: 1,
-			},
-		})
-
-		await cartStore.getCart()
-	} catch {
-		cartStore.cartView = true
-	}
 }
 </script>

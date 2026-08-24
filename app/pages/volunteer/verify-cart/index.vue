@@ -8,14 +8,14 @@
 						:class="(currentPublicCodePreview === '' ? 'visible' : 'invisible hidden') + ' md:visible md:block'"
 						class="w-full max-w-100 md:mr-4 lg:mr-12"
 					>
-						<VerifyCartPendingList :selected-cart="currentPublicCodePreview" @update:select-cart="setPublicCodePreview" />
+						<DomainCardVerifyCartPendingList :selected-cart="currentPublicCodePreview" @update:select-cart="setPublicCodePreview" />
 					</div>
-					<VerifyCartPreview
+					<DomainCardVerifyCartPreview
 						:class="(currentPublicCodePreview === '' ? 'invisible hidden' : 'visible') + ' md:visible md:flex md:flex-col'"
 						:public-code="currentPublicCodePreview"
 						@update:select-cart="setPublicCodePreview"
-						@cart-declined="declineToastMessage"
-						@cart-accepted="acceptToastMessage"
+						@cart-declined="declineCart"
+						@cart-accepted="acceptCart"
 					/>
 				</div>
 			</div>
@@ -43,7 +43,11 @@ const resetPublicCodePreview = () => {
 	currentPublicCodePreview.value = ""
 }
 
-const declineToastMessage = (publicCode: string) => {
+const declineCart = async (publicCode: string, reason: string) => {
+	await $fetch("/api/volunteer/verification/cartVerificationAction", {
+		method: "POST",
+		body: { publicCode, action: "REJECT", reason },
+	})
 	toast.add({
 		title: "Cart Action Status",
 		description: `Declined cart for ${publicCode}.`,
@@ -51,7 +55,11 @@ const declineToastMessage = (publicCode: string) => {
 	resetPublicCodePreview()
 }
 
-const acceptToastMessage = (publicCode: string) => {
+const acceptCart = async (publicCode: string, reason: string) => {
+	await $fetch("/api/volunteer/verification/cartVerificationAction", {
+		method: "POST",
+		body: { publicCode, action: "ACCEPT", reason },
+	})
 	toast.add({
 		title: "Cart Action Status",
 		description: `Accepted cart for ${publicCode}.`,

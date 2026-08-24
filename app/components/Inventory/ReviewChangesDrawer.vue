@@ -48,7 +48,7 @@
 							</UButtonGroup>
 						</div>
 						<div v-if="changeView === 'incremental'" class="space-y-3">
-							<InventoryReviewItemCard
+							<DomainCardInventoryReviewItemCard
 								v-for="inventoryItem in inventoryStore.inventoryChangesItems"
 								:key="inventoryItem.InventoryIntakeSessionItemChangeID"
 								:name="specificItemName(inventoryItem.specificItem)"
@@ -86,7 +86,7 @@
 							</template>
 
 							<template #item="{ item: inventoryItem }">
-								<InventoryReviewItemCard
+								<DomainCardInventoryReviewItemCard
 									:key="inventoryItem.specificItemID"
 									:name="specificItemName(inventoryItem.specificItem)"
 									:img-name="inventoryItem.specificItem.imgName"

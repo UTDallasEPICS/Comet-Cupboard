@@ -81,7 +81,7 @@
 									</template>
 
 									<template #item="{ item }">
-										<ShoppingCartAdjustCountItemCard
+										<DomainCardShoppingCartAdjustCountItemCard
 											class="w-full"
 											:item-deal="item.itemDeal"
 											:name="item.name"
@@ -131,7 +131,7 @@
 									</template>
 
 									<template #item="{ item }">
-										<ShoppingCartReviewItemCard
+										<DomainCardShoppingCartReviewItemCard
 											class="w-full"
 											:item-deal="item.itemDeal"
 											:name="item.name"
@@ -175,7 +175,7 @@
 									</template>
 
 									<template #item="{ item }">
-										<ShoppingCartReviewItemCard
+										<DomainCardShoppingCartReviewItemCard
 											class="w-full"
 											:item-deal="item.itemDeal"
 											:name="item.name"

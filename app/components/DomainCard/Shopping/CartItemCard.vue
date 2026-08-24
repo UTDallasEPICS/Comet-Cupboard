@@ -15,7 +15,7 @@
 		</div>
 		<USeparator />
 		<div class="flex flex-row items-center justify-end gap-2 p-2">
-			<UButton variant="ghost" color="error" :icon="icons['delete']" size="sm" aria-label="Remove from cart" @click="removeCartItem" />
+			<UButton variant="ghost" color="error" :icon="icons['delete']" size="sm" aria-label="Remove from cart" @click="emit('remove', specificItemID)" />
 			<SharedTextBaseSecondary class="text-right">In cart:</SharedTextBaseSecondary>
 			<SharedIncrementDecrementPill :count="props.count" :min="1" :max="quantity" @increment="increment" @decrement="decrement" />
 		</div>
@@ -32,37 +32,21 @@ const props = defineProps({
 	specificItem: { type: Object, default: null },
 })
 
-const emit = defineEmits(["update:cart"])
+const emit = defineEmits<{
+	increment: [specificItemID: string]
+	decrement: [specificItemID: string]
+	remove: [specificItemID: string]
+}>()
 
-const isSaving = ref(false)
-
-const increment = async () => {
-	await $fetch("/api/student/cart/cartItemCount", {
-		method: "POST",
-		body: { specificItemID: props.specificItemID, incrementChange: 1 },
-	})
-	isSaving.value = false
-	emit("update:cart")
+const increment = () => {
+	emit("increment", props.specificItemID)
 }
 
-const decrement = async () => {
+const decrement = () => {
 	if (props.count <= 1) {
 		return
 	}
-	await $fetch("/api/student/cart/cartItemCount", {
-		method: "POST",
-		body: { specificItemID: props.specificItemID, incrementChange: -1 },
-	})
-	isSaving.value = false
-	emit("update:cart")
-}
-
-const removeCartItem = async () => {
-	await $fetch("/api/student/cart/cartItem", {
-		method: "DELETE",
-		body: { specificItemID: props.specificItemID },
-	})
-	emit("update:cart")
+	emit("decrement", props.specificItemID)
 }
 
 const specificItemName = (specificItem) => {

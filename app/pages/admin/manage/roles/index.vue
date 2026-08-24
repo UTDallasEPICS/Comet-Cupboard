@@ -21,7 +21,13 @@
 				<SharedLayoutSectionUCard title="Users">
 					<ul class="my-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="user in paginatedUsers" :key="user.userID">
-							<ManageUserRoleItemCard :user-i-d="user.userID" :display-name="user.displayName" :role="user.role" @role-changed="refresh" />
+							<DomainCardManageUserRoleItemCard
+								:user-i-d="user.userID"
+								:display-name="user.displayName"
+								:role="user.role"
+								@set-role="setUserRole"
+								@self-demote="headAdminSelfDemote"
+							/>
 						</li>
 					</ul>
 					<UPagination
@@ -42,9 +48,24 @@
 <script lang="ts" setup>
 definePageMeta({ layout: false })
 
+const permissionsStore = usePermissionsStore()
+
 const { data: users, refresh } = await useFetch("/api/admin/user/users", {
 	method: "GET",
 })
+
+const setUserRole = async ({ userID, newRole }: { userID: string; newRole: string }) => {
+	await $fetch(permissionsStore.canHeadAdminAccess ? "/api/head-admin/user/role" : "/api/admin/user/role", {
+		method: "POST",
+		body: { userID, newRole },
+	})
+	await refresh()
+}
+
+const headAdminSelfDemote = async () => {
+	await $fetch("/api/head-admin/user/selfDemote", { method: "POST" })
+	await refresh()
+}
 
 const toggleOptions = ref(["Student", "Volunteer", "Admin", "Head Admin"])
 const toggleItems = ref([])

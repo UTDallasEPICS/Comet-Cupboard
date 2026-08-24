@@ -21,7 +21,7 @@
 
 					<ul v-if="shownActiveLocations.length != 0" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="location in shownActiveLocations" :key="location.locationID">
-							<ManageLocationItemCard
+							<DomainCardManageLocationItemCard
 								:name="location.locationName"
 								:img-name="location.imgName"
 								:description="location.description"
@@ -39,7 +39,7 @@
 					<USeparator class="my-4" />
 					<ul v-if="shownArchivedLocations.length != 0" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="location in shownArchivedLocations" :key="location.locationID">
-							<ManageLocationItemCard
+							<DomainCardManageLocationItemCard
 								:name="location.locationName"
 								:img-name="location.imgName"
 								:description="location.description"

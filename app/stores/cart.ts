@@ -15,6 +15,34 @@ export const useCartStore = defineStore("cart", () => {
 		}
 	}
 
+	const changeCartItemCount = async (specificItemID: string, incrementChange: number) => {
+		await $fetch("/api/student/cart/cartItemCount", {
+			method: "POST",
+			body: { specificItemID, incrementChange },
+		})
+		await getCart()
+	}
+
+	const addCartItem = async (specificItemID: string) => {
+		try {
+			await $fetch("/api/student/cart/cartItemCount", {
+				method: "POST",
+				body: { specificItemID, incrementChange: 1 },
+			})
+			await getCart()
+		} catch {
+			cartView.value = true
+		}
+	}
+
+	const removeCartItem = async (specificItemID: string) => {
+		await $fetch("/api/student/cart/cartItem", {
+			method: "DELETE",
+			body: { specificItemID },
+		})
+		await getCart()
+	}
+
 	const categorizedCartItems = computed(() => {
 		if (cart.value === null || "cartItems" in cart.value === false) {
 			return {}
@@ -75,5 +103,19 @@ export const useCartStore = defineStore("cart", () => {
 		}
 	}
 
-	return { cart, cartView, cartIsEmpty, cartTotalCount, pending, getCart, resetCartView, handleCartEvent, categorizedCartItems, itemIDtoCartItemMap }
+	return {
+		cart,
+		cartView,
+		cartIsEmpty,
+		cartTotalCount,
+		pending,
+		getCart,
+		changeCartItemCount,
+		addCartItem,
+		removeCartItem,
+		resetCartView,
+		handleCartEvent,
+		categorizedCartItems,
+		itemIDtoCartItemMap,
+	}
 })

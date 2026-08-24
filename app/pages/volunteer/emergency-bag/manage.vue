@@ -76,7 +76,7 @@
 							</div>
 							<ul class="flex w-full flex-col gap-3">
 								<li v-for="bag in group.bags" :key="bag.emergencyBagID" class="w-full">
-									<EmergencyBagTableBagCard v-model:selected="selected[bag.emergencyBagID]" :bag="bag" />
+									<DomainCardEmergencyBagTableBagCard v-model:selected="selected[bag.emergencyBagID]" :bag="bag" />
 								</li>
 							</ul>
 						</section>

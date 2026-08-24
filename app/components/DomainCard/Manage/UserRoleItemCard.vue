@@ -28,7 +28,10 @@ const props = defineProps({
 const permissionsStore = usePermissionsStore()
 const currentUserSession = useUserSessionInfoStore()
 
-const emit = defineEmits(["roleChanged"])
+const emit = defineEmits<{
+	"set-role": [payload: { userID: string; newRole: string }]
+	"self-demote": []
+}>()
 
 const roleColor = computed(() => {
 	switch (props.role) {
@@ -54,26 +57,26 @@ const actionItems = computed(() => {
 			if (props.role !== "STUDENT") {
 				items.push({
 					label: "Set to Student",
-					onClick: () => setUserToRoleHeadAdminFunction("STUDENT"),
+					onClick: () => emit("set-role", { userID: props.userID, newRole: "STUDENT" }),
 				})
 			}
 			if (props.role !== "VOLUNTEER") {
 				items.push({
 					label: "Set to Volunteer",
-					onClick: () => setUserToRoleHeadAdminFunction("VOLUNTEER"),
+					onClick: () => emit("set-role", { userID: props.userID, newRole: "VOLUNTEER" }),
 				})
 			}
 			if (props.role !== "ADMIN") {
 				items.push({
 					label: "Set to Admin",
-					onClick: () => setUserToRoleHeadAdminFunction("ADMIN"),
+					onClick: () => emit("set-role", { userID: props.userID, newRole: "ADMIN" }),
 					color: "error",
 				})
 			}
 		} else if (currentUserSession.userID === props.userID) {
 			items.push({
 				label: "SELF DEMOTE TO ADMIN",
-				onClick: () => headAdminSelfDemote(),
+				onClick: () => emit("self-demote"),
 				color: "error",
 			})
 		}
@@ -82,13 +85,13 @@ const actionItems = computed(() => {
 		if (props.role === "STUDENT") {
 			items.push({
 				label: "Set to Volunteer",
-				onClick: () => setUserToRoleAdminFunction("VOLUNTEER"),
+				onClick: () => emit("set-role", { userID: props.userID, newRole: "VOLUNTEER" }),
 			})
 		}
 		if (props.role === "VOLUNTEER") {
 			items.push({
 				label: "Set to Student",
-				onClick: () => setUserToRoleAdminFunction("STUDENT"),
+				onClick: () => emit("set-role", { userID: props.userID, newRole: "STUDENT" }),
 			})
 		}
 	}
@@ -102,39 +105,4 @@ const actionItems = computed(() => {
 
 	return items
 })
-
-const setUserToRoleAdminFunction = async (role) => {
-	try {
-		await $fetch("/api/admin/user/role", {
-			method: "POST",
-			body: {
-				userID: props.userID,
-				newRole: role,
-			},
-		})
-		emit("roleChanged", { userID: props.userID, newRole: role })
-	} catch (e) {}
-}
-
-const setUserToRoleHeadAdminFunction = async (role) => {
-	try {
-		await $fetch("/api/head-admin/user/role", {
-			method: "POST",
-			body: {
-				userID: props.userID,
-				newRole: role,
-			},
-		})
-		emit("roleChanged", { userID: props.userID, newRole: role })
-	} catch (e) {}
-}
-
-const headAdminSelfDemote = async () => {
-	try {
-		await $fetch("/api/head-admin/user/selfDemote", {
-			method: "POST",
-		})
-		emit("roleChanged", { userID: props.userID, newRole: "ADMIN" })
-	} catch (e) {}
-}
 </script>

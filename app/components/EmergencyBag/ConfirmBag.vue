@@ -44,7 +44,7 @@
 				<header class="text-xl font-bold">Items</header>
 			</template>
 			<div class="flex flex-col gap-4">
-				<EmergencyBagConfirmItemCard
+				<DomainCardEmergencyBagConfirmItemCard
 					v-for="item of displayItems"
 					:key="item.specificItemID"
 					:name="item.name"

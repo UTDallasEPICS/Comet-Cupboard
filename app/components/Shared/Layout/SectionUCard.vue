@@ -11,6 +11,9 @@
 				<slot name="header" />
 			</div>
 		</div>
+		<div v-if="$slots.headerContent" class="mt-4">
+			<slot name="headerContent" />
+		</div>
 		<USeparator class="my-4" />
 		<slot v-if="hasContent" />
 		<SharedTextBase v-else-if="emptyText" class="text-muted">{{ emptyText }}</SharedTextBase>
