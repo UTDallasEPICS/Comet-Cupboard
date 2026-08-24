@@ -9,9 +9,7 @@
 			<section>
 				<div class="mx-auto w-full max-w-xl">
 					<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
-						<UCard>
-							<SharedTextCardTitle>Tutorial Details</SharedTextCardTitle>
-							<USeparator class="my-4" />
+						<SharedLayoutSectionUCard title="Tutorial Details">
 							<UFormField
 								id="name"
 								name="name"
@@ -21,7 +19,7 @@
 							>
 								<UInput v-model="state.name" placeholder="Enter tutorial name" class="w-full" />
 							</UFormField>
-						</UCard>
+						</SharedLayoutSectionUCard>
 						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
 							<SharedButtonPositiveAction type="submit" text="Submit" />
 						</footer>

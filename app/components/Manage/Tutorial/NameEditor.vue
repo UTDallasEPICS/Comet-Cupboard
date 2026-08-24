@@ -1,8 +1,6 @@
 <template>
 	<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
-		<UCard>
-			<SharedTextCardTitle>Tutorial Details</SharedTextCardTitle>
-			<USeparator class="my-4" />
+		<SharedLayoutSectionUCard title="Tutorial Details">
 			<UFormField
 				id="name"
 				name="name"
@@ -16,7 +14,7 @@
 				<SharedButtonCancel text="Cancel" @click="cancelName" />
 				<SharedButtonPositiveAction type="submit" text="Save changes" />
 			</div>
-		</UCard>
+		</SharedLayoutSectionUCard>
 	</UForm>
 </template>
 

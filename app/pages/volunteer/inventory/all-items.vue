@@ -23,9 +23,7 @@
 					</UPopover>
 				</div>
 				<USeparator class="my-4" />
-				<UCard>
-					<SharedTextCardTitle>Active Items</SharedTextCardTitle>
-					<USeparator class="my-4" />
+				<SharedLayoutSectionUCard title="Active Items">
 					<ul v-if="shownActiveItems.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="item in shownActiveItems" :key="item.itemID">
 							<InventoryItemCard
@@ -41,11 +39,9 @@
 						</li>
 					</ul>
 					<SharedTextBase v-else class="block text-center">No active items found</SharedTextBase>
-				</UCard>
+				</SharedLayoutSectionUCard>
 
-				<UCard class="mt-4">
-					<SharedTextCardTitle>Archived Items</SharedTextCardTitle>
-					<USeparator class="my-4" />
+				<SharedLayoutSectionUCard title="Archived Items" class="mt-4">
 					<ul v-if="shownArchivedItems.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="item in shownArchivedItems" :key="item.itemID">
 							<InventoryItemCard
@@ -61,7 +57,7 @@
 						</li>
 					</ul>
 					<SharedTextBase v-else class="block text-center">No archived items found</SharedTextBase>
-				</UCard>
+				</SharedLayoutSectionUCard>
 			</section>
 		</NuxtLayout>
 	</div>

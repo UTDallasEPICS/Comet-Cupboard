@@ -1,7 +1,5 @@
 <template>
-	<UCard>
-		<SharedTextCardTitle>Deal</SharedTextCardTitle>
-		<USeparator class="my-4" />
+	<SharedLayoutSectionUCard title="Deal">
 		<URadioGroup v-model="selectedDealOption" :items="dealOptions" />
 		<div v-if="selectedDealOption === 'Deal is X for Y'" class="mt-4 grid gap-4 sm:grid-cols-2">
 			<UFormField label="Actual Count"><UInputNumber v-model="actualCount" :min="1" /></UFormField>
@@ -11,7 +9,7 @@
 			<UButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
 			<UButton label="Save Changes" color="secondary" :loading="isSaving" @click="saveDeal" />
 		</div>
-	</UCard>
+	</SharedLayoutSectionUCard>
 </template>
 
 <script setup lang="ts">

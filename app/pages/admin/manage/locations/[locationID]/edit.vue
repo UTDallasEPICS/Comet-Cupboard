@@ -5,9 +5,7 @@
 			<section>
 				<div class="mx-auto w-full max-w-xl">
 					<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
-						<UCard>
-							<SharedTextCardTitle>Location Image</SharedTextCardTitle>
-							<USeparator class="my-4" />
+						<SharedLayoutSectionUCard title="Location Image">
 							<UFormField
 								id="image"
 								name="image"
@@ -19,10 +17,8 @@
 									<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
 								</div>
 							</UFormField>
-						</UCard>
-						<UCard>
-							<SharedTextCardTitle>Location Details</SharedTextCardTitle>
-							<USeparator class="my-4" />
+						</SharedLayoutSectionUCard>
+						<SharedLayoutSectionUCard title="Location Details">
 							<UFormField
 								id="locationName"
 								name="locationName"
@@ -52,19 +48,13 @@
 									</SharedTextBaseSecondary>
 								</div>
 							</UFormField>
-						</UCard>
-						<UCard>
-							<SharedTextCardTitle>Description</SharedTextCardTitle>
-							<USeparator class="my-4" />
+						</SharedLayoutSectionUCard>
+						<SharedLayoutSectionUCard title="Description">
 							<UFormField id="description" name="description" label="Description">
 								<UTextarea v-model="state.description" placeholder="Enter description" class="w-full" />
 							</UFormField>
-						</UCard>
-						<UCard>
-							<SharedTextCardTitle>Map Details</SharedTextCardTitle>
-
-							<USeparator class="my-4" />
-
+						</SharedLayoutSectionUCard>
+						<SharedLayoutSectionUCard title="Map Details">
 							<UFormField
 								name="mapEmbedUrl"
 								label="Optional UTD Campus Map Embed URL"
@@ -77,7 +67,7 @@
 									Click for directions on getting this information
 								</UButton>
 							</UFormField>
-						</UCard>
+						</SharedLayoutSectionUCard>
 
 						<UModal v-model:open="showMapDirections" title="How to Find the Campus Map URL">
 							<template #body>
@@ -111,13 +101,11 @@
 								</div>
 							</template>
 						</UModal>
-						<UCard>
-							<SharedTextCardTitle>Availability</SharedTextCardTitle>
-							<USeparator class="my-4" />
+						<SharedLayoutSectionUCard title="Availability">
 							<UFormField id="archived" name="archived" label="Archived" description="Check if the location is archived">
 								<UCheckbox v-model="state.archived" label="Archived" />
 							</UFormField>
-						</UCard>
+						</SharedLayoutSectionUCard>
 
 						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
 							<SharedButtonPositiveAction type="submit" text="Submit" />

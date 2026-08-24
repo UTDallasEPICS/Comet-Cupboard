@@ -1,8 +1,6 @@
 <template>
 	<UForm :validate="validate" :state="state" class="w-full" @submit="onSubmit" @error="onError">
-		<UCard>
-			<SharedTextCardTitle>Source Details</SharedTextCardTitle>
-			<USeparator class="my-4" />
+		<SharedLayoutSectionUCard title="Source Details">
 			<div class="space-y-4">
 				<UFormField id="sourceName" name="sourceName" label="Source Name" description="Use up to 20 letters and spaces" required>
 					<UInput v-model="state.sourceName" placeholder="Enter source name" class="w-full" />
@@ -15,7 +13,7 @@
 				<UButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
 				<UButton type="submit" label="Save Changes" color="secondary" :loading="isSaving" />
 			</div>
-		</UCard>
+		</SharedLayoutSectionUCard>
 	</UForm>
 </template>
 

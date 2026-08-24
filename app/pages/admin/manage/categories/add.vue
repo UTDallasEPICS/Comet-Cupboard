@@ -5,9 +5,7 @@
 			<section>
 				<div class="mx-auto w-full max-w-xl">
 					<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
-						<UCard>
-							<SharedTextCardTitle>Category Image</SharedTextCardTitle>
-							<USeparator class="my-4" />
+						<SharedLayoutSectionUCard title="Category Image">
 							<UFormField
 								id="image"
 								name="image"
@@ -19,10 +17,8 @@
 									<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
 								</div>
 							</UFormField>
-						</UCard>
-						<UCard>
-							<SharedTextCardTitle>Category Details</SharedTextCardTitle>
-							<USeparator class="my-4" />
+						</SharedLayoutSectionUCard>
+						<SharedLayoutSectionUCard title="Category Details">
 							<UFormField
 								id="categoryName"
 								name="categoryName"
@@ -52,7 +48,7 @@
 									</SharedTextBaseSecondary>
 								</div>
 							</UFormField>
-						</UCard>
+						</SharedLayoutSectionUCard>
 						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
 							<SharedButtonPositiveAction type="submit" text="Submit" />
 						</footer>

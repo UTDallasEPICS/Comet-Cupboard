@@ -5,9 +5,7 @@
 			<UButton :icon="icons.back" color="neutral" variant="ghost" aria-label="Back to intake sessions" @click="emit('cancel')" />
 		</div>
 		<UForm :state="state" :validate="validate" class="space-y-4" @submit="startSession">
-			<UCard>
-				<SharedTextCardTitle>Session Details</SharedTextCardTitle>
-				<USeparator class="my-4" />
+			<SharedLayoutSectionUCard title="Session Details">
 				<div class="space-y-4">
 					<UFormField label="Session Name" name="inventoryIntakeSessionName" required
 						><UInput v-model="state.inventoryIntakeSessionName" placeholder="Enter session name" class="w-full"
@@ -15,10 +13,8 @@
 					<UFormField label="Intake Date" name="intakeDate" required><UInput v-model="state.intakeDate" type="date" class="w-full" /></UFormField>
 					<UFormField label="Notes" name="notes"><UTextarea v-model="state.notes" placeholder="Optional notes" class="w-full" /></UFormField>
 				</div>
-			</UCard>
-			<UCard>
-				<SharedTextCardTitle>Source Information</SharedTextCardTitle>
-				<USeparator class="my-4" />
+			</SharedLayoutSectionUCard>
+			<SharedLayoutSectionUCard title="Source Information">
 				<div class="space-y-4">
 					<UFormField label="Source" name="sourceID" required
 						><USelect
@@ -64,7 +60,7 @@
 						/>
 					</UFormField>
 				</div>
-			</UCard>
+			</SharedLayoutSectionUCard>
 			<div class="flex justify-end gap-2">
 				<UButton type="button" label="Cancel" color="neutral" variant="outline" @click="emit('cancel')" />
 				<UButton type="submit" label="Start Session" color="secondary" :loading="isSaving" />

@@ -20,16 +20,12 @@
 				</div>
 
 				<UForm :validate="validate" :state="state" class="mt-4 w-full space-y-4" @submit="onSubmit" @error="onError">
-					<UCard>
-						<SharedTextCardTitle>Announcement Details</SharedTextCardTitle>
-						<USeparator class="my-4" />
+					<SharedLayoutSectionUCard title="Announcement Details">
 						<UFormField name="message" label="Message" description="Enter the announcement shown to users" required>
 							<UTextarea v-model="state.message" class="w-full" placeholder="Enter announcement message" />
 						</UFormField>
-					</UCard>
-					<UCard>
-						<SharedTextCardTitle>Schedule</SharedTextCardTitle>
-						<USeparator class="my-4" />
+					</SharedLayoutSectionUCard>
+					<SharedLayoutSectionUCard title="Schedule">
 						<UFormField name="startsDate" label="Start date" class="text-xl" :ui="{ error: 'text-sm' }" required>
 							<UInputDate v-model="state.startsDate">
 								<template #leading>
@@ -56,7 +52,7 @@
 						<UFormField name="endsTime" label="End time" class="mt-2 text-xl" :ui="{ error: 'text-sm' }" required>
 							<UInputTime v-model="state.endsTime" />
 						</UFormField>
-					</UCard>
+					</SharedLayoutSectionUCard>
 					<footer class="sticky right-4 bottom-8 flex justify-end"><SharedButtonPositiveAction type="submit" text="Save changes" /></footer>
 				</UForm>
 			</div>

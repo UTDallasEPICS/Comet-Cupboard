@@ -25,9 +25,7 @@
 					</div>
 
 					<UForm :validate="validate" :state="state" class="mt-4 w-full space-y-4" @submit="onSubmit" @error="onError">
-						<UCard>
-							<SharedTextCardTitle>Link Details</SharedTextCardTitle>
-							<USeparator class="my-4" />
+						<SharedLayoutSectionUCard title="Link Details">
 							<div class="flex w-full flex-col gap-4">
 								<UFormField
 									id="displayName"
@@ -57,10 +55,8 @@
 									<UInput v-model="state.description" placeholder="Enter description" class="w-full" />
 								</UFormField>
 							</div>
-						</UCard>
-						<UCard>
-							<SharedTextCardTitle>Placement</SharedTextCardTitle>
-							<USeparator class="my-4" />
+						</SharedLayoutSectionUCard>
+						<SharedLayoutSectionUCard title="Placement">
 							<div class="flex w-full flex-col gap-4">
 								<UFormField
 									id="dashboardRolePage"
@@ -82,7 +78,7 @@
 									<UInput v-model.number="state.displayOrder" type="number" :min="0" placeholder="Enter display order" class="w-full" />
 								</UFormField>
 							</div>
-						</UCard>
+						</SharedLayoutSectionUCard>
 						<footer class="flex justify-end"><SharedButtonPositiveAction type="submit" text="Save changes" /></footer>
 					</UForm>
 				</div>

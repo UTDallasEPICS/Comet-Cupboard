@@ -9,9 +9,7 @@
 			<section>
 				<div class="mx-auto w-full max-w-xl">
 					<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
-						<UCard>
-							<SharedTextCardTitle>Item Details</SharedTextCardTitle>
-							<USeparator class="my-4" />
+						<SharedLayoutSectionUCard title="Item Details">
 							<UFormField
 								id="itemName"
 								name="itemName"
@@ -39,7 +37,7 @@
 									<SharedTextBaseSecondary class="mt-2 text-xs"> Check that you're not creating a duplicate item. </SharedTextBaseSecondary>
 								</div>
 							</UFormField>
-						</UCard>
+						</SharedLayoutSectionUCard>
 
 						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
 							<SharedButtonPositiveAction type="submit" text="Submit" />

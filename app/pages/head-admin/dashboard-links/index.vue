@@ -4,9 +4,8 @@
 			<USeparator class="my-4" />
 			<section>
 				<div class="flex w-full flex-col gap-4">
-					<UCard v-for="section in sections" :key="section.audience" class="my-2">
-						<div class="flex w-full flex-row items-center justify-between">
-							<SharedTextSectionTitle>{{ section.label }}</SharedTextSectionTitle>
+					<SharedLayoutSectionUCard v-for="section in sections" :key="section.audience" :title="section.label" empty-text="No custom links">
+						<template #header>
 							<UButton
 								icon="i-lucide-plus"
 								color="secondary"
@@ -14,8 +13,7 @@
 								label="Add link"
 								:to="`/head-admin/dashboard-links/add?audience=${section.audience}`"
 							/>
-						</div>
-						<USeparator class="my-4" />
+						</template>
 						<ul v-if="section.customLinks.length > 0" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 							<li v-for="link in section.customLinks" :key="link.label">
 								<DashboardEditCustomLinkCard
@@ -28,8 +26,7 @@
 								/>
 							</li>
 						</ul>
-						<SharedTextBase v-else>No custom links</SharedTextBase>
-					</UCard>
+					</SharedLayoutSectionUCard>
 				</div>
 			</section>
 		</NuxtLayout>

@@ -18,9 +18,7 @@
 				</div>
 				<USeparator class="my-4" />
 
-				<UCard>
-					<SharedTextCardTitle>Users</SharedTextCardTitle>
-					<USeparator class="my-4" />
+				<SharedLayoutSectionUCard title="Users">
 					<ul class="my-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="user in paginatedUsers" :key="user.userID">
 							<ManageUserRoleItemCard :user-i-d="user.userID" :display-name="user.displayName" :role="user.role" @role-changed="refresh" />
@@ -35,7 +33,7 @@
 							list: 'flex items-center justify-center gap-1',
 						}"
 					/>
-				</UCard>
+				</SharedLayoutSectionUCard>
 			</section>
 		</NuxtLayout>
 	</div>
