@@ -65,7 +65,7 @@
 								:change-count="inventoryItem.amountChanged"
 							/>
 						</div>
-						<SharedGroupedCollapsible
+						<SharedLayoutGroupedCollapsible
 							v-else
 							:groups="inventoryStore.inventoryChangesItemsAggregatedCategorized"
 							:get-key="(item) => item.specificItemID"
@@ -102,7 +102,7 @@
 									:change-count="inventoryItem.amountChanged"
 								/>
 							</template>
-						</SharedGroupedCollapsible>
+						</SharedLayoutGroupedCollapsible>
 
 						<div class="flex justify-center pt-6">
 							<SharedButtonPositiveAction text="Submit" @click="inventoryStore.submitChanges()" />

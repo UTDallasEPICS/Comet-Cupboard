@@ -33,7 +33,7 @@
 							<UInputTime v-model="state.startsTime" />
 						</UFormField>
 
-						<UFormField name="endsDate" label="End date" class="text-xl mt-4" :ui="{ error: 'text-sm' }" required>
+						<UFormField name="endsDate" label="End date" class="mt-4 text-xl" :ui="{ error: 'text-sm' }" required>
 							<UInputDate v-model="state.endsDate">
 								<template #leading>
 									<UPopover>

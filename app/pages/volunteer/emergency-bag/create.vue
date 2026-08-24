@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<NuxtLayout name="main" title="Create Emergency Bags" :back-navigation="{ text: 'Back to Manage Emergency Bags', to: '/volunteer/emergency-bag/manage' }">
+		<NuxtLayout
+			name="main"
+			title="Create Emergency Bags"
+			:back-navigation="{ text: 'Back to Manage Emergency Bags', to: '/volunteer/emergency-bag/manage' }"
+		>
 			<div class="flex justify-center">
 				<div class="flex w-full max-w-100 flex-col">
 					<UStepper ref="stepper" disabled :items="steps">

@@ -65,11 +65,7 @@
 								class="mt-4"
 							/>
 							<div class="mt-4 flex flex-col gap-4">
-								<SharedGroupedCollapsible
-									:groups="groupedCartItems"
-									:get-key="(item) => item.itemID"
-									:default-open="true"
-								>
+								<SharedLayoutGroupedCollapsible :groups="groupedCartItems" :get-key="(item) => item.itemID" :default-open="true">
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
 											<SharedButtonPositiveAction
@@ -94,7 +90,7 @@
 											@update:adjustment="(specificItemID, countAdjustment) => (countAdjustments[specificItemID] = countAdjustment)"
 										/>
 									</template>
-								</SharedGroupedCollapsible>
+								</SharedLayoutGroupedCollapsible>
 
 								<div class="flex flex-row justify-between gap-4">
 									<SharedButtonCancel text="Back" @click="decrementStepper" />
@@ -119,11 +115,7 @@
 								class="mt-4"
 							/>
 							<div class="mt-4 flex flex-col gap-4">
-								<SharedGroupedCollapsible
-									:groups="groupedCartItems"
-									:get-key="(item) => item.itemID"
-									:default-open="true"
-								>
+								<SharedLayoutGroupedCollapsible :groups="groupedCartItems" :get-key="(item) => item.itemID" :default-open="true">
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
 											<SharedButtonPositiveAction
@@ -147,7 +139,7 @@
 											:item-final-count="itemFinalCounts[item.itemID] ?? 0"
 										/>
 									</template>
-								</SharedGroupedCollapsible>
+								</SharedLayoutGroupedCollapsible>
 								<div class="flex flex-row justify-between gap-4">
 									<SharedButtonCancel text="Back" @click="decrementStepper" />
 									<SharedButtonPositiveAction text="Submit Cart" @click="submitCart" />
@@ -167,11 +159,7 @@
 							<UProgress :indeterminate="true" class="mt-4" />
 
 							<div class="mt-4 flex flex-col gap-4">
-								<SharedGroupedCollapsible
-									:groups="groupedCartItems"
-									:get-key="(item) => item.itemID"
-									:default-open="true"
-								>
+								<SharedLayoutGroupedCollapsible :groups="groupedCartItems" :get-key="(item) => item.itemID" :default-open="true">
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
 											<SharedButtonPositiveAction
@@ -195,7 +183,7 @@
 											:item-final-count="itemFinalCounts[item.itemID] ?? 0"
 										/>
 									</template>
-								</SharedGroupedCollapsible>
+								</SharedLayoutGroupedCollapsible>
 								<div class="flex flex-row justify-center gap-4">
 									<SharedButtonCancel text="Cancel Request" @click="cancelCart" />
 								</div>

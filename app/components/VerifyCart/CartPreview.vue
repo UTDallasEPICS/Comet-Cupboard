@@ -11,7 +11,7 @@
 		<div v-if="validPublicCode" class="flex h-full flex-col gap-y-4">
 			<SharedWarningsList v-if="pendingCartWarnings(cart).length > 0" :warnings="pendingCartWarnings(cart)" />
 
-			<SharedGroupedCollapsible :groups="categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+			<SharedLayoutGroupedCollapsible :groups="categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
 				<template #header="{ group, open }">
 					<div class="flex flex-col gap-2">
 						<SharedButtonPositiveAction
@@ -35,7 +35,7 @@
 						:item-final-count="itemFinalCounts[item.itemID] ?? 0"
 					/>
 				</template>
-			</SharedGroupedCollapsible>
+			</SharedLayoutGroupedCollapsible>
 
 			<div class="flex flex-col items-end">
 				<SharedTextBase class="text-right text-nowrap">Total Count: {{ cartTotalCount }}</SharedTextBase>

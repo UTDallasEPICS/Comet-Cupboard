@@ -34,7 +34,7 @@
 							class="border-border-soft h-12 w-12 shrink-0 rounded-md border object-cover"
 						/>
 						<div>
-							<SharedTextBaseSecondary>{{ specificItem.productName == 'Default' ? name : specificItem.productName }}</SharedTextBaseSecondary>
+							<SharedTextBaseSecondary>{{ specificItem.productName == "Default" ? name : specificItem.productName }}</SharedTextBaseSecondary>
 							<SharedTextBaseSecondary
 								>{{ specificItem.count }} in cart{{
 									specificItem.countAdjustment ? ` (${specificItem.countAdjustment} adjusted)` : ""

@@ -8,7 +8,14 @@
 					<UInput v-model="state.itemName" maxlength="100" placeholder="Enter item name" class="w-full" />
 				</UFormField>
 				<UFormField id="category" name="category" label="Category" description="Select the category for this item" required>
-					<USelect v-model="state.categoryID" :items="categoryOptions" value-key="value" label-key="label" placeholder="Select category" class="w-full" />
+					<USelect
+						v-model="state.categoryID"
+						:items="categoryOptions"
+						value-key="value"
+						label-key="label"
+						placeholder="Select category"
+						class="w-full"
+					/>
 				</UFormField>
 				<UFormField id="archived" name="archived" label="Availability" description="Hide this item from active inventory and shopping">
 					<UCheckbox v-model="state.archived" label="Archived" />
@@ -35,7 +42,11 @@ const props = defineProps<{
 const emit = defineEmits<{ updated: [] }>()
 
 const formSchema = z.object({
-	itemName: z.string().min(1, "Item name is required").max(100, "Item name must be at most 100 characters").regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
+	itemName: z
+		.string()
+		.min(1, "Item name is required")
+		.max(100, "Item name must be at most 100 characters")
+		.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
 	categoryID: z.string().min(1, "Category is required"),
 	archived: z.boolean(),
 })
@@ -45,7 +56,9 @@ const { state, validate, onError } = createFormBuilder(formSchema, () => ({
 	archived: props.originalArchived,
 }))
 const isSaving = ref(false)
-const changesMade = computed(() => state.value.itemName !== props.originalName || state.value.categoryID !== props.originalCategoryID || state.value.archived !== props.originalArchived)
+const changesMade = computed(
+	() => state.value.itemName !== props.originalName || state.value.categoryID !== props.originalCategoryID || state.value.archived !== props.originalArchived
+)
 
 watch(
 	() => [props.originalName, props.originalCategoryID, props.originalArchived],

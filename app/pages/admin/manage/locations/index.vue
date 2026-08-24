@@ -21,7 +21,12 @@
 
 					<ul v-if="shownActiveLocations.length != 0" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="location in shownActiveLocations" :key="location.locationID">
-							<ManageLocationItemCard :name="location.locationName" :img-name="location.imgName" :description="location.description" :location-i-d="location.locationID" />
+							<ManageLocationItemCard
+								:name="location.locationName"
+								:img-name="location.imgName"
+								:description="location.description"
+								:location-i-d="location.locationID"
+							/>
 						</li>
 					</ul>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">
@@ -34,7 +39,12 @@
 					<USeparator class="my-4" />
 					<ul v-if="shownArchivedLocations.length != 0" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="location in shownArchivedLocations" :key="location.locationID">
-							<ManageLocationItemCard :name="location.locationName" :img-name="location.imgName" :description="location.description" :location-i-d="location.locationID" />
+							<ManageLocationItemCard
+								:name="location.locationName"
+								:img-name="location.imgName"
+								:description="location.description"
+								:location-i-d="location.locationID"
+							/>
 						</li>
 					</ul>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">

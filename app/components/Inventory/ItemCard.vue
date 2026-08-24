@@ -8,7 +8,7 @@
 		class="w-full"
 	>
 		<UCard :class="`${changeCount != 0 ? 'border-utd-orange' : ''} relative w-full min-w-72 overflow-hidden shadow-md`" :ui="{ body: 'p-0 sm:p-0' }">
-			<div class="absolute top-2 right-2 flex flex-row gap-2 z-10">
+			<div class="absolute top-2 right-2 z-10 flex flex-row gap-2">
 				<SharedDealBadge :item-deal="itemDeal" />
 				<UButton :to="`/volunteer/inventory/${category}/${itemID}/edit`" :icon="icons.edit" size="sm" color="neutral" variant="ghost" />
 			</div>

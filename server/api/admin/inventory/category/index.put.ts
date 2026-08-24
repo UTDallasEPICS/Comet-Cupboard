@@ -8,7 +8,10 @@ import { imageSchema, deleteImage, uploadImage, processImage } from "#server/uti
 const schema = imageSchema
 	.extend({
 		categoryID: z.string(),
-		categoryName: z.string().min(1, "Category name cannot be empty").refine((value) => value.trim().toLowerCase() !== "all items", "all items is reserved"),
+		categoryName: z
+			.string()
+			.min(1, "Category name cannot be empty")
+			.refine((value) => value.trim().toLowerCase() !== "all items", "all items is reserved"),
 		archived: z.enum(["true", "false"]),
 	})
 	.strict()

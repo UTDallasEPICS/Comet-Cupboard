@@ -2,7 +2,17 @@
 	<NuxtLayout name="main" :title="title" :back-navigation="{ text: 'Back to Management', to: '/head-admin' }">
 		<section class="space-y-6">
 			<nav class="flex gap-1 overflow-x-auto border-b border-gray-200 pb-2" aria-label="Data analytics pages">
-				<UButton v-for="item in navigation" :key="item.to" :to="item.to" :icon="item.icon" :label="item.label" color="neutral" :variant="route.path === item.to ? 'soft' : 'ghost'" size="sm" class="shrink-0" />
+				<UButton
+					v-for="item in navigation"
+					:key="item.to"
+					:to="item.to"
+					:icon="item.icon"
+					:label="item.label"
+					color="neutral"
+					:variant="route.path === item.to ? 'soft' : 'ghost'"
+					size="sm"
+					class="shrink-0"
+				/>
 			</nav>
 			<slot />
 		</section>

@@ -33,12 +33,12 @@
 												{{ item.quantity }}
 											</div>
 										</div>
-									<div v-if="item.itemLabels.length" class="ml-12 flex flex-wrap gap-1 pb-1">
-										<UBadge v-for="label in item.itemLabels" :key="label" :label="label" color="neutral" variant="outline" />
+										<div v-if="item.itemLabels.length" class="ml-12 flex flex-wrap gap-1 pb-1">
+											<UBadge v-for="label in item.itemLabels" :key="label" :label="label" color="neutral" variant="outline" />
+										</div>
+										<USeparator />
 									</div>
-									<USeparator />
 								</div>
-							</div>
 							</template>
 						</UPopover>
 					</div>
@@ -67,7 +67,9 @@
 					/>
 				</div>
 				<div class="flex justify-center">
-					<SharedTextBaseSecondary v-if="hasError" class="mt-4 text-sm text-red-500">Please add at least one item to your bag</SharedTextBaseSecondary>
+					<SharedTextBaseSecondary v-if="hasError" class="mt-4 text-sm text-red-500"
+						>Please add at least one item to your bag</SharedTextBaseSecondary
+					>
 				</div>
 			</UCard>
 		</div>
@@ -126,7 +128,9 @@ const specificItemOptions = computed(() => {
 
 const filteredItems = computed(() => {
 	const query = searchQuery.value.toLowerCase()
-	return specificItemOptions.value.filter((item: BagItem) => [item.name, item.productName, ...item.itemLabels].some((value) => value.toLowerCase().includes(query)))
+	return specificItemOptions.value.filter((item: BagItem) =>
+		[item.name, item.productName, ...item.itemLabels].some((value) => value.toLowerCase().includes(query))
+	)
 })
 
 const addItemToBag = (item: { specificItemID: string; name: string; productName: string; imgName: string; quantity: number; itemLabels: string[] }) => {

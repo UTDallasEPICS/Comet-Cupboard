@@ -68,7 +68,13 @@
 					<template #body>
 						<div v-if="hasActiveQueuePing" class="space-y-3">
 							<SharedTextBase>A volunteer is ready to help you.</SharedTextBase>
-							<UInput v-model.number="timeEstimateMinutes" type="number" min="1" placeholder="Minutes until you arrive (optional)" class="w-full" />
+							<UInput
+								v-model.number="timeEstimateMinutes"
+								type="number"
+								min="1"
+								placeholder="Minutes until you arrive (optional)"
+								class="w-full"
+							/>
 							<UButton label="Acknowledge" :loading="isAcknowledgingPing" @click="acknowledgeQueuePing" />
 						</div>
 						<SharedTextBase v-else>No notifications</SharedTextBase>

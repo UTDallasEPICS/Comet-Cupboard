@@ -85,7 +85,10 @@
 									<div class="space-y-2">
 										<SharedTextCardTitle>Step 1</SharedTextCardTitle>
 
-										<SharedTextBaseSecondary>Find the location on the UTD campus map that you want to link to and click the Share button.</SharedTextBaseSecondary>
+										<SharedTextBaseSecondary
+											>Find the location on the UTD campus map that you want to link to and click the Share
+											button.</SharedTextBaseSecondary
+										>
 
 										<img
 											src="/CampusURLSharePart1.png"
@@ -97,9 +100,7 @@
 									<div class="space-y-2">
 										<SharedTextCardTitle>Step 2</SharedTextCardTitle>
 
-										<SharedTextBaseSecondary
-											>Paste the URL section into the map URL input</SharedTextBaseSecondary
-										>
+										<SharedTextBaseSecondary>Paste the URL section into the map URL input</SharedTextBaseSecondary>
 
 										<img
 											src="/CampusURLSharePart2.png"

@@ -8,14 +8,16 @@
 		<div class="space-y-4">
 			<div v-for="product in orderedProducts" :key="product.key" class="border-border-soft rounded-lg border p-3">
 				<div class="mb-3 flex items-center justify-between gap-2">
-					<SharedTextBase class="font-semibold">{{ product.productName || 'New Product' }}</SharedTextBase>
+					<SharedTextBase class="font-semibold">{{ product.productName || "New Product" }}</SharedTextBase>
 					<div class="flex flex-wrap justify-end gap-1">
 						<UBadge v-for="label in product.itemLabelNames" :key="label" :label="label" color="neutral" variant="outline" />
 						<UBadge v-if="product.specificItemID" :label="`Quantity: ${product.quantity}`" color="neutral" variant="outline" />
 					</div>
 				</div>
 				<div class="space-y-3">
-					<UFormField label="Product Name" required><UInput v-model="product.productName" class="w-full" :readonly="product.productName === 'Default'" /></UFormField>
+					<UFormField label="Product Name" required
+						><UInput v-model="product.productName" class="w-full" :readonly="product.productName === 'Default'"
+					/></UFormField>
 					<UFormField label="Product Image" description="JPG, PNG, or WEBP. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels">
 						<UFileUpload
 							v-model="productImages[product.key]"
@@ -57,7 +59,9 @@ const productImages = reactive<Record<string, File | undefined>>({})
 const changedImageKeys = ref<Set<string>>(new Set())
 const isSaving = ref(false)
 
-const orderedProducts = computed(() => [...editableProducts.value].sort((first, second) => Number(second.productName === "Default") - Number(first.productName === "Default")))
+const orderedProducts = computed(() =>
+	[...editableProducts.value].sort((first, second) => Number(second.productName === "Default") - Number(first.productName === "Default"))
+)
 const changesMade = computed(() => {
 	if (editableProducts.value.length !== originalProducts.value.length) return true
 	return editableProducts.value.some((product) => {
@@ -97,9 +101,13 @@ const markImageChanged = (productKey: string) => {
 	changedImageKeys.value = new Set([...changedImageKeys.value, productKey])
 }
 
-watch(() => props.specificItems, () => {
-	if (!changesMade.value) void hydrateProducts()
-}, { immediate: true, deep: true })
+watch(
+	() => props.specificItems,
+	() => {
+		if (!changesMade.value) void hydrateProducts()
+	},
+	{ immediate: true, deep: true }
+)
 
 const addProduct = () => {
 	const key = crypto.randomUUID()

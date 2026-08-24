@@ -63,7 +63,13 @@
 									<UBadge :label="`QTY: ${item.count}`" variant="outline" color="neutral" />
 								</div>
 								<div v-if="item.specificItem.itemLabels.length" class="mt-1 flex flex-wrap gap-1">
-									<UBadge v-for="label in item.specificItem.itemLabels" :key="label.itemLabelName" :label="label.itemLabelName" color="neutral" variant="outline" />
+									<UBadge
+										v-for="label in item.specificItem.itemLabels"
+										:key="label.itemLabelName"
+										:label="label.itemLabelName"
+										color="neutral"
+										variant="outline"
+									/>
 								</div>
 							</div>
 						</div>
@@ -124,8 +130,8 @@ const props = defineProps<{
 			specificItem: {
 				specificItemID: string
 				productName: string
-					imgName: string
-					itemLabels: { itemLabelName: string }[]
+				imgName: string
+				itemLabels: { itemLabelName: string }[]
 				item: {
 					itemName: string
 				}

@@ -42,10 +42,12 @@ export default defineSafeHandler(async (event) => {
 					return { specificItem, finalCount: cartItem.count + cartItem.countAdjustment }
 				})
 			)
-			const orderItems = cartItems.filter(({ finalCount }) => finalCount > 0).map(({ specificItem, finalCount }) => ({
-				specificItemID: specificItem.specificItemID,
-				count: finalCount,
-			}))
+			const orderItems = cartItems
+				.filter(({ finalCount }) => finalCount > 0)
+				.map(({ specificItem, finalCount }) => ({
+					specificItemID: specificItem.specificItemID,
+					count: finalCount,
+				}))
 
 			for (const { specificItem, finalCount } of cartItems) {
 				if (Number(specificItem.quantity) < finalCount) {

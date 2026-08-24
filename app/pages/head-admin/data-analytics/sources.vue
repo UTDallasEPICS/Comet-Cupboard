@@ -14,8 +14,14 @@ type Sources = Record<string, Record<string, number>>
 const { range, query } = useAnalyticsRange()
 const { data } = await useFetch<Sources>("/api/head-admin/data/source", { query, default: () => ({}) })
 const sourceData = computed(() => data.value ?? {})
-const tableRows = computed(() => Object.entries(sourceData.value).flatMap(([source, categories]) => Object.entries(categories).map(([category, quantity]) => ({ source, category, quantity }))))
-const sourceTotals = computed(() => Object.entries(sourceData.value).map(([source, categories]) => ({ source, quantity: Object.values(categories).reduce((sum, value) => sum + value, 0) })))
+const tableRows = computed(() =>
+	Object.entries(sourceData.value).flatMap(([source, categories]) =>
+		Object.entries(categories).map(([category, quantity]) => ({ source, category, quantity }))
+	)
+)
+const sourceTotals = computed(() =>
+	Object.entries(sourceData.value).map(([source, categories]) => ({ source, quantity: Object.values(categories).reduce((sum, value) => sum + value, 0) }))
+)
 const total = computed(() => sourceTotals.value.reduce((sum, row) => sum + row.quantity, 0))
 const metrics = computed(() => [
 	{ label: "Items contributed", value: total.value, icon: "i-lucide-package-plus" },
@@ -24,6 +30,12 @@ const metrics = computed(() => [
 	{ label: "Average per source", value: sourceTotals.value.length ? Math.round(total.value / sourceTotals.value.length) : 0, icon: "i-lucide-chart-bar" },
 ])
 const chartLabels = computed(() => sourceTotals.value.map((row) => row.source))
-const chartDatasets = computed(() => [{ label: "Items contributed", data: sourceTotals.value.map((row) => row.quantity), backgroundColor: "#154734", borderRadius: 6 }])
-const columns = [{ key: "source", label: "Source" }, { key: "category", label: "Category" }, { key: "quantity", label: "Items" }]
+const chartDatasets = computed(() => [
+	{ label: "Items contributed", data: sourceTotals.value.map((row) => row.quantity), backgroundColor: "#154734", borderRadius: 6 },
+])
+const columns = [
+	{ key: "source", label: "Source" },
+	{ key: "category", label: "Category" },
+	{ key: "quantity", label: "Items" },
+]
 </script>

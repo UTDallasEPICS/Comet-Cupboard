@@ -8,13 +8,27 @@
 			<template #content>
 				<div class="flex sm:divide-x sm:divide-gray-200">
 					<div class="hidden flex-col sm:flex">
-						<UButton v-for="preset in presets" :key="preset.label" :label="preset.label" color="neutral" variant="ghost" class="rounded-none px-4" @click="selectPreset(preset.days)" />
+						<UButton
+							v-for="preset in presets"
+							:key="preset.label"
+							:label="preset.label"
+							color="neutral"
+							variant="ghost"
+							class="rounded-none px-4"
+							@click="selectPreset(preset.days)"
+						/>
 					</div>
 					<UCalendar v-model="range" range class="p-2" :number-of-months="2" />
 				</div>
 			</template>
 		</UPopover>
-		<USelect v-if="showGrouping" v-model="grouping" :items="['Day', 'Week', 'Month', 'Semester']" variant="ghost" class="w-28 data-[state=open]:bg-gray-100" />
+		<USelect
+			v-if="showGrouping"
+			v-model="grouping"
+			:items="['Day', 'Week', 'Month', 'Semester']"
+			variant="ghost"
+			class="w-28 data-[state=open]:bg-gray-100"
+		/>
 	</div>
 </template>
 

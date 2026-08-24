@@ -21,7 +21,7 @@ export default defineSafeHandler(async (event) => {
 		where: {
 			...(action ? { action: action as any } : {}),
 			...(search ? { message: { contains: search } } : {}),
-			...((startDate || endDate) ? { timestamp: { ...(startDate ? { gte: startDate } : {}), ...(endDate ? { lte: endDate } : {}) } } : {}),
+			...(startDate || endDate ? { timestamp: { ...(startDate ? { gte: startDate } : {}), ...(endDate ? { lte: endDate } : {}) } } : {}),
 		},
 		orderBy: { timestamp: "desc" },
 		include: { user: { select: { userID: true, displayName: true } } },

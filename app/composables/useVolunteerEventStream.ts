@@ -15,7 +15,16 @@ export const useVolunteerEventStream = () => {
 	}
 
 	const dispatchQueueEvent = async (event: AppEvent) => {
-		if (["queue.queueUpdated", "queue.entryApproved", "queue.entryRemoved", "queue.entryAdded", "queue.notification.sent", "queue.notification.acknowledged"].includes(event.type)) {
+		if (
+			[
+				"queue.queueUpdated",
+				"queue.entryApproved",
+				"queue.entryRemoved",
+				"queue.entryAdded",
+				"queue.notification.sent",
+				"queue.notification.acknowledged",
+			].includes(event.type)
+		) {
 			await queueStore.handleQueueEvent(event)
 		}
 	}

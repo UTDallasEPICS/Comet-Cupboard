@@ -23,10 +23,18 @@
 							<img :alt="location.locationName" :src="`/api/public/image/${location.imgName}`" class="h-44 w-full object-cover" />
 							<UCollapsible>
 								<template #default="{ open }">
-									<UButton color="neutral" variant="ghost" block class="h-auto justify-between rounded-none p-4" :trailing-icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'">
+									<UButton
+										color="neutral"
+										variant="ghost"
+										block
+										class="h-auto justify-between rounded-none p-4"
+										:trailing-icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+									>
 										<div class="min-w-0 text-left">
 											<SharedTextCardTitle>{{ location.locationName }}</SharedTextCardTitle>
-											<SharedTextBase class="mt-1 text-sm text-gray-600">Available Bags: {{ visibleBags(location).length }}</SharedTextBase>
+											<SharedTextBase class="mt-1 text-sm text-gray-600"
+												>Available Bags: {{ visibleBags(location).length }}</SharedTextBase
+											>
 										</div>
 									</UButton>
 								</template>
@@ -38,7 +46,13 @@
 											<div v-if="visibleBags(location).length" class="space-y-2">
 												<div v-for="(bag, index) in visibleBags(location)" :key="index" class="rounded-lg border border-gray-200 p-2">
 													<div v-if="bag.emergencyBagLabels.length" class="flex flex-wrap gap-1">
-														<UBadge v-for="label in bag.emergencyBagLabels" :key="label.emergencyBagLabelName" :label="label.emergencyBagLabelName" color="neutral" variant="outline" />
+														<UBadge
+															v-for="label in bag.emergencyBagLabels"
+															:key="label.emergencyBagLabelName"
+															:label="label.emergencyBagLabelName"
+															color="neutral"
+															variant="outline"
+														/>
 													</div>
 													<SharedTextBaseSecondary v-else>No labels</SharedTextBaseSecondary>
 												</div>
@@ -46,7 +60,17 @@
 											<SharedTextBaseSecondary v-else>No available bags match the selected labels.</SharedTextBaseSecondary>
 										</div>
 										<div v-if="location.mapEmbedUrl" class="h-52 overflow-hidden rounded-lg border border-gray-200">
-											<iframe :src="location.mapEmbedUrl" width="100%" height="100%" :title="location.locationName" scrolling="no" allow="geolocation; gyroscope; accelerometer" style="border: 0px solid #fff; margin: 0; padding: 0" class="block" loading="lazy" />
+											<iframe
+												:src="location.mapEmbedUrl"
+												width="100%"
+												height="100%"
+												:title="location.locationName"
+												scrolling="no"
+												allow="geolocation; gyroscope; accelerometer"
+												style="border: 0px solid #fff; margin: 0; padding: 0"
+												class="block"
+												loading="lazy"
+											/>
 										</div>
 									</div>
 								</template>
@@ -78,11 +102,15 @@ const selectedLabels = ref<string[]>([])
 const locations = computed(() => locationResults.value ?? [])
 
 const labelOptions = computed(() => {
-	const labels = locations.value.flatMap((location) => location.emergencyBags.flatMap((bag) => bag.emergencyBagLabels.map((label) => label.emergencyBagLabelName)))
+	const labels = locations.value.flatMap((location) =>
+		location.emergencyBags.flatMap((bag) => bag.emergencyBagLabels.map((label) => label.emergencyBagLabelName))
+	)
 	return [...new Set(labels)].sort((first, second) => first.localeCompare(second))
 })
 
 const visibleBags = (location: LocationData) => {
-	return location.emergencyBags.filter((bag) => selectedLabels.value.every((selectedLabel) => bag.emergencyBagLabels.some((label) => label.emergencyBagLabelName === selectedLabel)))
+	return location.emergencyBags.filter((bag) =>
+		selectedLabels.value.every((selectedLabel) => bag.emergencyBagLabels.some((label) => label.emergencyBagLabelName === selectedLabel))
+	)
 }
 </script>

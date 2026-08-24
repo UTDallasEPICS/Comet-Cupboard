@@ -9,7 +9,9 @@
 				<SharedTextCardTitle>Session Details</SharedTextCardTitle>
 				<USeparator class="my-4" />
 				<div class="space-y-4">
-					<UFormField label="Session Name" name="inventoryIntakeSessionName" required><UInput v-model="state.inventoryIntakeSessionName" placeholder="Enter session name" class="w-full" /></UFormField>
+					<UFormField label="Session Name" name="inventoryIntakeSessionName" required
+						><UInput v-model="state.inventoryIntakeSessionName" placeholder="Enter session name" class="w-full"
+					/></UFormField>
 					<UFormField label="Intake Date" name="intakeDate" required><UInput v-model="state.intakeDate" type="date" class="w-full" /></UFormField>
 					<UFormField label="Notes" name="notes"><UTextarea v-model="state.notes" placeholder="Optional notes" class="w-full" /></UFormField>
 				</div>
@@ -18,13 +20,48 @@
 				<SharedTextCardTitle>Source Information</SharedTextCardTitle>
 				<USeparator class="my-4" />
 				<div class="space-y-4">
-					<UFormField label="Source" name="sourceID" required><USelect v-model="state.sourceID" :items="sources" value-key="sourceID" label-key="sourceName" placeholder="Select source" class="w-full" /></UFormField>
+					<UFormField label="Source" name="sourceID" required
+						><USelect
+							v-model="state.sourceID"
+							:items="sources"
+							value-key="sourceID"
+							label-key="sourceName"
+							placeholder="Select source"
+							class="w-full"
+					/></UFormField>
 					<UFormField v-for="field in sourceFields" :key="field.fieldID" :label="field.fieldName" :required="!field.optional">
-						<UInput v-if="field.type === 'TEXT'" :model-value="textMetadataValue(field.fieldName)" :required="!field.optional" class="w-full" @update:model-value="setTextMetadata(field.fieldName, $event)" />
-						<UInput v-else-if="field.type === 'NUMBER'" :model-value="textMetadataValue(field.fieldName)" type="number" :required="!field.optional" class="w-full" @update:model-value="setTextMetadata(field.fieldName, $event)" />
-						<UInput v-else-if="field.type === 'DATE'" :model-value="textMetadataValue(field.fieldName)" type="date" :required="!field.optional" class="w-full" @update:model-value="setTextMetadata(field.fieldName, $event)" />
+						<UInput
+							v-if="field.type === 'TEXT'"
+							:model-value="textMetadataValue(field.fieldName)"
+							:required="!field.optional"
+							class="w-full"
+							@update:model-value="setTextMetadata(field.fieldName, $event)"
+						/>
+						<UInput
+							v-else-if="field.type === 'NUMBER'"
+							:model-value="textMetadataValue(field.fieldName)"
+							type="number"
+							:required="!field.optional"
+							class="w-full"
+							@update:model-value="setTextMetadata(field.fieldName, $event)"
+						/>
+						<UInput
+							v-else-if="field.type === 'DATE'"
+							:model-value="textMetadataValue(field.fieldName)"
+							type="date"
+							:required="!field.optional"
+							class="w-full"
+							@update:model-value="setTextMetadata(field.fieldName, $event)"
+						/>
 						<UCheckbox v-else-if="field.type === 'BOOLEAN'" v-model="booleanMetadata[field.fieldName]" :label="field.fieldName" />
-						<USelect v-else :model-value="textMetadataValue(field.fieldName)" :items="choiceItems(field)" :required="!field.optional" class="w-full" @update:model-value="setTextMetadata(field.fieldName, $event)" />
+						<USelect
+							v-else
+							:model-value="textMetadataValue(field.fieldName)"
+							:items="choiceItems(field)"
+							:required="!field.optional"
+							class="w-full"
+							@update:model-value="setTextMetadata(field.fieldName, $event)"
+						/>
 					</UFormField>
 				</div>
 			</UCard>
@@ -59,7 +96,9 @@ const { state, validate } = createFormBuilder(formSchema, () => ({
 const textMetadata = reactive<Record<string, string>>({})
 const booleanMetadata = reactive<Record<string, boolean>>({})
 const isSaving = ref(false)
-const { data: sessionFields } = await useFetch<SourceField[]>("/api/volunteer/inventory/source/field", { query: computed(() => ({ sourceID: state.value.sourceID })) })
+const { data: sessionFields } = await useFetch<SourceField[]>("/api/volunteer/inventory/source/field", {
+	query: computed(() => ({ sourceID: state.value.sourceID })),
+})
 const sourceFields = computed<SourceField[]>(() => sessionFields.value ?? [])
 
 const choiceItems = (field: SourceField) => (Array.isArray(field.choices) ? field.choices.filter((choice): choice is string => typeof choice === "string") : [])

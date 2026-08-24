@@ -26,8 +26,15 @@ const selectedDealOption = ref("No deal")
 const actualCount = ref(2)
 const adjustedCount = ref(1)
 const isSaving = ref(false)
-const originalOption = computed(() => !props.originalDeal ? "No deal" : props.originalDeal.actualCount === 1 && props.originalDeal.adjustedCount === 0 ? "Free deal" : "Deal is X for Y")
-const changesMade = computed(() => selectedDealOption.value !== originalOption.value || (selectedDealOption.value === "Deal is X for Y" && (actualCount.value !== props.originalDeal?.actualCount || adjustedCount.value !== props.originalDeal?.adjustedCount)))
+const originalOption = computed(() =>
+	!props.originalDeal ? "No deal" : props.originalDeal.actualCount === 1 && props.originalDeal.adjustedCount === 0 ? "Free deal" : "Deal is X for Y"
+)
+const changesMade = computed(
+	() =>
+		selectedDealOption.value !== originalOption.value ||
+		(selectedDealOption.value === "Deal is X for Y" &&
+			(actualCount.value !== props.originalDeal?.actualCount || adjustedCount.value !== props.originalDeal?.adjustedCount))
+)
 
 const cancelChanges = () => {
 	selectedDealOption.value = originalOption.value

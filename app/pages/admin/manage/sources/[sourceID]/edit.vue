@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<NuxtLayout name="main" :title="`Edit ${currentSource?.sourceName ?? 'Source'}`" :back-navigation="{ text: 'Back to Manage Sources', to: '/admin/manage/sources' }">
+		<NuxtLayout
+			name="main"
+			:title="`Edit ${currentSource?.sourceName ?? 'Source'}`"
+			:back-navigation="{ text: 'Back to Manage Sources', to: '/admin/manage/sources' }"
+		>
 			<USeparator class="my-4" />
 			<section class="mx-auto w-full max-w-xl space-y-4">
 				<ManageSourceDetailsEditor

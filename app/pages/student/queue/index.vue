@@ -27,7 +27,13 @@
 							<form class="flex w-full max-w-sm flex-col items-center gap-3" @submit.prevent="joinQueue">
 								<SharedTextBaseSecondary>Enter the 6-digit queue code</SharedTextBaseSecondary>
 								<UPinInput v-model="accessCode" type="number" :length="6" required size="lg" />
-								<UButton type="submit" label="Join Queue" color="secondary" :loading="isJoining" :disabled="isJoining || accessCode.length !== 6" />
+								<UButton
+									type="submit"
+									label="Join Queue"
+									color="secondary"
+									:loading="isJoining"
+									:disabled="isJoining || accessCode.length !== 6"
+								/>
 							</form>
 						</div>
 					</div>

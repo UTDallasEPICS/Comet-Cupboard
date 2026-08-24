@@ -39,7 +39,7 @@
 				</template>
 			</UAlert>
 			<USeparator class="my-4" />
-			<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.specificItemID" :default-open="true">
+			<SharedLayoutGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.specificItemID" :default-open="true">
 				<template #header="{ group, open }">
 					<div class="flex flex-col gap-2">
 						<SharedButtonPositiveAction
@@ -73,7 +73,7 @@
 						@update:cart="cartStore.getCart"
 					/>
 				</template>
-			</SharedGroupedCollapsible>
+			</SharedLayoutGroupedCollapsible>
 
 			<div class="flex justify-center pt-6">
 				<SharedButtonNavigateTo text="Proceed to Checkout" class="w-48" @click="proceedToCheckout" />

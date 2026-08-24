@@ -28,16 +28,16 @@
 					<USeparator class="my-4" />
 					<ul v-if="shownActiveItems.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="item in shownActiveItems" :key="item.itemID">
-						<InventoryItemCard
-							:specific-items="item.specificItems"
-							:change-count="inventoryChangeCount(item)"
-							:current-count="itemQuantityTotal(item)"
-							:img-name="item.imgName"
-							:item-deal="item.deal ? { actualCount: item.deal.actualCount, adjustedCount: item.deal.adjustedCount } : {}"
-							:item-i-d="item.itemID"
-							:name="item.itemName"
-							:category="item.category.categoryName"
-						/>
+							<InventoryItemCard
+								:specific-items="item.specificItems"
+								:change-count="inventoryChangeCount(item)"
+								:current-count="itemQuantityTotal(item)"
+								:img-name="item.imgName"
+								:item-deal="item.deal ? { actualCount: item.deal.actualCount, adjustedCount: item.deal.adjustedCount } : {}"
+								:item-i-d="item.itemID"
+								:name="item.itemName"
+								:category="item.category.categoryName"
+							/>
 						</li>
 					</ul>
 					<SharedTextBase v-else class="block text-center">No active items found</SharedTextBase>
@@ -48,16 +48,16 @@
 					<USeparator class="my-4" />
 					<ul v-if="shownArchivedItems.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<li v-for="item in shownArchivedItems" :key="item.itemID">
-						<InventoryItemCard
-							:specific-items="item.specificItems"
-							:change-count="inventoryChangeCount(item)"
-							:current-count="itemQuantityTotal(item)"
-							:img-name="item.imgName"
-							:item-deal="item.deal ? { actualCount: item.deal.actualCount, adjustedCount: item.deal.adjustedCount } : {}"
-							:item-i-d="item.itemID"
-							:name="item.itemName"
-							:category="item.category.categoryName"
-						/>
+							<InventoryItemCard
+								:specific-items="item.specificItems"
+								:change-count="inventoryChangeCount(item)"
+								:current-count="itemQuantityTotal(item)"
+								:img-name="item.imgName"
+								:item-deal="item.deal ? { actualCount: item.deal.actualCount, adjustedCount: item.deal.adjustedCount } : {}"
+								:item-i-d="item.itemID"
+								:name="item.itemName"
+								:category="item.category.categoryName"
+							/>
 						</li>
 					</ul>
 					<SharedTextBase v-else class="block text-center">No archived items found</SharedTextBase>
@@ -100,7 +100,8 @@ const shownItems = computed(() => {
 			(!toggleItems.value.includes("Deal") || item.deal !== null) &&
 			(!toggleItems.value.includes("Archived") || item.archived === true) &&
 			(!toggleItems.value.includes("In Stock") || itemQuantityTotal(item) > 0) &&
-			(selectedItemLabels.value.length === 0 || item.specificItems.some((product) => product.itemLabels.some((label) => selectedItemLabels.value.includes(label.itemLabelName))))
+			(selectedItemLabels.value.length === 0 ||
+				item.specificItems.some((product) => product.itemLabels.some((label) => selectedItemLabels.value.includes(label.itemLabelName))))
 		)
 	})
 })

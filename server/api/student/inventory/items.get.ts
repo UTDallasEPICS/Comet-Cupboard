@@ -27,9 +27,8 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
-	return items
-		.map((item) => ({
-			...item,
-			specificItems: item.specificItems.filter((specificItem) => checkAvailability === "false" || Number(specificItem.quantity) > 0),
-		}))
+	return items.map((item) => ({
+		...item,
+		specificItems: item.specificItems.filter((specificItem) => checkAvailability === "false" || Number(specificItem.quantity) > 0),
+	}))
 })

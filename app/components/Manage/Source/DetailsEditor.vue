@@ -29,7 +29,11 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ updated: [] }>()
 const formSchema = z.object({
-	sourceName: z.string().min(1, "Source name is required").max(20, "Source name must be at most 20 characters").regex(/^[A-Za-z ]+$/, "Source name must only contain letters and spaces"),
+	sourceName: z
+		.string()
+		.min(1, "Source name is required")
+		.max(20, "Source name must be at most 20 characters")
+		.regex(/^[A-Za-z ]+$/, "Source name must only contain letters and spaces"),
 	archived: z.boolean(),
 })
 const { state, validate, onError } = createFormBuilder(formSchema, () => ({ sourceName: props.originalName, archived: props.originalArchived }))

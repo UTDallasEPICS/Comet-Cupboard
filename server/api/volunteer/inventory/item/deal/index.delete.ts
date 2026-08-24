@@ -31,5 +31,5 @@ export default defineSafeHandler(async (event) => {
 		return "Successfully deleted deal"
 	})
 
-    return transactionResult
+	return transactionResult
 })

@@ -40,13 +40,13 @@ export default defineSafeHandler(async (event) => {
 					stepOrdering,
 				},
 			})
-            await tx.auditLog.create({
-                data: {
-                    action: "TUTORIAL_EDITED",
-                    message: `Tutorial step created: ${newStep.tutorialStepID}`,
-                    userID: event.context.userSession.userID,
-                },
-            })
+			await tx.auditLog.create({
+				data: {
+					action: "TUTORIAL_EDITED",
+					message: `Tutorial step created: ${newStep.tutorialStepID}`,
+					userID: event.context.userSession.userID,
+				},
+			})
 			return newStep
 		})
 	} else {

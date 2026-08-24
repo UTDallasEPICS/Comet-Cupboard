@@ -20,16 +20,41 @@ const title = computed(() => (isIncoming.value ? "Items Received" : "Items Distr
 const eyebrow = computed(() => (isIncoming.value ? "Inventory intake" : "Student orders"))
 const chartTitle = computed(() => (isIncoming.value ? "Items received over time" : "Items distributed over time"))
 const tableTitle = computed(() => (isIncoming.value ? "Received item details" : "Distributed item details"))
-const tableRows = computed(() => Object.entries(movement.value).flatMap(([period, categories]) => Object.entries(categories).flatMap(([category, data]) => Object.entries(data.items).map(([item, quantity]) => ({ period, category, item, quantity })))))
-const periodTotals = computed(() => Object.entries(movement.value).map(([period, categories]) => ({ period, quantity: Object.values(categories).reduce((sum, category) => sum + category.total, 0) })))
+const tableRows = computed(() =>
+	Object.entries(movement.value).flatMap(([period, categories]) =>
+		Object.entries(categories).flatMap(([category, data]) => Object.entries(data.items).map(([item, quantity]) => ({ period, category, item, quantity })))
+	)
+)
+const periodTotals = computed(() =>
+	Object.entries(movement.value).map(([period, categories]) => ({
+		period,
+		quantity: Object.values(categories).reduce((sum, category) => sum + category.total, 0),
+	}))
+)
 const total = computed(() => periodTotals.value.reduce((sum, row) => sum + row.quantity, 0))
 const metrics = computed(() => [
-	{ label: isIncoming.value ? "Items received" : "Items distributed", value: total.value, icon: isIncoming.value ? "i-lucide-package-plus" : "i-lucide-package-minus" },
+	{
+		label: isIncoming.value ? "Items received" : "Items distributed",
+		value: total.value,
+		icon: isIncoming.value ? "i-lucide-package-plus" : "i-lucide-package-minus",
+	},
 	{ label: "Periods with activity", value: periodTotals.value.filter((row) => row.quantity > 0).length, icon: "i-lucide-calendar-days" },
 	{ label: "Item types", value: new Set(tableRows.value.map((row) => row.item)).size, icon: "i-lucide-package" },
 	{ label: "Average per period", value: periodTotals.value.length ? Math.round(total.value / periodTotals.value.length) : 0, icon: "i-lucide-chart-bar" },
 ])
 const chartLabels = computed(() => periodTotals.value.map((row) => row.period))
-const chartDatasets = computed(() => [{ label: isIncoming.value ? "Items received" : "Items distributed", data: periodTotals.value.map((row) => row.quantity), backgroundColor: isIncoming.value ? "#154734" : "#e4701e", borderRadius: 6 }])
-const columns = [{ key: "period", label: "Period" }, { key: "category", label: "Category" }, { key: "item", label: "Item" }, { key: "quantity", label: "Quantity" }]
+const chartDatasets = computed(() => [
+	{
+		label: isIncoming.value ? "Items received" : "Items distributed",
+		data: periodTotals.value.map((row) => row.quantity),
+		backgroundColor: isIncoming.value ? "#154734" : "#e4701e",
+		borderRadius: 6,
+	},
+])
+const columns = [
+	{ key: "period", label: "Period" },
+	{ key: "category", label: "Category" },
+	{ key: "item", label: "Item" },
+	{ key: "quantity", label: "Quantity" },
+]
 </script>

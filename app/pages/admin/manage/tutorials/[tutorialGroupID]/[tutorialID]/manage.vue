@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<NuxtLayout name="main" :title="`Manage ${tutorial?.tutorialName ?? 'Tutorial'} Steps`" :back-navigation="{ text: `Back to Tutorials`, to: `/admin/manage/tutorials` }">
+		<NuxtLayout
+			name="main"
+			:title="`Manage ${tutorial?.tutorialName ?? 'Tutorial'} Steps`"
+			:back-navigation="{ text: `Back to Tutorials`, to: `/admin/manage/tutorials` }"
+		>
 			<USeparator class="my-4" />
 			<section>
 				<div class="mx-auto flex w-96 flex-col items-center gap-4">

@@ -24,7 +24,7 @@
 						</UModal>
 					</div>
 
-					<UForm :validate="validate" :state="state" class="w-full space-y-4 mt-4" @submit="onSubmit" @error="onError">
+					<UForm :validate="validate" :state="state" class="mt-4 w-full space-y-4" @submit="onSubmit" @error="onError">
 						<UCard>
 							<SharedTextCardTitle>Link Details</SharedTextCardTitle>
 							<USeparator class="my-4" />

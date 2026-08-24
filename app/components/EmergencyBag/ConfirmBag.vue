@@ -11,7 +11,12 @@
 						<div class="flex items-center justify-center gap-1">
 							<UBadge v-if="props.bagDetails.selectedCategory.length === 0" class="rounded-full bg-gray-400 font-bold" label="Neither" />
 
-							<UBadge v-for="label in props.bagDetails.selectedCategory" :key="label" :label="label" class="rounded-full bg-green-700 font-bold" />
+							<UBadge
+								v-for="label in props.bagDetails.selectedCategory"
+								:key="label"
+								:label="label"
+								class="rounded-full bg-green-700 font-bold"
+							/>
 						</div>
 					</div>
 					<div class="flex gap-2">
