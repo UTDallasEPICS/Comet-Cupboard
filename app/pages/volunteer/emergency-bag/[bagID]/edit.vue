@@ -1,90 +1,83 @@
 <template>
-	<UContainer>
+	<div>
 		<NuxtLayout
 			name="main"
-			:title="`Edit bag: ${emergencyBag.label}`"
+			:title="`Edit bag: ${emergencyBag?.label ?? ''}`"
 			:back-navigation="{ text: 'Back to Manage Bags', to: '/volunteer/emergency-bag/manage' }"
-		/>
-		<div class="flex items-center justify-center">
-			<UCard class="w-full max-w-100">
-				<div class="flex flex-col gap-4">
-					<EmergencyBagItemCard
-						v-for="item in emergencyBag.EmergencyBagItems"
-						:key="item.itemID"
-						:name="item.Item.name"
-						:img-name="item.Item.imgName"
-						:item-count="item.count"
-						:item-quantity="item.Item.quantity"
-						@remove="removeItemFromBag(item.itemID)"
-						@increment="increaseItemCount(item.itemID)"
-						@decrement="decreaseItemCount(item.itemID)"
-					/>
+		>
+			<USeparator class="my-4" />
+			<section v-if="emergencyBag" class="mx-auto w-full max-w-xl space-y-4">
+				<EmergencyBagAddItem ref="addItemRef" v-model:bag-items="bagItems" />
+				<EmergencyBagDetails ref="detailsRef" v-model:bag-details="bagDetails" />
+				<div class="flex justify-end">
+					<SharedButtonPositiveAction text="Save Changes" :loading="isSaving" @click="saveBag" />
 				</div>
-			</UCard>
-		</div>
-		<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
-			<SharedButtonPositiveAction type="submit" text="Submit" @click="editBag()" />
-		</footer>
-	</UContainer>
+			</section>
+			<div v-else class="py-12 text-center"><SharedTextBase>Emergency bag not found.</SharedTextBase></div>
+		</NuxtLayout>
+	</div>
 </template>
 
 <script lang="ts" setup>
 definePageMeta({ layout: false })
+import { getLocalTimeZone, parseDate } from "@internationalized/date"
+
 const route = useRoute()
-const bagID = route.params.bagID
-const emergencyBag = ref()
+const addItemRef = useTemplateRef("addItemRef")
+const detailsRef = useTemplateRef("detailsRef")
+const isSaving = ref(false)
+const bagItems = ref<any[]>([])
+const bagDetails = ref<any>({ selectedCategory: [], expirationDate: null, isPrivate: false, bagDescription: "" })
 
-const { data } = await useFetch("/api/volunteer/emergency-bag/emergencyBag", {
-	query: { bagID: bagID },
+const { data: emergencyBags } = await useFetch<any[]>("/api/volunteer/emergency-bag", {
+	query: { emergencyBagID: route.params.bagID },
 })
-watchEffect(() => {
-	emergencyBag.value = data.value
-})
+const emergencyBag = computed(() => emergencyBags.value?.[0])
 
-const removeItemFromBag = (itemID: string) => {
-	if (!emergencyBag.value.EmergencyBagItems) return
-	emergencyBag.value.EmergencyBagItems = emergencyBag.value.EmergencyBagItems.filter((item) => item.itemID != itemID)
-}
+watch(
+	emergencyBag,
+	(bag) => {
+		if (!bag) return
+		bagItems.value = bag.emergencyBagItems.map((item: any) => ({
+			specificItemID: item.specificItemID,
+			count: item.count,
+			name: item.specificItem.item.itemName,
+			productName: item.specificItem.productName,
+			imgName: item.specificItem.imgName,
+			quantity: Number(item.specificItem.quantity) + item.count,
+			itemLabels: item.specificItem.itemLabels.map((label: any) => label.itemLabelName),
+		}))
+		bagDetails.value = {
+			selectedCategory: bag.emergencyBagLabels.map((label: any) => label.emergencyBagLabelName),
+			expirationDate: parseDate(bag.expiryDate.slice(0, 10)),
+			isPrivate: bag.private,
+			bagDescription: bag.bagDescription ?? "",
+		}
+	},
+	{ immediate: true }
+)
 
-const increaseItemCount = (itemID: string) => {
-	if (!emergencyBag.value.EmergencyBagItems) return
+const saveBag = async () => {
+	const addItemsValid = addItemRef.value?.validate() ?? true
+	const detailsValid = await (detailsRef.value?.validate() ?? true)
+	if (!addItemsValid || !detailsValid || !emergencyBag.value) return
 
-	const item = emergencyBag.value.EmergencyBagItems.find((bi) => bi.itemID === itemID)
-	if (!item) return
-
-	const available = Math.max(0, item.Item.quantity)
-	if (item.count >= available) return
-
-	item.count++
-}
-
-const decreaseItemCount = (itemID: string) => {
-	if (!emergencyBag.value.EmergencyBagItems) return
-
-	const item = emergencyBag.value.EmergencyBagItems.find((bi) => bi.itemID === itemID)
-	if (item.count === 1) {
-		return
-	} else {
-		item.count--
-	}
-}
-
-const editBag = async () => {
-	if (!emergencyBag.value) return
-
+	isSaving.value = true
 	try {
-		const editBag = await $fetch("/api/volunteer/emergency-bag/emergencyBag", {
-			method: "PATCH",
+		await $fetch("/api/volunteer/emergency-bag/emergency-bag", {
+			method: "PUT",
 			body: {
-				bagID: emergencyBag.value.bagID,
-				items: emergencyBag.value.EmergencyBagItems.map((item) => ({
-					itemID: item.itemID,
-					count: item.count,
-				})),
+				emergencyBagID: emergencyBag.value.emergencyBagID,
+				expiryDate: bagDetails.value.expirationDate.toDate(getLocalTimeZone()).toISOString(),
+				labels: bagDetails.value.selectedCategory,
+				private: bagDetails.value.isPrivate,
+				bagDescription: bagDetails.value.isPrivate ? bagDetails.value.bagDescription : "",
+				items: bagItems.value.map((item) => ({ specificItemID: item.specificItemID, count: item.count })),
 			},
 		})
-	} catch (err: any) {
-		console.error("Failed to edit bag: ", err)
+		await navigateTo("/volunteer/emergency-bag/manage")
+	} finally {
+		isSaving.value = false
 	}
 }
 </script>

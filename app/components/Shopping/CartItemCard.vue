@@ -1,29 +1,22 @@
 <template>
-	<UCard
-		class="relative w-full min-w-72 shadow-md"
-		:ui="{
-			body: 'p-0 py-0 sm:p-0 sm:py-0',
-		}"
-	>
+	<UCard class="relative w-full min-w-72 overflow-hidden shadow-md" :ui="{ body: 'p-0 sm:p-0' }">
 		<SharedDealBadge :item-deal="itemDeal" class="absolute top-2 right-2" />
-		<div class="flex flex-row items-center gap-2">
-			<img :src="`/api/public/image/${imgName}`" :alt="name" class="border-border-soft aspect-square h-full w-20 rounded-lg border object-cover" />
+		<div class="flex min-h-24 items-center gap-4 p-4">
+			<img
+				:src="`/api/public/image/${imgName}`"
+				:alt="specificItemName(specificItem)"
+				class="border-border-soft h-16 w-16 shrink-0 rounded-lg border object-cover"
+			/>
 
-			<div class="flex w-full flex-col p-2">
-				<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
-				<div class="flex flex-row items-center justify-between">
-					<UBadge :label="`QTY: ${quantity}`" variant="outline" color="neutral" />
-				</div>
+			<div class="min-w-0">
+				<SharedTextCardTitle>{{ specificItemName(specificItem) }}</SharedTextCardTitle>
+				<SharedTextBaseSecondary>{{ quantity }} available</SharedTextBaseSecondary>
 			</div>
 		</div>
-		<div class="absolute right-2 bottom-2 flex flex-row items-center justify-between gap-2">
-			<UButton
-				variant="ghost"
-				color="error"
-				:icon="icons['delete']"
-				size="sm"
-				@click="removeCartItem"
-			/>
+		<USeparator />
+		<div class="flex flex-row items-center justify-end gap-2 p-2">
+			<UButton variant="ghost" color="error" :icon="icons['delete']" size="sm" aria-label="Remove from cart" @click="removeCartItem" />
+			<SharedTextBaseSecondary class="text-right">In cart:</SharedTextBaseSecondary>
 			<SharedIncrementDecrementPill :count="props.count" :min="1" :max="quantity" @increment="increment" @decrement="decrement" />
 		</div>
 	</UCard>
@@ -31,12 +24,12 @@
 
 <script setup lang="ts">
 const props = defineProps({
-	name: { type: String, required: true },
 	imgName: { type: String, required: true },
-	itemID: { type: String, required: true },
+	specificItemID: { type: String, required: true },
 	itemDeal: { type: Object, default: () => ({}) },
 	quantity: { type: Number, required: true },
 	count: { type: Number, default: 0 },
+	specificItem: { type: Object, default: null },
 })
 
 const emit = defineEmits(["update:cart"])
@@ -46,7 +39,7 @@ const isSaving = ref(false)
 const increment = async () => {
 	await $fetch("/api/student/cart/cartItemCount", {
 		method: "POST",
-		body: { itemID: props.itemID, incrementChange: 1 },
+		body: { specificItemID: props.specificItemID, incrementChange: 1 },
 	})
 	isSaving.value = false
 	emit("update:cart")
@@ -58,7 +51,7 @@ const decrement = async () => {
 	}
 	await $fetch("/api/student/cart/cartItemCount", {
 		method: "POST",
-		body: { itemID: props.itemID, incrementChange: -1 },
+		body: { specificItemID: props.specificItemID, incrementChange: -1 },
 	})
 	isSaving.value = false
 	emit("update:cart")
@@ -67,8 +60,15 @@ const decrement = async () => {
 const removeCartItem = async () => {
 	await $fetch("/api/student/cart/cartItem", {
 		method: "DELETE",
-		body: { itemID: props.itemID },
+		body: { specificItemID: props.specificItemID },
 	})
 	emit("update:cart")
+}
+
+const specificItemName = (specificItem) => {
+	if (!specificItem) {
+		return ""
+	}
+	return specificItem.productName == "Default" ? specificItem.item.itemName : specificItem.productName
 }
 </script>

@@ -74,6 +74,17 @@ export default defineSafeHandler(async (event) => {
 			})),
 		})
 
+		for (const itemChange of Object.values(aggregatedItemChanges)) {
+			await tx.specificItem.update({
+				where: { specificItemID: itemChange.specificItemID },
+				data: { quantity: { increment: itemChange.amountChanged } },
+			})
+		}
+
+		await tx.inventoryIntakeSession.delete({
+			where: { inventoryIntakeSessionID },
+		})
+
 		await tx.auditLog.create({
 			data: {
 				action: "INVENTORY_INTAKE_SESSION_COMPLETED",

@@ -7,28 +7,37 @@ import { imageSchema, deleteImage, uploadImage, processImage } from "#server/uti
 
 const schema = imageSchema
 	.extend({
-		specificItemID: z.string(),
+		specificItemID: z.string().optional(),
 		productName: z.string().min(1, "Name cannot be empty").max(100, "Name must be at most 100 characters"),
 		itemID: z.string(),
+		itemLabels: z.string().optional(),
 	})
+	.partial({ image: true })
 	.strict()
 
 export default defineSafeHandler(async (event) => {
-	const { specificItemID, productName, itemID, image } = await validateFormData(event, schema)
+	const { specificItemID, productName, itemID, image, itemLabels } = await validateFormData(event, schema)
+	const itemLabelNames = itemLabels ? z.array(z.string().min(1).max(100)).parse(JSON.parse(itemLabels)) : []
+	const itemLabelConnections = itemLabelNames.map((itemLabelName) => ({
+		where: { itemLabelName },
+		create: { itemLabelName },
+	}))
 
 	if (!specificItemID) {
-		let newImgName = undefined
+		let newImgName = ""
 		if (image) {
 			newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
 		}
 		return await prisma.$transaction(async (tx) => {
 			const newSpecificItem = await tx.specificItem.create({
 				data: {
-					specificItemID,
 					productName,
-					imgName: newImgName!,
-                    itemID: itemID,
-                    quantity: 0,
+					imgName: newImgName,
+					itemID,
+					quantity: 0,
+					itemLabels: {
+						connectOrCreate: itemLabelConnections,
+					},
 				},
 			})
 			await tx.auditLog.create({
@@ -46,6 +55,9 @@ export default defineSafeHandler(async (event) => {
 		if (!existingSpecificItem) {
 			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Specific Item does not exist` })
 		}
+		if (existingSpecificItem.productName === "Default" && productName !== "Default") {
+			throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "The Default specific product cannot be renamed" })
+		}
 		oldImgName = existingSpecificItem.imgName
 		let newImgName = undefined
 		if (image) {
@@ -58,6 +70,10 @@ export default defineSafeHandler(async (event) => {
 				data: {
 					productName,
 					imgName: newImgName ?? oldImgName,
+					itemLabels: {
+						set: [],
+						connectOrCreate: itemLabelConnections,
+					},
 				},
 			})
 			await tx.auditLog.create({

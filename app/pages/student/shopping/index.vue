@@ -5,10 +5,10 @@
 			<section>
 				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<li>
-						<SharedAllItemsCard variant="shopping" category-name="All Items" />
+						<SharedCategoryCard variant="shopping" category-name="All Items" all-items />
 					</li>
-					<li v-for="(category, i) in categories" :key="i">
-						<SharedCategoryCard variant="shopping" :category-name="category.name" :img-name="category.imgName" />
+					<li v-for="category in categories" :key="category.categoryID">
+						<SharedCategoryCard variant="shopping" :category-name="category.categoryName" :img-name="category.imgName" />
 					</li>
 				</ul>
 			</section>

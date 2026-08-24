@@ -7,17 +7,19 @@ export default defineSafeHandler(async (event) => {
 			archived: false,
 		},
 		orderBy: { locationName: "asc" },
-		include: {
+		select: {
+			locationID: true,
+			locationName: true,
+			description: true,
+			imgName: true,
+			mapEmbedUrl: true,
 			emergencyBags: {
-				// private bags will typically be at "no location"
-				where: {
-					private: false,
+				where: { private: false },
+				select: {
+					emergencyBagLabels: {
+						select: { emergencyBagLabelName: true },
+					},
 				},
-				include: {
-					emergencyBagLabels: true,
-				},
-                // labels should be enough for aggregation
-				select: {},
 			},
 		},
 	})

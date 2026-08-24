@@ -8,8 +8,6 @@
 					</UFormField>
 				</UCard>
 				<UCard>
-					<!-- <header class="mb-4 text-xl font-bold">Expiration Date <span class="text-red-500">*</span></header> -->
-
 					<UFormField name="expirationDate" label="Expiration Date" class="text-xl" :ui="{ error: 'text-sm' }" required>
 						<UInputDate ref="inputDate" v-model="bagDetails.expirationDate" class="mt-2">
 							<template #leading>
@@ -67,8 +65,8 @@ const schema = z.object({
 })
 
 const labels = [
-	{ label: "Vegetarian", value: "VEGETARIAN" },
-	{ label: "Peanut Butter", value: "PEANUT_BUTTER" },
+	{ label: "Vegetarian", value: "Vegetarian" },
+	{ label: "Peanut Butter", value: "Peanut Butter" },
 ]
 
 watch(

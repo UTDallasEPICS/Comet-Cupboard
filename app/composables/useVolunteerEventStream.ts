@@ -4,6 +4,7 @@ const listeners: ((event: AppEvent) => void)[] = []
 export const useVolunteerEventStream = () => {
 	const cartSessionsStore = useCartSessionsStore()
 	const queueStore = useQueueStore()
+	const inventoryStore = useInventoryStore()
 	const toast = useToast()
 	const config = useRuntimeConfig()
 
@@ -16,6 +17,12 @@ export const useVolunteerEventStream = () => {
 	const dispatchQueueEvent = async (event: AppEvent) => {
 		if (["queue.queueUpdated", "queue.entryApproved", "queue.entryRemoved", "queue.entryAdded", "queue.notification.sent", "queue.notification.acknowledged"].includes(event.type)) {
 			await queueStore.handleQueueEvent(event)
+		}
+	}
+
+	const dispatchInventoryEvent = async (event: AppEvent) => {
+		if (["inventoryIntakeSession.specificItemAmountChange", "inventoryIntakeSession.submitted"].includes(event.type)) {
+			await inventoryStore.handleIntakeSessionEvent(event)
 		}
 	}
 
@@ -43,6 +50,7 @@ export const useVolunteerEventStream = () => {
 
 				dispatchCartSessionEvent(event)
 				dispatchQueueEvent(event)
+				dispatchInventoryEvent(event)
 			} catch (error) {}
 		}
 

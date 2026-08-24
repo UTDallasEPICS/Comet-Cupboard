@@ -20,7 +20,7 @@ export default defineSafeHandler(async (event) => {
 			pending: true,
 		},
 		include: {
-			cartItems: { include: { specificItem: { include: { item: { include: { deal: true } } } } } },
+			cartItems: { include: { specificItem: { include: { item: { include: { deal: true, category: true } } } } } },
 			userSession: { select: { publicIcon: true } },
 		},
 	})

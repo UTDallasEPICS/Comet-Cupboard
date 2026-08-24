@@ -26,22 +26,13 @@
 					</div>
 				</template>
 
-				<template #item="{ item: cartItem }">
+				<template #item="{ item }">
 					<ShoppingCartReviewItemCard
-						:item-deal="
-							cartItem.Item.Deal
-								? {
-										actualCount: cartItem.Item.Deal.actualCount,
-										adjustedCount: cartItem.Item.Deal.adjustedCount,
-									}
-								: {}
-						"
 						class="w-full"
-						:count="cartItem.count"
-						:img-name="cartItem.Item.imgName"
-						:item-i-d="cartItem.itemID"
-						:name="cartItem.Item.name"
-						:count-adjustment="cartItem.countAdjustment"
+						:item-deal="item.itemDeal"
+						:name="item.name"
+						:specific-items="item.specificItems"
+						:item-final-count="itemFinalCounts[item.itemID] ?? 0"
 					/>
 				</template>
 			</SharedGroupedCollapsible>
@@ -97,42 +88,60 @@ const { data: cart } = await useAsyncData(
 	}
 )
 
-const categorizedCartItems = computed(() => {
-	if (cart.value === null || "CartItems" in cart.value === false) {
+const categorizedCartItems = computed<Record<string, any[]>>(() => {
+	if (cart.value === null || "cartItems" in cart.value === false) {
 		return {}
 	}
-	const items = cart.value?.CartItems.sort((a, b) => {
-		const categoryCompare = a.Item.categoryName.localeCompare(b.Item.categoryName)
+	const items = [...cart.value.cartItems].sort((a, b) => {
+		const categoryCompare = a.specificItem.item.category.categoryName.localeCompare(b.specificItem.item.category.categoryName)
 		if (categoryCompare !== 0) {
 			return categoryCompare
 		}
 
-		return a.Item.name.localeCompare(b.Item.name)
+		return a.specificItem.item.itemName.localeCompare(b.specificItem.item.itemName)
 	})
 
-	return Object.groupBy(items, (cartItem) => cartItem.Item.categoryName)
+	const categoryGroups = Object.groupBy(items, (cartItem) => cartItem.specificItem.item.category.categoryName) as Record<string, any[]>
+	return Object.fromEntries(
+		Object.entries(categoryGroups).map(([categoryName, categoryCartItems]) => {
+			const itemGroups = Object.groupBy(categoryCartItems, (cartItem) => cartItem.specificItem.itemID) as Record<string, any[]>
+			return [
+				categoryName,
+				Object.entries(itemGroups).map(([itemID, itemCartItems]) => {
+					const cartItems = itemCartItems as any[]
+					const firstCartItem = cartItems[0]
+					return {
+						itemID,
+						name: firstCartItem.specificItem.item.itemName,
+						itemDeal: firstCartItem.specificItem.item.deal ?? {},
+						specificItems: cartItems.map((cartItem) => ({
+							specificItemID: cartItem.specificItemID,
+							productName: cartItem.specificItem.productName,
+							imgName: cartItem.specificItem.imgName,
+							count: cartItem.count,
+							countAdjustment: cartItem.countAdjustment,
+						})),
+					}
+				}),
+			]
+		})
+	)
 })
 
 const categoryCartItems = computed(() => {
-	if (!cart || !cart.value || !cart.value.CartItems) {
+	if (!cart || !cart.value || !cart.value.cartItems) {
 		return {}
 	}
-	const categoryCartItemsGrouped = Object.groupBy(cart.value.CartItems, (cartItem) => {
-		return cartItem.Item.categoryName
+	const categoryCartItemsGrouped = Object.groupBy(cart.value.cartItems, (cartItem) => {
+		return cartItem.specificItem.item.category.categoryName
 	})
-	return categoryCartItemsGrouped
+	return categoryCartItemsGrouped as Record<string, any[]>
 })
 
+const itemFinalCounts = computed(() => cartItemFinalCounts(cart.value))
+
 const cartAdjustedCount = computed(() => {
-	let adjCount = 0
-	Object.keys(categoryCartItems.value).forEach((category) => {
-		adjCount += categoryCartItems.value[category]
-			.map((cartItem) => {
-				return cartItemCountAdjustment(cartItem).count
-			})
-			.reduce((a, b) => a + b, 0)
-	})
-	return adjCount
+	return cartCountAdjustment(cart.value)
 })
 
 const cartTotalCount = computed(() => {

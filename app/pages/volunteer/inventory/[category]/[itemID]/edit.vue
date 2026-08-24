@@ -2,71 +2,22 @@
 	<div>
 		<NuxtLayout
 			name="main"
-			:title="`Edit ${item?.name}`"
+			:title="`Edit ${item?.itemName}`"
 			:back-navigation="{ text: `Back to ${currentCategory}`, to: `/volunteer/inventory/${currentCategory}` }"
 		>
 			<USeparator class="my-4" />
 			<section>
-				<div class="mx-auto w-min">
-					<UForm :validate="validate" :state="state" class="w-96 space-y-4" @submit="onSubmit" @error="onError">
-						<UCard>
-							<UFormField
-								id="image"
-								name="image"
-								label="Item Image"
-								description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels"
-								required
-							>
-								<div class="flex flex-col gap-2">
-									<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
-								</div>
-							</UFormField>
-						</UCard>
-
-						<UCard>
-							<UFormField
-								id="itemName"
-								name="itemName"
-								label="Item Name"
-								description="Item name must be at most 20 characters and only contain letters and spaces"
-								required
-							>
-								<UInput v-model="state.itemName" placeholder="Enter item name" />
-
-								<div v-if="mostSimilarItems.length" class="border-border-soft mt-2 rounded-lg border p-2">
-									<div class="mb-2 flex items-center gap-2">
-										<SharedTextBaseSecondary> Similar existing items </SharedTextBaseSecondary>
-									</div>
-
-									<div class="flex flex-wrap gap-2">
-										<UBadge
-											v-for="similarItem in mostSimilarItems"
-											:key="similarItem.id"
-											:label="similarItem.name"
-											color="neutral"
-											variant="soft"
-										/>
-									</div>
-
-									<SharedTextBaseSecondary class="mt-2 text-xs"> Check that you're not creating a duplicate item. </SharedTextBaseSecondary>
-								</div>
-							</UFormField>
-						</UCard>
-
-						<UCard>
-							<UFormField id="category" name="category" label="Category" description="Select the category for this item" required>
-								<USelect v-model="state.category" :items="categoryOptions" placeholder="Select category" />
-							</UFormField>
-						</UCard>
-						<UCard>
-							<UFormField id="archived" name="archived" label="Archived" description="Check if the item is archived">
-								<UCheckbox v-model="state.archived" label="Archived" />
-							</UFormField>
-						</UCard>
-						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
-							<SharedButtonPositiveAction type="submit" text="Submit" />
-						</footer>
-					</UForm>
+				<div v-if="item" class="mx-auto w-full max-w-xl space-y-4">
+					<InventoryItemDetailsEditor
+						:item-i-d="itemID"
+						:original-name="item.itemName"
+						:original-category-i-d="item.categoryID"
+						:original-archived="item.archived"
+						:category-options="categoryOptions"
+						@updated="refreshItem"
+					/>
+					<InventoryItemDealEditor :item-i-d="itemID" :original-deal="item.deal" @updated="refreshItem" />
+					<InventorySpecificProductsEditor :item-i-d="itemID" :specific-items="item.specificItems" @updated="refreshItem" />
 				</div>
 			</section>
 		</NuxtLayout>
@@ -74,15 +25,13 @@
 </template>
 
 <script lang="ts" setup>
-import * as z from "zod"
-
 definePageMeta({ layout: false })
 
 const route = useRoute()
 const currentCategory = route.params.category as string
 const itemID = route.params.itemID as string
 
-const { data: item } = await useFetch("/api/student/inventory/item/", {
+const { data: item, refresh: refreshItem } = await useFetch("/api/student/inventory/item", {
 	query: { itemID },
 })
 
@@ -90,88 +39,7 @@ const { data: categories } = await useFetch("/api/student/inventory/categories")
 
 const categoryOptions = computed(() => {
 	return categories.value?.map((category) => {
-		return category.name
+		return { label: category.categoryName, value: category.categoryID }
 	})
 })
-
-const originalImage = ref<Blob | null>(null)
-
-const formSchema = imageSchema
-	.extend({
-		itemName: z
-			.string()
-			.min(1, "Item name is required")
-			.max(20, "Item name must be at most 20 characters")
-			.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
-		category: z.string().min(1, "Category is required"),
-		archived: z.boolean().default(false),
-	})
-	.partial({
-		image: true,
-		itemName: true,
-		category: true,
-	})
-
-const { schema, state, validate, onError } = createFormBuilder(formSchema, () => ({
-	image: originalImage.value
-		? new File([originalImage.value], item.value?.imgName, {
-				type: originalImage.value.type,
-			})
-		: undefined,
-	itemName: item.value?.name || undefined,
-	category: item.value?.categoryName || undefined,
-	archived: item.value?.archived || false,
-}))
-
-watchEffect(async () => {
-	if (item.value) {
-		originalImage.value = await $fetch<Blob>(`/api/public/image/${item.value.imgName}`, { responseType: "blob" })
-		state.value.image = new File([originalImage.value], item.value.imgName, {
-			type: originalImage.value.type,
-		})
-	} else {
-		originalImage.value = null
-	}
-})
-
-const { data: items } = await useFetch("/api/student/inventory/items", {
-	method: "GET",
-	query: {
-		checkAvailability: "false",
-		includeArchived: "true",
-	},
-})
-const { query, filtered } = useFuzzySearch(items ?? ref([]), { searchKeys: ["name"] })
-watch(
-	() => state.value.itemName,
-	(name) => {
-		query.value = name || ""
-	},
-	{ immediate: true }
-)
-const mostSimilarItems = computed(() => {
-	return filtered.value.slice(0, 5)
-})
-
-const onSubmit = async (event) => {
-	try {
-		const formData = new FormData()
-		formData.append("itemID", itemID)
-		formData.append("name", event.data.itemName || "")
-		formData.append("categoryName", event.data.category || "")
-		if (event.data.image) {
-			formData.append("image", event.data.image)
-		}
-		formData.append("archived", event.data.archived ? "true" : "false")
-
-		await $fetch("/api/volunteer/inventory/item", {
-			method: "PUT",
-			body: formData,
-		})
-
-		navigateTo(`/volunteer/inventory/${currentCategory}`)
-	} catch (error) {
-		// idk for now
-	}
-}
 </script>

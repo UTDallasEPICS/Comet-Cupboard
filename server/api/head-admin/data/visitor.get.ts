@@ -51,8 +51,11 @@ export default defineSafeHandler(async (event) => {
 		}
 	})
 
-	const firstDate = startDate ?? new Date(rows[0]!.createdAt)
-	const lastDate = endDate ?? new Date(rows[rows.length - 1]!.createdAt)
+	const firstDate = startDate ?? rows[0]?.createdAt
+	const lastDate = endDate ?? rows.at(-1)?.createdAt
+	if (!firstDate || !lastDate) {
+		return {}
+	}
 	const lastTimeLevel = getTimeLevel(lastDate, timeLevel)
 	const allTimeLevels: Record<string, Record<string, number> | number> = {}
 	let curDate = new Date(firstDate)

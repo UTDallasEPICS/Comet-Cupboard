@@ -2,6 +2,7 @@ import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateBody } from "#server/utils/validation"
+import { AccessPermission } from "#shared/utils/permissions"
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
@@ -9,15 +10,16 @@ const generateRandomLabel = () => Array.from({ length: 5 }, () => CHARS[Math.flo
 
 const schema = z
 	.object({
-		emergencyBagID: z.string(),
+		emergencyBagID: z.string().optional(),
 		expiryDate: z.coerce.date(),
 		labels: z.array(z.string().trim().min(1)).default([]),
+		private: z.boolean().default(false),
+		bagDescription: z.string().trim().default(""),
 		items: z
 			.array(
 				z.object({
 					specificItemID: z.string(),
-					existingItemCountsToDecrease: z.int().nonnegative(),
-					newItemCountsToAdd: z.int().nonnegative(),
+					count: z.int().positive(),
 				})
 			)
 			.min(1),
@@ -25,7 +27,10 @@ const schema = z
 	.strict()
 
 export default defineSafeHandler(async (event) => {
-	const { emergencyBagID, expiryDate, labels, items } = await validateBody(event, schema)
+	const { emergencyBagID, expiryDate, labels, private: isPrivate, bagDescription, items } = await validateBody(event, schema)
+	if (isPrivate && !event.context.permissions[AccessPermission.ADMIN]) {
+		throw createError({ statusCode: 403, statusMessage: "Only administrators can create or edit private emergency bags." })
+	}
 
 	// Prevent multiple entries for the same specific item.
 	const uniqueItemIDs = new Set(items.map((item) => item.specificItemID))
@@ -39,6 +44,13 @@ export default defineSafeHandler(async (event) => {
 
 	return await prisma.$transaction(async (tx) => {
 		if (!emergencyBagID) {
+			const specificItems = await tx.specificItem.findMany({ where: { specificItemID: { in: items.map((item) => item.specificItemID) } } })
+			for (const item of items) {
+				const specificItem = specificItems.find((candidate) => candidate.specificItemID === item.specificItemID)
+				if (!specificItem || specificItem.quantity < item.count) {
+					throw createError({ statusCode: 400, statusMessage: "Insufficient inventory to create this emergency bag." })
+				}
+			}
 			let newBagLabel = generateRandomLabel()
 
 			while (
@@ -55,12 +67,14 @@ export default defineSafeHandler(async (event) => {
 				data: {
 					label: newBagLabel,
 					expiryDate,
+					private: isPrivate,
+					bagDescription: isPrivate ? bagDescription : "",
 
 					emergencyBagItems: {
 						createMany: {
 							data: items.map((item) => ({
 								specificItemID: item.specificItemID,
-								count: item.newItemCountsToAdd,
+								count: item.count,
 							})),
 						},
 					},
@@ -72,6 +86,9 @@ export default defineSafeHandler(async (event) => {
 					},
 				},
 			})
+			for (const item of items) {
+				await tx.specificItem.update({ where: { specificItemID: item.specificItemID }, data: { quantity: { decrement: item.count } } })
+			}
 
 			await tx.auditLog.create({
 				data: {
@@ -100,27 +117,21 @@ export default defineSafeHandler(async (event) => {
 					statusMessage: "Emergency bag not found.",
 				})
 			}
-
+			if (existingBag.private && !event.context.permissions[AccessPermission.ADMIN]) {
+				throw createError({ statusCode: 403, statusMessage: "Only administrators can edit private emergency bags." })
+			}
 			const existingItemsMap = new Map(existingBag.emergencyBagItems.map((item) => [item.specificItemID, item.count]))
-
-			const updatedItems = items.map((item) => {
-				const existingCount = existingItemsMap.get(item.specificItemID) ?? 0
-
-				if (item.existingItemCountsToDecrease > existingCount) {
-					throw createError({
-						statusCode: 400,
-						statusMessage:
-							`Cannot remove ${item.existingItemCountsToDecrease} ` +
-							`item(s) from ${item.specificItemID}; ` +
-							`only ${existingCount} currently exist in the bag.`,
-					})
+			const requestedItemsMap = new Map(items.map((item) => [item.specificItemID, item.count]))
+			const itemIDs = [...new Set([...existingItemsMap.keys(), ...requestedItemsMap.keys()])]
+			const specificItems = await tx.specificItem.findMany({ where: { specificItemID: { in: itemIDs } } })
+			for (const specificItemID of itemIDs) {
+				const inventoryDelta = (requestedItemsMap.get(specificItemID) ?? 0) - (existingItemsMap.get(specificItemID) ?? 0)
+				if (inventoryDelta <= 0) continue
+				const specificItem = specificItems.find((candidate) => candidate.specificItemID === specificItemID)
+				if (!specificItem || specificItem.quantity < inventoryDelta) {
+					throw createError({ statusCode: 400, statusMessage: "Insufficient inventory to update this emergency bag." })
 				}
-
-				return {
-					specificItemID: item.specificItemID,
-					count: existingCount - item.existingItemCountsToDecrease + item.newItemCountsToAdd,
-				}
-			})
+			}
 
 			const updatedBag = await tx.emergencyBag.update({
 				where: {
@@ -128,22 +139,11 @@ export default defineSafeHandler(async (event) => {
 				},
 				data: {
 					expiryDate,
+					private: isPrivate,
+					bagDescription: isPrivate ? bagDescription : "",
 					emergencyBagItems: {
-						upsert: updatedItems.map((item) => ({
-							where: {
-								emergencyBagItemID: {
-									specificItemID: item.specificItemID,
-									emergencyBagID,
-								},
-							},
-							update: {
-								count: item.count,
-							},
-							create: {
-								specificItemID: item.specificItemID,
-								count: item.count,
-							},
-						})),
+						deleteMany: {},
+						createMany: { data: items },
 					},
 					emergencyBagLabels: {
 						set: labels.map((emergencyBagLabelName) => ({
@@ -152,6 +152,12 @@ export default defineSafeHandler(async (event) => {
 					},
 				},
 			})
+			for (const specificItemID of itemIDs) {
+				const inventoryDelta = (requestedItemsMap.get(specificItemID) ?? 0) - (existingItemsMap.get(specificItemID) ?? 0)
+				if (inventoryDelta !== 0) {
+					await tx.specificItem.update({ where: { specificItemID }, data: { quantity: { decrement: inventoryDelta } } })
+				}
+			}
 
 			await tx.auditLog.create({
 				data: {

@@ -114,7 +114,7 @@ export const roleLinks: Record<Role, AppLink[]> = {
 		},
 
 		{
-			label: "Historical Inventory Intake Sessions",
+			label: "Past Inventory Intake Sessions",
 			description: "View past inventory intake sessions",
 			icon: icons["inventory"],
 			to: "/admin/intake-sessions/historical",
@@ -138,12 +138,6 @@ export const roleLinks: Record<Role, AppLink[]> = {
 			description: "Manage external dashboard links",
 			icon: "i-lucide-external-link",
 			to: "/head-admin/dashboard-links",
-		},
-		{
-			label: "Audit Log",
-			description: "Inspect application-wide actions",
-			icon: icons["disclosures"],
-			to: "/head-admin/audit-log",
 		},
 	],
 }

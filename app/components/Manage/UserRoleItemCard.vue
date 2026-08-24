@@ -28,6 +28,8 @@ const props = defineProps({
 const permissionsStore = usePermissionsStore()
 const currentUserSession = useUserSessionInfoStore()
 
+const emit = defineEmits(["roleChanged"])
+
 const roleColor = computed(() => {
 	switch (props.role) {
 		case "STUDENT":
@@ -110,6 +112,7 @@ const setUserToRoleAdminFunction = async (role) => {
 				newRole: role,
 			},
 		})
+		emit("roleChanged", { userID: props.userID, newRole: role })
 	} catch (e) {}
 }
 
@@ -122,6 +125,7 @@ const setUserToRoleHeadAdminFunction = async (role) => {
 				newRole: role,
 			},
 		})
+		emit("roleChanged", { userID: props.userID, newRole: role })
 	} catch (e) {}
 }
 
@@ -130,6 +134,7 @@ const headAdminSelfDemote = async () => {
 		await $fetch("/api/head-admin/user/selfDemote", {
 			method: "POST",
 		})
+		emit("roleChanged", { userID: props.userID, newRole: "ADMIN" })
 	} catch (e) {}
 }
 </script>

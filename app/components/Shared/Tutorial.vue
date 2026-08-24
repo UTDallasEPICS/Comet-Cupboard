@@ -56,16 +56,18 @@
 								<SharedTextBase class="mt-2 text-center"
 									>{{ currentCarouselNumber + 1 }} / {{ activeTutorial.tutorialSteps.length }}</SharedTextBase
 								>
-								<UButton
-									v-if="viewModel.isTutorialGroup && currentCarouselNumber === activeTutorial.tutorialSteps.length - 1"
-									color="secondary"
-									variant="solid"
-									size="xl"
-									class="mt-4"
-									@click="backToTutorials"
-								>
-									Back to Tutorials
-								</UButton>
+								<div class="flex w-full flex-row items-center justify-center">
+									<UButton
+										v-if="viewModel.isTutorialGroup && currentCarouselNumber === activeTutorial.tutorialSteps.length - 1"
+										color="secondary"
+										variant="solid"
+										size="xl"
+										class="mt-4"
+										@click="backToTutorials"
+									>
+										Back to Tutorials
+									</UButton>
+								</div>
 							</template>
 						</div>
 					</section>

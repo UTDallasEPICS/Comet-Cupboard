@@ -16,33 +16,34 @@ export const useCartStore = defineStore("cart", () => {
 	}
 
 	const categorizedCartItems = computed(() => {
-		if (cart.value === null || "CartItems" in cart.value === false) {
+		if (cart.value === null || "cartItems" in cart.value === false) {
 			return {}
 		}
-		const items = cart.value.CartItems.sort((a, b) => {
-			const categoryCompare = a.Item.categoryName.localeCompare(b.Item.categoryName)
+		const categoryName = (cartItem: any) => cartItem.specificItem?.item?.category?.categoryName ?? "Uncategorized"
+		const items = [...cart.value.cartItems].sort((a: any, b: any) => {
+			const categoryCompare = categoryName(a).localeCompare(categoryName(b))
 			if (categoryCompare !== 0) {
 				return categoryCompare
 			}
 
-			return a.Item.name.localeCompare(b.Item.name)
+			return (a.specificItem?.item?.itemName ?? "").localeCompare(b.specificItem?.item?.itemName ?? "")
 		})
 
-		return Object.groupBy(items, (cartItem) => cartItem.Item.categoryName)
+		return Object.groupBy(items, categoryName)
 	})
 
 	const itemIDtoCartItemMap = computed(() => {
-		if (cart.value === null || "CartItems" in cart.value === false) {
+		if (cart.value === null || "cartItems" in cart.value === false) {
 			return {}
 		}
-		return Object.fromEntries(cart.value.CartItems.map((cartItem) => [cartItem.Item.itemID, cartItem]))
+		return Object.fromEntries(cart.value.cartItems.map((cartItem: any) => [cartItem.specificItemID, cartItem]))
 	})
 
 	const cartTotalCount = computed(() => {
-		if (cart.value === null || "CartItems" in cart.value === false) {
+		if (cart.value === null || "cartItems" in cart.value === false) {
 			return 0
 		}
-		return (cart.value.CartItems as Array<{ count: number }>)
+		return (cart.value.cartItems as Array<{ count: number }>)
 			.map((cartItem) => {
 				return cartItem.count
 			})

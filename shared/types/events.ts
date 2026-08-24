@@ -45,6 +45,7 @@ export interface EventMap {
 		productName: string
 		imgName: string
 		amountChanged: number
+		inventoryIntakeSessionItemChangeID: string
 	}
 	"inventoryIntakeSession.submitted": { inventoryIntakeSessionID: string }
 }

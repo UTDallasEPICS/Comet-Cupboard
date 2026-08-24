@@ -1,24 +1,12 @@
 <template>
-	<UCard
-		:class="`${changeCount != 0 ? '' : ''} relative w-full min-w-72 shadow-md`"
-		:ui="{
-			body: 'p-0 py-0 sm:p-0 sm:py-0',
-		}"
-	>
+	<UCard class="relative w-full min-w-72 overflow-hidden shadow-md" :ui="{ body: 'p-0 sm:p-0' }">
 		<SharedDealBadge :item-deal="itemDeal" class="absolute top-2 right-2" />
 
-		<div class="flex flex-row items-center gap-2">
-			<img :src="`/api/public/image/${imgName}`" :alt="name" class="border-border-soft aspect-square h-full w-20 rounded-l-lg border object-cover" />
-
-			<div class="flex w-full flex-col p-2">
-				<div class="flex flex-row items-center justify-between">
-					<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
-				</div>
-
-				<div class="flex flex-row items-center gap-2">
-					<UBadge :label="`QTY: ${quantity}`" variant="outline" color="neutral" />
-					<UBadge :label="changeCount > 0 ? `+${changeCount}` : `${changeCount}`" color="secondary" variant="solid" />
-				</div>
+		<div class="flex min-h-24 items-center gap-4 p-4">
+			<img :src="`/api/public/image/${imgName}`" :alt="name" class="border-border-soft h-16 w-16 shrink-0 rounded-lg border object-cover" />
+			<div>
+				<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
+				<SharedTextBaseSecondary>{{ changeCount > 0 ? `+${changeCount}` : changeCount }}</SharedTextBaseSecondary>
 			</div>
 		</div>
 	</UCard>
@@ -41,10 +29,6 @@ const props = defineProps({
 	itemID: {
 		type: String,
 		required: true,
-	},
-	quantity: {
-		type: Number,
-		default: 0,
 	},
 	changeCount: {
 		type: Number,

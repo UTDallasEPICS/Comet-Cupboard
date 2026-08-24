@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<NuxtLayout name="main" title="Create Emergency Bags" :back-navigation="{ text: 'Back to Dashboard', to: '/volunteer' }">
+		<NuxtLayout name="main" title="Create Emergency Bags" :back-navigation="{ text: 'Back to Manage Emergency Bags', to: '/volunteer/emergency-bag/manage' }">
 			<div class="flex justify-center">
 				<div class="flex w-full max-w-100 flex-col">
 					<UStepper ref="stepper" disabled :items="steps">
@@ -38,18 +38,22 @@
 </template>
 
 <script lang="ts" setup>
-import { getLocalTimeZone } from "@internationalized/date"
+import { getLocalTimeZone, parseDate } from "@internationalized/date"
 definePageMeta({ layout: false })
 const stepper = ref()
 const addItemRef = useTemplateRef("addItemRef")
 const detailsRef = useTemplateRef("detailsRef")
+const route = useRoute()
 
 const bagItems = ref<
 	{
-		itemID: string
+		specificItemID: string
 		count: number
 		name: string
+		productName: string
 		imgName: string
+		quantity: number
+		itemLabels: string[]
 	}[]
 >([])
 
@@ -59,6 +63,28 @@ const bagDetails = ref({
 	isPrivate: null,
 	bagDescription: "",
 })
+
+if (route.query.duplicateFrom) {
+	const sourceBags = await $fetch<any[]>("/api/volunteer/emergency-bag", {
+		query: { emergencyBagID: route.query.duplicateFrom },
+	})
+	const sourceBag = sourceBags[0]
+	if (sourceBag) {
+		bagItems.value = sourceBag.emergencyBagItems.map((item: any) => ({
+			specificItemID: item.specificItemID,
+			count: item.count,
+			name: item.specificItem.item.itemName,
+			productName: item.specificItem.productName,
+			imgName: item.specificItem.imgName,
+			quantity: Number(item.specificItem.quantity),
+			itemLabels: item.specificItem.itemLabels.map((label: any) => label.itemLabelName),
+		}))
+		bagDetails.value.selectedCategory = sourceBag.emergencyBagLabels.map((label: any) => label.emergencyBagLabelName)
+		bagDetails.value.isPrivate = sourceBag.private
+		bagDetails.value.bagDescription = sourceBag.bagDescription || ""
+		bagDetails.value.expirationDate = parseDate(sourceBag.expiryDate.slice(0, 10))
+	}
+}
 
 const steps = [
 	{ label: "Add", icon: "i-lucide-shopping-cart", description: "Add Item" },
@@ -88,15 +114,15 @@ const submitBag = async () => {
 	if (!addValid || !detailsValid) return false
 
 	try {
-		const createBag = await $fetch("/api/volunteer/emergency-bag/emergencyBags", {
-			method: "POST",
+		await $fetch("/api/volunteer/emergency-bag/emergency-bag", {
+			method: "PUT",
 			body: {
-				bagCategory: bagDetails.value.selectedCategory,
+				labels: bagDetails.value.selectedCategory,
 				expiryDate: bagDetails.value.expirationDate.toDate(getLocalTimeZone()).toISOString(),
-				privacy: bagDetails.value.isPrivate ? "PRIVATE" : "PUBLIC",
+				private: bagDetails.value.isPrivate ?? false,
 				bagDescription: bagDetails.value.isPrivate ? bagDetails.value.bagDescription : "",
 				items: bagItems.value.map((item) => ({
-					itemID: item.itemID,
+					specificItemID: item.specificItemID,
 					count: item.count,
 				})),
 			},

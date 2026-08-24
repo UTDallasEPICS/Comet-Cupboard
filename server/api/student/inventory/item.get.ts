@@ -20,7 +20,11 @@ export default defineSafeHandler(async (event) => {
 		},
 		include: {
 			deal: true,
-			specificItems: true,
+			specificItems: {
+				include: {
+					itemLabels: true,
+				},
+			},
 			category: true,
 		},
 	})

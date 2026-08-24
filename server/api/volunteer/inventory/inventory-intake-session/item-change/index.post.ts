@@ -8,18 +8,14 @@ import { createEvent } from "#server/utils/eventsFactory"
 const schema = z.object({
 	inventoryIntakeSessionID: z.string(),
 	specificItemID: z.string(),
-	amountChanged: z.int(),
+	incrementChange: z.int(),
 })
 
 export default defineSafeHandler(async (event) => {
-	const { inventoryIntakeSessionID, specificItemID, amountChanged } = await validateBody(event, schema)
+	const { inventoryIntakeSessionID, specificItemID, incrementChange } = await validateBody(event, schema)
 	return await prisma.$transaction(async (prisma) => {
 		const change = await prisma.inventoryIntakeSessionItemChange.create({
-			data: {
-				inventoryIntakeSessionID,
-				specificItemID,
-				amountChanged,
-			},
+			data: { inventoryIntakeSessionID, specificItemID, amountChanged: incrementChange },
 			include: {
 				specificItem: true,
 			},
@@ -30,7 +26,8 @@ export default defineSafeHandler(async (event) => {
 				specificItemID,
 				productName: change.specificItem.productName,
 				imgName: change.specificItem.imgName,
-				amountChanged,
+				amountChanged: change.amountChanged,
+				inventoryIntakeSessionItemChangeID: change.InventoryIntakeSessionItemChangeID,
 			})
 		)
 		return change

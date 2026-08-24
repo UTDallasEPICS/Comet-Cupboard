@@ -16,7 +16,7 @@ export default defineSafeHandler(async (event) => {
 
 	const transactionResult = await prisma.$transaction(async (tx) => {
 		const bag = await tx.emergencyBag.findUnique({
-			where: { label: label },
+			where: { label: label, private: false },
 			include: { emergencyBagItems: true, emergencyBagLabels: true },
 		})
 

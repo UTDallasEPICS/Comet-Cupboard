@@ -8,7 +8,7 @@
 							:icon="icons['add']"
 							variant="ghost"
 							color="neutral"
-							class="absolute bg-utd-green text-white right-0"
+							class="bg-utd-green absolute right-0 text-white"
 							:to="`/volunteer/inventory/${currentCategory}/add`"
 						/>
 					</UInput>
@@ -20,6 +20,9 @@
 								<SharedTextBase class="w-full font-semibold">Filter</SharedTextBase>
 								<USeparator />
 								<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="vertical" />
+								<SharedTextBase class="w-full font-semibold">Item Labels</SharedTextBase>
+								<USeparator />
+								<UCheckboxGroup v-model="selectedItemLabels" :items="itemLabelOptions" orientation="vertical" />
 								<SharedTextBase class="w-full font-semibold">Sort</SharedTextBase>
 								<USeparator />
 								<USelect v-model="sortOption" :items="sortOptions" class="w-full max-w-md grow" />
@@ -28,37 +31,45 @@
 					</UPopover>
 				</div>
 				<USeparator class="my-4" />
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					<li v-for="item in shownActiveItems" :key="item.itemID">
+				<UCard>
+					<SharedTextCardTitle>Active Items</SharedTextCardTitle>
+					<USeparator class="my-4" />
+					<ul v-if="shownActiveItems.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+						<li v-for="item in shownActiveItems" :key="item.itemID">
 						<InventoryItemCard
-							:change-count="inventoryStore.inventoryChangesItems.find((i) => i.itemID === item.itemID)?.count || 0"
-							:current-count="item.quantity"
+							:specific-items="item.specificItems"
+							:change-count="inventoryChangeCount(item)"
+							:current-count="itemQuantityTotal(item)"
 							:img-name="item.imgName"
-							:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
+							:item-deal="item.deal ? { actualCount: item.deal.actualCount, adjustedCount: item.deal.adjustedCount } : {}"
 							:item-i-d="item.itemID"
-							:name="item.name"
-							:category="item.categoryName"
+							:name="item.itemName"
+							:category="item.category.categoryName"
 						/>
-					</li>
-				</ul>
+						</li>
+					</ul>
+					<SharedTextBase v-else class="block text-center">No active items found</SharedTextBase>
+				</UCard>
 
-				<USeparator class="my-4" />
-
-				<SharedTextSectionTitle>Archived Items</SharedTextSectionTitle>
-
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					<li v-for="item in shownArchivedItems" :key="item.itemID">
+				<UCard class="mt-4">
+					<SharedTextCardTitle>Archived Items</SharedTextCardTitle>
+					<USeparator class="my-4" />
+					<ul v-if="shownArchivedItems.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+						<li v-for="item in shownArchivedItems" :key="item.itemID">
 						<InventoryItemCard
-							:change-count="inventoryStore.inventoryChangesItems.find((i) => i.itemID === item.itemID)?.count || 0"
-							:current-count="item.quantity"
+							:specific-items="item.specificItems"
+							:change-count="inventoryChangeCount(item)"
+							:current-count="itemQuantityTotal(item)"
 							:img-name="item.imgName"
-							:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
+							:item-deal="item.deal ? { actualCount: item.deal.actualCount, adjustedCount: item.deal.adjustedCount } : {}"
 							:item-i-d="item.itemID"
-							:name="item.name"
-							:category="item.categoryName"
+							:name="item.itemName"
+							:category="item.category.categoryName"
 						/>
-					</li>
-				</ul>
+						</li>
+					</ul>
+					<SharedTextBase v-else class="block text-center">No archived items found</SharedTextBase>
+				</UCard>
 			</section>
 		</NuxtLayout>
 	</div>
@@ -81,13 +92,26 @@ const { data: items } = await useFetch("/api/student/inventory/items", {
 
 const toggleOptions = ref(["In Stock", "Deal", "Archived"])
 const toggleItems = ref([])
+const itemLabelOptions = ["Gluten Free", "Halal", "Kosher", "Vegan", "Vegetarian"]
+const selectedItemLabels = ref<string[]>([])
+
+const itemQuantityTotal = (item: { specificItems: Array<{ quantity: string }> }) => {
+	return item.specificItems.reduce((sum, si) => sum + Number(si.quantity), 0)
+}
+
+const inventoryChangeCount = (item: { itemID: string }) => {
+	return inventoryStore.inventoryChangesItems
+		.filter((change) => change.specificItem.itemID === item.itemID)
+		.reduce((sum, change) => sum + change.amountChanged, 0)
+}
 
 const shownItems = computed(() => {
 	return items.value.filter((item) => {
 		return (
-			(!toggleItems.value.includes("Deal") || item.Deal !== null) &&
+			(!toggleItems.value.includes("Deal") || item.deal !== null) &&
 			(!toggleItems.value.includes("Archived") || item.archived === true) &&
-			(!toggleItems.value.includes("In Stock") || item.quantity > 0)
+			(!toggleItems.value.includes("In Stock") || itemQuantityTotal(item) > 0) &&
+			(selectedItemLabels.value.length === 0 || item.specificItems.some((product) => product.itemLabels.some((label) => selectedItemLabels.value.includes(label.itemLabelName))))
 		)
 	})
 })
@@ -95,7 +119,7 @@ const shownItems = computed(() => {
 const categoryItems = computed(() => {
 	return (
 		shownItems.value?.filter((item) => {
-			const itemCategory = item.categoryName?.trim().toLowerCase() || ""
+			const itemCategory = item.category.categoryName?.trim().toLowerCase() || ""
 			const currentCategoryLower = currentCategory?.trim().toLowerCase() || ""
 			return itemCategory.includes(currentCategoryLower)
 		}) || []
@@ -108,14 +132,14 @@ const sortedItems = computed(() => {
 	}
 	const sorted = [...categoryItems.value]
 	if (sortOption.value === "Alphabetical") {
-		sorted.sort((a, b) => a.name.localeCompare(b.name))
+		sorted.sort((a, b) => a.itemName.localeCompare(b.itemName))
 	} else if (sortOption.value === "Quantity") {
-		sorted.sort((a, b) => b.quantity - a.quantity)
+		sorted.sort((a, b) => itemQuantityTotal(b) - itemQuantityTotal(a))
 	}
 	return sorted
 })
 
-const { query, filtered } = useFuzzySearch(sortedItems, { searchKeys: ["name"] })
+const { query, filtered } = useFuzzySearch(sortedItems, { searchKeys: ["itemName", "specificItems.productName", "specificItems.itemLabels.itemLabelName"] })
 
 const shownActiveItems = computed(() => {
 	return filtered.value.filter((item) => {

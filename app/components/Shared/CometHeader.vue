@@ -119,7 +119,12 @@
 						header: 'bg-utd-orange',
 					}"
 				>
-					<UButton variant="ghost" class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent">
+					<UButton
+						variant="ghost"
+						class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent"
+						aria-label="Open cart"
+						@click="cartStore.cartView = true"
+					>
 						<ShoppingCartIcon :cart-view="cartStore.cartView" :cart-disabled="false" :cart-total-count="cartStore.cartTotalCount" />
 					</UButton>
 

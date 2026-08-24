@@ -23,6 +23,13 @@ export default defineSafeHandler(async (event) => {
 					itemName,
 					categoryID,
 					archived: archived === "true",
+					specificItems: {
+						create: {
+							productName: "Default",
+							imgName: "",
+							quantity: 0,
+						},
+					},
 				},
 			})
 			await tx.auditLog.create({

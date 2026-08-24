@@ -1,76 +1,158 @@
 <template>
 	<UContainer>
-		<div v-if="inventoryStore.hasInventoryChanges === false" class="py-12 text-center">
-			<SharedTextBase>No changes to review</SharedTextBase>
-		</div>
-		<div v-else>
-			<SharedGroupedCollapsible :groups="inventoryStore.inventoryChangesItemsCategorized" :get-key="(item) => item.itemID" :default-open="true">
-				<template #header="{ group, open }">
-					<div class="flex flex-col gap-2">
-						<SharedButtonPositiveAction
-							:text="group"
-							:trailing-icon="icons['chevronDown']"
-							block
-							class="group w-full rounded-lg"
-							:ui="{
-								trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200',
-							}"
+		<Transition name="slide" mode="out-in">
+			<div :key="view" class="space-y-4">
+				<InventoryIntakeSessionStartForm v-if="view === 'create'" :sources="sources ?? []" @cancel="view = 'review'" @started="handleSessionStarted" />
+				<template v-else>
+					<UCard>
+						<div class="flex items-center justify-between gap-2">
+							<SharedTextCardTitle>Inventory Intake Session</SharedTextCardTitle>
+							<UButton icon="i-lucide-plus" label="Start session" color="secondary" @click="view = 'create'" />
+						</div>
+						<USelectMenu
+							v-model="selectedSessionID"
+							:items="inventoryStore.activeIntakeSessions"
+							value-key="inventoryIntakeSessionID"
+							label-key="inventoryIntakeSessionName"
+							placeholder="Select a session"
+							class="mt-2 w-full"
 						/>
+						<SharedTextBaseSecondary v-if="selectedSession" class="mt-2">
+							{{ selectedSession.sourceName }} · {{ selectedSession.notes || "No notes" }}
+						</SharedTextBaseSecondary>
+						<UButton
+							v-if="selectedSession"
+							label="Clear Session"
+							icon="i-lucide-x"
+							color="neutral"
+							variant="ghost"
+							class="mt-2"
+							@click="inventoryStore.clearIntakeSession()"
+						/>
+					</UCard>
+					<div v-if="inventoryStore.hasInventoryChanges">
+						<div class="flex justify-end">
+							<UButtonGroup>
+								<UButton
+									label="Incremental"
+									color="neutral"
+									:variant="changeView === 'incremental' ? 'solid' : 'outline'"
+									@click="changeView = 'incremental'"
+								/>
+								<UButton
+									label="Aggregated"
+									color="neutral"
+									:variant="changeView === 'aggregated' ? 'solid' : 'outline'"
+									@click="changeView = 'aggregated'"
+								/>
+							</UButtonGroup>
+						</div>
+						<div v-if="changeView === 'incremental'" class="space-y-3">
+							<InventoryReviewItemCard
+								v-for="inventoryItem in inventoryStore.inventoryChangesItems"
+								:key="inventoryItem.InventoryIntakeSessionItemChangeID"
+								:name="specificItemName(inventoryItem.specificItem)"
+								:img-name="inventoryItem.specificItem.imgName"
+								:item-deal="
+									inventoryItem.specificItem.item.deal
+										? {
+												actualCount: inventoryItem.specificItem.item.deal.actualCount,
+												adjustedCount: inventoryItem.specificItem.item.deal.adjustedCount,
+											}
+										: {}
+								"
+								:item-i-d="inventoryItem.specificItemID"
+								:change-count="inventoryItem.amountChanged"
+							/>
+						</div>
+						<SharedGroupedCollapsible
+							v-else
+							:groups="inventoryStore.inventoryChangesItemsAggregatedCategorized"
+							:get-key="(item) => item.specificItemID"
+							:default-open="true"
+						>
+							<template #header="{ group, open }">
+								<div class="flex flex-col gap-2">
+									<SharedButtonPositiveAction
+										:text="group"
+										:trailing-icon="icons['chevronDown']"
+										block
+										class="group w-full rounded-lg"
+										:ui="{
+											trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200',
+										}"
+									/>
+								</div>
+							</template>
+
+							<template #item="{ item: inventoryItem }">
+								<InventoryReviewItemCard
+									:key="inventoryItem.specificItemID"
+									:name="specificItemName(inventoryItem.specificItem)"
+									:img-name="inventoryItem.specificItem.imgName"
+									:item-deal="
+										inventoryItem.specificItem.item.deal
+											? {
+													actualCount: inventoryItem.specificItem.item.deal.actualCount,
+													adjustedCount: inventoryItem.specificItem.item.deal.adjustedCount,
+												}
+											: {}
+									"
+									:item-i-d="inventoryItem.specificItemID"
+									:change-count="inventoryItem.amountChanged"
+								/>
+							</template>
+						</SharedGroupedCollapsible>
+
+						<div class="flex justify-center pt-6">
+							<SharedButtonPositiveAction text="Submit" @click="inventoryStore.submitChanges()" />
+						</div>
 					</div>
 				</template>
-
-				<template #item="{ item: inventoryItem }">
-					<InventoryReviewItemCard
-						:key="inventoryItem.id"
-						:name="inventoryItem.Item.name"
-						:img-name="inventoryItem.Item.imgName"
-						:item-deal="
-							inventoryItem.Item.Deal
-								? { actualCount: inventoryItem.Item.Deal.actualCount, adjustedCount: inventoryItem.Item.Deal.adjustedCount }
-								: {}
-						"
-						:item-i-d="inventoryItem.id"
-						:quantity="inventoryItem.Item.quantity"
-						:change-count="inventoryItem.count"
-					/>
-				</template>
-			</SharedGroupedCollapsible>
-
-			<UCard class="mt-4">
-				<div class="flex items-center justify-between">
-					<SharedTextCardTitle> Source Information </SharedTextCardTitle>
-					<UButton class="text-xs" @click="navigateTo('/admin/manage/sources')">Add Source</UButton>
-				</div>
-				<USelectMenu
-					v-model="selectedSource"
-					:items="sources || []"
-					value-key="sourceID"
-					label-key="name"
-					ignore-filter
-					:icon="icons['sources']"
-					placeholder="Select a source"
-					class="mt-2 w-full"
-				/>
-				<!-- <div v-if="fields.length > 0" class="flex flex-col gap-3 lg:flex-row">
-				<UFormGroup v-for="fieldName in fields" :key="fieldName" :label="fieldName" class="w-72">
-					<UInput v-model="fieldInputs[fieldName]" :placeholder="'Enter data'" />
-				</UFormGroup>
-			</div> -->
-			</UCard>
-
-			<div class="flex justify-center pt-6">
-				<SharedButtonPositiveAction v-if="!selectedSource" text="No source selected" disabled />
-				<SharedButtonPositiveAction v-else text="Submit" @click="inventoryStore.submitChanges(selectedSource, fieldInputs)" />
 			</div>
-		</div>
+		</Transition>
 	</UContainer>
 </template>
 
 <script lang="ts" setup>
-const selectedSource = ref("")
-const { data: sources } = await useFetch("/api/volunteer/inventory/sources")
-const { data: items } = await useFetch("/api/student/inventory/items")
-const fields = ref<string[]>([])
-const fieldInputs = ref<Record<string, string>>({})
+const { data: sources } = await useFetch("/api/volunteer/inventory/source")
 const inventoryStore = useInventoryStore()
+const view = ref<"review" | "create">("review")
+const changeView = ref<"incremental" | "aggregated">("aggregated")
+const selectedSessionID = computed({
+	get: () => inventoryStore.selectedIntakeSessionID,
+	set: (inventoryIntakeSessionID) => {
+		if (inventoryIntakeSessionID) void inventoryStore.selectIntakeSession(inventoryIntakeSessionID)
+	},
+})
+await inventoryStore.getActiveIntakeSessions()
+
+const selectedSession = computed(() =>
+	inventoryStore.activeIntakeSessions.find((session) => session.inventoryIntakeSessionID === inventoryStore.selectedIntakeSessionID)
+)
+const handleSessionStarted = async (inventoryIntakeSessionID: string) => {
+	await inventoryStore.getActiveIntakeSessions()
+	await inventoryStore.selectIntakeSession(inventoryIntakeSessionID)
+	view.value = "review"
+}
+
+const specificItemName = (specificItem: { productName: string; item: { itemName: string } }) =>
+	`${specificItem.productName == "Default" ? specificItem.item.itemName : specificItem.productName}`
 </script>
+
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+	transition: all 0.25s ease;
+}
+
+.slide-enter-from {
+	transform: translateX(100%);
+	opacity: 0;
+}
+
+.slide-leave-to {
+	transform: translateX(-100%);
+	opacity: 0;
+}
+</style>

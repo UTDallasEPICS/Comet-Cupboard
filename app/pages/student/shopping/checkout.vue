@@ -65,7 +65,11 @@
 								class="mt-4"
 							/>
 							<div class="mt-4 flex flex-col gap-4">
-								<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+								<SharedGroupedCollapsible
+									:groups="groupedCartItems"
+									:get-key="(item) => item.itemID"
+									:default-open="true"
+								>
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
 											<SharedButtonPositiveAction
@@ -80,27 +84,14 @@
 										</div>
 									</template>
 
-									<template #item="{ item: cartItem }">
+									<template #item="{ item }">
 										<ShoppingCartAdjustCountItemCard
-											:item-deal="
-												cartItem.Item.Deal
-													? {
-															actualCount: cartItem.Item.Deal.actualCount,
-															adjustedCount: cartItem.Item.Deal.adjustedCount,
-														}
-													: {}
-											"
 											class="w-full"
-											:count="cartItem.count"
-											:img-name="cartItem.Item.imgName"
-											:item-i-d="cartItem.itemID"
-											:name="cartItem.Item.name"
-											:count-adjustment="countAdjustments[cartItem.itemID] || 0"
-											@update:model-value="
-												(countAdjustment) => {
-													countAdjustments[cartItem.itemID] = countAdjustment
-												}
-											"
+											:item-deal="item.itemDeal"
+											:name="item.name"
+											:specific-items="item.specificItems"
+											:item-final-count="itemFinalCounts[item.itemID] ?? 0"
+											@update:adjustment="(specificItemID, countAdjustment) => (countAdjustments[specificItemID] = countAdjustment)"
 										/>
 									</template>
 								</SharedGroupedCollapsible>
@@ -128,7 +119,11 @@
 								class="mt-4"
 							/>
 							<div class="mt-4 flex flex-col gap-4">
-								<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+								<SharedGroupedCollapsible
+									:groups="groupedCartItems"
+									:get-key="(item) => item.itemID"
+									:default-open="true"
+								>
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
 											<SharedButtonPositiveAction
@@ -143,22 +138,13 @@
 										</div>
 									</template>
 
-									<template #item="{ item: cartItem }">
+									<template #item="{ item }">
 										<ShoppingCartReviewItemCard
-											:item-deal="
-												cartItem.Item.Deal
-													? {
-															actualCount: cartItem.Item.Deal.actualCount,
-															adjustedCount: cartItem.Item.Deal.adjustedCount,
-														}
-													: {}
-											"
 											class="w-full"
-											:count="cartItem.count"
-											:img-name="cartItem.Item.imgName"
-											:item-i-d="cartItem.itemID"
-											:name="cartItem.Item.name"
-											:count-adjustment="countAdjustments[cartItem.itemID] || 0"
+											:item-deal="item.itemDeal"
+											:name="item.name"
+											:specific-items="item.specificItems"
+											:item-final-count="itemFinalCounts[item.itemID] ?? 0"
 										/>
 									</template>
 								</SharedGroupedCollapsible>
@@ -173,7 +159,7 @@
 							<USeparator class="mb-4" />
 
 							<UAlert
-								:title="`Your cart has been submitted and is awaiting verification. A staff member will review the items and finalize your request${loadingDots}`"
+								title="Your cart has been submitted and is awaiting verification. A staff member will review the items and finalize your request."
 								:icon="icons['information']"
 								color="neutral"
 								variant="outline"
@@ -181,7 +167,11 @@
 							<UProgress :indeterminate="true" class="mt-4" />
 
 							<div class="mt-4 flex flex-col gap-4">
-								<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+								<SharedGroupedCollapsible
+									:groups="groupedCartItems"
+									:get-key="(item) => item.itemID"
+									:default-open="true"
+								>
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
 											<SharedButtonPositiveAction
@@ -196,22 +186,13 @@
 										</div>
 									</template>
 
-									<template #item="{ item: cartItem }">
+									<template #item="{ item }">
 										<ShoppingCartReviewItemCard
-											:item-deal="
-												cartItem.Item.Deal
-													? {
-															actualCount: cartItem.Item.Deal.actualCount,
-															adjustedCount: cartItem.Item.Deal.adjustedCount,
-														}
-													: {}
-											"
 											class="w-full"
-											:count="cartItem.count"
-											:img-name="cartItem.Item.imgName"
-											:item-i-d="cartItem.itemID"
-											:name="cartItem.Item.name"
-											:count-adjustment="cartItem.countAdjustment"
+											:item-deal="item.itemDeal"
+											:name="item.name"
+											:specific-items="item.specificItems"
+											:item-final-count="itemFinalCounts[item.itemID] ?? 0"
 										/>
 									</template>
 								</SharedGroupedCollapsible>
@@ -324,12 +305,12 @@ const countAdjustments = ref<Record<string, number>>({})
 
 const combineCartAndTemporaryAdjustments = computed(() => {
 	return {
-		CartItems:
+		cartItems:
 			cartStore.categorizedCartItems && Object.keys(cartStore.categorizedCartItems).length > 0
 				? Object.values(cartStore.categorizedCartItems)
 						.flatMap((items) => items)
 						.map((cartItem) => {
-							const adjustment = countAdjustments.value[cartItem.itemID] || 0
+							const adjustment = countAdjustments.value[cartItem.specificItemID] || 0
 							return {
 								...cartItem,
 								countAdjustment: adjustment,
@@ -339,7 +320,50 @@ const combineCartAndTemporaryAdjustments = computed(() => {
 	}
 })
 
-const { loadingDots } = useLoadingDots()
+const groupedCartItems = computed<Record<string, any[]>>(() => {
+	const categoryGroups = Object.groupBy(
+		combineCartAndTemporaryAdjustments.value.cartItems,
+		(cartItem: any) => cartItem.specificItem?.item?.category?.categoryName ?? "Uncategorized"
+	) as Record<string, any[]>
+
+	return Object.fromEntries(
+		Object.entries(categoryGroups).map(([categoryName, categoryCartItems]) => {
+			const itemGroups = Object.groupBy(
+				categoryCartItems ?? [],
+				(cartItem: any) => cartItem.specificItem?.itemID ?? cartItem.specificItem?.item?.itemID
+			) as Record<string, any[]>
+
+			return [
+				categoryName,
+				Object.entries(itemGroups).map(([itemID, itemCartItems]) => {
+					const cartItems = itemCartItems ?? []
+					const firstCartItem: any = cartItems[0]
+					return {
+						itemID,
+						name: firstCartItem.specificItem.item.itemName,
+						itemDeal: firstCartItem.specificItem.item.deal ?? {},
+						specificItems: cartItems.map((cartItem: any) => ({
+							specificItemID: cartItem.specificItemID,
+							productName: cartItem.specificItem.productName,
+							imgName: cartItem.specificItem.imgName,
+							count: cartItem.count,
+							countAdjustment: cartItem.countAdjustment,
+						})),
+					}
+				}),
+			]
+		})
+	)
+})
+
+const itemFinalCounts = computed(() => cartItemFinalCounts(combineCartAndTemporaryAdjustments.value))
+const itemFinalCount = (cartItem: any) => {
+	const itemID = cartItem.specificItem?.itemID ?? cartItem.specificItem?.item?.itemID
+	const firstCartItem = combineCartAndTemporaryAdjustments.value.cartItems.find(
+		(item: any) => (item.specificItem?.itemID ?? item.specificItem?.item?.itemID) === itemID
+	)
+	return firstCartItem?.specificItemID === cartItem.specificItemID && itemID ? itemFinalCounts.value[itemID] : undefined
+}
 
 onBeforeUnmount(() => {
 	unsubscribe()
@@ -368,8 +392,8 @@ const submitCart = async () => {
 					.flatMap((items) => items)
 					.map((cartItem) => {
 						return {
-							itemID: cartItem.itemID,
-							countAdjustment: countAdjustments.value[cartItem.itemID] || 0,
+							specificItemID: cartItem.specificItemID,
+							countAdjustment: countAdjustments.value[cartItem.specificItemID] || 0,
 						}
 					})
 			: []

@@ -1,100 +1,106 @@
 <template>
-	<UCollapsible v-model:open="isOpen" class="w-full min-w-72" disabled>
-		<UChip
-			:text="changeCount > 0 ? `+${changeCount}` : `${changeCount}`"
-			:show="changeCount != 0"
-			:ui="{
-				base: 'h-[24px] min-w-[24px] text-[12px]',
-			}"
-			class="w-full"
-		>
-			<UCard
-				:class="`${changeCount != 0 ? 'border-utd-orange' : ''} relative w-full min-w-72 shadow-md`"
-				:ui="{
-					body: 'p-0 py-0 sm:p-0 sm:py-0',
-				}"
-			>
-				<div class="absolute top-2 right-2 flex flex-row gap-2">
-					<SharedDealBadge :item-deal="itemDeal" />
-					<UDropdownMenu
-						:items="editMenuItems"
-						:content="{
-							align: 'end',
-							side: 'bottom',
-						}"
-					>
-						<UButton :icon="icons['ellipsesActions']" size="sm" color="neutral" variant="ghost" />
-					</UDropdownMenu>
-				</div>
-
-				<div class="flex flex-row items-center gap-2">
-					<img
-						:src="`/api/public/image/${imgName}`"
-						:alt="name"
-						class="border-border-soft aspect-square h-full w-20 rounded-l-lg border object-cover"
-					/>
-
-					<div class="flex w-full flex-col p-2">
-						<div class="flex flex-row items-center justify-between">
-							<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
-						</div>
-
-						<div class="flex flex-row items-center justify-between">
-							<UBadge :label="`QTY: ${currentCount}`" variant="outline" color="neutral" />
-						</div>
-					</div>
-				</div>
-				<UButton :icon="icons['chevronDown']" size="sm" variant="ghost" color="neutral" class="absolute right-2 bottom-2" @click="isOpen = !isOpen" />
-			</UCard>
-		</UChip>
-		<template #content>
-			<div class="border-utd-green flex h-min gap-1 rounded-3xl">
-				<div class="border-utd-green ml-auto flex w-fit items-center overflow-hidden rounded-md border bg-white">
-					<SharedButtonBaseCustomColor
-						custom-color="utd-green"
-						content-color="white"
-						button-variant="ghost"
-						:ui="{
-							base: 'rounded-none px-2 h-full',
-						}"
-						:icon="icons.subtract"
-						size="sm"
-						@click="decrement"
-					/>
-					<UInputNumber
-						v-model="adjustAmount"
-						:increment="false"
-						:decrement="false"
-						:min="1"
-						:max="99"
-						class="w-10"
-						:ui="{
-							root: 'border-0 shadow-none',
-							base: 'text-center',
-						}"
-						variant="ghost"
-						color="neutral"
-						@blur="ensureValid"
-					/>
-					<SharedButtonBaseCustomColor
-						custom-color="utd-green"
-						content-color="white"
-						button-variant="ghost"
-						:ui="{
-							base: 'rounded-none px-2 h-full',
-						}"
-						:icon="icons.add"
-						size="sm"
-						@click="increment"
-					/>
-				</div>
+	<UChip
+		:text="changeCount > 0 ? `+${changeCount}` : `${changeCount}`"
+		:show="changeCount != 0"
+		:ui="{
+			base: 'h-[24px] min-w-[24px] text-[12px]',
+		}"
+		class="w-full"
+	>
+		<UCard :class="`${changeCount != 0 ? 'border-utd-orange' : ''} relative w-full min-w-72 overflow-hidden shadow-md`" :ui="{ body: 'p-0 sm:p-0' }">
+			<div class="absolute top-2 right-2 flex flex-row gap-2 z-10">
+				<SharedDealBadge :item-deal="itemDeal" />
+				<UButton :to="`/volunteer/inventory/${category}/${itemID}/edit`" :icon="icons.edit" size="sm" color="neutral" variant="ghost" />
 			</div>
-		</template>
-	</UCollapsible>
+
+			<div class="relative flex min-h-24 items-center gap-4 p-4">
+				<img :src="`/api/public/image/${primaryImageName}`" :alt="name" class="border-border-soft h-16 w-16 shrink-0 rounded-lg border object-cover" />
+				<div>
+					<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
+					<SharedTextBaseSecondary>{{ currentCount }} in stock</SharedTextBaseSecondary>
+				</div>
+				<UButton
+					:trailing-icon="isOpen ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+					size="sm"
+					variant="ghost"
+					color="neutral"
+					class="absolute right-2 bottom-1"
+					label="Restock item"
+					@click="isOpen = !isOpen"
+				/>
+			</div>
+			<UCollapsible v-model:open="isOpen">
+				<template #content>
+					<USeparator />
+					<SharedTextBaseSecondary class="mt-2 text-center">Select a specific item to restock</SharedTextBaseSecondary>
+
+					<div v-if="normalizedSpecificItems.length" class="border-border-soft">
+						<div class="space-y-2 p-2">
+							<UButton
+								v-for="product in orderedSpecificItems"
+								:key="product.specificItemID"
+								color="neutral"
+								variant="ghost"
+								class="border-border-soft w-full border"
+								:class="{ 'border-secondary bg-secondary/10': restockSpecificItemID === product.specificItemID }"
+								@click="restockSpecificItemID = product.specificItemID"
+							>
+								<div class="flex w-full flex-row items-center gap-4">
+									<img
+										:src="`/api/public/image/${product.imgName}`"
+										:alt="`${name} (${product.productName})`"
+										class="border-border-soft h-12 w-12 shrink-0 rounded-md border object-cover"
+									/>
+									<div class="text-left">
+										<SharedTextBaseSecondary
+											>{{ product.productName }}
+											{{ restockSpecificItemID === product.specificItemID ? "(Selected)" : "" }}</SharedTextBaseSecondary
+										>
+										<SharedTextBaseSecondary>
+											{{ product.quantity }} in stock
+											{{
+												specificItemTotalInventoryIntakeSessionChange(product.specificItemID) !== 0
+													? `(${specificItemTotalInventoryIntakeSessionChange(product.specificItemID)} to restock)`
+													: ""
+											}}
+										</SharedTextBaseSecondary>
+										<div class="flex flex-row gap-2">
+											<UBadge
+												v-for="label in product.itemLabels"
+												:key="label.itemLabelName"
+												:label="label.itemLabelName"
+												color="neutral"
+												variant="subtle"
+												size="md"
+											/>
+										</div>
+									</div>
+								</div>
+							</UButton>
+						</div>
+						<form class="p-2" @submit.prevent="confirmRestock">
+							<USeparator class="mb-4" />
+							<div class="flex flex-wrap items-center justify-end gap-2">
+								<USelect v-model="restockDirection" :items="['+', '-']" class="w-16" aria-label="Change direction" />
+								<UInput v-model.number="restockAmount" type="number" min="1" step="1" class="w-16" aria-label="Change amount" />
+								<UButton type="submit" :loading="isSaving" :disabled="isSaving || !restockSpecificItemID" label="Confirm" color="secondary" />
+							</div>
+						</form>
+					</div>
+				</template>
+			</UCollapsible>
+		</UCard>
+	</UChip>
 </template>
 
 <script lang="ts" setup>
-import type { DropdownMenuItem } from "@nuxt/ui"
+type SpecificItem = {
+	specificItemID: string
+	productName: string
+	imgName: string
+	quantity: number
+	itemLabels: { itemLabelName: string }[]
+}
 
 const props = defineProps({
 	name: {
@@ -125,35 +131,39 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
+	specificItems: {
+		type: Array,
+		default: () => [],
+	},
 })
 
 const inventoryStore = useInventoryStore()
 
 const isOpen = ref(false)
 
-const editMenuItems = ref<DropdownMenuItem[]>([
-	{ label: "Edit", onClick: () => navigateTo(`/volunteer/inventory/${props.category}/${props.itemID}/edit`) },
-	{ label: "Item Deal", onClick: () => navigateTo(`/volunteer/inventory/${props.category}/${props.itemID}/deal`) },
-])
+const restockDirection = ref("+")
+const restockAmount = ref(1)
+const normalizedSpecificItems = computed(() => (Array.isArray(props.specificItems) ? props.specificItems : []) as SpecificItem[])
+const orderedSpecificItems = computed(() =>
+	[...normalizedSpecificItems.value].sort((first, second) => Number(second.productName === "Default") - Number(first.productName === "Default"))
+)
 
-const adjustAmount = ref(1)
-
-const increment = async () => {
-	await inventoryStore.changeInventorySessionItemCount(props.itemID, adjustAmount.value)
+const specificItemTotalInventoryIntakeSessionChange = (specificItemID: string) => {
+	return inventoryStore.inventoryChangesItems
+		.filter((change) => change.specificItemID === specificItemID)
+		.reduce((sum, change) => sum + change.amountChanged, 0)
 }
 
-const decrement = async () => {
-	await inventoryStore.changeInventorySessionItemCount(props.itemID, -adjustAmount.value)
-}
+const primaryImageName = computed(() => orderedSpecificItems.value[0]?.imgName ?? "")
+const restockSpecificItemID = ref<string | undefined>(normalizedSpecificItems.value[0]?.specificItemID)
+const isSaving = ref(false)
 
-const displayChange = computed(() => {
-	const c = Number(props.changeCount || 0)
-	return c > 0 ? `+${c}` : `${c}`
-})
-
-const ensureValid = () => {
-	if (adjustAmount.value === null || adjustAmount.value === "" || isNaN(adjustAmount.value)) {
-		adjustAmount.value = 1
-	}
+const confirmRestock = async () => {
+	if (!restockSpecificItemID.value || !Number.isInteger(restockAmount.value) || restockAmount.value < 1) return
+	await inventoryStore.changeInventorySessionItemCount(
+		restockSpecificItemID.value,
+		restockDirection.value === "+" ? restockAmount.value : -restockAmount.value
+	)
+	if (inventoryStore.selectedIntakeSessionID) isOpen.value = false
 }
 </script>

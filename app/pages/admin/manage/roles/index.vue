@@ -18,20 +18,24 @@
 				</div>
 				<USeparator class="my-4" />
 
-				<ul class="my-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					<li v-for="user in paginatedUsers" :key="user.userID">
-						<ManageUserRoleItemCard :user-i-d="user.userID" :display-name="user.displayName" :role="user.role" />
-					</li>
-				</ul>
-				<UPagination
-					v-model:page="page"
-					:items-per-page="pageSize"
-					:total="filtered.length"
-					class="w-full"
-					:ui="{
-						list: 'flex items-center justify-center gap-1',
-					}"
-				/>
+				<UCard>
+					<SharedTextCardTitle>Users</SharedTextCardTitle>
+					<USeparator class="my-4" />
+					<ul class="my-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+						<li v-for="user in paginatedUsers" :key="user.userID">
+							<ManageUserRoleItemCard :user-i-d="user.userID" :display-name="user.displayName" :role="user.role" @role-changed="refresh" />
+						</li>
+					</ul>
+					<UPagination
+						v-model:page="page"
+						:items-per-page="pageSize"
+						:total="filtered.length"
+						class="w-full"
+						:ui="{
+							list: 'flex items-center justify-center gap-1',
+						}"
+					/>
+				</UCard>
 			</section>
 		</NuxtLayout>
 	</div>
@@ -40,7 +44,7 @@
 <script lang="ts" setup>
 definePageMeta({ layout: false })
 
-const { data: users } = await useFetch("/api/admin/user/users", {
+const { data: users, refresh } = await useFetch("/api/admin/user/users", {
 	method: "GET",
 })
 

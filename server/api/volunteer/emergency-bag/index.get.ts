@@ -10,15 +10,16 @@ const schema = z.object({
 export default defineSafeHandler(async (event) => {
 	const { emergencyBagID } = validateQuery(event, schema)
 
+	const canViewPrivateBags = Boolean(event.context.permissions["ADMIN"])
 	const emergencyBags = await prisma.emergencyBag.findMany({
 		where: {
-			private: false,
+			...(!canViewPrivateBags ? { private: false } : {}),
 			...(emergencyBagID ? { emergencyBagID } : {}),
 		},
 		include: {
 			emergencyBagItems: {
 				include: {
-					specificItem: { include: { item: true } },
+					specificItem: { include: { item: true, itemLabels: true } },
 				},
 			},
 			emergencyBagLabels: true,

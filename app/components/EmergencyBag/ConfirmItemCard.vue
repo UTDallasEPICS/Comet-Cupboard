@@ -10,6 +10,10 @@
 
 			<div class="flex w-full flex-col p-2">
 				<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
+				<SharedTextBaseSecondary v-if="productName">{{ productName }}</SharedTextBaseSecondary>
+				<div v-if="itemLabels.length" class="mt-1 flex flex-wrap gap-1">
+					<UBadge v-for="label in itemLabels" :key="label" :label="label" color="neutral" variant="outline" />
+				</div>
 			</div>
 
 			<div class="flex flex-row items-center justify-between px-4">
@@ -28,9 +32,10 @@ const emit = defineEmits<{
 
 const props = defineProps<{
 	name: string
+	productName?: string
 	imgName: string
 	itemID: string
-	itemDeal: Object
-	itemCount: Number
+	itemCount: number
+	itemLabels: string[]
 }>()
 </script>

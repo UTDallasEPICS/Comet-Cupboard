@@ -40,7 +40,7 @@ const { data: pendingCarts } = await useFetch("/api/volunteer/cart/carts", {
 	},
 })
 
-const pendingCartsList = ref(pendingCarts.value)
+const pendingCartsList = ref(pendingCarts.value ?? [])
 
 const pendingPublicCodesAndAdjQTY = computed(() => {
 	if (!pendingCartsList.value) {

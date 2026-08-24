@@ -1,47 +1,54 @@
 <template>
 	<div>
 		<NuxtLayout name="main" title="Manage Emergency Bags" :back-navigation="{ text: 'Back to Dashboard', to: '/volunteer' }">
-			<USeparator class="my-4" />
-			<div class="flex items-center justify-center">
-				<UCard class="w-full max-w-100">
-						<div class="flex flex-row flex-nowrap items-center gap-2">
-							<UInput v-model="searchQuery" type="text" :icon="icons['search']" placeholder="Search bags" class="relative grow">
-								<UButton
-									:icon="icons['add']"
-									variant="ghost"
-									color="neutral"
-									class="bg-utd-green absolute right-0 text-white"
-									@click="navigateTo('/volunteer/emergency-bag/create')"
-								/>
-							</UInput>
-							<UPopover>
-								<UButton :icon="icons['sortFilter']" variant="ghost" color="neutral" size="md" />
+			<section>
+				<div class="flex flex-row flex-nowrap items-center gap-2">
+					<UInput v-model="searchQuery" type="text" :icon="icons['search']" placeholder="Search bags" class="relative grow">
+						<UButton
+							:icon="icons['add']"
+							color="secondary"
+							label="Add"
+							class="absolute right-0"
+							@click="navigateTo('/volunteer/emergency-bag/create')"
+						/>
+					</UInput>
+					<UPopover>
+						<UButton :icon="icons['sortFilter']" variant="ghost" color="neutral" size="md" />
 
-								<template #content>
-									<div class="flex w-64 flex-col items-start gap-2 p-4">
-										<SharedTextBase class="w-full font-semibold">Filter</SharedTextBase>
-										<USeparator />
-										<UCheckboxGroup v-model="toggleBags" :items="toggleOptions" orientation="vertical" />
-										<SharedTextBase class="w-full font-semibold">Sort</SharedTextBase>
-										<USeparator />
-										<USelect v-model="sortOption" :items="sortOptions" class="w-full max-w-md grow" />
-									</div>
-								</template>
-							</UPopover>
-						</div>
-					<div class="w-full flex flex-row justify-end mt-2 mb-4">
+						<template #content>
+							<div class="flex w-64 flex-col items-start gap-2 p-4">
+								<SharedTextBase class="w-full font-semibold">Filter</SharedTextBase>
+								<USeparator />
+								<UCheckboxGroup v-model="toggleBags" :items="toggleOptions" orientation="vertical" />
+								<SharedTextBase class="w-full font-semibold">Location</SharedTextBase>
+								<USeparator />
+								<UCheckboxGroup v-model="locationFilter" :items="locationFilterOptions" orientation="vertical" />
+								<SharedTextBase class="w-full font-semibold">Bag Labels</SharedTextBase>
+								<USeparator />
+								<UCheckboxGroup v-model="emergencyBagLabelFilter" :items="emergencyBagLabelOptions" orientation="vertical" />
+								<SharedTextBase class="w-full font-semibold">Sort</SharedTextBase>
+								<USeparator />
+								<USelect v-model="sortOption" :items="sortOptions" class="w-full max-w-md grow" />
+							</div>
+						</template>
+					</UPopover>
+				</div>
+				<USeparator class="my-4" />
+				<UCard>
+					<div class="flex items-center justify-between gap-3">
+						<SharedTextSectionTitle>Emergency Bags</SharedTextSectionTitle>
 						<UPopover>
 							<UButton label="Move Bag" class="bg-utd-green" trailing-icon="i-lucide-arrow-left-right" />
 
 							<template #content>
 								<div class="flex flex-col gap-2 p-4">
 									<div>
-										<p>Move from:</p>
-										<span>{{ selectedLocationLabel }}</span>
+										<SharedTextBase>Move from:</SharedTextBase>
+										<SharedTextBase>{{ selectedLocationLabel }}</SharedTextBase>
 										<USeparator />
 									</div>
 									<div>
-										<p>To:</p>
+										<SharedTextBase>To:</SharedTextBase>
 										<UDropdownMenu :items="items" :ui="{ content: 'w-48' }">
 											<UButton label="Choose Location" color="neutral" variant="outline" trailing-icon="i-lucide-chevron-down" />
 										</UDropdownMenu>
@@ -50,10 +57,9 @@
 							</template>
 						</UPopover>
 					</div>
-
-					<div v-if="emergencyBags.length === 0" class="flex flex-col items-center justify-center gap-y-4 pt-4">
-						<SharedTextBase> No bags have been created </SharedTextBase>
-						<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
+					<USeparator class="my-4" />
+					<div v-if="groupedBags.length === 0" class="flex flex-col items-center justify-center gap-y-4 py-8">
+						<SharedTextBase>{{ emergencyBags?.length ? "No bags match the current filters" : "No bags have been created" }}</SharedTextBase>
 						<UButton
 							label="Create new bag"
 							color="neutral"
@@ -62,41 +68,62 @@
 							@click="navigateTo('/volunteer/emergency-bag/create')"
 						/>
 					</div>
-					<div class="flex flex-col gap-2">
-						<EmergencyBagTableBagCard v-for="bag in sortedBags" :key="bag.bagID" v-model:selected="selected[bag.bagID]" :bag="bag" />
+					<div v-else class="flex w-full flex-col gap-6">
+						<section v-for="group in groupedBags" :key="group.locationName" class="space-y-3">
+							<div class="flex items-center gap-3">
+								<SharedTextSectionTitle>{{ group.locationName }}</SharedTextSectionTitle>
+								<UBadge :label="String(group.bags.length)" color="neutral" variant="subtle" />
+							</div>
+							<ul class="flex w-full flex-col gap-3">
+								<li v-for="bag in group.bags" :key="bag.emergencyBagID" class="w-full">
+									<EmergencyBagTableBagCard v-model:selected="selected[bag.emergencyBagID]" :bag="bag" />
+								</li>
+							</ul>
+						</section>
 					</div>
 				</UCard>
-			</div>
+			</section>
 		</NuxtLayout>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { h, resolveComponent } from "vue"
+import { resolveComponent } from "vue"
 definePageMeta({ layout: false })
 const UButton = resolveComponent("UButton")
 const targetLocation = ref<string | null>(null)
 const selected = ref<Record<string, boolean>>({})
 const searchQuery = ref("")
+const locationFilter = ref<string[]>([])
+const emergencyBagLabelFilter = ref<string[]>([])
 
-const { data: emergencyBags, refresh } = await useFetch("/api/volunteer/emergency-bag/emergencyBags")
+const { data: emergencyBags, refresh } = await useFetch("/api/volunteer/emergency-bag")
 
 const { data: locations } = await useFetch("/api/volunteer/location")
 
-const toggleOptions = ref(["Vegetarian", "Peanut Butter", "Private", "Public"])
+const toggleOptions = ref(["Private", "Public"])
 const toggleBags = ref<string[]>([])
 const sortOption = ref("Alphabetical")
-const sortOptions = ["Alphabetical", "Expiration Date", "Location", "Item Count"]
+const sortOptions = ["Alphabetical", "Expiration Date"]
+
+const locationFilterOptions = computed(() => [
+	"Unassigned",
+	...(locations.value ?? []).filter((location) => !location.archived).map((location) => location.locationName),
+])
+const emergencyBagLabelOptions = computed(() => {
+	const labels = (emergencyBags.value ?? []).flatMap((bag) => bag.emergencyBagLabels.map((label) => label.emergencyBagLabelName))
+	return [...new Set(labels)].sort((first, second) => first.localeCompare(second))
+})
 
 const shownBags = computed(() => {
 	if (!emergencyBags.value) return []
 	return emergencyBags.value.filter((bag) => {
-		return (
-			(!toggleBags.value.includes("Vegetarian") || bag.isVegetarian) &&
-			(!toggleBags.value.includes("Peanut Butter") || bag.hasPeanutButter) &&
-			(!toggleBags.value.includes("Private") || bag.privacy === "PRIVATE") &&
-			(!toggleBags.value.includes("Public") || bag.privacy === "PUBLIC")
-		)
+		const matchesPrivacy = toggleBags.value.length === 0 || (bag.private ? toggleBags.value.includes("Private") : toggleBags.value.includes("Public"))
+		const locationName = bag.location?.locationName ?? "Unassigned"
+		const matchesLocation = locationFilter.value.length === 0 || locationFilter.value.includes(locationName)
+		const bagLabels = bag.emergencyBagLabels.map((label) => label.emergencyBagLabelName)
+		const matchesLabels = emergencyBagLabelFilter.value.length === 0 || emergencyBagLabelFilter.value.some((label) => bagLabels.includes(label))
+		return matchesPrivacy && matchesLocation && matchesLabels
 	})
 })
 
@@ -108,29 +135,38 @@ const filteredBags = computed(() => {
 })
 
 const sortedBags = computed(() => {
-	if (!filteredBags.value) {
-		return []
-	}
 	const sorted = [...filteredBags.value]
 	if (sortOption.value === "Alphabetical") {
 		sorted.sort((a, b) => a.label.localeCompare(b.label))
 	} else if (sortOption.value === "Expiration Date") {
 		sorted.sort((a, b) => new Date(a.expiryDate).getTime() - new Date(b.expiryDate).getTime())
-	} else if (sortOption.value === "Location") {
-		sorted.sort((a, b) => (a.locationName ?? "Unassigned").localeCompare(b.locationName ?? "Unassigned"))
-	} else if (sortOption.value === "Item Count") {
-		sorted.sort((a, b) => a.EmergencyBagItems.length - b.EmergencyBagItems.length)
 	}
 	return sorted
+})
+
+const groupedBags = computed(() => {
+	const groups = new Map<string, typeof sortedBags.value>()
+	for (const bag of sortedBags.value) {
+		const locationName = bag.location?.locationName ?? "Unassigned"
+		groups.set(locationName, [...(groups.get(locationName) ?? []), bag])
+	}
+
+	return [...groups.entries()]
+		.sort(([firstLocation], [secondLocation]) => {
+			if (firstLocation === "Unassigned") return -1
+			if (secondLocation === "Unassigned") return 1
+			return firstLocation.localeCompare(secondLocation)
+		})
+		.map(([locationName, bags]) => ({ locationName, bags }))
 })
 
 const items = computed<DropdownMenuItem[]>(() =>
 	locations.value
 		.filter((loc) => !loc.archived)
 		.map((loc) => ({
-			label: loc.name,
+			label: loc.locationName,
 			onSelect: () => {
-				targetLocation.value = loc.name
+				targetLocation.value = loc.locationID
 				moveBag()
 			},
 		}))
@@ -138,10 +174,10 @@ const items = computed<DropdownMenuItem[]>(() =>
 
 const selectedBags = computed(() =>
 	(emergencyBags.value ?? [])
-		.filter((bag) => selected.value[bag.bagID])
+		.filter((bag) => selected.value[bag.emergencyBagID])
 		.map((bag) => ({
-			bagID: bag.bagID,
-			currentLocation: bag.locationName,
+			emergencyBagID: bag.emergencyBagID,
+			currentLocation: bag.location?.locationName,
 		}))
 )
 
@@ -166,11 +202,11 @@ const moveBag = async () => {
 	}
 
 	try {
-		const moveBag = await $fetch("/api/volunteer/emergency-bag/emergencyBags", {
-			method: "PATCH",
+		await $fetch("/api/volunteer/emergency-bag/multi-move", {
+			method: "PUT",
 			body: {
-				bagIDs: selectedBags.value.map((bag) => bag.bagID),
-				location: targetLocation.value,
+				bagIDs: selectedBags.value.map((bag) => bag.emergencyBagID),
+				locationID: targetLocation.value,
 			},
 		})
 

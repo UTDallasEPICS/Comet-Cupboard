@@ -97,11 +97,10 @@ CREATE TABLE "inventory_intake_session" (
 
 -- CreateTable
 CREATE TABLE "inventory_intake_session_item_change" (
+    "inventory_intake_session_item_change_id" TEXT NOT NULL PRIMARY KEY,
     "inventory_intake_session_id" TEXT NOT NULL,
     "specific_item_id" TEXT NOT NULL,
     "amount_changed" INTEGER NOT NULL,
-
-    PRIMARY KEY ("inventory_intake_session_id", "specific_item_id"),
     CONSTRAINT "inventory_intake_session_item_change_inventory_intake_session_id_fkey" FOREIGN KEY ("inventory_intake_session_id") REFERENCES "inventory_intake_session" ("inventory_intake_session_id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "inventory_intake_session_item_change_specific_item_id_fkey" FOREIGN KEY ("specific_item_id") REFERENCES "specific_item" ("specific_item_id") ON DELETE RESTRICT ON UPDATE CASCADE
 );

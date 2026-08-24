@@ -24,11 +24,11 @@
 					<li v-for="item in filtered" :key="item.itemID">
 						<ShoppingItemCard
 							type-of-card="SHOPPING"
-							:img-name="item.imgName"
-							:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
+							:item-deal="item.deal ? { actualCount: item.deal.actualCount, adjustedCount: item.deal.adjustedCount } : {}"
 							:item-i-d="item.itemID"
-							:name="item.name"
-							:quantity="item.quantity"
+							:name="item.itemName"
+							:quantity="itemQuantityTotal(item)"
+							:specific-items="item.specificItems"
 						/>
 					</li>
 				</ul>
@@ -52,16 +52,19 @@ const { data: items } = await useFetch("/api/student/inventory/items", {
 
 const toggleOptions = ref(["Deal"])
 const toggleItems = ref([])
+const itemQuantityTotal = (item: { specificItems: Array<{ quantity: string }> }) => {
+	return item.specificItems.reduce((sum, si) => sum + Number(si.quantity), 0)
+}
 const shownItems = computed(() => {
 	return items.value.filter((item) => {
-		return !toggleItems.value.includes("Deal") || item.Deal !== null
+		return !toggleItems.value.includes("Deal") || item.deal !== null
 	})
 })
 
 const categoryItems = computed(() => {
 	return (
 		shownItems.value?.filter((item) => {
-			const itemCategory = item.categoryName?.trim().toLowerCase() || ""
+			const itemCategory = item.category?.categoryName?.trim().toLowerCase() || ""
 			const currentCategoryLower = currentCategory?.trim().toLowerCase() || ""
 			return itemCategory.includes(currentCategoryLower)
 		}) || []
@@ -74,12 +77,12 @@ const sortedItems = computed(() => {
 	}
 	const sorted = [...categoryItems.value]
 	if (sortOption.value === "Alphabetical") {
-		sorted.sort((a, b) => a.name.localeCompare(b.name))
+		sorted.sort((a, b) => a.itemName.localeCompare(b.itemName))
 	} else if (sortOption.value === "Quantity") {
-		sorted.sort((a, b) => b.quantity - a.quantity)
+		sorted.sort((a, b) => itemQuantityTotal(b) - itemQuantityTotal(a))
 	}
 	return sorted
 })
 
-const { query, filtered } = useFuzzySearch(sortedItems, { searchKeys: ["name"] })
+const { query, filtered } = useFuzzySearch(sortedItems, { searchKeys: ["itemName", "specificItems.productName", "specificItems.itemLabels.itemLabelName"] })
 </script>

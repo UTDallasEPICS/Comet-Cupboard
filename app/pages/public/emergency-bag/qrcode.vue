@@ -49,7 +49,7 @@ const submitBagID = async () => {
 	isLoading.value = true
 
 	try {
-		const response = await $fetch("/api/public/emergency-bag/bagtaken", {
+		const response = await $fetch("/api/public/emergency-bag/take-bag", {
 			method: "POST",
 			body: { label: bagID.value },
 		})

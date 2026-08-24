@@ -30,29 +30,42 @@ export default defineSafeHandler(async (event) => {
 		}
 
 		if (action === "ACCEPT") {
-			const orderItems = pendingCart.cartItems.map((cartItem) => ({
-				specificItemID: cartItem.specificItemID,
-				count: cartItem.count,
+			const cartItems = await Promise.all(
+				pendingCart.cartItems.map(async (cartItem) => {
+					const specificItem = await tx.specificItem.findUnique({
+						where: { specificItemID: cartItem.specificItemID },
+					})
+					if (!specificItem) {
+						throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Specific item not found" })
+					}
+
+					return { specificItem, finalCount: cartItem.count + cartItem.countAdjustment }
+				})
+			)
+			const orderItems = cartItems.filter(({ finalCount }) => finalCount > 0).map(({ specificItem, finalCount }) => ({
+				specificItemID: specificItem.specificItemID,
+				count: finalCount,
 			}))
 
-			for (const orderItem of orderItems) {
-				const specificItem = await tx.specificItem.findUnique({ where: { specificItemID: orderItem.specificItemID }, select: { quantity: true } })
-				if (!specificItem || Number(specificItem.quantity) < orderItem.count) {
+			for (const { specificItem, finalCount } of cartItems) {
+				if (Number(specificItem.quantity) < finalCount) {
 					throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "Insufficient inventory to accept cart" })
 				}
 				await tx.specificItem.update({
-					where: { specificItemID: orderItem.specificItemID },
-					data: { quantity: specificItem.quantity - orderItem.count },
+					where: { specificItemID: specificItem.specificItemID },
+					data: { quantity: specificItem.quantity - finalCount },
 				})
 			}
 
-			await tx.order.create({
-				data: {
-					userID: pendingCart.userSession.userID,
-					orderItems: { create: orderItems },
-					cartCreatedAt: pendingCart.createdAt,
-				},
-			})
+			if (orderItems.length) {
+				await tx.order.create({
+					data: {
+						userID: pendingCart.userSession.userID,
+						orderItems: { create: orderItems },
+						cartCreatedAt: pendingCart.createdAt,
+					},
+				})
+			}
 			await tx.auditLog.create({
 				data: {
 					action: "VERIFY_CART_APPROVED",
