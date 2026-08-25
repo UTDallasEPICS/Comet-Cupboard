@@ -39,6 +39,7 @@ export type Icon =
 	| "i-lucide-inbox"
 	| "i-lucide-list-end"
 	| "i-lucide-list-filter"
+	| "i-lucide-log-in"
 	| "i-lucide-log-out"
 	| "i-lucide-mail"
 	| "i-lucide-map-pin"

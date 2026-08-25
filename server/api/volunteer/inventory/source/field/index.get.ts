@@ -8,7 +8,6 @@ const schema = z
 		sourceID: z.string(),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { sourceID } = validateQuery(event, schema)

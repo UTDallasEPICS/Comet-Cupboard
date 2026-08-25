@@ -17,7 +17,7 @@
 								<SharedButtonActionButton
 									v-for="(tutorial, index) in tutorials"
 									:key="tutorial.tutorialID"
-									color="neutral"
+									action="neutral"
 									:text="tutorial.tutorialName"
 									trailing-icon="i-lucide-chevron-right"
 									justify="between"
@@ -34,7 +34,14 @@
 							<SharedTextBase class="text-center">{{ activeTutorial.tutorialName }}</SharedTextBase>
 							<div v-if="activeTutorial.tutorialSteps.length === 0" class="flex flex-col items-center justify-center gap-4 py-8 text-center">
 								<SharedTextBaseSecondary>This tutorial doesn't have any steps yet.</SharedTextBaseSecondary>
-								<SharedButtonActionButton color="secondary" variant="solid" size="xl" class="mt-4" @click="backToTutorials">
+								<SharedButtonActionButton
+									action="positive"
+									variant="solid"
+									size="xl"
+									class="mt-4"
+									leading-icon="i-lucide-arrow-left"
+									@click="backToTutorials"
+								>
 									Back to Tutorials
 								</SharedButtonActionButton>
 							</div>
@@ -59,7 +66,7 @@
 								<div class="flex w-full flex-row items-center justify-center">
 									<SharedButtonActionButton
 										v-if="viewModel.isTutorialGroup && currentCarouselNumber === activeTutorial.tutorialSteps.length - 1"
-										color="secondary"
+										action="positive"
 										variant="solid"
 										size="xl"
 										class="mt-4"

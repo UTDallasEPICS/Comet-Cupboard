@@ -10,7 +10,7 @@
 				<div class="mx-auto w-full max-w-xl">
 					<div class="flex w-full flex-row items-center justify-center">
 						<SharedConfirmationModal title="Confirm Deletion?" confirm-text="Confirm Deletion" @confirm="deactivate(route.params.dashboardLinkID)">
-							<SharedButtonActionButton label="Delete Custom Link" color="error" variant="outline" icon="i-lucide-trash-2" />
+							<SharedButtonActionButton text="Delete Custom Link" action="negative" variant="outline" leading-icon="i-lucide-trash-2" />
 						</SharedConfirmationModal>
 					</div>
 

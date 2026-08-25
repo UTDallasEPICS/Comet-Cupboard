@@ -4,20 +4,20 @@ import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateFormData } from "#server/utils/validation"
 import { imageSchema, deleteImage, uploadImage, processImage } from "#server/utils/image"
+import { specificProductSchema } from "#shared/utils/formSchemas"
 
-const schema = imageSchema
+const schema = specificProductSchema
 	.extend({
 		specificItemID: z.string().optional(),
-		productName: z.string().min(1, "Name cannot be empty").max(100, "Name must be at most 100 characters"),
 		itemID: z.string(),
 		itemLabels: z.string().optional(),
+		image: imageSchema.shape.image.optional(),
 	})
-	.partial({ image: true })
 	.strict()
 
 export default defineSafeHandler(async (event) => {
 	const { specificItemID, productName, itemID, image, itemLabels } = await validateFormData(event, schema)
-	const itemLabelNames = itemLabels ? z.array(z.string().min(1).max(100)).parse(JSON.parse(itemLabels)) : []
+	const itemLabelNames = itemLabels ? specificProductSchema.shape.itemLabels.parse(JSON.parse(itemLabels)) : []
 	const itemLabelConnections = itemLabelNames.map((itemLabelName) => ({
 		where: { itemLabelName },
 		create: { itemLabelName },

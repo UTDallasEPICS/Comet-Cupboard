@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { createInventoryItemSchema, createInventoryItemFormFields, type CreateInventoryItemForm } from "~/utils/formSchemas"
+import { createInventoryItemSchema, createInventoryItemFormFields, type CreateInventoryItemForm } from "#shared/utils/formSchemas"
 
 type ItemSummary = { itemID: string; itemName: string }
 const props = withDefaults(defineProps<{ items?: ItemSummary[] }>(), { items: () => [] })

@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { CreateLocationForm } from "~/utils/formSchemas"
+import type { CreateLocationForm } from "#shared/utils/formSchemas"
 
 definePageMeta({ layout: false })
 

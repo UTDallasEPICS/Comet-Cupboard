@@ -10,7 +10,9 @@
 						<USelect v-model="timeRange" :items="timeRangeOptions" class="w-full" />
 					</div>
 					<UPopover class="mt-3">
-						<SharedButtonActionButton color="neutral" variant="outline" icon="i-lucide-calendar">{{ dateRangeLabel }}</SharedButtonActionButton>
+						<SharedButtonActionButton action="neutral" variant="outline" leading-icon="i-lucide-calendar">{{
+							dateRangeLabel
+						}}</SharedButtonActionButton>
 						<template #content><UCalendar v-model="customDateRange" range :number-of-months="2" class="p-2" /></template>
 					</UPopover>
 					<SharedTextBaseSecondary class="mt-3"

@@ -17,7 +17,7 @@
 		<div class="flex flex-row items-center justify-end gap-2 p-2">
 			<SharedButtonActionButton
 				variant="ghost"
-				color="error"
+				action="negative"
 				icon="i-lucide-trash-2"
 				size="sm"
 				aria-label="Remove from cart"

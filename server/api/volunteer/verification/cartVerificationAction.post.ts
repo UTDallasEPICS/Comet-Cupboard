@@ -14,7 +14,6 @@ const schema = z
 		reason: z.string().optional(),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { publicCode, action, reason } = await validateBody(event, schema)

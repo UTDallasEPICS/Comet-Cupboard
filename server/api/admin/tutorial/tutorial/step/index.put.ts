@@ -4,12 +4,13 @@ import { defineSafeHandler } from "#server/utils/handler"
 import { imageSchema, deleteImage, uploadImage, processImage } from "#server/utils/image"
 import { validateFormData } from "#server/utils/validation"
 import { StatusCodes } from "http-status-codes"
+import { tutorialStepSchema } from "#shared/utils/formSchemas"
 
-const schema = imageSchema
+const schema = tutorialStepSchema
 	.extend({
 		tutorialStepID: z.string(),
 		tutorialID: z.string().min(1),
-		description: z.string().min(1, "Description cannot be empty"),
+		image: imageSchema.shape.image,
 	})
 	.strict()
 

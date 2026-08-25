@@ -8,7 +8,7 @@
 			<USeparator class="my-4" />
 			<div class="flex flex-col items-center justify-center gap-4">
 				<SharedConfirmationModal title="Confirm Deletion?" confirm-text="Confirm Deletion" @confirm="deleteTutorial">
-					<SharedButtonActionButton label="Delete Tutorial" color="error" variant="outline" icon="i-lucide-trash-2" />
+					<SharedButtonActionButton text="Delete Tutorial" action="negative" leading-icon="i-lucide-trash-2" />
 				</SharedConfirmationModal>
 
 				<section class="w-full max-w-xl">
@@ -31,14 +31,7 @@
 						/>
 
 						<div class="flex justify-center">
-							<SharedButtonActionButton
-								v-if="canAddStep"
-								label="Add step"
-								color="neutral"
-								variant="outline"
-								trailing-icon="i-lucide-plus"
-								@click="addStep"
-							/>
+							<SharedButtonActionButton v-if="canAddStep" text="Add step" action="positive" leading-icon="i-lucide-plus" @click="addStep" />
 							<UAlert
 								v-else
 								title="You must save the current step before adding a new one"

@@ -8,13 +8,13 @@
 		class="w-full"
 	>
 		<UCard :class="`${changeCount != 0 ? 'border-utd-orange' : ''} relative w-full min-w-72 overflow-hidden shadow-md`" :ui="{ body: 'p-0 sm:p-0' }">
-			<div class="absolute top-2 right-2 z-10 flex flex-row gap-2">
+			<div class="absolute top-2 right-2 z-10 flex flex-row items-center gap-2">
 				<SharedDealBadge :item-deal="itemDeal" />
 				<SharedButtonActionButton
 					:to="`/volunteer/inventory/${category}/${itemID}/edit`"
 					icon="i-lucide-edit"
 					size="sm"
-					color="neutral"
+					action="neutral"
 					variant="ghost"
 				/>
 			</div>
@@ -29,9 +29,9 @@
 					:trailing-icon="isOpen ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
 					size="sm"
 					variant="ghost"
-					color="neutral"
+					action="neutral"
 					class="absolute right-2 bottom-1"
-					label="Restock item"
+					text="Restock item"
 					@click="isOpen = !isOpen"
 				/>
 			</div>
@@ -45,7 +45,7 @@
 							<SharedButtonActionButton
 								v-for="product in orderedSpecificItems"
 								:key="product.specificItemID"
-								color="neutral"
+								action="neutral"
 								variant="ghost"
 								class="border-border-soft w-full border"
 								:class="{ 'border-secondary bg-secondary/10': restockSpecificItemID === product.specificItemID }"
@@ -93,8 +93,9 @@
 									type="submit"
 									:loading="isSaving"
 									:disabled="isSaving || !restockSpecificItemID"
-									label="Confirm"
-									color="secondary"
+									text="Confirm"
+									leading-icon="i-lucide-check"
+									action="positive"
 								/>
 							</div>
 						</form>

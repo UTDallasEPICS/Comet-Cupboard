@@ -11,16 +11,16 @@
 			</div>
 			<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
 				<template #cancel>
-					<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+					<SharedButtonActionButton type="button" text="Cancel" action="cancel" variant="outline" @click="cancelChanges" />
 				</template>
-				<SharedButtonActionButton type="submit" label="Save Changes" color="secondary" :loading="saving" />
+				<SharedButtonActionButton type="submit" text="Save Changes" leading-icon="i-lucide-check" action="positive" :loading="saving" />
 			</SharedFormActions>
 		</SharedLayoutSectionUCard>
 	</SharedFormShell>
 </template>
 
 <script setup lang="ts">
-import { sourceDetailsSchema, sourceDetailsFormFields, type SourceDetailsForm } from "~/utils/formSchemas"
+import { sourceDetailsSchema, sourceDetailsFormFields, type SourceDetailsForm } from "#shared/utils/formSchemas"
 
 const props = defineProps<{
 	sourceID: string

@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { EditCategoryForm } from "~/utils/formSchemas"
+import type { EditCategoryForm } from "#shared/utils/formSchemas"
 
 definePageMeta({ layout: false })
 

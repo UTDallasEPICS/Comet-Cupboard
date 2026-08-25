@@ -1,6 +1,6 @@
 <template>
 	<UCollapsible class="w-full">
-		<SharedButtonActionButton color="neutral" variant="ghost" block class="w-full justify-between">
+		<SharedButtonActionButton action="neutral" variant="ghost" block class="w-full justify-between">
 			<UUser :name="cart.publicCode" :avatar="{ icon: cart.publicIcon }" size="lg" />
 
 			<SharedIcon name="i-lucide-chevron-down" class="size-5" />
@@ -16,7 +16,7 @@
 					confirm-text="Confirm Cancel"
 					@confirm="emit('cancel', cart.publicCode)"
 				>
-					<SharedButtonActionButton label="Cancel Session" icon="i-lucide-x" color="error" />
+					<SharedButtonActionButton text="Cancel Session" action="negative" />
 				</SharedConfirmationModal>
 			</div>
 		</template>

@@ -19,7 +19,7 @@
 
 			<SharedLayoutSectionUCard title="Current Queue" empty-text="No students in queue" class="mt-4">
 				<template #headerContent>
-					<div class="flex flex-col items-center gap-2 sm:items-end">
+					<div class="flex flex-col items-center justify-center gap-2">
 						<SharedTextBaseSecondary class="text-center sm:text-right">
 							Queue Access Code (Rotating in {{ accessCodeSecondsRemaining }} seconds)
 						</SharedTextBaseSecondary>

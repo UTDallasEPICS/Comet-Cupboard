@@ -8,7 +8,7 @@
 		<SharedButtonActionButton
 			class="absolute top-2 right-2"
 			variant="ghost"
-			color="neutral"
+			action="neutral"
 			size="sm"
 			icon="i-lucide-edit"
 			@click="navigateTo(`/admin/manage/sources/${sourceID}/edit`)"

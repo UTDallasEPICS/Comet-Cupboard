@@ -11,7 +11,7 @@
 					<template #leading>
 						<UPopover>
 							<SharedButtonActionButton
-								color="neutral"
+								action="neutral"
 								variant="link"
 								size="md"
 								icon="i-lucide-calendar"
@@ -31,7 +31,7 @@
 					<template #leading>
 						<UPopover>
 							<SharedButtonActionButton
-								color="neutral"
+								action="neutral"
 								variant="link"
 								size="md"
 								icon="i-lucide-calendar"
@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { announcementSchema, announcementFormFields, type AnnouncementForm } from "~/utils/formSchemas"
+import { announcementSchema, announcementFormFields, type AnnouncementForm } from "#shared/utils/formSchemas"
 
 const props = withDefaults(defineProps<{ initialValues: AnnouncementForm; submitText?: string }>(), {
 	submitText: "Submit",

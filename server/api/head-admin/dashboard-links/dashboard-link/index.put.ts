@@ -2,19 +2,9 @@ import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateBody } from "#server/utils/validation"
-const schema = z
-	.object({
-		dashboardLinkID: z.string(),
-		displayName: z.string().trim().min(1),
-		url: z.url({
-			protocol: /^https?$/,
-			hostname: z.regexes.domain,
-		}),
-		description: z.string().default(""),
-		dashboardRolePage: z.enum(["STUDENT", "VOLUNTEER", "ADMIN", "HEAD_ADMIN"]),
-		displayOrder: z.number().int().default(0),
-	})
-	.strict()
+import { dashboardLinkSchema } from "#shared/utils/formSchemas"
+
+const schema = dashboardLinkSchema.extend({ dashboardLinkID: z.string() }).strict()
 
 export default defineSafeHandler(async (event) => {
 	const { dashboardLinkID, displayName, url, description, dashboardRolePage, displayOrder } = await validateBody(event, schema)

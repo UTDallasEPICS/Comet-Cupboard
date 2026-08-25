@@ -4,7 +4,12 @@
 			<div v-if="validPublicCode" class="flex flex-row items-center justify-between">
 				<UUser :name="cart.publicCode" :avatar="{ icon: cart.publicIcon }" size="lg" />
 
-				<SharedButtonActionButton action="navigate-to" text="Back to carts" @click="emit('update:select-cart', '')" />
+				<SharedButtonActionButton
+					action="navigate-to"
+					text="Back to carts"
+					leading-icon="i-lucide-arrow-left"
+					@click="emit('update:select-cart', '')"
+				/>
 			</div>
 			<SharedTextCardTitle v-else>Cart Preview</SharedTextCardTitle>
 		</template>
@@ -43,7 +48,7 @@
 			</div>
 			<div class="flex flex-row justify-center gap-x-4 sm:justify-end">
 				<SharedButtonActionButton action="negative" text="Decline" @click="emit('cart-declined', publicCode, reason)" />
-				<SharedButtonActionButton action="positive" text="Accept" @click="emit('cart-accepted', publicCode, reason)" />
+				<SharedButtonActionButton action="positive" text="Accept" leading-icon="i-lucide-check" @click="emit('cart-accepted', publicCode, reason)" />
 			</div>
 		</div>
 		<div v-else class="flex flex-col items-center justify-center gap-4">

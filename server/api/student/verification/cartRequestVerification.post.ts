@@ -17,7 +17,6 @@ const schema = z
 		),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const publicCode = event.context.userSession.publicCode

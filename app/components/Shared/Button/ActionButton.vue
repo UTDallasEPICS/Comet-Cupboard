@@ -14,7 +14,7 @@ defineOptions({
 })
 
 type ButtonVariant = "solid" | "ghost" | "outline" | "link" | "soft" | "subtle"
-type ButtonAction = "custom" | "positive" | "negative" | "cancel" | "navigate-back" | "navigate-to"
+type ButtonAction = "custom" | "positive" | "negative" | "cancel" | "neutral" | "navigate-back" | "navigate-to"
 type CustomColor = "primary" | "secondary" | "success" | "info" | "warning" | "error" | "neutral" | "cancel-gray"
 
 const props = defineProps({
@@ -39,12 +39,12 @@ const props = defineProps({
 	},
 
 	customColor: {
-		type: String,
+		type: String as PropType<CustomColor>,
 		default: undefined,
 	},
 
 	color: {
-		type: String,
+		type: String as PropType<CustomColor>,
 		default: undefined,
 	},
 
@@ -102,6 +102,13 @@ const actionConfig = computed(() => {
 				trailingIcon: undefined,
 			}
 
+		case "neutral":
+			return {
+				color: "neutral" as CustomColor,
+				leadingIcon: undefined,
+				trailingIcon: undefined,
+			}
+
 		case "navigate-back":
 			return {
 				color: "primary" as CustomColor,
@@ -146,65 +153,65 @@ const colorClasses = computed(() => {
 	switch (resolvedColor.value) {
 		case "primary":
 			return {
-				solid: "bg-primary hover:bg-primary/75 active:bg-primary/75",
-				ghost: "text-primary hover:bg-primary/10 active:bg-primary/20",
-				outline: "border-primary text-primary",
+				solid: "bg-primary hover:bg-primary/75 active:bg-primary/75 disabled:bg-primary/50",
+				ghost: "text-primary hover:bg-primary/10 active:bg-primary/20 disabled:text-primary/50",
+				outline: "border-primary text-primary disabled:border-primary/50 disabled:text-primary/50",
 			}
 
 		case "secondary":
 			return {
-				solid: "bg-secondary hover:bg-secondary/75 active:bg-secondary/75",
-				ghost: "text-secondary hover:bg-secondary/10 active:bg-secondary/20",
-				outline: "border-secondary text-secondary",
+				solid: "bg-secondary hover:bg-secondary/75 active:bg-secondary/75 disabled:bg-secondary/50",
+				ghost: "text-secondary hover:bg-secondary/10 active:bg-secondary/20 disabled:text-secondary/50",
+				outline: "border-secondary text-secondary disabled:border-secondary/50 disabled:text-secondary/50",
 			}
 
 		case "success":
 			return {
-				solid: "bg-success hover:bg-success/75 active:bg-success/75",
-				ghost: "text-success hover:bg-success/10 active:bg-success/20",
-				outline: "border-success text-success",
+				solid: "bg-success hover:bg-success/75 active:bg-success/75 disabled:bg-success/50",
+				ghost: "text-success hover:bg-success/10 active:bg-success/20 disabled:text-success/50",
+				outline: "border-success text-success disabled:border-success/50 disabled:text-success/50",
 			}
 
 		case "info":
 			return {
-				solid: "bg-info hover:bg-info/75 active:bg-info/75",
-				ghost: "text-info hover:bg-info/10 active:bg-info/20",
-				outline: "border-info text-info",
+				solid: "bg-info hover:bg-info/75 active:bg-info/75 disabled:bg-info/50",
+				ghost: "text-info hover:bg-info/10 active:bg-info/20 disabled:text-info/50",
+				outline: "border-info text-info disabled:border-info/50 disabled:text-info/50",
 			}
 
 		case "warning":
 			return {
-				solid: "bg-warning hover:bg-warning/75 active:bg-warning/75",
-				ghost: "text-warning hover:bg-warning/10 active:bg-warning/20",
-				outline: "border-warning text-warning",
+				solid: "bg-warning hover:bg-warning/75 active:bg-warning/75 disabled:bg-warning/50",
+				ghost: "text-warning hover:bg-warning/10 active:bg-warning/20 disabled:text-warning/50",
+				outline: "border-warning text-warning disabled:border-warning/50 disabled:text-warning/50",
 			}
 
 		case "error":
 			return {
-				solid: "bg-error hover:bg-error/75 active:bg-error/75",
-				ghost: "text-error hover:bg-error/10 active:bg-error/20",
-				outline: "border-error text-error",
+				solid: "bg-error hover:bg-error/75 active:bg-error/75 disabled:bg-error/50",
+				ghost: "text-error hover:bg-error/10 active:bg-error/20 disabled:text-error/50",
+				outline: "border-error text-error disabled:border-error/50 disabled:text-error/50",
 			}
 
 		case "neutral":
 			return {
-				solid: "bg-neutral-500 hover:bg-neutral-500/75 active:bg-neutral-500/75",
-				ghost: "text-neutral-500 hover:bg-neutral-500/10 active:bg-neutral-500/20",
-				outline: "border-neutral-500 text-neutral-500",
+				solid: "bg-neutral-500 hover:bg-neutral-500/75 active:bg-neutral-500/75 disabled:bg-neutral-500/50",
+				ghost: "text-neutral-500 hover:bg-neutral-500/10 active:bg-neutral-500/20 disabled:text-neutral-500/50",
+				outline: "border-neutral-500 text-neutral-500 disabled:border-neutral-500/50 disabled:text-neutral-500/50",
 			}
 
 		case "cancel-gray":
 			return {
-				solid: "bg-cancel-gray hover:bg-cancel-gray/75 active:bg-cancel-gray/75",
-				ghost: "text-cancel-gray hover:bg-cancel-gray/10 active:bg-cancel-gray/20",
-				outline: "border-cancel-gray text-cancel-gray",
+				solid: "bg-cancel-gray hover:bg-cancel-gray/75 active:bg-cancel-gray/75 disabled:bg-cancel-gray/50",
+				ghost: "text-cancel-gray hover:bg-cancel-gray/10 active:bg-cancel-gray/20 disabled:text-cancel-gray/50",
+				outline: "border-cancel-gray text-cancel-gray disabled:border-cancel-gray/50 disabled:text-cancel-gray/50",
 			}
 
 		default:
 			return {
-				solid: "bg-primary hover:bg-primary/75 active:bg-primary/75",
-				ghost: "text-primary hover:bg-primary/10 active:bg-primary/20",
-				outline: "border-primary text-primary",
+				solid: "bg-primary hover:bg-primary/75 active:bg-primary/75 disabled:bg-primary/50",
+				ghost: "text-primary hover:bg-primary/10 active:bg-primary/20 disabled:text-primary/50",
+				outline: "border-primary text-primary disabled:border-primary/50 disabled:text-primary/50",
 			}
 	}
 })
@@ -215,6 +222,7 @@ const buttonClasses = computed(() => {
 			return `
 				${colorClasses.value.solid}
 				text-${props.contentColor}
+				disabled:text-${props.contentColor}/50
 			`
 
 		case "ghost":
@@ -233,7 +241,17 @@ const mergedUi = computed(() => ({
 
 	base: `
 		rounded-xl
-		${props.justify === "start" ? "justify-start" : props.justify === "center" ? "justify-center" : props.justify === "end" ? "justify-end" : props.justify === "between" ? "justify-between" : ""}
+		${
+			props.justify === "start"
+				? "justify-start"
+				: props.justify === "center"
+					? "justify-center"
+					: props.justify === "end"
+						? "justify-end"
+						: props.justify === "between"
+							? "justify-between"
+							: ""
+		}
 		items-center
 		${buttonClasses.value}
 		${props.ui.base ?? ""}

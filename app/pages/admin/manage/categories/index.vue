@@ -5,11 +5,11 @@
 				<div class="flex flex-row flex-nowrap items-center gap-2">
 					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search categories" class="relative grow">
 						<SharedButtonActionButton
-							icon="i-lucide-plus"
+							leading-icon="i-lucide-plus"
 							variant="ghost"
-							color="neutral"
+							action="positive"
 							class="bg-utd-green absolute right-0 text-white"
-							label="Add"
+							text="Add"
 							:to="`/admin/manage/categories/add`"
 						/>
 					</UInput>

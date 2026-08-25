@@ -2,7 +2,7 @@
 	<SharedFormCard>
 		<div class="flex items-center justify-between gap-3">
 			<SharedTextCardTitle>Specific Products</SharedTextCardTitle>
-			<SharedButtonActionButton label="Add Product" icon="i-lucide-plus" color="neutral" variant="outline" @click="addProduct" />
+			<SharedButtonActionButton text="Add Product" leading-icon="i-lucide-plus" action="neutral" variant="outline" @click="addProduct" />
 		</div>
 		<USeparator class="my-4" />
 		<div class="space-y-4">
@@ -45,15 +45,15 @@
 		</div>
 		<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
 			<template #cancel>
-				<SharedButtonActionButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+				<SharedButtonActionButton text="Cancel" action="cancel" variant="outline" @click="cancelChanges" />
 			</template>
-			<SharedButtonActionButton label="Save Changes" color="secondary" :loading="saving" @click="saveProducts" />
+			<SharedButtonActionButton text="Save Changes" leading-icon="i-lucide-check" action="positive" :loading="saving" @click="saveProducts" />
 		</SharedFormActions>
 	</SharedFormCard>
 </template>
 
 <script setup lang="ts">
-import { specificProductFormFields } from "~/utils/formSchemas"
+import { specificProductFormFields } from "#shared/utils/formSchemas"
 type SpecificProduct = {
 	specificItemID: string
 	productName: string

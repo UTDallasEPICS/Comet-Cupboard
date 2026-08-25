@@ -2,7 +2,13 @@
 	<div class="space-y-4">
 		<div class="flex items-center justify-between gap-3">
 			<SharedTextCardTitle>Start Intake Session</SharedTextCardTitle>
-			<SharedButtonActionButton icon="i-lucide-arrow-left" color="neutral" variant="ghost" aria-label="Back to intake sessions" @click="emit('cancel')" />
+			<SharedButtonActionButton
+				icon="i-lucide-arrow-left"
+				action="neutral"
+				variant="ghost"
+				aria-label="Back to intake sessions"
+				@click="emit('cancel')"
+			/>
 		</div>
 		<SharedFormShell :state="state" :validate="validate" class="space-y-4" :on-submit="startSession" :on-error="onError">
 			<SharedLayoutSectionUCard title="Session Details">
@@ -70,16 +76,16 @@
 			</SharedLayoutSectionUCard>
 			<SharedFormActions submit-text="Start Session">
 				<template #cancel>
-					<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="emit('cancel')" />
+					<SharedButtonActionButton type="button" text="Cancel" action="cancel" variant="outline" @click="emit('cancel')" />
 				</template>
-				<SharedButtonActionButton type="submit" label="Start Session" color="secondary" :loading="isSaving" />
+				<SharedButtonActionButton type="submit" text="Start Session" leading-icon="i-lucide-plus" action="positive" :loading="isSaving" />
 			</SharedFormActions>
 		</SharedFormShell>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { intakeSessionSchema, intakeSessionFormFields, type IntakeSessionForm } from "~/utils/formSchemas"
+import { intakeSessionSchema, intakeSessionFormFields, type IntakeSessionForm } from "#shared/utils/formSchemas"
 
 type Source = { sourceID: string; sourceName: string }
 type SourceField = { fieldID: string; fieldName: string; type: "TEXT" | "NUMBER" | "DATE" | "BOOLEAN" | "CHOICE"; choices: unknown; optional: boolean }

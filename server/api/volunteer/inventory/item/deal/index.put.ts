@@ -3,18 +3,9 @@ import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateBody } from "#server/utils/validation"
+import { dealSchema } from "#shared/utils/formSchemas"
 
-const schema = z
-	.object({
-		itemID: z.string(),
-		actualCount: z.number().int().positive(),
-		adjustedCount: z.number().int().nonnegative(),
-	})
-	.refine((data) => data.actualCount > data.adjustedCount, {
-		error: "adjustedCount must be less than actualCount",
-	})
-	.strict()
-	.required()
+const schema = dealSchema.extend({ itemID: z.string() }).strict()
 
 /*
 	NOTE: Consider 1 for 0 deal as FREE

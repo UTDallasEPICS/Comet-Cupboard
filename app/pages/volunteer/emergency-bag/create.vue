@@ -26,7 +26,7 @@
 				<SharedButtonActionButton
 					v-if="stepper?.hasPrev"
 					leading-icon="i-lucide-arrow-left"
-					color="neutral"
+					action="neutral"
 					:class="stepper?.hasPrev ? 'bg-utd-orange' : 'bg-gray-500'"
 					:disabled="!stepper?.hasPrev"
 					@click="prevStepper()"

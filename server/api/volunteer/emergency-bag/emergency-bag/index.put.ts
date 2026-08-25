@@ -3,28 +3,13 @@ import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateBody } from "#server/utils/validation"
 import { AccessPermission } from "#shared/utils/permissions"
+import { emergencyBagSchema } from "#shared/utils/formSchemas"
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 const generateRandomLabel = () => Array.from({ length: 5 }, () => CHARS[Math.floor(Math.random() * CHARS.length)]).join("")
 
-const schema = z
-	.object({
-		emergencyBagID: z.string().optional(),
-		expiryDate: z.coerce.date(),
-		labels: z.array(z.string().trim().min(1)).default([]),
-		private: z.boolean().default(false),
-		bagDescription: z.string().trim().default(""),
-		items: z
-			.array(
-				z.object({
-					specificItemID: z.string(),
-					count: z.int().positive(),
-				})
-			)
-			.min(1),
-	})
-	.strict()
+const schema = emergencyBagSchema.extend({ emergencyBagID: z.string().optional() }).strict()
 
 export default defineSafeHandler(async (event) => {
 	const { emergencyBagID, expiryDate, labels, private: isPrivate, bagDescription, items } = await validateBody(event, schema)

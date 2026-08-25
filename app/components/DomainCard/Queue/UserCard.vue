@@ -1,6 +1,6 @@
 <template>
 	<UCollapsible class="w-full">
-		<SharedButtonActionButton color="neutral" variant="ghost" block class="w-full justify-between">
+		<SharedButtonActionButton action="neutral" variant="ghost" block class="w-full justify-between">
 			<div class="flex min-w-0 items-center gap-3 text-left">
 				<UUser :name="queueEntry.publicCode" :description="`Position: ${queueEntry.position}`" :avatar="{ icon: queueEntry.publicIcon }" size="lg" />
 			</div>
@@ -22,15 +22,15 @@
 					confirm-text="Confirm Removal"
 					@confirm="emit('remove', queueEntry.publicCode)"
 				>
-					<SharedButtonActionButton label="Remove" icon="i-lucide-user-round-minus" color="error" />
+					<SharedButtonActionButton text="Remove" leading-icon="i-lucide-trash-2" action="negative" />
 				</SharedConfirmationModal>
 
-				<SharedButtonActionButton label="Approve" icon="i-lucide-check" color="secondary" @click="emit('approve', queueEntry)" />
+				<SharedButtonActionButton text="Approve" leading-icon="i-lucide-check" action="positive" @click="emit('approve', queueEntry)" />
 
 				<SharedButtonActionButton
-					label="Ping"
-					icon="i-lucide-send"
-					color="neutral"
+					text="Ping"
+					leading-icon="i-lucide-send"
+					action="neutral"
 					variant="outline"
 					:loading="isSendingNotification && notificationPublicCode === queueEntry.publicCode"
 					@click="emit('ping', queueEntry.publicCode)"

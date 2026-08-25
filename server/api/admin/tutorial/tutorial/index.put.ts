@@ -2,19 +2,14 @@ import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateBody } from "#server/utils/validation"
+import { tutorialNameSchema } from "#shared/utils/formSchemas"
 
-const schema = z
-	.object({
+const schema = tutorialNameSchema
+	.extend({
 		tutorialID: z.string(),
 		tutorialGroupID: z.string().min(1),
-		tutorialName: z
-			.string()
-			.min(1)
-			.max(30)
-			.regex(/^[A-Za-z ]+$/),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { tutorialID, tutorialName, tutorialGroupID } = await validateBody(event, schema)

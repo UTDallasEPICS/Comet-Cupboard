@@ -2,14 +2,9 @@ import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateBody } from "#server/utils/validation"
+import { sourceDetailsSchema } from "#shared/utils/formSchemas"
 
-const schema = z
-	.object({
-		sourceID: z.string(),
-		sourceName: z.string().min(1, "Name cannot be empty"),
-		archived: z.boolean(),
-	})
-	.strict()
+const schema = sourceDetailsSchema.extend({ sourceID: z.string() }).strict()
 
 export default defineSafeHandler(async (event) => {
 	const { sourceID, sourceName, archived } = await validateBody(event, schema)

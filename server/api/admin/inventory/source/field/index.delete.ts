@@ -10,7 +10,6 @@ const schema = z
 		fieldID: z.string(),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { fieldID } = await validateBody(event, schema)

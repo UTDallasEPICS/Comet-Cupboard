@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-wrap items-center justify-between gap-3">
 		<UPopover :content="{ align: 'start' }" :modal="true">
-			<SharedButtonActionButton color="neutral" variant="ghost" icon="i-lucide-calendar" class="group data-[state=open]:bg-gray-100">
+			<SharedButtonActionButton action="neutral" variant="ghost" leading-icon="i-lucide-calendar" class="group data-[state=open]:bg-gray-100">
 				{{ dateLabel }}
 				<template #trailing><SharedIcon name="i-lucide-chevron-down" class="transition-transform group-data-[state=open]:rotate-180" /></template>
 			</SharedButtonActionButton>
@@ -11,8 +11,8 @@
 						<SharedButtonActionButton
 							v-for="preset in presets"
 							:key="preset.label"
-							:label="preset.label"
-							color="neutral"
+							:text="preset.label"
+							action="neutral"
 							variant="ghost"
 							class="rounded-none px-4"
 							@click="selectPreset(preset.days)"

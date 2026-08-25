@@ -3,12 +3,10 @@ import { defineSafeHandler } from "#server/utils/handler"
 import { z } from "zod"
 import { validateBody } from "#server/utils/validation"
 import { Prisma } from "../../../../../prisma/generated/prisma/client"
+import { intakeSessionSchema } from "#shared/utils/formSchemas"
 
-const schema = z.object({
-	inventoryIntakeSessionName: z.string(),
-	notes: z.string(),
+const schema = intakeSessionSchema.extend({
 	intakeDate: z.coerce.date(),
-	sourceID: z.string(),
 	sourceMetadata: z.json().optional(),
 })
 

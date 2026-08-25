@@ -7,15 +7,15 @@
 		</div>
 		<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
 			<template #cancel>
-				<SharedButtonActionButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+				<SharedButtonActionButton text="Cancel" action="cancel" variant="outline" @click="cancelChanges" />
 			</template>
-			<SharedButtonActionButton label="Save Changes" color="secondary" :loading="saving" @click="saveDeal" />
+			<SharedButtonActionButton text="Save Changes" leading-icon="i-lucide-check" action="positive" :loading="saving" @click="saveDeal" />
 		</SharedFormActions>
 	</SharedLayoutSectionUCard>
 </template>
 
 <script setup lang="ts">
-import { dealFormFields } from "~/utils/formSchemas"
+import { dealFormFields } from "#shared/utils/formSchemas"
 const props = defineProps<{
 	itemID: string
 	originalDeal: { actualCount: number; adjustedCount: number } | null

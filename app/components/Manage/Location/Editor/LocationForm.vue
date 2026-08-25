@@ -25,7 +25,7 @@
 		<SharedLayoutSectionUCard title="Map Details">
 			<UFormField name="mapEmbedUrl" v-bind="locationFormFields.mapEmbedUrl">
 				<UInput v-model="state.mapEmbedUrl" :placeholder="locationFormFields.mapEmbedUrl.placeholder" class="w-full" />
-				<SharedButtonActionButton variant="link" color="primary" class="mt-2 px-0" @click="showMapDirections = true">
+				<SharedButtonActionButton action="custom" variant="link" class="mt-2 px-0" @click="showMapDirections = true">
 					<SharedIcon name="i-lucide-circle-help" class="mr-1" />
 					Click for directions on getting this information
 				</SharedButtonActionButton>
@@ -75,7 +75,7 @@ import {
 	editLocationFormFields,
 	type CreateLocationForm,
 	type EditLocationForm,
-} from "~/utils/formSchemas"
+} from "#shared/utils/formSchemas"
 
 type LocationSummary = { locationID: string; locationName: string }
 type LocationFormValues = CreateLocationForm | EditLocationForm

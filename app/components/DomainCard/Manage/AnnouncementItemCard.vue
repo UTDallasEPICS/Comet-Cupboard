@@ -13,7 +13,7 @@
 			<SharedButtonActionButton
 				:to="`/admin/announcements/${announcement.announcementID}/edit`"
 				icon="i-lucide-edit"
-				color="neutral"
+				action="neutral"
 				variant="ghost"
 				aria-label="Edit announcement"
 			/>

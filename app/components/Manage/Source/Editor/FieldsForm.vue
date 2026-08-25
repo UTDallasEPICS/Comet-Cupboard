@@ -2,7 +2,7 @@
 	<SharedFormCard>
 		<div class="flex items-center justify-between gap-3">
 			<SharedTextCardTitle>Source Fields</SharedTextCardTitle>
-			<SharedButtonActionButton label="Add Field" icon="i-lucide-plus" color="secondary" @click="addField" />
+			<SharedButtonActionButton text="Add Field" leading-icon="i-lucide-plus" action="positive" @click="addField" />
 		</div>
 		<USeparator class="my-4" />
 		<div v-if="editableFields.length" class="space-y-4">
@@ -27,9 +27,9 @@
 							<SharedTextBaseSecondary>Choice Values</SharedTextBaseSecondary>
 							<SharedButtonActionButton
 								type="button"
-								label="Add Choice"
-								icon="i-lucide-plus"
-								color="neutral"
+								text="Add Choice"
+								leading-icon="i-lucide-plus"
+								action="neutral"
 								variant="outline"
 								@click="field.choices.push('')"
 							/>
@@ -40,7 +40,7 @@
 								<SharedButtonActionButton
 									type="button"
 									icon="i-lucide-trash-2"
-									color="error"
+									action="negative"
 									variant="ghost"
 									aria-label="Delete choice"
 									@click="field.choices.splice(index, 1)"
@@ -49,11 +49,17 @@
 						</UFormField>
 					</div>
 					<div v-if="fieldChanged(field) || field.isNew" class="flex justify-end gap-2">
-						<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelField(field)" />
-						<SharedButtonActionButton type="submit" label="Save Changes" color="secondary" :loading="savingFieldKey === field.key" />
+						<SharedButtonActionButton type="button" text="Cancel" action="cancel" variant="outline" @click="cancelField(field)" />
+						<SharedButtonActionButton
+							type="submit"
+							text="Save Changes"
+							leading-icon="i-lucide-check"
+							action="positive"
+							:loading="savingFieldKey === field.key"
+						/>
 					</div>
 					<SharedConfirmationModal v-else title="Confirm Field Removal?" confirm-text="Confirm Removal" @confirm="confirmRemoveField(field.fieldID)">
-						<SharedButtonActionButton type="button" label="Remove" color="error" variant="outline" />
+						<SharedButtonActionButton type="button" text="Remove" leading-icon="i-lucide-trash-2" action="negative" variant="outline" />
 					</SharedConfirmationModal>
 				</div>
 			</SharedFormShell>
@@ -64,7 +70,7 @@
 
 <script setup lang="ts">
 import type { FormError } from "@nuxt/ui"
-import { sourceFieldSchema, sourceFieldFormFields } from "~/utils/formSchemas"
+import { sourceFieldSchema, sourceFieldFormFields } from "#shared/utils/formSchemas"
 
 type FieldType = "TEXT" | "NUMBER" | "DATE" | "BOOLEAN" | "CHOICE"
 interface SourceField {

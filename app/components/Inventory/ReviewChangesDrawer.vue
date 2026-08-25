@@ -12,7 +12,7 @@
 					<UCard>
 						<div class="flex items-center justify-between gap-2">
 							<SharedTextCardTitle>Inventory Intake Session</SharedTextCardTitle>
-							<SharedButtonActionButton icon="i-lucide-plus" label="Start session" color="secondary" @click="view = 'create'" />
+							<SharedButtonActionButton leading-icon="i-lucide-plus" text="Start session" action="positive" @click="view = 'create'" />
 						</div>
 						<USelectMenu
 							v-model="selectedSessionID"
@@ -27,9 +27,9 @@
 						</SharedTextBaseSecondary>
 						<SharedButtonActionButton
 							v-if="selectedSession"
-							label="Clear Session"
-							icon="i-lucide-x"
-							color="neutral"
+							text="Clear Session"
+							leading-icon="i-lucide-x"
+							action="neutral"
 							variant="ghost"
 							class="mt-2"
 							@click="inventoryStore.clearIntakeSession()"
@@ -39,14 +39,14 @@
 						<div class="flex justify-end">
 							<UButtonGroup>
 								<SharedButtonActionButton
-									label="Incremental"
-									color="neutral"
+									text="Incremental"
+									action="neutral"
 									:variant="changeView === 'incremental' ? 'solid' : 'outline'"
 									@click="changeView = 'incremental'"
 								/>
 								<SharedButtonActionButton
-									label="Aggregated"
-									color="neutral"
+									text="Aggregated"
+									action="neutral"
 									:variant="changeView === 'aggregated' ? 'solid' : 'outline'"
 									@click="changeView = 'aggregated'"
 								/>
@@ -111,7 +111,7 @@
 						</SharedLayoutGroupedCollapsible>
 
 						<div class="flex justify-center pt-6">
-							<SharedButtonActionButton action="positive" text="Submit" @click="inventoryStore.submitChanges()" />
+							<SharedButtonActionButton action="positive" text="Submit" leading-icon="i-lucide-check" @click="inventoryStore.submitChanges()" />
 						</div>
 					</div>
 				</template>

@@ -15,7 +15,7 @@
 				:trailing-icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
 				size="sm"
 				variant="ghost"
-				color="neutral"
+				action="neutral"
 				class="absolute right-2 bottom-1"
 				:label="label"
 				:aria-label="ariaLabel || label"

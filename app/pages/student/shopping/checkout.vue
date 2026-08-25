@@ -45,8 +45,8 @@
 									</SharedTextBase>
 								</UCard>
 								<div class="flex flex-row justify-between gap-4">
-									<SharedButtonActionButton action="cancel" text="Back" @click="goToShopping" />
-									<SharedButtonActionButton action="positive" text="I Agree" @click="incrementStepper" />
+									<SharedButtonActionButton action="cancel" text="Back" leading-icon="i-lucide-arrow-left" @click="goToShopping" />
+									<SharedButtonActionButton action="positive" text="I Agree" leading-icon="i-lucide-check" @click="incrementStepper" />
 								</div>
 							</div>
 						</template>
@@ -94,8 +94,8 @@
 								</SharedLayoutGroupedCollapsible>
 
 								<div class="flex flex-row justify-between gap-4">
-									<SharedButtonActionButton action="cancel" text="Back" @click="decrementStepper" />
-									<SharedButtonActionButton action="positive" text="Next" @click="incrementStepper" />
+									<SharedButtonActionButton action="cancel" text="Back" leading-icon="i-lucide-arrow-left" @click="decrementStepper" />
+									<SharedButtonActionButton action="positive" text="Next" trailing-icon="i-lucide-arrow-right" @click="incrementStepper" />
 								</div>
 							</div>
 						</template>
@@ -143,8 +143,8 @@
 									</template>
 								</SharedLayoutGroupedCollapsible>
 								<div class="flex flex-row justify-between gap-4">
-									<SharedButtonActionButton action="cancel" text="Back" @click="decrementStepper" />
-									<SharedButtonActionButton action="positive" text="Submit Cart" @click="submitCart" />
+									<SharedButtonActionButton action="cancel" text="Back" leading-icon="i-lucide-arrow-left" @click="decrementStepper" />
+									<SharedButtonActionButton action="positive" text="Submit Cart" leading-icon="i-lucide-check" @click="submitCart" />
 								</div>
 							</div>
 						</template>
@@ -205,7 +205,13 @@
 									</div>
 								</UCard>
 								<div class="mt-4 flex flex-row justify-center gap-4">
-									<SharedButtonActionButton action="navigate-to" text="Back to Shopping" class="w-48" @click="goToShopping" />
+									<SharedButtonActionButton
+										action="navigate-to"
+										text="Back to Shopping"
+										leading-icon="i-lucide-arrow-left"
+										class="w-48"
+										@click="goToShopping"
+									/>
 								</div>
 							</template>
 							<template v-else>
@@ -217,7 +223,13 @@
 									</div>
 								</UCard>
 								<div class="mt-4 flex flex-row justify-center gap-4">
-									<SharedButtonActionButton action="navigate-to" text="Back to Dashboard" class="w-48" @click="navigateTo('/student')" />
+									<SharedButtonActionButton
+										action="navigate-to"
+										text="Back to Dashboard"
+										leading-icon="i-lucide-arrow-left"
+										class="w-48"
+										@click="navigateTo('/student')"
+									/>
 								</div>
 							</template>
 						</template>

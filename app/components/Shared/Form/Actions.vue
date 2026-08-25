@@ -3,7 +3,7 @@
 		<slot name="cancel" />
 
 		<slot>
-			<SharedButtonActionButton action="positive" type="submit" :text="submitText" />
+			<SharedButtonActionButton action="positive" type="submit" leading-icon="i-lucide-check" :text="submitText" />
 		</slot>
 	</div>
 </template>

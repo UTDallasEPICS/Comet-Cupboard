@@ -33,7 +33,7 @@
 
 				<SharedButtonActionButton
 					class="w-min"
-					color="neutral"
+					action="neutral"
 					variant="ghost"
 					trailing-icon="i-lucide-chevron-down"
 					:ui="{ trailingIcon: ['transition-transform duration-200', expand ? 'rotate-180' : ''] }"
@@ -76,13 +76,13 @@
 					</div>
 					<div v-if="!props.bag.private" class="flex justify-end">
 						<SharedButtonActionButton
-							label="Edit Bag"
+							text="Edit Bag"
 							class="bg-utd-orange text-white"
 							variant="outline"
-							trailing-icon="i-lucide-square-pen"
+							leading-icon="i-lucide-square-pen"
 							@click="navigateTo(`/volunteer/emergency-bag/${props.bag.emergencyBagID}/edit`)"
 						/>
-						<SharedButtonActionButton label="Duplicate" color="neutral" variant="outline" trailing-icon="i-lucide-copy" @click="duplicateBag" />
+						<SharedButtonActionButton text="Duplicate" action="neutral" variant="outline" leading-icon="i-lucide-copy" @click="duplicateBag" />
 					</div>
 				</ul>
 				<div class="mt-2 max-w-sm">
@@ -97,10 +97,10 @@
 
 						<div class="flex justify-end pt-2">
 							<SharedButtonActionButton
-								label="Edit Bag"
+								text="Edit Bag"
 								class="bg-utd-orange text-white"
 								variant="outline"
-								trailing-icon="i-lucide-square-pen"
+								leading-icon="i-lucide-square-pen"
 								@click="navigateTo(`/volunteer/emergency-bag/${props.bag.emergencyBagID}/edit`)"
 							/>
 						</div>

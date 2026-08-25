@@ -9,7 +9,6 @@ const schema = z
 		publicCode: z.string(),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { publicCode } = validateQuery(event, schema)

@@ -10,7 +10,6 @@ const schema = z
 		specificItemID: z.string(),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { specificItemID } = await validateBody(event, schema)

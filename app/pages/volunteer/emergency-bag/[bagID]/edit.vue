@@ -10,7 +10,7 @@
 				<EmergencyBagEditorAddItemForm ref="addItemRef" v-model:bag-items="bagItems" />
 				<EmergencyBagEditorDetailsForm ref="detailsRef" v-model:bag-details="bagDetails" />
 				<div class="flex justify-end">
-					<SharedButtonActionButton action="positive" text="Save Changes" :loading="isSaving" @click="saveBag" />
+					<SharedButtonActionButton action="positive" text="Save Changes" leading-icon="i-lucide-check" :loading="isSaving" @click="saveBag" />
 				</div>
 			</section>
 			<div v-else class="py-12 text-center"><SharedTextBase>Emergency bag not found.</SharedTextBase></div>

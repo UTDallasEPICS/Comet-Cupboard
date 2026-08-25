@@ -5,10 +5,10 @@
 				<div class="flex flex-row flex-nowrap items-center gap-2">
 					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search locations" class="relative grow">
 						<SharedButtonActionButton
-							icon="i-lucide-plus"
+							leading-icon="i-lucide-plus"
 							variant="ghost"
-							color="neutral"
-							label="Add"
+							action="positive"
+							text="Add"
 							class="bg-utd-green absolute right-0 text-white"
 							:to="`/admin/manage/locations/add`"
 						/>

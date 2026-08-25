@@ -4,15 +4,14 @@ import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateFormData } from "#server/utils/validation"
 import { imageSchema, deleteImage, uploadImage, processImage } from "#server/utils/image"
+import { categoryNameSchema, editCategorySchema } from "#shared/utils/formSchemas"
 
-const schema = imageSchema
+const schema = editCategorySchema
 	.extend({
 		categoryID: z.string(),
-		categoryName: z
-			.string()
-			.min(1, "Category name cannot be empty")
-			.refine((value) => value.trim().toLowerCase() !== "all items", "all items is reserved"),
+		categoryName: categoryNameSchema,
 		archived: z.enum(["true", "false"]),
+		image: imageSchema.shape.image,
 	})
 	.strict()
 

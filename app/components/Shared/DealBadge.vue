@@ -1,6 +1,19 @@
 <template>
-	<UBadge v-if="dealType === 'free'" class="bg-deal-green" label="Free" />
-	<UBadge v-else-if="dealType === 'deal'" class="bg-deal-green" :label="`${props.itemDeal.actualCount} for ${props.itemDeal.adjustedCount}`" />
+	<UBadge
+		v-if="dealType === 'free'"
+		:ui="{
+			base: 'h-5 px-2 leading-none',
+		}"
+		class="bg-deal-green"
+		label="Free"
+	/>
+	<UBadge
+		v-else-if="dealType === 'deal'"
+		:ui="{
+			base: 'h-5 px-2 leading-none',
+		}"
+		:label="`${itemDeal.actualCount} for ${itemDeal.adjustedCount}`"
+	/>
 </template>
 
 <script lang="ts" setup>

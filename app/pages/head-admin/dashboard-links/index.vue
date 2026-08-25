@@ -7,10 +7,10 @@
 					<SharedLayoutSectionUCard v-for="section in sections" :key="section.audience" :title="section.label" empty-text="No custom links">
 						<template #header>
 							<SharedButtonActionButton
-								icon="i-lucide-plus"
-								color="secondary"
+								leading-icon="i-lucide-plus"
+								action="positive"
 								variant="solid"
-								label="Add link"
+								text="Add link"
 								:to="`/head-admin/dashboard-links/add?audience=${section.audience}`"
 							/>
 						</template>

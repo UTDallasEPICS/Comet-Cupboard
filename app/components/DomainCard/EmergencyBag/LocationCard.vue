@@ -5,7 +5,7 @@
 			<UCollapsible>
 				<template #default="{ open }">
 					<SharedButtonActionButton
-						color="neutral"
+						action="neutral"
 						variant="ghost"
 						block
 						class="h-auto justify-between rounded-none p-4"

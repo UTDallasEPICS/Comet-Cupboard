@@ -17,12 +17,12 @@
 								size="lg"
 							/>
 							<SharedConfirmationModal title="Confirm Leaving Queue?" confirm-text="Confirm Leave" @confirm="confirmLeaveQueue">
-								<SharedButtonActionButton action="cancel" text="Leave Queue" class="my-auto h-min" />
+								<SharedButtonActionButton action="cancel" text="Leave Queue" leading-icon="i-lucide-log-out" class="my-auto h-min" />
 							</SharedConfirmationModal>
 						</div>
 						<div v-else-if="cartStore.cart" class="flex flex-col items-center justify-center gap-4">
 							<SharedTextBase> You currently have an active cart. </SharedTextBase>
-							<SharedButtonActionButton action="navigate-to" text="Browse Items" to="/student/shopping" />
+							<SharedButtonActionButton action="navigate-to" text="Browse Items" trailing-icon="i-lucide-arrow-right" to="/student/shopping" />
 						</div>
 						<div v-else class="flex flex-col items-center justify-center gap-4">
 							<SharedTextBase> Currently not in queue </SharedTextBase>
@@ -31,8 +31,9 @@
 								<UPinInput v-model="accessCode" type="number" :length="6" required size="lg" />
 								<SharedButtonActionButton
 									type="submit"
-									label="Join Queue"
-									color="secondary"
+									text="Join Queue"
+									leading-icon="i-lucide-log-in"
+									action="positive"
 									:loading="isJoining"
 									:disabled="isJoining || accessCode.length !== 6"
 								/>

@@ -13,7 +13,7 @@
 		>
 
 		<UDropdownMenu :items="actionItems">
-			<SharedButtonActionButton icon="i-lucide-ellipsis" variant="ghost" color="neutral" class="absolute top-2 right-2 h-8 w-8" />
+			<SharedButtonActionButton icon="i-lucide-ellipsis" variant="ghost" action="neutral" class="absolute top-2 right-2 h-8 w-8" />
 		</UDropdownMenu>
 	</UCard>
 </template>

@@ -12,7 +12,6 @@ const schema = z
 		filename: z.string().regex(/^[a-zA-Z0-9._-]+$/),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { filename } = validateParams(event, schema)

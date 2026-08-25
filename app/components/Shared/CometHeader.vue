@@ -85,7 +85,12 @@
 								placeholder="Minutes until you arrive (optional)"
 								class="w-full"
 							/>
-							<SharedButtonActionButton label="Acknowledge" :loading="isAcknowledgingPing" @click="acknowledgeQueuePing" />
+							<SharedButtonActionButton
+								text="Acknowledge"
+								leading-icon="i-lucide-check"
+								:loading="isAcknowledgingPing"
+								@click="acknowledgeQueuePing"
+							/>
 						</div>
 						<SharedTextBase v-else>No notifications</SharedTextBase>
 					</template>
@@ -185,7 +190,7 @@
 							/>
 							<SharedTextBase class="text-utd-orange">{{ permissionsStore.roleText }}</SharedTextBase>
 							<USeparator />
-							<SharedButtonActionButton variant="outline" color="neutral" icon="i-lucide-log-out" class="w-full" @click="logout">
+							<SharedButtonActionButton variant="outline" action="neutral" icon="i-lucide-log-out" class="w-full" @click="logout">
 								Logout
 							</SharedButtonActionButton>
 						</div>

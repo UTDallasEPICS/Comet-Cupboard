@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { dashboardLinkSchema, dashboardLinkFormFields, type DashboardLinkForm } from "~/utils/formSchemas"
+import { dashboardLinkSchema, dashboardLinkFormFields, type DashboardLinkForm } from "#shared/utils/formSchemas"
 
 const roles = ["STUDENT", "VOLUNTEER", "ADMIN", "HEAD_ADMIN"] as const
 const props = withDefaults(defineProps<{ initialValues?: Partial<DashboardLinkForm>; submitText?: string }>(), {

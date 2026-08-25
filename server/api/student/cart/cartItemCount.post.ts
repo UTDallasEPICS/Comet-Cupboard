@@ -11,7 +11,6 @@ const schema = z
 		incrementChange: z.number().int().min(-1).max(1),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { specificItemID, incrementChange } = await validateBody(event, schema)

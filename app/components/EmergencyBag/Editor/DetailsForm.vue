@@ -13,7 +13,7 @@
 							<template #leading>
 								<UPopover :reference="inputDate?.inputsRef[3]?.$el">
 									<SharedButtonActionButton
-										color="neutral"
+										action="neutral"
 										variant="link"
 										size="md"
 										icon="i-lucide-calendar"
@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts" setup>
-import { emergencyBagDetailsSchema, emergencyBagDetailsFormFields, emergencyBagDisplayFields } from "~/utils/formSchemas"
+import { emergencyBagDetailsSchema, emergencyBagDetailsFormFields, emergencyBagDisplayFields } from "#shared/utils/formSchemas"
 import type { DateValue } from "@internationalized/date"
 
 const permissionsStore = usePermissionsStore()

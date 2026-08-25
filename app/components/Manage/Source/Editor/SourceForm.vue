@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { sourceSchema, sourceFormFields, type SourceForm } from "~/utils/formSchemas"
+import { sourceSchema, sourceFormFields, type SourceForm } from "#shared/utils/formSchemas"
 
 type SourceSummary = {
 	sourceID: string

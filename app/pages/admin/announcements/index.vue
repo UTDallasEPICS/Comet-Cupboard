@@ -9,7 +9,7 @@
 							<SharedTextBaseSecondary>Manage upcoming announcements</SharedTextBaseSecondary>
 						</div>
 
-						<SharedButtonActionButton to="/admin/announcements/add" icon="i-lucide-plus" color="secondary" label="Create announcement" />
+						<SharedButtonActionButton to="/admin/announcements/add" leading-icon="i-lucide-plus" action="positive" text="Create announcement" />
 					</div>
 
 					<USeparator class="my-4" />
@@ -30,9 +30,9 @@
 						<SharedTextBaseSecondary class="mt-1"> Create an announcement to notify users. </SharedTextBaseSecondary>
 						<SharedButtonActionButton
 							to="/admin/announcements/add"
-							icon="i-lucide-plus"
-							color="secondary"
-							label="Create announcement"
+							leading-icon="i-lucide-plus"
+							action="positive"
+							text="Create announcement"
 							class="mt-4"
 						/>
 					</div>

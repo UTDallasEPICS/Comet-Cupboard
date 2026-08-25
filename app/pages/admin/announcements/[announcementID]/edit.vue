@@ -5,7 +5,7 @@
 			<div class="mx-auto w-full max-w-xl">
 				<div class="flex w-full flex-row items-center justify-center">
 					<SharedConfirmationModal title="Confirm Deletion?" confirm-text="Confirm Deletion" @confirm="archiveAnnouncement(announcementID)">
-						<SharedButtonActionButton label="Delete Announcement" color="error" variant="outline" icon="i-lucide-trash-2" />
+						<SharedButtonActionButton text="Delete Announcement" action="negative" variant="outline" leading-icon="i-lucide-trash-2" />
 					</SharedConfirmationModal>
 				</div>
 
@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import type { AnnouncementForm } from "~/utils/formSchemas"
+import type { AnnouncementForm } from "#shared/utils/formSchemas"
 import { Time, getLocalTimeZone, parseDate, today } from "@internationalized/date"
 
 definePageMeta({ layout: false })
@@ -39,16 +39,10 @@ function timeFromDate(value: string) {
 	const date = new Date(value)
 	return new Time(date.getHours(), date.getMinutes())
 }
-const toISOString = (date: any, time: any) => new Date(`${date.toString()}T${time.toString()}`).toISOString()
 const onSubmit = async (data: AnnouncementForm) => {
 	await $fetch("/api/admin/announcements", {
 		method: "PUT",
-		body: {
-			announcementID,
-			message: data.message,
-			startsAt: toISOString(data.startsDate, data.startsTime),
-			endsAt: toISOString(data.endsDate, data.endsTime),
-		},
+		body: { announcementID, ...data },
 	})
 	await navigateTo("/admin/announcements")
 }

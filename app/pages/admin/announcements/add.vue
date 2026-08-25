@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import type { AnnouncementForm } from "~/utils/formSchemas"
+import type { AnnouncementForm } from "#shared/utils/formSchemas"
 import { Time, getLocalTimeZone, today } from "@internationalized/date"
 
 definePageMeta({ layout: false })
@@ -23,16 +23,10 @@ const initialValues: AnnouncementForm = {
 	startsTime: new Time(9, 0) as any,
 	endsTime: new Time(17, 0) as any,
 }
-const toISOString = (date: any, time: any) => new Date(`${date.toString()}T${time.toString()}`).toISOString()
 const onSubmit = async (data: AnnouncementForm) => {
 	await $fetch("/api/admin/announcements", {
 		method: "PUT",
-		body: {
-			announcementID: "",
-			message: data.message,
-			startsAt: toISOString(data.startsDate, data.startsTime),
-			endsAt: toISOString(data.endsDate, data.endsTime),
-		},
+		body: { announcementID: "", ...data },
 	})
 	await navigateTo("/admin/announcements")
 }

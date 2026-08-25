@@ -3,15 +3,9 @@ import { prisma } from "#server/utils/db"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateFormData } from "#server/utils/validation"
+import { inventoryItemDetailsSchema } from "#shared/utils/formSchemas"
 
-const schema = z
-	.object({
-		itemID: z.string(),
-		itemName: z.string().min(1, "Name cannot be empty").max(100, "Name must be at most 100 characters"),
-		categoryID: z.string(),
-		archived: z.enum(["true", "false"]),
-	})
-	.strict()
+const schema = inventoryItemDetailsSchema.extend({ itemID: z.string(), archived: z.enum(["true", "false"]) }).strict()
 
 export default defineSafeHandler(async (event) => {
 	const { itemName, categoryID, itemID, archived } = await validateFormData(event, schema)

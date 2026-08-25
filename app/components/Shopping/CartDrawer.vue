@@ -5,14 +5,14 @@
 				<div class="flex w-full flex-col items-center gap-2">
 					<SharedTextBase>Currently waiting in queue</SharedTextBase>
 					<UProgress :indeterminate="true" class="mt-4" />
-					<SharedButtonActionButton action="navigate-to" text="Go to Queue" to="/student/queue" />
+					<SharedButtonActionButton action="navigate-to" text="Go to Queue" trailing-icon="i-lucide-arrow-right" to="/student/queue" />
 				</div>
 			</template>
 			<template v-else>
 				<div class="flex w-full flex-col items-center gap-4">
 					<SharedTextBase>You need to join queue before shopping</SharedTextBase>
 					<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
-					<SharedButtonActionButton action="navigate-to" text="Go to Queue" to="/student/queue" />
+					<SharedButtonActionButton action="navigate-to" text="Go to Queue" trailing-icon="i-lucide-arrow-right" to="/student/queue" />
 				</div>
 			</template>
 		</template>
@@ -20,7 +20,7 @@
 			<div class="flex w-full flex-col items-center gap-4">
 				<SharedTextBase>Your cart is empty</SharedTextBase>
 				<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
-				<SharedButtonActionButton action="navigate-to" text="Browse Items" to="/student/shopping" />
+				<SharedButtonActionButton action="navigate-to" text="Browse Items" trailing-icon="i-lucide-arrow-right" to="/student/shopping" />
 			</div>
 		</template>
 		<template v-else>
@@ -79,7 +79,13 @@
 			</SharedLayoutGroupedCollapsible>
 
 			<div class="flex justify-center pt-6">
-				<SharedButtonActionButton action="navigate-to" text="Proceed to Checkout" class="w-48" @click="proceedToCheckout" />
+				<SharedButtonActionButton
+					action="navigate-to"
+					text="Proceed to Checkout"
+					trailing-icon="i-lucide-arrow-right"
+					class="w-48"
+					@click="proceedToCheckout"
+				/>
 			</div>
 		</template>
 	</UContainer>

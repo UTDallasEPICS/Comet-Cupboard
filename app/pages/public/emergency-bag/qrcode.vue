@@ -20,7 +20,13 @@
 						</SharedTextBase>
 
 						<div class="flex justify-end">
-							<SharedButtonActionButton action="positive" text="Submit" :disabled="isLoading" @click="submitBagID" />
+							<SharedButtonActionButton
+								action="positive"
+								text="Submit"
+								leading-icon="i-lucide-check"
+								:disabled="isLoading"
+								@click="submitBagID"
+							/>
 						</div>
 					</div>
 				</UCard>

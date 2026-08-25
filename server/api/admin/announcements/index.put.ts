@@ -2,19 +2,22 @@ import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateBody } from "#server/utils/validation"
+import { announcementSchema } from "#shared/utils/formSchemas"
 
-const schema = z
-	.object({
-		announcementID: z.string(),
-		message: z.string().trim().min(1),
-		startsAt: z.coerce.date(),
-		endsAt: z.coerce.date(),
-	})
+const schema = announcementSchema
+	.extend({ announcementID: z.string() })
 	.strict()
-	.refine((value) => value.endsAt > value.startsAt, { message: "End date must be after start date", path: ["endsAt"] })
+	.refine((value) => new Date(`${String(value.endsDate)}T${String(value.endsTime)}`) > new Date(`${String(value.startsDate)}T${String(value.startsTime)}`), {
+		message: "End date must be after start date",
+		path: ["endsDate"],
+	})
+
+const toISOString = (date: unknown, time: unknown) => new Date(`${String(date)}T${String(time)}`).toISOString()
 
 export default defineSafeHandler(async (event) => {
-	const { announcementID, message, startsAt, endsAt } = await validateBody(event, schema)
+	const { announcementID, message, startsDate, endsDate, startsTime, endsTime } = await validateBody(event, schema)
+	const startsAt = toISOString(startsDate, startsTime)
+	const endsAt = toISOString(endsDate, endsTime)
 
 	if (!announcementID) {
 		return await prisma.$transaction(async (tx) => {

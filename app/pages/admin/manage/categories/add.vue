@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { CreateCategoryForm } from "~/utils/formSchemas"
+import type { CreateCategoryForm } from "#shared/utils/formSchemas"
 
 definePageMeta({ layout: false })
 

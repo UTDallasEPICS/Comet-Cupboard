@@ -5,17 +5,15 @@ import { defineSafeHandler } from "#server/utils/handler"
 import { validateFormData } from "#server/utils/validation"
 import { Prisma } from "../../../../prisma/generated/prisma/client"
 import { imageSchema, deleteImage, uploadImage, processImage } from "#server/utils/image"
+import { descriptionSchema, editLocationSchema, locationNameSchema } from "#shared/utils/formSchemas"
 
-const schema = imageSchema
+const schema = editLocationSchema
 	.extend({
 		locationID: z.string(),
-		locationName: z.string().min(1, "Location name cannot be empty"),
-		description: z.string().or(z.literal("")),
-		mapEmbedUrl: z
-			.string()
-			.regex(/^https:\/\/map\.concept3d\.com\/\?id=1772#!m\/\d+$/, "Use a valid UTD Concept3D map URL")
-			.or(z.literal("")),
+		locationName: locationNameSchema,
+		description: descriptionSchema,
 		archived: z.enum(["true", "false"]),
+		image: imageSchema.shape.image,
 	})
 	.strict()
 

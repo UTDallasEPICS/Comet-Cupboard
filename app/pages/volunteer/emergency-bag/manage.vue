@@ -5,15 +5,15 @@
 				<div class="flex flex-row flex-nowrap items-center gap-2">
 					<UInput v-model="searchQuery" type="text" icon="i-lucide-search" placeholder="Search bags" class="relative grow">
 						<SharedButtonActionButton
-							icon="i-lucide-plus"
-							color="secondary"
-							label="Add"
+							leading-icon="i-lucide-plus"
+							action="positive"
+							text="Add"
 							class="absolute right-0"
 							@click="navigateTo('/volunteer/emergency-bag/create')"
 						/>
 					</UInput>
 					<UPopover>
-						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" variant="ghost" color="neutral" size="md" />
+						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" variant="ghost" action="neutral" size="md" />
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">
@@ -38,7 +38,7 @@
 					<div class="flex items-center justify-between gap-3">
 						<SharedTextSectionTitle>Emergency Bags</SharedTextSectionTitle>
 						<UPopover>
-							<SharedButtonActionButton label="Move Bag" class="bg-utd-green" trailing-icon="i-lucide-arrow-left-right" />
+							<SharedButtonActionButton text="Move Bag" class="bg-utd-green" leading-icon="i-lucide-arrow-left-right" />
 
 							<template #content>
 								<div class="flex flex-col gap-2 p-4">
@@ -51,8 +51,8 @@
 										<SharedTextBase>To:</SharedTextBase>
 										<UDropdownMenu :items="items" :ui="{ content: 'w-48' }">
 											<SharedButtonActionButton
-												label="Choose Location"
-												color="neutral"
+												text="Choose Location"
+												action="neutral"
 												variant="outline"
 												trailing-icon="i-lucide-chevron-down"
 											/>
@@ -66,10 +66,10 @@
 					<div v-if="groupedBags.length === 0" class="flex flex-col items-center justify-center gap-y-4 py-8">
 						<SharedTextBase>{{ emergencyBags?.length ? "No bags match the current filters" : "No bags have been created" }}</SharedTextBase>
 						<SharedButtonActionButton
-							label="Create new bag"
-							color="neutral"
+							text="Create new bag"
+							action="positive"
 							variant="outline"
-							trailing-icon="i-lucide-plus"
+							leading-icon="i-lucide-plus"
 							@click="navigateTo('/volunteer/emergency-bag/create')"
 						/>
 					</div>

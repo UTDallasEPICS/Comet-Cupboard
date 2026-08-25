@@ -25,8 +25,7 @@
 						>
 							<SharedButtonActionButton
 								class="flex-1"
-								action="custom"
-								custom-color="neutral"
+								action="neutral"
 								:text="tutorial.tutorialName"
 								justify="between"
 								trailing-icon="i-lucide-chevron-right"
@@ -38,7 +37,7 @@
 
 						<SharedButtonActionButton
 							class="w-min"
-							color="neutral"
+							action="neutral"
 							variant="ghost"
 							size="xl"
 							icon="i-lucide-edit"
@@ -48,12 +47,11 @@
 				</ul>
 				<div class="flex justify-center p-4">
 					<SharedButtonActionButton
-						label="Create new tutorial"
-						color="secondary"
+						text="Create new tutorial"
+						action="positive"
 						variant="solid"
 						class="w-max"
-						text="Create new tutorial"
-						trailing-icon="i-lucide-plus"
+						leading-icon="i-lucide-plus"
 						@click="navigateTo(`/admin/manage/tutorials/${tutorialGroupID}/add`)"
 					/>
 				</div>

@@ -9,7 +9,6 @@ const schema = z
 		label: z.string().length(5, "Bag ID must be 5 characters long"),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { label } = await validateBody(event, schema)

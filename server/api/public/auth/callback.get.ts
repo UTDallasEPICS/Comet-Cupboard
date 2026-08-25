@@ -15,7 +15,6 @@ const schema = z
 		state: z.string().min(1),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { code, state } = validateQuery(event, schema)

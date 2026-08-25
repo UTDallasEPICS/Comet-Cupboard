@@ -34,7 +34,7 @@ import {
 	editCategoryFormFields,
 	type CreateCategoryForm,
 	type EditCategoryForm,
-} from "~/utils/formSchemas"
+} from "#shared/utils/formSchemas"
 
 type CategorySummary = { categoryID: string; categoryName: string }
 type CategoryFormValues = CreateCategoryForm | EditCategoryForm

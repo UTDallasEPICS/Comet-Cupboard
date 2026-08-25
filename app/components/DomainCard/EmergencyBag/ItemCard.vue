@@ -24,7 +24,7 @@
 				variant="ghost"
 				icon="i-lucide-x"
 				class="absolute top-2 right-2 shrink-0"
-				color="neutral"
+				action="neutral"
 				size="xs"
 				@click="emit('remove', itemID)"
 			/>

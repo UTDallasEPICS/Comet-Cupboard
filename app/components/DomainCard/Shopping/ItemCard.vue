@@ -27,11 +27,11 @@
 
 				<SharedButtonActionButton
 					v-if="orderedSpecificItems.length"
-					color="neutral"
+					action="neutral"
 					variant="ghost"
 					size="sm"
 					class="absolute right-2 bottom-1"
-					label="Show items"
+					text="Show items"
 					:trailing-icon="isSpecificItemsOpen ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
 					@click="isSpecificItemsOpen = !isSpecificItemsOpen"
 				/>
@@ -69,7 +69,13 @@
 										/>
 									</div>
 								</div>
-								<SharedButtonActionButton action="positive" text="Add" class="ml-auto" @click="emit('add', specificItem.specificItemID)" />
+								<SharedButtonActionButton
+									action="positive"
+									text="Add"
+									leading-icon="i-lucide-plus"
+									class="ml-auto"
+									@click="emit('add', specificItem.specificItemID)"
+								/>
 							</div>
 						</div>
 					</div>

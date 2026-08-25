@@ -5,7 +5,13 @@
 				<div class="flex items-center justify-between gap-3">
 					<h2 class="text-lg font-semibold text-gray-900">Find A Pickup Point</h2>
 					<UPopover>
-						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" variant="ghost" color="neutral" size="md" aria-label="Filter bag labels" />
+						<SharedButtonActionButton
+							icon="i-lucide-sliders-horizontal"
+							variant="ghost"
+							action="neutral"
+							size="md"
+							aria-label="Filter bag labels"
+						/>
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">
 								<SharedTextBase class="w-full font-semibold">Filter Labels</SharedTextBase>

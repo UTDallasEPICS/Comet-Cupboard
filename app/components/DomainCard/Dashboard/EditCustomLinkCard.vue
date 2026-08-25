@@ -19,7 +19,7 @@
 				class="ml-auto"
 				icon="i-lucide-edit"
 				variant="ghost"
-				color="neutral"
+				action="neutral"
 				:to="`/head-admin/dashboard-links/${dashboardLinkID}/edit`"
 			/>
 		</div>
