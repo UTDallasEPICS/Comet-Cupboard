@@ -8,9 +8,9 @@
 						:class="(currentPublicCodePreview === '' ? 'visible' : 'invisible hidden') + ' md:visible md:block'"
 						class="w-full max-w-100 md:mr-4 lg:mr-12"
 					>
-						<DomainCardVerifyCartPendingList :selected-cart="currentPublicCodePreview" @update:select-cart="setPublicCodePreview" />
+						<VerifyCartPendingList :selected-cart="currentPublicCodePreview" @update:select-cart="setPublicCodePreview" />
 					</div>
-					<DomainCardVerifyCartPreview
+					<VerifyCartPreview
 						:class="(currentPublicCodePreview === '' ? 'invisible hidden' : 'visible') + ' md:visible md:flex md:flex-col'"
 						:public-code="currentPublicCodePreview"
 						@update:select-cart="setPublicCodePreview"
