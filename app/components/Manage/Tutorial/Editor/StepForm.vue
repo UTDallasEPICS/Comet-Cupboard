@@ -7,7 +7,7 @@
 			</div>
 			<USeparator class="mb-4" />
 
-			<UFormField id="image" name="image" label="Step Image" description="JPG or PNG. 2MB Max. Image should be 16:9 (for example 1200x675px)" required>
+			<UFormField name="image" v-bind="tutorialStepFormFields.image" required>
 				<UFileUpload
 					v-model="state.image"
 					class="aspect-square w-full"
@@ -17,8 +17,8 @@
 				/>
 			</UFormField>
 
-			<UFormField id="description" name="description" label="Step Description" description="Describe what the user should do in this step" required>
-				<UTextarea v-model="state.description" placeholder="Enter step description" class="w-full" />
+			<UFormField name="description" v-bind="tutorialStepFormFields.description" required>
+				<UTextarea v-model="state.description" :placeholder="tutorialStepFormFields.description.placeholder" class="w-full" />
 			</UFormField>
 
 			<SharedFormActions v-if="stepChanged" submit-text="Save changes">
@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { tutorialStepSchema } from "~/utils/formSchemas"
+import { tutorialStepSchema, tutorialStepFormFields } from "~/utils/formSchemas"
 
 const props = defineProps<{
 	tutorialStepID: string
@@ -82,7 +82,7 @@ const submit = () => {
 	const payload = new FormData()
 	payload.append("tutorialID", props.tutorialID)
 	payload.append("tutorialStepID", props.isNewStep ? "" : props.tutorialStepID)
-	payload.append("description", state.value.description)
+	payload.append("description", String(state.value.description ?? ""))
 	if (state.value.image) {
 		payload.append("image", state.value.image)
 	}

@@ -10,7 +10,12 @@
 					<UStepper ref="stepper" disabled :items="steps">
 						<template #content="{ item }">
 							<USeparator class="mb-4" />
-							<EmergencyBagEditorAddItemForm v-if="item.label === 'Add'" ref="addItemRef" v-model:bag-items="bagItems" />
+							<EmergencyBagEditorAddItemForm
+								v-if="item.label === 'Add'"
+								ref="addItemRef"
+								:items="inventoryItems ?? []"
+								v-model:bag-items="bagItems"
+							/>
 							<EmergencyBagEditorDetailsForm v-if="item.label === 'Details'" ref="detailsRef" v-model:bag-details="bagDetails" />
 							<EmergencyBagEditorConfirmBagForm v-if="item.label === 'Confirm'" :bag-items="bagItems" :bag-details="bagDetails" />
 						</template>
@@ -48,6 +53,9 @@ const stepper = ref()
 const addItemRef = useTemplateRef("addItemRef")
 const detailsRef = useTemplateRef("detailsRef")
 const route = useRoute()
+const { data: inventoryItems } = await useFetch("/api/student/inventory/items", {
+	query: { checkAvailability: "true" },
+})
 
 const bagItems = ref<
 	{

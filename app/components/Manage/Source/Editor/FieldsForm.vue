@@ -1,5 +1,5 @@
 <template>
-	<UCard>
+	<SharedFormCard>
 		<div class="flex items-center justify-between gap-3">
 			<SharedTextCardTitle>Source Fields</SharedTextCardTitle>
 			<SharedButtonActionButton label="Add Field" icon="i-lucide-plus" color="secondary" @click="addField" />
@@ -15,10 +15,10 @@
 				:on-error="onError"
 			>
 				<div class="border-border-soft space-y-3 rounded-lg border p-3">
-					<UFormField :id="`fieldName-${field.key}`" name="fieldName" label="Field Name" required
-						><UInput v-model="field.fieldName" class="w-full"
+					<UFormField :id="`${sourceFieldFormFields.fieldName.id}-${field.key}`" name="fieldName" v-bind="sourceFieldFormFields.fieldName" required
+						><UInput v-model="field.fieldName" :placeholder="sourceFieldFormFields.fieldName.placeholder" class="w-full"
 					/></UFormField>
-					<UFormField :id="`fieldType-${field.key}`" name="type" label="Field Type" required
+					<UFormField :id="`${sourceFieldFormFields.type.id}-${field.key}`" name="type" v-bind="sourceFieldFormFields.type" required
 						><USelect v-model="field.type" :items="fieldTypes" class="w-full"
 					/></UFormField>
 					<UCheckbox v-model="field.optional" label="Optional field" />
@@ -34,9 +34,9 @@
 								@click="field.choices.push('')"
 							/>
 						</div>
-						<UFormField v-for="(_choice, index) in field.choices" :key="index" :name="`choices.${index}`">
+						<UFormField v-for="(_choice, index) in field.choices" :key="index" :name="`choices.${index}`" v-bind="sourceFieldFormFields.choices">
 							<div class="flex items-center gap-2">
-								<UInput v-model="field.choices[index]" placeholder="Choice value" class="grow" />
+								<UInput v-model="field.choices[index]" :placeholder="sourceFieldFormFields.choices.placeholder" class="grow" />
 								<SharedButtonActionButton
 									type="button"
 									icon="i-lucide-trash-2"
@@ -52,37 +52,19 @@
 						<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelField(field)" />
 						<SharedButtonActionButton type="submit" label="Save Changes" color="secondary" :loading="savingFieldKey === field.key" />
 					</div>
-					<SharedButtonActionButton
-						v-else
-						type="button"
-						label="Remove"
-						color="error"
-						variant="outline"
-						@click="openRemoveFieldModal(field.fieldID)"
-					/>
+					<SharedConfirmationModal v-else title="Confirm Field Removal?" confirm-text="Confirm Removal" @confirm="confirmRemoveField(field.fieldID)">
+						<SharedButtonActionButton type="button" label="Remove" color="error" variant="outline" />
+					</SharedConfirmationModal>
 				</div>
 			</SharedFormShell>
 		</div>
 		<SharedTextBaseSecondary v-else>No fields added yet.</SharedTextBaseSecondary>
-	</UCard>
-
-	<UModal v-model:open="isRemoveFieldModalOpen">
-		<template #content>
-			<UCard>
-				<SharedTextCardTitle>Confirm Field Removal?</SharedTextCardTitle>
-				<USeparator class="my-2" />
-				<div class="mt-4 flex justify-center gap-2">
-					<SharedButtonActionButton label="Cancel" color="neutral" variant="outline" @click="isRemoveFieldModalOpen = false" />
-					<SharedButtonActionButton label="Confirm Removal" color="error" @click="confirmRemoveField" />
-				</div>
-			</UCard>
-		</template>
-	</UModal>
+	</SharedFormCard>
 </template>
 
 <script setup lang="ts">
 import type { FormError } from "@nuxt/ui"
-import { sourceFieldSchema } from "~/utils/formSchemas"
+import { sourceFieldSchema, sourceFieldFormFields } from "~/utils/formSchemas"
 
 type FieldType = "TEXT" | "NUMBER" | "DATE" | "BOOLEAN" | "CHOICE"
 interface SourceField {
@@ -119,8 +101,6 @@ const { onError } = createFormBuilder(sourceFieldSchema)
 const { data: fields, refresh: refreshFields } = await useFetch<SourceField[]>("/api/volunteer/inventory/source/field", { query: { sourceID: props.sourceID } })
 const editableFields = ref<EditableField[]>([])
 const savingFieldKey = ref<string | null>(null)
-const isRemoveFieldModalOpen = ref(false)
-const fieldIDToRemove = ref<string | null>(null)
 
 const toEditable = (field: SourceField): EditableField => {
 	const editable = {
@@ -183,14 +163,7 @@ const saveField = (field: EditableField) => {
 	if (field.isNew) editableFields.value = editableFields.value.filter((candidate) => candidate.key !== field.key)
 	emit("save", field.isNew ? { body: { sourceID: props.sourceID, ...body } } : { fieldID: field.fieldID, body })
 }
-const openRemoveFieldModal = (fieldID: string) => {
-	fieldIDToRemove.value = fieldID
-	isRemoveFieldModalOpen.value = true
-}
-const confirmRemoveField = () => {
-	if (!fieldIDToRemove.value) return
-	emit("remove", fieldIDToRemove.value)
-	fieldIDToRemove.value = null
-	isRemoveFieldModalOpen.value = false
+const confirmRemoveField = (fieldID: string) => {
+	emit("remove", fieldID)
 }
 </script>

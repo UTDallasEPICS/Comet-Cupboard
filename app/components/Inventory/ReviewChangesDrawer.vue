@@ -4,7 +4,7 @@
 			<div :key="view" class="space-y-4">
 				<InventoryEditorIntakeSessionStartForm
 					v-if="view === 'create'"
-					:sources="sources ?? []"
+					:sources="props.sources"
 					@cancel="view = 'review'"
 					@started="handleSessionStarted"
 				/>
@@ -121,7 +121,7 @@
 </template>
 
 <script lang="ts" setup>
-const { data: sources } = await useFetch("/api/volunteer/inventory/source")
+const props = defineProps<{ sources: { sourceID: string; sourceName: string }[] }>()
 const inventoryStore = useInventoryStore()
 const view = ref<"review" | "create">("review")
 const changeView = ref<"incremental" | "aggregated">("aggregated")

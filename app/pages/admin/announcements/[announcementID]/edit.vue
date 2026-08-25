@@ -4,19 +4,9 @@
 			<USeparator class="my-4" />
 			<div class="mx-auto w-full max-w-xl">
 				<div class="flex w-full flex-row items-center justify-center">
-					<UModal v-model:open="isDeleteModalOpen">
+					<SharedConfirmationModal title="Confirm Deletion?" confirm-text="Confirm Deletion" @confirm="archiveAnnouncement(announcementID)">
 						<SharedButtonActionButton label="Delete Announcement" color="error" variant="outline" icon="i-lucide-trash-2" />
-						<template #content>
-							<UCard>
-								<SharedTextCardTitle>Confirm Deletion?</SharedTextCardTitle>
-								<USeparator class="my-2" />
-								<div class="mt-4 flex flex-row items-center justify-center gap-2">
-									<SharedButtonActionButton action="cancel" text="Cancel" @click="isDeleteModalOpen = false" />
-									<SharedButtonActionButton action="negative" text="Confirm Deletion" @click="archiveAnnouncement(announcementID)" />
-								</div>
-							</UCard>
-						</template>
-					</UModal>
+					</SharedConfirmationModal>
 				</div>
 
 				<ManageAnnouncementEditorAnnouncementForm :initial-values="initialValues" submit-text="Save changes" class="mt-4" @submit="onSubmit" />
@@ -34,11 +24,10 @@ definePageMeta({ layout: false })
 const route = useRoute()
 const announcementID = String(route.params.announcementID)
 
-const isDeleteModalOpen = ref(false)
-
 const timeZone = getLocalTimeZone()
-const { data: announcements } = await useFetch("/api/admin/announcements")
-const announcement = computed(() => announcements.value?.find((entry) => entry.announcementID === announcementID))
+type AnnouncementRecord = { announcementID: string; message: string; startsAt: string; endsAt: string }
+const { data: announcements } = await useFetch<AnnouncementRecord[]>("/api/admin/announcements")
+const announcement = computed(() => announcements.value?.find((entry: AnnouncementRecord) => entry.announcementID === announcementID))
 const initialValues = computed<AnnouncementForm>(() => ({
 	message: announcement.value?.message ?? undefined,
 	startsDate: announcement.value ? parseDate(new Date(announcement.value.startsAt).toLocaleDateString("en-CA", { timeZone })) : today(timeZone),

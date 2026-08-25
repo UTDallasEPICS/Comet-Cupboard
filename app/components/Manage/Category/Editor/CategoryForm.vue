@@ -1,25 +1,13 @@
 <template>
 	<SharedFormShell :validate="validate" :state="state" :on-submit="submit" :on-error="onError" width-class="w-full" class="space-y-4">
 		<SharedLayoutSectionUCard title="Category Image">
-			<UFormField
-				id="image"
-				name="image"
-				label="Category Image"
-				description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels"
-				required
-			>
+			<UFormField name="image" v-bind="categoryFormFields.image" required>
 				<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
 			</UFormField>
 		</SharedLayoutSectionUCard>
 		<SharedLayoutSectionUCard title="Category Details">
-			<UFormField
-				id="categoryName"
-				name="categoryName"
-				label="Category Name"
-				description="Category name must be at most 20 characters and only contain letters and spaces"
-				required
-			>
-				<UInput v-model="state.categoryName" placeholder="Enter category name" />
+			<UFormField name="categoryName" v-bind="categoryFormFields.categoryName" required>
+				<UInput v-model="state.categoryName" :placeholder="categoryFormFields.categoryName.placeholder" />
 				<div v-if="mostSimilarItems.length" class="border-border-soft mt-2 rounded-lg border p-2">
 					<SharedTextBaseSecondary>Similar existing categories</SharedTextBaseSecondary>
 					<div class="mt-2 flex flex-wrap gap-2">
@@ -30,8 +18,8 @@
 			</UFormField>
 		</SharedLayoutSectionUCard>
 		<SharedLayoutSectionUCard v-if="showArchived" title="Availability">
-			<UFormField id="archived" name="archived" label="Archived" description="Check if the category is archived">
-				<UCheckbox v-model="state.archived" label="Archived" />
+			<UFormField name="archived" v-bind="editCategoryFormFields.archived">
+				<UCheckbox v-model="editState.archived" label="Archived" />
 			</UFormField>
 		</SharedLayoutSectionUCard>
 		<SharedFormActions :submit-text="submitText" class-name="sticky right-4 bottom-8 mt-4" />
@@ -39,7 +27,14 @@
 </template>
 
 <script setup lang="ts">
-import { createCategorySchema, editCategorySchema, type CreateCategoryForm, type EditCategoryForm } from "~/utils/formSchemas"
+import {
+	createCategorySchema,
+	editCategorySchema,
+	createCategoryFormFields,
+	editCategoryFormFields,
+	type CreateCategoryForm,
+	type EditCategoryForm,
+} from "~/utils/formSchemas"
 
 type CategorySummary = { categoryID: string; categoryName: string }
 type CategoryFormValues = CreateCategoryForm | EditCategoryForm
@@ -50,7 +45,9 @@ const props = withDefaults(defineProps<{ categories?: CategorySummary[]; initial
 	submitText: "Submit",
 })
 const emit = defineEmits<{ submit: [payload: CategoryFormValues] }>()
+const categoryFormFields = createCategoryFormFields
 const { state, validate, onError } = createFormBuilder(props.showArchived ? editCategorySchema : createCategorySchema, () => props.initialValues)
+const editState = state as Ref<EditCategoryForm>
 const { query, filtered } = useFuzzySearch(
 	computed(() => props.categories),
 	{ searchKeys: ["categoryName"] }

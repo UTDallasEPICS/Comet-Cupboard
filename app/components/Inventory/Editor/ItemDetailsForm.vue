@@ -2,33 +2,35 @@
 	<SharedFormShell :validate="validate" :state="state" class="w-full" :on-submit="onSubmit" :on-error="onError">
 		<SharedLayoutSectionUCard title="Item Details">
 			<div class="space-y-4">
-				<UFormField id="itemName" name="itemName" label="Item Name" description="Use up to 100 letters and spaces" required>
-					<UInput v-model="state.itemName" maxlength="100" placeholder="Enter item name" class="w-full" />
+				<UFormField name="itemName" v-bind="inventoryItemDetailsFormFields.itemName" required>
+					<UInput v-model="state.itemName" maxlength="100" :placeholder="inventoryItemDetailsFormFields.itemName.placeholder" class="w-full" />
 				</UFormField>
-				<UFormField id="category" name="category" label="Category" description="Select the category for this item" required>
+				<UFormField name="categoryID" v-bind="inventoryItemDetailsFormFields.categoryID" required>
 					<USelect
 						v-model="state.categoryID"
 						:items="categoryOptions"
 						value-key="value"
 						label-key="label"
-						placeholder="Select category"
+						:placeholder="inventoryItemDetailsFormFields.categoryID.placeholder"
 						class="w-full"
 					/>
 				</UFormField>
-				<UFormField id="archived" name="archived" label="Availability" description="Hide this item from active inventory and shopping">
+				<UFormField name="archived" v-bind="inventoryItemDetailsFormFields.archived">
 					<UCheckbox v-model="state.archived" label="Archived" />
 				</UFormField>
 			</div>
-			<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
-				<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+			<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
+				<template #cancel>
+					<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+				</template>
 				<SharedButtonActionButton type="submit" label="Save Changes" color="secondary" :loading="saving" />
-			</div>
+			</SharedFormActions>
 		</SharedLayoutSectionUCard>
 	</SharedFormShell>
 </template>
 
 <script setup lang="ts">
-import { inventoryItemDetailsSchema, type InventoryItemDetailsForm } from "~/utils/formSchemas"
+import { inventoryItemDetailsSchema, inventoryItemDetailsFormFields, type InventoryItemDetailsForm } from "~/utils/formSchemas"
 
 const props = defineProps<{
 	itemID: string

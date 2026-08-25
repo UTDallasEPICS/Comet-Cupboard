@@ -12,7 +12,11 @@ definePageMeta({ layout: false })
 
 type Sources = Record<string, Record<string, number>>
 const { range, query } = useAnalyticsRange()
-const { data } = await useFetch<Sources>("/api/head-admin/data/source", { query, default: () => ({}) })
+const sourceQuery = computed(() => ({
+	startDate: query.value.startDate,
+	endDate: query.value.endDate,
+}))
+const { data } = await useFetch<Sources>("/api/head-admin/data/source", { query: sourceQuery, default: () => ({}) })
 const sourceData = computed(() => data.value ?? {})
 const tableRows = computed(() =>
 	Object.entries(sourceData.value).flatMap(([source, categories]) =>

@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { sourceSchema, sourceFormFields } from "~/utils/formSchemas"
+import { sourceSchema, sourceFormFields, type SourceForm } from "~/utils/formSchemas"
 
 type SourceSummary = {
 	sourceID: string
@@ -75,7 +75,7 @@ watch(
 
 const mostSimilarItems = computed(() => filtered.value.slice(0, 5))
 
-const submit = (event: { data: z.infer<typeof sourceSchema> }) => {
+const submit = (event: { data: SourceForm }) => {
 	emit("submit", event.data.sourceName)
 }
 </script>

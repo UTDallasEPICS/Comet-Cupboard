@@ -1,12 +1,12 @@
 <template>
 	<SharedFormShell :validate="validate" :state="state" :on-submit="submit" :on-error="onError" width-class="w-full" class="space-y-4">
 		<SharedLayoutSectionUCard title="Announcement Details">
-			<UFormField name="message" label="Message" description="Enter the announcement shown to users" required>
-				<UTextarea v-model="state.message" class="w-full" placeholder="Enter announcement message" />
+			<UFormField name="message" v-bind="announcementFormFields.message" required>
+				<UTextarea v-model="state.message" class="w-full" :placeholder="announcementFormFields.message.placeholder" />
 			</UFormField>
 		</SharedLayoutSectionUCard>
 		<SharedLayoutSectionUCard title="Schedule">
-			<UFormField name="startsDate" label="Start date" class="text-xl" :ui="{ error: 'text-sm' }" required>
+			<UFormField name="startsDate" v-bind="announcementFormFields.startsDate" class="text-xl" :ui="{ error: 'text-sm' }" required>
 				<UInputDate v-model="state.startsDate">
 					<template #leading>
 						<UPopover>
@@ -23,10 +23,10 @@
 					</template>
 				</UInputDate>
 			</UFormField>
-			<UFormField name="startsTime" label="Start time" class="mt-2 text-xl" :ui="{ error: 'text-sm' }" required>
+			<UFormField name="startsTime" v-bind="announcementFormFields.startsTime" class="mt-2 text-xl" :ui="{ error: 'text-sm' }" required>
 				<UInputTime v-model="state.startsTime" />
 			</UFormField>
-			<UFormField name="endsDate" label="End date" class="mt-4 text-xl" :ui="{ error: 'text-sm' }" required>
+			<UFormField name="endsDate" v-bind="announcementFormFields.endsDate" class="mt-4 text-xl" :ui="{ error: 'text-sm' }" required>
 				<UInputDate v-model="state.endsDate">
 					<template #leading>
 						<UPopover>
@@ -43,7 +43,7 @@
 					</template>
 				</UInputDate>
 			</UFormField>
-			<UFormField name="endsTime" label="End time" class="mt-2 text-xl" :ui="{ error: 'text-sm' }" required>
+			<UFormField name="endsTime" v-bind="announcementFormFields.endsTime" class="mt-2 text-xl" :ui="{ error: 'text-sm' }" required>
 				<UInputTime v-model="state.endsTime" />
 			</UFormField>
 		</SharedLayoutSectionUCard>
@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { announcementSchema, type AnnouncementForm } from "~/utils/formSchemas"
+import { announcementSchema, announcementFormFields, type AnnouncementForm } from "~/utils/formSchemas"
 
 const props = withDefaults(defineProps<{ initialValues: AnnouncementForm; submitText?: string }>(), {
 	submitText: "Submit",

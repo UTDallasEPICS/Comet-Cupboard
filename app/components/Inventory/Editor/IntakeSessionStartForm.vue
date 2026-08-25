@@ -7,16 +7,23 @@
 		<SharedFormShell :state="state" :validate="validate" class="space-y-4" :on-submit="startSession" :on-error="onError">
 			<SharedLayoutSectionUCard title="Session Details">
 				<div class="space-y-4">
-					<UFormField label="Session Name" name="inventoryIntakeSessionName" required
-						><UInput v-model="state.inventoryIntakeSessionName" placeholder="Enter session name" class="w-full"
+					<UFormField name="inventoryIntakeSessionName" v-bind="intakeSessionFormFields.inventoryIntakeSessionName" required
+						><UInput
+							v-model="state.inventoryIntakeSessionName"
+							:placeholder="intakeSessionFormFields.inventoryIntakeSessionName.placeholder"
+							class="w-full"
 					/></UFormField>
-					<UFormField label="Intake Date" name="intakeDate" required><UInput v-model="state.intakeDate" type="date" class="w-full" /></UFormField>
-					<UFormField label="Notes" name="notes"><UTextarea v-model="state.notes" placeholder="Optional notes" class="w-full" /></UFormField>
+					<UFormField name="intakeDate" v-bind="intakeSessionFormFields.intakeDate" required
+						><UInput v-model="state.intakeDate" type="date" class="w-full"
+					/></UFormField>
+					<UFormField name="notes" v-bind="intakeSessionFormFields.notes"
+						><UTextarea v-model="state.notes" :placeholder="intakeSessionFormFields.notes.placeholder" class="w-full"
+					/></UFormField>
 				</div>
 			</SharedLayoutSectionUCard>
 			<SharedLayoutSectionUCard title="Source Information">
 				<div class="space-y-4">
-					<UFormField label="Source" name="sourceID" required
+					<UFormField name="sourceID" v-bind="intakeSessionFormFields.sourceID" required
 						><USelect
 							v-model="state.sourceID"
 							:items="sources"
@@ -25,7 +32,7 @@
 							placeholder="Select source"
 							class="w-full"
 					/></UFormField>
-					<UFormField v-for="field in sourceFields" :key="field.fieldID" :label="field.fieldName" :required="!field.optional">
+					<UFormField v-for="field in sourceFields" :key="field.fieldID" :id="field.fieldID" :label="field.fieldName" :required="!field.optional">
 						<UInput
 							v-if="field.type === 'TEXT'"
 							:model-value="textMetadataValue(field.fieldName)"
@@ -61,16 +68,18 @@
 					</UFormField>
 				</div>
 			</SharedLayoutSectionUCard>
-			<div class="flex justify-end gap-2">
-				<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="emit('cancel')" />
+			<SharedFormActions submit-text="Start Session">
+				<template #cancel>
+					<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="emit('cancel')" />
+				</template>
 				<SharedButtonActionButton type="submit" label="Start Session" color="secondary" :loading="isSaving" />
-			</div>
+			</SharedFormActions>
 		</SharedFormShell>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { intakeSessionSchema, type IntakeSessionForm } from "~/utils/formSchemas"
+import { intakeSessionSchema, intakeSessionFormFields, type IntakeSessionForm } from "~/utils/formSchemas"
 
 type Source = { sourceID: string; sourceName: string }
 type SourceField = { fieldID: string; fieldName: string; type: "TEXT" | "NUMBER" | "DATE" | "BOOLEAN" | "CHOICE"; choices: unknown; optional: boolean }

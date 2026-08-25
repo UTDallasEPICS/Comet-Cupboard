@@ -2,24 +2,30 @@
 	<SharedFormShell :validate="validate" :state="state" :on-submit="submit" :on-error="onError" width-class="w-full">
 		<SharedLayoutSectionUCard title="Link Details">
 			<div class="flex w-full flex-col gap-4">
-				<UFormField name="displayName" label="Display Name" description="Enter the display name for the dashboard link" required>
-					<UInput v-model="state.displayName" placeholder="Enter display name" class="w-full" />
+				<UFormField name="displayName" v-bind="dashboardLinkFormFields.displayName" required>
+					<UInput v-model="state.displayName" :placeholder="dashboardLinkFormFields.displayName.placeholder" class="w-full" />
 				</UFormField>
-				<UFormField name="url" label="URL" description="Enter the URL for the dashboard link (Must start with https://)" required>
-					<UInput v-model="state.url" placeholder="Enter URL" class="w-full" />
+				<UFormField name="url" v-bind="dashboardLinkFormFields.url" required>
+					<UInput v-model="state.url" :placeholder="dashboardLinkFormFields.url.placeholder" class="w-full" />
 				</UFormField>
-				<UFormField name="description" label="Description" description="Enter the description for the dashboard link" required>
-					<UInput v-model="state.description" placeholder="Enter description" class="w-full" />
+				<UFormField name="description" v-bind="dashboardLinkFormFields.description" required>
+					<UInput v-model="state.description" :placeholder="dashboardLinkFormFields.description.placeholder" class="w-full" />
 				</UFormField>
 			</div>
 		</SharedLayoutSectionUCard>
 		<SharedLayoutSectionUCard title="Placement">
 			<div class="flex w-full flex-col gap-4">
-				<UFormField name="dashboardRolePage" label="Dashboard Role Page" description="Select the dashboard role page for the link" required>
+				<UFormField name="dashboardRolePage" v-bind="dashboardLinkFormFields.dashboardRolePage" required>
 					<USelect v-model="state.dashboardRolePage" :items="roles" class="w-full" />
 				</UFormField>
-				<UFormField name="displayOrder" label="Display Order" description="Enter the display order for the dashboard link" required>
-					<UInput v-model.number="state.displayOrder" type="number" :min="0" placeholder="Enter display order" class="w-full" />
+				<UFormField name="displayOrder" v-bind="dashboardLinkFormFields.displayOrder" required>
+					<UInput
+						v-model.number="state.displayOrder"
+						type="number"
+						:min="0"
+						:placeholder="dashboardLinkFormFields.displayOrder.placeholder"
+						class="w-full"
+					/>
 				</UFormField>
 			</div>
 		</SharedLayoutSectionUCard>
@@ -28,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { dashboardLinkSchema, type DashboardLinkForm } from "~/utils/formSchemas"
+import { dashboardLinkSchema, dashboardLinkFormFields, type DashboardLinkForm } from "~/utils/formSchemas"
 
 const roles = ["STUDENT", "VOLUNTEER", "ADMIN", "HEAD_ADMIN"] as const
 const props = withDefaults(defineProps<{ initialValues?: Partial<DashboardLinkForm>; submitText?: string }>(), {

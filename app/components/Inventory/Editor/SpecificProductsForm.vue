@@ -1,5 +1,5 @@
 <template>
-	<UCard>
+	<SharedFormCard>
 		<div class="flex items-center justify-between gap-3">
 			<SharedTextCardTitle>Specific Products</SharedTextCardTitle>
 			<SharedButtonActionButton label="Add Product" icon="i-lucide-plus" color="neutral" variant="outline" @click="addProduct" />
@@ -15,10 +15,14 @@
 					</div>
 				</div>
 				<div class="space-y-3">
-					<UFormField label="Product Name" required
-						><UInput v-model="product.productName" class="w-full" :readonly="product.productName === 'Default'"
+					<UFormField v-bind="specificProductFormFields.productName" required
+						><UInput
+							v-model="product.productName"
+							:placeholder="specificProductFormFields.productName.placeholder"
+							class="w-full"
+							:readonly="product.productName === 'Default'"
 					/></UFormField>
-					<UFormField label="Product Image" description="JPG, PNG, or WEBP. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels">
+					<UFormField v-bind="specificProductFormFields.productImage">
 						<UFileUpload
 							v-model="productImages[product.key]"
 							accept=".jpg,.jpeg,.png,.webp"
@@ -27,20 +31,29 @@
 							@update:model-value="markImageChanged(product.key)"
 						/>
 					</UFormField>
-					<UFormField label="Item Labels">
-						<USelectMenu v-model="product.itemLabelNames" :items="itemLabelOptions" multiple placeholder="Select labels" class="w-full" />
+					<UFormField v-bind="specificProductFormFields.itemLabels">
+						<USelectMenu
+							v-model="product.itemLabelNames"
+							:items="itemLabelOptions"
+							multiple
+							:placeholder="specificProductFormFields.itemLabels.placeholder"
+							class="w-full"
+						/>
 					</UFormField>
 				</div>
 			</div>
 		</div>
-		<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
-			<SharedButtonActionButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+		<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
+			<template #cancel>
+				<SharedButtonActionButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+			</template>
 			<SharedButtonActionButton label="Save Changes" color="secondary" :loading="saving" @click="saveProducts" />
-		</div>
-	</UCard>
+		</SharedFormActions>
+	</SharedFormCard>
 </template>
 
 <script setup lang="ts">
+import { specificProductFormFields } from "~/utils/formSchemas"
 type SpecificProduct = {
 	specificItemID: string
 	productName: string

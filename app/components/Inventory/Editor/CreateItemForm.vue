@@ -1,8 +1,8 @@
 <template>
 	<SharedFormShell :validate="validate" :state="state" :on-submit="submit" :on-error="onError" width-class="w-full">
 		<SharedLayoutSectionUCard title="Item Details">
-			<UFormField name="itemName" label="Item Name" description="Item name must be at most 100 characters and only contain letters and spaces" required>
-				<UInput v-model="state.itemName" maxlength="100" placeholder="Enter item name" />
+			<UFormField name="itemName" v-bind="createInventoryItemFormFields.itemName" required>
+				<UInput v-model="state.itemName" maxlength="100" :placeholder="createInventoryItemFormFields.itemName.placeholder" />
 				<div v-if="mostSimilarItems.length" class="border-border-soft mt-2 rounded-lg border p-2">
 					<SharedTextBaseSecondary>Similar existing items</SharedTextBaseSecondary>
 					<div class="mt-2 flex flex-wrap gap-2">
@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { createInventoryItemSchema, type CreateInventoryItemForm } from "~/utils/formSchemas"
+import { createInventoryItemSchema, createInventoryItemFormFields, type CreateInventoryItemForm } from "~/utils/formSchemas"
 
 type ItemSummary = { itemID: string; itemName: string }
 const props = withDefaults(defineProps<{ items?: ItemSummary[] }>(), { items: () => [] })

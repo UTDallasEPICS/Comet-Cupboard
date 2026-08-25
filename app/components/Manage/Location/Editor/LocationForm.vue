@@ -1,25 +1,13 @@
 <template>
 	<SharedFormShell :validate="validate" :state="state" :on-submit="submit" :on-error="onError" width-class="w-full" class="space-y-4">
 		<SharedLayoutSectionUCard title="Location Image">
-			<UFormField
-				id="image"
-				name="image"
-				label="Location Image"
-				description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels"
-				required
-			>
+			<UFormField name="image" v-bind="locationFormFields.image" required>
 				<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
 			</UFormField>
 		</SharedLayoutSectionUCard>
 		<SharedLayoutSectionUCard title="Location Details">
-			<UFormField
-				id="locationName"
-				name="locationName"
-				label="Location Name"
-				description="Location name must be at most 20 characters and only contain letters and spaces"
-				required
-			>
-				<UInput v-model="state.locationName" placeholder="Enter location name" />
+			<UFormField name="locationName" v-bind="locationFormFields.locationName" required>
+				<UInput v-model="state.locationName" :placeholder="locationFormFields.locationName.placeholder" />
 				<div v-if="mostSimilarItems.length" class="border-border-soft mt-2 rounded-lg border p-2">
 					<SharedTextBaseSecondary>Similar existing locations</SharedTextBaseSecondary>
 					<div class="mt-2 flex flex-wrap gap-2">
@@ -30,13 +18,13 @@
 			</UFormField>
 		</SharedLayoutSectionUCard>
 		<SharedLayoutSectionUCard title="Description">
-			<UFormField id="description" name="description" label="Description">
-				<UTextarea v-model="state.description" placeholder="Enter description" class="w-full" />
+			<UFormField name="description" v-bind="locationFormFields.description">
+				<UTextarea v-model="state.description" :placeholder="locationFormFields.description.placeholder" class="w-full" />
 			</UFormField>
 		</SharedLayoutSectionUCard>
 		<SharedLayoutSectionUCard title="Map Details">
-			<UFormField name="mapEmbedUrl" label="Optional UTD Campus Map Embed URL" description="Use https://map.concept3d.com/?id=1772#!m/<map-id>">
-				<UInput v-model="state.mapEmbedUrl" placeholder="https://map.concept3d.com/?id=1772#!m/551906" class="w-full" />
+			<UFormField name="mapEmbedUrl" v-bind="locationFormFields.mapEmbedUrl">
+				<UInput v-model="state.mapEmbedUrl" :placeholder="locationFormFields.mapEmbedUrl.placeholder" class="w-full" />
 				<SharedButtonActionButton variant="link" color="primary" class="mt-2 px-0" @click="showMapDirections = true">
 					<SharedIcon name="i-lucide-circle-help" class="mr-1" />
 					Click for directions on getting this information
@@ -44,7 +32,7 @@
 			</UFormField>
 		</SharedLayoutSectionUCard>
 		<SharedLayoutSectionUCard v-if="showArchived" title="Availability">
-			<UFormField id="archived" name="archived" label="Archived" description="Check if the location is archived">
+			<UFormField name="archived" v-bind="locationFormFields.archived">
 				<UCheckbox v-model="state.archived" label="Archived" />
 			</UFormField>
 		</SharedLayoutSectionUCard>
@@ -80,7 +68,14 @@
 </template>
 
 <script setup lang="ts">
-import { createLocationSchema, editLocationSchema, type CreateLocationForm, type EditLocationForm } from "~/utils/formSchemas"
+import {
+	createLocationSchema,
+	editLocationSchema,
+	createLocationFormFields,
+	editLocationFormFields,
+	type CreateLocationForm,
+	type EditLocationForm,
+} from "~/utils/formSchemas"
 
 type LocationSummary = { locationID: string; locationName: string }
 type LocationFormValues = CreateLocationForm | EditLocationForm
@@ -91,6 +86,7 @@ const props = withDefaults(defineProps<{ locations?: LocationSummary[]; initialV
 	submitText: "Submit",
 })
 const emit = defineEmits<{ submit: [payload: LocationFormValues] }>()
+const locationFormFields = computed(() => (props.showArchived ? editLocationFormFields : createLocationFormFields))
 const showMapDirections = ref(false)
 const { state, validate, onError } = createFormBuilder(props.showArchived ? editLocationSchema : createLocationSchema, () => props.initialValues)
 const { query, filtered } = useFuzzySearch(

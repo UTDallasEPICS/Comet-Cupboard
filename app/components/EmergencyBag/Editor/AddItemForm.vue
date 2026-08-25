@@ -1,7 +1,7 @@
 <template>
 	<div class="flex justify-center">
 		<div class="flex w-full max-w-100 flex-col">
-			<UCard>
+			<SharedFormCard>
 				<div class="flex flex-row items-center justify-between gap-4">
 					<SharedTextCardTitle>Current Bag</SharedTextCardTitle>
 					<div class="relative w-42">
@@ -71,7 +71,7 @@
 						>Please add at least one item to your bag</SharedTextBaseSecondary
 					>
 				</div>
-			</UCard>
+			</SharedFormCard>
 		</div>
 	</div>
 </template>

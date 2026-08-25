@@ -1,14 +1,14 @@
 <template>
-	<UForm ref="formRef" :schema="schema" :state="bagDetails">
+	<SharedFormShell ref="formRef" :schema="schema" :state="bagDetails">
 		<div class="flex justify-center">
 			<div class="flex w-full max-w-100 flex-col gap-4">
-				<UCard>
-					<UFormField label="Select Labels" class="text-xl">
+				<SharedFormCard>
+					<UFormField v-bind="emergencyBagDisplayFields.selectedCategory" class="text-xl">
 						<UCheckboxGroup v-model="bagDetails.selectedCategory" size="xl" class="mt-2" :items="labels" />
 					</UFormField>
-				</UCard>
-				<UCard>
-					<UFormField name="expirationDate" label="Expiration Date" class="text-xl" :ui="{ error: 'text-sm' }" required>
+				</SharedFormCard>
+				<SharedFormCard>
+					<UFormField name="expirationDate" v-bind="emergencyBagDetailsFormFields.expirationDate" class="text-xl" :ui="{ error: 'text-sm' }" required>
 						<UInputDate ref="inputDate" v-model="bagDetails.expirationDate" class="mt-2">
 							<template #leading>
 								<UPopover :reference="inputDate?.inputsRef[3]?.$el">
@@ -28,32 +28,32 @@
 							</template>
 						</UInputDate>
 					</UFormField>
-				</UCard>
-				<UCard v-if="permissionsStore.canAdminAccess">
-					<UFormField label="Privacy" class="text-xl">
+				</SharedFormCard>
+				<SharedFormCard v-if="permissionsStore.canAdminAccess">
+					<UFormField v-bind="emergencyBagDisplayFields.isPrivate" class="text-xl">
 						<UCheckbox v-model="bagDetails.isPrivate" label="Make this bag private" class="mt-2" />
 						<UTextarea
 							v-if="bagDetails.isPrivate"
 							v-model="bagDetails.bagDescription"
-							placeholder="Please enter a bag description..."
+							:placeholder="emergencyBagDisplayFields.bagDescription.placeholder"
 							class="mt-2 w-full"
 							:rows="4"
 						/>
 					</UFormField>
-				</UCard>
+				</SharedFormCard>
 			</div>
 		</div>
-	</UForm>
+	</SharedFormShell>
 </template>
 
 <script lang="ts" setup>
-import { emergencyBagDetailsSchema } from "~/utils/formSchemas"
-import { getLocalTimeZone, today } from "@internationalized/date"
+import { emergencyBagDetailsSchema, emergencyBagDetailsFormFields, emergencyBagDisplayFields } from "~/utils/formSchemas"
+import type { DateValue } from "@internationalized/date"
 
 const permissionsStore = usePermissionsStore()
 const bagDetails = defineModel<{
 	selectedCategory: string[]
-	expirationDate: Date
+	expirationDate: DateValue | null
 	isPrivate: boolean
 	bagDescription: string
 }>("bagDetails", { required: true })

@@ -2,23 +2,25 @@
 	<SharedFormShell :validate="validate" :state="state" class="w-full" :on-submit="onSubmit" :on-error="onError">
 		<SharedLayoutSectionUCard title="Source Details">
 			<div class="space-y-4">
-				<UFormField id="sourceName" name="sourceName" label="Source Name" description="Use up to 20 letters and spaces" required>
-					<UInput v-model="state.sourceName" placeholder="Enter source name" class="w-full" />
+				<UFormField name="sourceName" v-bind="sourceDetailsFormFields.sourceName" required>
+					<UInput v-model="state.sourceName" :placeholder="sourceDetailsFormFields.sourceName.placeholder" class="w-full" />
 				</UFormField>
-				<UFormField id="archived" name="archived" label="Archived" description="Hide this source from active intake options">
+				<UFormField name="archived" v-bind="sourceDetailsFormFields.archived">
 					<UCheckbox v-model="state.archived" label="Archived" />
 				</UFormField>
 			</div>
-			<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
-				<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+			<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
+				<template #cancel>
+					<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+				</template>
 				<SharedButtonActionButton type="submit" label="Save Changes" color="secondary" :loading="saving" />
-			</div>
+			</SharedFormActions>
 		</SharedLayoutSectionUCard>
 	</SharedFormShell>
 </template>
 
 <script setup lang="ts">
-import { sourceDetailsSchema, type SourceDetailsForm } from "~/utils/formSchemas"
+import { sourceDetailsSchema, sourceDetailsFormFields, type SourceDetailsForm } from "~/utils/formSchemas"
 
 const props = defineProps<{
 	sourceID: string

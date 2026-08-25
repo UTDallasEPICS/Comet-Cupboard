@@ -8,11 +8,16 @@
 						:class="(currentPublicCodePreview === '' ? 'visible' : 'invisible hidden') + ' md:visible md:block'"
 						class="w-full max-w-100 md:mr-4 lg:mr-12"
 					>
-						<VerifyCartPendingList :selected-cart="currentPublicCodePreview" @update:select-cart="setPublicCodePreview" />
+						<VerifyCartPendingList
+							:selected-cart="currentPublicCodePreview"
+							:pending-carts="pendingCarts ?? []"
+							@update:select-cart="setPublicCodePreview"
+						/>
 					</div>
 					<VerifyCartPreview
 						:class="(currentPublicCodePreview === '' ? 'invisible hidden' : 'visible') + ' md:visible md:flex md:flex-col'"
 						:public-code="currentPublicCodePreview"
+						:cart="previewCart"
 						@update:select-cart="setPublicCodePreview"
 						@cart-declined="declineCart"
 						@cart-accepted="acceptCart"
@@ -29,6 +34,15 @@ definePageMeta({ layout: false })
 const toast = useToast()
 
 const currentPublicCodePreview = ref<string>("")
+const { data: pendingCarts } = await useFetch<{ publicCode: string; publicIcon: string }[]>("/api/volunteer/cart/carts", {
+	query: { pending: "true" },
+})
+const { data: previewCart } = await useAsyncData(
+	"pending-cart",
+	() =>
+		currentPublicCodePreview.value ? $fetch("/api/volunteer/verification/pendingCart", { query: { publicCode: currentPublicCodePreview.value } }) : null,
+	{ watch: [currentPublicCodePreview] }
+)
 
 const setPublicCodePreview = (publicCode: string) => {
 	// deselect cart if already chosen

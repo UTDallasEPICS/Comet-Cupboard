@@ -2,17 +2,20 @@
 	<SharedLayoutSectionUCard title="Deal">
 		<URadioGroup v-model="selectedDealOption" :items="dealOptions" />
 		<div v-if="selectedDealOption === 'Deal is X for Y'" class="mt-4 grid gap-4 sm:grid-cols-2">
-			<UFormField label="Actual Count"><UInputNumber v-model="actualCount" :min="1" /></UFormField>
-			<UFormField label="Adjusted Count"><UInputNumber v-model="adjustedCount" :min="0" /></UFormField>
+			<UFormField v-bind="dealFormFields.actualCount"><UInputNumber v-model="actualCount" :min="1" /></UFormField>
+			<UFormField v-bind="dealFormFields.adjustedCount"><UInputNumber v-model="adjustedCount" :min="0" /></UFormField>
 		</div>
-		<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
-			<SharedButtonActionButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+		<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
+			<template #cancel>
+				<SharedButtonActionButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+			</template>
 			<SharedButtonActionButton label="Save Changes" color="secondary" :loading="saving" @click="saveDeal" />
-		</div>
+		</SharedFormActions>
 	</SharedLayoutSectionUCard>
 </template>
 
 <script setup lang="ts">
+import { dealFormFields } from "~/utils/formSchemas"
 const props = defineProps<{
 	itemID: string
 	originalDeal: { actualCount: number; adjustedCount: number } | null

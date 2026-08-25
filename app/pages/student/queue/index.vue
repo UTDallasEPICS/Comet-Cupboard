@@ -16,7 +16,9 @@
 								:avatar="{ icon: queueStore.queueStatus.publicIcon }"
 								size="lg"
 							/>
-							<SharedButtonActionButton action="cancel" text="Leave Queue" class="my-auto h-min" @click="isLeaveQueueModalOpen = true" />
+							<SharedConfirmationModal title="Confirm Leaving Queue?" confirm-text="Confirm Leave" @confirm="confirmLeaveQueue">
+								<SharedButtonActionButton action="cancel" text="Leave Queue" class="my-auto h-min" />
+							</SharedConfirmationModal>
 						</div>
 						<div v-else-if="cartStore.cart" class="flex flex-col items-center justify-center gap-4">
 							<SharedTextBase> You currently have an active cart. </SharedTextBase>
@@ -40,37 +42,17 @@
 				</UCard>
 			</section>
 
-			<UModal v-model:open="isLeaveQueueModalOpen">
-				<template #content>
-					<UCard>
-						<SharedTextCardTitle>Confirm Leaving Queue?</SharedTextCardTitle>
-						<USeparator class="my-2" />
-						<div class="mt-4 flex flex-row items-center justify-center gap-2">
-							<SharedButtonActionButton action="cancel" text="Cancel" @click="isLeaveQueueModalOpen = false" />
-							<SharedButtonActionButton action="negative" text="Confirm Leave" @click="confirmLeaveQueue" />
-						</div>
-					</UCard>
-				</template>
-			</UModal>
-
 			<section>
 				<UCard class="mt-4">
 					<SharedTextSectionTitle> Current Queue </SharedTextSectionTitle>
 					<USeparator class="my-4" />
 					<div v-if="queueStore.queue.length !== 0" class="flex w-full flex-col gap-y-2">
-						<div
+						<DomainCardQueueCurrentEntryCard
 							v-for="queueEntry in queueStore.queue"
 							:key="queueEntry.position"
-							class="border-border-soft flex w-full items-center rounded-lg border p-3"
-							:class="{ 'bg-utd-green/10': queueEntry.publicCode === queueStore.queueStatus?.publicCode }"
-						>
-							<UUser
-								:name="queueEntry.publicCode"
-								:description="`Position: ${queueEntry.position}`"
-								:avatar="{ icon: queueEntry.publicIcon }"
-								size="lg"
-							/>
-						</div>
+							:queue-entry="queueEntry"
+							:is-current="queueEntry.publicCode === queueStore.queueStatus?.publicCode"
+						/>
 					</div>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">
 						<SharedTextBase> No students in queue </SharedTextBase>
@@ -89,8 +71,6 @@ const queueStore = useQueueStore()
 const cartStore = useCartStore()
 const accessCode = ref<number[]>([])
 const isJoining = ref(false)
-const isLeaveQueueModalOpen = ref(false)
-
 const joinQueue = async () => {
 	isJoining.value = true
 	try {
@@ -109,6 +89,5 @@ const leaveQueue = async () => {
 
 const confirmLeaveQueue = async () => {
 	await leaveQueue()
-	isLeaveQueueModalOpen.value = false
 }
 </script>

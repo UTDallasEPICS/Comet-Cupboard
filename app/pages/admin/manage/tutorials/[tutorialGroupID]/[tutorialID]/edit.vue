@@ -7,19 +7,9 @@
 		>
 			<USeparator class="my-4" />
 			<div class="flex flex-col items-center justify-center gap-4">
-				<UModal v-model:open="isDeleteModalOpen">
+				<SharedConfirmationModal title="Confirm Deletion?" confirm-text="Confirm Deletion" @confirm="deleteTutorial">
 					<SharedButtonActionButton label="Delete Tutorial" color="error" variant="outline" icon="i-lucide-trash-2" />
-					<template #content>
-						<UCard>
-							<SharedTextCardTitle>Confirm Deletion?</SharedTextCardTitle>
-							<USeparator class="my-2" />
-							<div class="mt-4 flex flex-row items-center justify-center gap-2">
-								<SharedButtonActionButton action="cancel" text="Cancel" @click="isDeleteModalOpen = false" />
-								<SharedButtonActionButton action="negative" text="Confirm Deletion" @click="deleteTutorial" />
-							</div>
-						</UCard>
-					</template>
-				</UModal>
+				</SharedConfirmationModal>
 
 				<section class="w-full max-w-xl">
 					<ManageTutorialEditorNameForm :original-name="originalName" @submit="saveName" />

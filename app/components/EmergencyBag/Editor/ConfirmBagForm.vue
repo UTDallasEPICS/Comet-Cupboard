@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col justify-center gap-4">
 		<div class="flex w-full max-w-100 flex-col">
-			<UCard>
+			<SharedFormCard>
 				<template #header>
 					<header class="text-xl font-bold">Bag Details</header>
 				</template>
@@ -36,10 +36,10 @@
 						</div>
 					</div>
 				</div>
-			</UCard>
+			</SharedFormCard>
 		</div>
 
-		<UCard>
+		<SharedFormCard>
 			<template #header>
 				<header class="text-xl font-bold">Items</header>
 			</template>
@@ -55,7 +55,7 @@
 					:item-labels="item.itemLabels"
 				/>
 			</div>
-		</UCard>
+		</SharedFormCard>
 	</div>
 </template>
 

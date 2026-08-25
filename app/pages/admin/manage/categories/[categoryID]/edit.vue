@@ -77,5 +77,5 @@ const onSubmit = async (data: EditCategoryForm) => {
 	} catch (error) {
 		// idk for now
 	}
-})
+}
 </script>

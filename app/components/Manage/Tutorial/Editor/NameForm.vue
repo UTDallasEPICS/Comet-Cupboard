@@ -1,14 +1,8 @@
 <template>
 	<SharedFormShell :validate="validate" :state="state" :on-submit="submit" :on-error="onError" width-class="w-full">
 		<SharedLayoutSectionUCard title="Tutorial Details">
-			<UFormField
-				id="name"
-				name="name"
-				label="Tutorial Name"
-				description="Tutorial name must be at most 30 characters and only contain letters and spaces"
-				required
-			>
-				<UInput v-model="state.name" placeholder="Enter new tutorial name" class="w-full" />
+			<UFormField name="name" v-bind="tutorialNameFormFields.name" required>
+				<UInput v-model="state.name" :placeholder="tutorialNameFormFields.name.placeholder" class="w-full" />
 			</UFormField>
 			<SharedFormActions v-if="changesMade" submit-text="Save changes">
 				<template #cancel>
@@ -20,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { tutorialNameSchema } from "~/utils/formSchemas"
+import { tutorialNameSchema, tutorialNameFormFields } from "~/utils/formSchemas"
 
 const props = defineProps<{ originalName: string }>()
 
