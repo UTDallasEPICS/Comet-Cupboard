@@ -35,7 +35,7 @@
 		</div>
 		<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
 			<SharedButtonActionButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
-			<SharedButtonActionButton label="Save Changes" color="secondary" :loading="isSaving" @click="saveProducts" />
+			<SharedButtonActionButton label="Save Changes" color="secondary" :loading="saving" @click="saveProducts" />
 		</div>
 	</UCard>
 </template>
@@ -50,14 +50,13 @@ type SpecificProduct = {
 }
 type EditableProduct = Omit<SpecificProduct, "itemLabels"> & { key: string; itemLabelNames: string[] }
 
-const props = defineProps<{ itemID: string; specificItems: SpecificProduct[] }>()
-const emit = defineEmits<{ updated: [] }>()
+const props = defineProps<{ itemID: string; specificItems: SpecificProduct[]; saving?: boolean }>()
+const emit = defineEmits<{ save: [payloads: FormData[]] }>()
 const itemLabelOptions = ["Gluten Free", "Halal", "Kosher", "Vegan", "Vegetarian"]
 const editableProducts = ref<EditableProduct[]>([])
 const originalProducts = ref<EditableProduct[]>([])
 const productImages = reactive<Record<string, File | undefined>>({})
 const changedImageKeys = ref<Set<string>>(new Set())
-const isSaving = ref(false)
 
 const orderedProducts = computed(() =>
 	[...editableProducts.value].sort((first, second) => Number(second.productName === "Default") - Number(first.productName === "Default"))
@@ -118,24 +117,19 @@ const cancelChanges = () => {
 	void hydrateProducts()
 }
 
-const saveProducts = async () => {
+const saveProducts = () => {
 	if (editableProducts.value.some((product) => !product.productName.trim())) return
-	isSaving.value = true
-	try {
-		for (const product of editableProducts.value) {
-			const formData = new FormData()
-			if (product.specificItemID) formData.append("specificItemID", product.specificItemID)
-			formData.append("itemID", props.itemID)
-			formData.append("productName", product.productName.trim())
-			formData.append("itemLabels", JSON.stringify(product.itemLabelNames))
-			const selectedImage = productImages[product.key]
-			const image = Array.isArray(selectedImage) ? selectedImage[0] : selectedImage
-			if (image && changedImageKeys.value.has(product.key)) formData.append("image", image)
-			await $fetch("/api/volunteer/inventory/item/specific-item", { method: "PUT", body: formData })
-		}
-		emit("updated")
-	} finally {
-		isSaving.value = false
-	}
+	const payloads = editableProducts.value.map((product) => {
+		const formData = new FormData()
+		if (product.specificItemID) formData.append("specificItemID", product.specificItemID)
+		formData.append("itemID", props.itemID)
+		formData.append("productName", product.productName.trim())
+		formData.append("itemLabels", JSON.stringify(product.itemLabelNames))
+		const selectedImage = productImages[product.key]
+		const image = Array.isArray(selectedImage) ? selectedImage[0] : selectedImage
+		if (image && changedImageKeys.value.has(product.key)) formData.append("image", image)
+		return formData
+	})
+	emit("save", payloads)
 }
 </script>

@@ -4,7 +4,7 @@
 			<USeparator class="my-4" />
 			<section>
 				<div class="mx-auto w-full max-w-xl">
-					<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
+					<SharedFormShell :validate="validate" :state="state" class="w-full space-y-4" :on-submit="onSubmit" :on-error="onError">
 						<SharedLayoutSectionUCard title="Location Image">
 							<UFormField
 								id="image"
@@ -104,7 +104,7 @@
 						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
 							<SharedButtonActionButton action="positive" type="submit" text="Submit" />
 						</footer>
-					</UForm>
+					</SharedFormShell>
 				</div>
 			</section>
 		</NuxtLayout>
@@ -112,26 +112,13 @@
 </template>
 
 <script lang="ts" setup>
-import * as z from "zod"
+import { createLocationSchema } from "~/utils/formSchemas"
 
 definePageMeta({ layout: false })
 
 const showMapDirections = ref(false)
 
-const formSchema = imageSchema.extend({
-	locationName: z
-		.string()
-		.min(1, "Location name is required")
-		.max(20, "Location name must be at most 20 characters")
-		.regex(/^[A-Za-z ]+$/, "Location name must only contain letters and spaces"),
-	description: z.string().or(z.literal("")),
-	mapEmbedUrl: z
-		.string()
-		.regex(/^https:\/\/map\.concept3d\.com\/\?id=1772#!m\/\d+$/, "Use a valid UTD Concept3D map URL")
-		.or(z.literal("")),
-})
-
-const { schema, state, validate, onError } = createFormBuilder(formSchema, () => ({
+const { schema, state, validate, onError } = createFormBuilder(createLocationSchema, () => ({
 	image: undefined,
 	locationName: undefined,
 	description: undefined,

@@ -15,7 +15,14 @@
 		</div>
 		<USeparator />
 		<div class="flex flex-row items-center justify-end gap-2 p-2">
-			<SharedButtonActionButton variant="ghost" color="error" icon="i-lucide-trash-2" size="sm" aria-label="Remove from cart" @click="emit('remove', specificItemID)" />
+			<SharedButtonActionButton
+				variant="ghost"
+				color="error"
+				icon="i-lucide-trash-2"
+				size="sm"
+				aria-label="Remove from cart"
+				@click="emit('remove', specificItemID)"
+			/>
 			<SharedTextBaseSecondary class="text-right">In cart:</SharedTextBaseSecondary>
 			<SharedIncrementDecrementPill :count="props.count" :min="1" :max="quantity" @increment="increment" @decrement="decrement" />
 		</div>

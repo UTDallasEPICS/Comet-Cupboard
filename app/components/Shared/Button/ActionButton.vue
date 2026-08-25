@@ -53,9 +53,9 @@ const props = defineProps({
 		default: "white",
 	},
 
-	leftAlign: {
-		type: Boolean,
-		default: false,
+	justify: {
+		type: String as PropType<"start" | "center" | "end" | "between">,
+		default: "center",
 	},
 
 	leadingIcon: {
@@ -233,7 +233,7 @@ const mergedUi = computed(() => ({
 
 	base: `
 		rounded-xl
-		${props.leftAlign ? "justify-start" : "justify-center"}
+		${props.justify === "start" ? "justify-start" : props.justify === "center" ? "justify-center" : props.justify === "end" ? "justify-end" : props.justify === "between" ? "justify-between" : ""}
 		items-center
 		${buttonClasses.value}
 		${props.ui.base ?? ""}

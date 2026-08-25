@@ -7,7 +7,7 @@
 		</div>
 		<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
 			<SharedButtonActionButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
-			<SharedButtonActionButton label="Save Changes" color="secondary" :loading="isSaving" @click="saveDeal" />
+			<SharedButtonActionButton label="Save Changes" color="secondary" :loading="saving" @click="saveDeal" />
 		</div>
 	</SharedLayoutSectionUCard>
 </template>
@@ -16,14 +16,14 @@
 const props = defineProps<{
 	itemID: string
 	originalDeal: { actualCount: number; adjustedCount: number } | null
+	saving?: boolean
 }>()
-const emit = defineEmits<{ updated: [] }>()
+const emit = defineEmits<{ save: [deal: { actualCount: number; adjustedCount: number } | null] }>()
 
 const dealOptions = ["No deal", "Deal is X for Y", "Free deal"]
 const selectedDealOption = ref("No deal")
 const actualCount = ref(2)
 const adjustedCount = ref(1)
-const isSaving = ref(false)
 const originalOption = computed(() =>
 	!props.originalDeal ? "No deal" : props.originalDeal.actualCount === 1 && props.originalDeal.adjustedCount === 0 ? "Free deal" : "Deal is X for Y"
 )
@@ -48,25 +48,16 @@ watch(
 	{ immediate: true }
 )
 
-const saveDeal = async () => {
+const saveDeal = () => {
 	if (selectedDealOption.value === "Deal is X for Y" && actualCount.value <= adjustedCount.value) return
-	isSaving.value = true
-	try {
-		if (selectedDealOption.value === "No deal") {
-			if (props.originalDeal) await $fetch("/api/volunteer/inventory/item/deal", { method: "DELETE", query: { itemID: props.itemID } })
-		} else {
-			await $fetch("/api/volunteer/inventory/item/deal", {
-				method: "PUT",
-				body: {
-					itemID: props.itemID,
+	emit(
+		"save",
+		selectedDealOption.value === "No deal"
+			? null
+			: {
 					actualCount: selectedDealOption.value === "Free deal" ? 1 : actualCount.value,
 					adjustedCount: selectedDealOption.value === "Free deal" ? 0 : adjustedCount.value,
-				},
-			})
-		}
-		emit("updated")
-	} finally {
-		isSaving.value = false
-	}
+				}
+	)
 }
 </script>

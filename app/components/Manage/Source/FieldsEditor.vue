@@ -6,7 +6,14 @@
 		</div>
 		<USeparator class="my-4" />
 		<div v-if="editableFields.length" class="space-y-4">
-			<UForm v-for="field in editableFields" :key="field.key" :validate="validateField" :state="field" @submit="saveField(field)" @error="onError">
+			<SharedFormShell
+				v-for="field in editableFields"
+				:key="field.key"
+				:validate="validateField"
+				:state="field"
+				:on-submit="saveField(field)"
+				:on-error="onError"
+			>
 				<div class="border-border-soft space-y-3 rounded-lg border p-3">
 					<UFormField :id="`fieldName-${field.key}`" name="fieldName" label="Field Name" required
 						><UInput v-model="field.fieldName" class="w-full"
@@ -18,7 +25,14 @@
 					<div v-if="field.type === 'CHOICE'" class="space-y-2 rounded-lg border p-3">
 						<div class="flex items-center justify-between gap-2">
 							<SharedTextBaseSecondary>Choice Values</SharedTextBaseSecondary>
-							<SharedButtonActionButton type="button" label="Add Choice" icon="i-lucide-plus" color="neutral" variant="outline" @click="field.choices.push('')" />
+							<SharedButtonActionButton
+								type="button"
+								label="Add Choice"
+								icon="i-lucide-plus"
+								color="neutral"
+								variant="outline"
+								@click="field.choices.push('')"
+							/>
 						</div>
 						<UFormField v-for="(_choice, index) in field.choices" :key="index" :name="`choices.${index}`">
 							<div class="flex items-center gap-2">
@@ -38,9 +52,16 @@
 						<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelField(field)" />
 						<SharedButtonActionButton type="submit" label="Save Changes" color="secondary" :loading="savingFieldKey === field.key" />
 					</div>
-					<SharedButtonActionButton v-else type="button" label="Remove" color="error" variant="outline" @click="openRemoveFieldModal(field.fieldID)" />
+					<SharedButtonActionButton
+						v-else
+						type="button"
+						label="Remove"
+						color="error"
+						variant="outline"
+						@click="openRemoveFieldModal(field.fieldID)"
+					/>
 				</div>
-			</UForm>
+			</SharedFormShell>
 		</div>
 		<SharedTextBaseSecondary v-else>No fields added yet.</SharedTextBaseSecondary>
 	</UCard>
@@ -61,7 +82,7 @@
 
 <script setup lang="ts">
 import type { FormError } from "@nuxt/ui"
-import * as z from "zod"
+import { sourceFieldSchema } from "~/utils/formSchemas"
 
 type FieldType = "TEXT" | "NUMBER" | "DATE" | "BOOLEAN" | "CHOICE"
 interface SourceField {
@@ -82,7 +103,11 @@ interface EditableField {
 	original?: Omit<EditableField, "original">
 }
 
-const props = defineProps<{ sourceID: string }>()
+const props = defineProps<{ sourceID: string; refreshToken?: number }>()
+const emit = defineEmits<{
+	save: [payload: { fieldID?: string; body: { sourceID?: string; fieldName: string; type: FieldType; optional: boolean; choices?: string[] } }]
+	remove: [fieldID: string]
+}>()
 const fieldTypes = [
 	{ label: "Text", value: "TEXT" },
 	{ label: "Number", value: "NUMBER" },
@@ -90,13 +115,7 @@ const fieldTypes = [
 	{ label: "TRUE/FALSE", value: "BOOLEAN" },
 	{ label: "Choice", value: "CHOICE" },
 ]
-const fieldSchema = z.object({
-	fieldName: z.string().trim().min(1, "Field name is required"),
-	type: z.enum(["TEXT", "NUMBER", "DATE", "BOOLEAN", "CHOICE"]),
-	optional: z.boolean(),
-	choices: z.array(z.string().trim().min(1, "Choice values cannot be empty")).default([]),
-})
-const { onError } = createFormBuilder(fieldSchema)
+const { onError } = createFormBuilder(sourceFieldSchema)
 const { data: fields, refresh: refreshFields } = await useFetch<SourceField[]>("/api/volunteer/inventory/source/field", { query: { sourceID: props.sourceID } })
 const editableFields = ref<EditableField[]>([])
 const savingFieldKey = ref<string | null>(null)
@@ -123,8 +142,12 @@ watch(
 	},
 	{ immediate: true }
 )
+watch(
+	() => props.refreshToken,
+	() => void refreshFields()
+)
 const validateField = async (field: EditableField): Promise<FormError[]> => {
-	const result = fieldSchema.safeParse(field)
+	const result = sourceFieldSchema.safeParse(field)
 	return result.success ? [] : result.error.issues.map((issue) => ({ name: String(issue.path[0]), message: issue.message }))
 }
 const fieldChanged = (field: EditableField) =>
@@ -150,32 +173,24 @@ const cancelField = (field: EditableField) => {
 	}
 	Object.assign(field, field.original, { choices: [...(field.original?.choices ?? [])] })
 }
-const saveField = async (field: EditableField) => {
-	savingFieldKey.value = field.key
-	try {
-		const body = {
-			fieldName: field.fieldName.trim(),
-			type: field.type,
-			optional: field.optional,
-			choices: field.type === "CHOICE" ? field.choices.map((choice) => choice.trim()) : undefined,
-		}
-		if (field.isNew) await $fetch("/api/admin/inventory/source/field", { method: "POST", body: { sourceID: props.sourceID, ...body } })
-		else await $fetch("/api/admin/inventory/source/field", { method: "PUT", body: { fieldID: field.fieldID, ...body } })
-		if (field.isNew) editableFields.value = editableFields.value.filter((candidate) => candidate.key !== field.key)
-		await refreshFields()
-	} finally {
-		savingFieldKey.value = null
+const saveField = (field: EditableField) => {
+	const body = {
+		fieldName: field.fieldName.trim(),
+		type: field.type,
+		optional: field.optional,
+		choices: field.type === "CHOICE" ? field.choices.map((choice) => choice.trim()) : undefined,
 	}
+	if (field.isNew) editableFields.value = editableFields.value.filter((candidate) => candidate.key !== field.key)
+	emit("save", field.isNew ? { body: { sourceID: props.sourceID, ...body } } : { fieldID: field.fieldID, body })
 }
 const openRemoveFieldModal = (fieldID: string) => {
 	fieldIDToRemove.value = fieldID
 	isRemoveFieldModalOpen.value = true
 }
-const confirmRemoveField = async () => {
+const confirmRemoveField = () => {
 	if (!fieldIDToRemove.value) return
-	await $fetch("/api/admin/inventory/source/field", { method: "DELETE", body: { fieldID: fieldIDToRemove.value } })
+	emit("remove", fieldIDToRemove.value)
 	fieldIDToRemove.value = null
 	isRemoveFieldModalOpen.value = false
-	await refreshFields()
 }
 </script>

@@ -50,7 +50,12 @@
 									<div>
 										<SharedTextBase>To:</SharedTextBase>
 										<UDropdownMenu :items="items" :ui="{ content: 'w-48' }">
-											<SharedButtonActionButton label="Choose Location" color="neutral" variant="outline" trailing-icon="i-lucide-chevron-down" />
+											<SharedButtonActionButton
+												label="Choose Location"
+												color="neutral"
+												variant="outline"
+												trailing-icon="i-lucide-chevron-down"
+											/>
 										</UDropdownMenu>
 									</div>
 								</div>

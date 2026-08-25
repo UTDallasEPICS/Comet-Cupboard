@@ -42,7 +42,8 @@
 			<SharedLayoutGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.specificItemID" :default-open="true">
 				<template #header="{ group, open }">
 					<div class="flex flex-col gap-2">
-						<SharedButtonActionButton action="positive"
+						<SharedButtonActionButton
+							action="positive"
 							:text="group"
 							trailing-icon="i-lucide-chevron-down"
 							block

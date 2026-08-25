@@ -23,7 +23,12 @@
 				<template #header="{ close }">
 					<div class="flex w-full flex-row items-center justify-between">
 						<img src="/CometCupboardLogo2.png" class="aspect-auto h-8" />
-						<SharedButtonActionButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" icon="i-lucide-x" @click="close" />
+						<SharedButtonActionButton
+							variant="ghost"
+							class="text-white hover:bg-transparent active:bg-transparent"
+							icon="i-lucide-x"
+							@click="close"
+						/>
 					</div>
 				</template>
 
@@ -62,7 +67,12 @@
 					<template #header="{ close }">
 						<div class="flex w-full items-center justify-between">
 							<SharedTextBase class="font-semibold text-white">Notifications</SharedTextBase
-							><SharedButtonActionButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" icon="i-lucide-x" @click="close" />
+							><SharedButtonActionButton
+								variant="ghost"
+								class="text-white hover:bg-transparent active:bg-transparent"
+								icon="i-lucide-x"
+								@click="close"
+							/>
 						</div>
 					</template>
 					<template #body>
@@ -107,7 +117,12 @@
 					<template #header="{ close }">
 						<div class="flex w-full flex-row items-center justify-between">
 							<SharedTextBase class="font-semibold text-white">Inventory Changes</SharedTextBase>
-							<SharedButtonActionButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" icon="i-lucide-x" @click="close" />
+							<SharedButtonActionButton
+								variant="ghost"
+								class="text-white hover:bg-transparent active:bg-transparent"
+								icon="i-lucide-x"
+								@click="close"
+							/>
 						</div>
 					</template>
 
@@ -137,7 +152,12 @@
 					<template #header="{ close }">
 						<div class="flex w-full flex-row items-center justify-between">
 							<SharedTextBase class="font-semibold text-white">Your Cart</SharedTextBase>
-							<SharedButtonActionButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" icon="i-lucide-x" @click="close" />
+							<SharedButtonActionButton
+								variant="ghost"
+								class="text-white hover:bg-transparent active:bg-transparent"
+								icon="i-lucide-x"
+								@click="close"
+							/>
 						</div>
 					</template>
 					<template #body>
@@ -165,7 +185,9 @@
 							/>
 							<SharedTextBase class="text-utd-orange">{{ permissionsStore.roleText }}</SharedTextBase>
 							<USeparator />
-							<SharedButtonActionButton variant="outline" color="neutral" icon="i-lucide-log-out" class="w-full" @click="logout"> Logout </SharedButtonActionButton>
+							<SharedButtonActionButton variant="outline" color="neutral" icon="i-lucide-log-out" class="w-full" @click="logout">
+								Logout
+							</SharedButtonActionButton>
 						</div>
 					</template>
 				</UPopover>

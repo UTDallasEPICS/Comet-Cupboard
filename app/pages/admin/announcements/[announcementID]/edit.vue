@@ -19,7 +19,7 @@
 					</UModal>
 				</div>
 
-				<UForm :validate="validate" :state="state" class="mt-4 w-full space-y-4" @submit="onSubmit" @error="onError">
+				<SharedFormShell :validate="validate" :state="state" class="mt-4 w-full space-y-4" :on-submit="onSubmit" :on-error="onError">
 					<SharedLayoutSectionUCard title="Announcement Details">
 						<UFormField name="message" label="Message" description="Enter the announcement shown to users" required>
 							<UTextarea v-model="state.message" class="w-full" placeholder="Enter announcement message" />
@@ -30,7 +30,14 @@
 							<UInputDate v-model="state.startsDate">
 								<template #leading>
 									<UPopover>
-										<SharedButtonActionButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
+										<SharedButtonActionButton
+											color="neutral"
+											variant="link"
+											size="md"
+											icon="i-lucide-calendar"
+											aria-label="Select a date"
+											class="px-0"
+										/>
 										<template #content><UCalendar v-model="state.startsDate" class="p-2" /></template>
 									</UPopover>
 								</template>
@@ -43,7 +50,14 @@
 							<UInputDate v-model="state.endsDate">
 								<template #leading>
 									<UPopover>
-										<SharedButtonActionButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
+										<SharedButtonActionButton
+											color="neutral"
+											variant="link"
+											size="md"
+											icon="i-lucide-calendar"
+											aria-label="Select a date"
+											class="px-0"
+										/>
 										<template #content><UCalendar v-model="state.endsDate" class="p-2" /></template>
 									</UPopover>
 								</template>
@@ -53,15 +67,17 @@
 							<UInputTime v-model="state.endsTime" />
 						</UFormField>
 					</SharedLayoutSectionUCard>
-					<footer class="sticky right-4 bottom-8 flex justify-end"><SharedButtonActionButton action="positive" type="submit" text="Save changes" /></footer>
-				</UForm>
+					<footer class="sticky right-4 bottom-8 flex justify-end">
+						<SharedButtonActionButton action="positive" type="submit" text="Save changes" />
+					</footer>
+				</SharedFormShell>
 			</div>
 		</NuxtLayout>
 	</div>
 </template>
 
 <script setup lang="ts">
-import * as z from "zod"
+import { announcementSchema } from "~/utils/formSchemas"
 import { Time, getLocalTimeZone, parseDate, today } from "@internationalized/date"
 
 definePageMeta({ layout: false })
@@ -74,14 +90,7 @@ const isDeleteModalOpen = ref(false)
 const timeZone = getLocalTimeZone()
 const { data: announcements } = await useFetch("/api/admin/announcements")
 const announcement = computed(() => announcements.value?.find((entry) => entry.announcementID === announcementID))
-const formSchema = z.object({
-	message: z.string().trim().min(1, "Message is required"),
-	startsDate: z.any(),
-	endsDate: z.any(),
-	startsTime: z.any(),
-	endsTime: z.any(),
-})
-const { schema, state, validate, onError } = createFormBuilder(formSchema, () => ({
+const { schema, state, validate, onError } = createFormBuilder(announcementSchema, () => ({
 	message: announcement.value?.message ?? undefined,
 	startsDate: announcement.value ? parseDate(new Date(announcement.value.startsAt).toLocaleDateString("en-CA", { timeZone })) : today(timeZone),
 	endsDate: announcement.value ? parseDate(new Date(announcement.value.endsAt).toLocaleDateString("en-CA", { timeZone })) : today(timeZone),

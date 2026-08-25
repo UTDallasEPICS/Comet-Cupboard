@@ -1,5 +1,5 @@
 <template>
-	<UForm :validate="validate" :state="state" class="w-full" @submit="onSubmit" @error="onError">
+	<SharedFormShell :validate="validate" :state="state" class="w-full" :on-submit="onSubmit" :on-error="onError">
 		<SharedLayoutSectionUCard title="Source Details">
 			<div class="space-y-4">
 				<UFormField id="sourceName" name="sourceName" label="Source Name" description="Use up to 20 letters and spaces" required>
@@ -11,31 +11,23 @@
 			</div>
 			<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
 				<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
-				<SharedButtonActionButton type="submit" label="Save Changes" color="secondary" :loading="isSaving" />
+				<SharedButtonActionButton type="submit" label="Save Changes" color="secondary" :loading="saving" />
 			</div>
 		</SharedLayoutSectionUCard>
-	</UForm>
+	</SharedFormShell>
 </template>
 
 <script setup lang="ts">
-import * as z from "zod"
+import { sourceDetailsSchema, type SourceDetailsForm } from "~/utils/formSchemas"
 
 const props = defineProps<{
 	sourceID: string
 	originalName: string
 	originalArchived: boolean
+	saving?: boolean
 }>()
-const emit = defineEmits<{ updated: [] }>()
-const formSchema = z.object({
-	sourceName: z
-		.string()
-		.min(1, "Source name is required")
-		.max(20, "Source name must be at most 20 characters")
-		.regex(/^[A-Za-z ]+$/, "Source name must only contain letters and spaces"),
-	archived: z.boolean(),
-})
-const { state, validate, onError } = createFormBuilder(formSchema, () => ({ sourceName: props.originalName, archived: props.originalArchived }))
-const isSaving = ref(false)
+const emit = defineEmits<{ save: [payload: SourceDetailsForm] }>()
+const { state, validate, onError } = createFormBuilder(sourceDetailsSchema, () => ({ sourceName: props.originalName, archived: props.originalArchived }))
 const changesMade = computed(() => state.value.sourceName !== props.originalName || state.value.archived !== props.originalArchived)
 
 watch(
@@ -52,13 +44,7 @@ const cancelChanges = () => {
 	state.value.sourceName = props.originalName
 	state.value.archived = props.originalArchived
 }
-const onSubmit = async (event: { data: z.infer<typeof formSchema> }) => {
-	isSaving.value = true
-	try {
-		await $fetch("/api/admin/inventory/source", { method: "PUT", body: { sourceID: props.sourceID, ...event.data } })
-		emit("updated")
-	} finally {
-		isSaving.value = false
-	}
+const onSubmit = (event: { data: SourceDetailsForm }) => {
+	emit("save", event.data)
 }
 </script>

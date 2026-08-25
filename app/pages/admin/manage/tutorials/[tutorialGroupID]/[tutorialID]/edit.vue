@@ -22,17 +22,12 @@
 				</UModal>
 
 				<section class="w-full max-w-xl">
-					<ManageTutorialNameEditor
-						:original-name="originalName"
-						:tutorialID="tutorialID"
-						:tutorialGroupID="tutorialGroupID"
-						@name-changed="refresh"
-					/>
+					<ManageTutorialEditorNameForm :original-name="originalName" @submit="saveName" />
 				</section>
 
 				<section class="w-full max-w-xl">
 					<div class="mx-auto flex w-full flex-col gap-4">
-						<ManageTutorialStepEditor
+						<ManageTutorialEditorStepForm
 							v-for="step in stepsWithTemporaryStep"
 							:key="`${step.tutorialStepID}-${stepRefreshKeys[step.tutorialStepID] ?? 0}`"
 							:tutorialStepID="step.tutorialStepID"
@@ -41,11 +36,19 @@
 							:originalImageURL="step.imageUrl"
 							:stepIndex="step.stepIndex"
 							:isNewStep="step.isNewStep"
-							@step-changed="handleStepChanged"
+							@submit="saveStep"
+							@remove="removeStep"
 						/>
 
 						<div class="flex justify-center">
-							<SharedButtonActionButton v-if="canAddStep" label="Add step" color="neutral" variant="outline" trailing-icon="i-lucide-plus" @click="addStep" />
+							<SharedButtonActionButton
+								v-if="canAddStep"
+								label="Add step"
+								color="neutral"
+								variant="outline"
+								trailing-icon="i-lucide-plus"
+								@click="addStep"
+							/>
 							<UAlert
 								v-else
 								title="You must save the current step before adding a new one"
@@ -111,6 +114,37 @@ const addStep = () => {
 }
 
 const stepRefreshKeys = ref<Record<string, number>>({})
+
+const saveName = async (tutorialName: string) => {
+	await $fetch("/api/admin/tutorial/tutorial", {
+		method: "PUT",
+		body: {
+			tutorialID,
+			tutorialGroupID,
+			tutorialName,
+		},
+	})
+	await refresh()
+}
+
+const saveStep = async (payload: FormData) => {
+	const tutorialStepID = String(payload.get("tutorialStepID") ?? "")
+	await $fetch("/api/admin/tutorial/tutorial/step", {
+		method: "PUT",
+		body: payload,
+	})
+	await handleStepChanged({ tutorialStepID })
+}
+
+const removeStep = async (tutorialStepID: string) => {
+	if (tutorialStepID) {
+		await $fetch("/api/admin/tutorial/tutorial/step", {
+			method: "DELETE",
+			query: { tutorialStepID },
+		})
+	}
+	await handleStepChanged({ tutorialStepID })
+}
 
 const handleStepChanged = async (changeInformation) => {
 	const tutorialStepID = changeInformation.tutorialStepID

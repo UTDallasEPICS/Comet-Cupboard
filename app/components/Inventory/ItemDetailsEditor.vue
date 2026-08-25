@@ -1,5 +1,5 @@
 <template>
-	<UForm :validate="validate" :state="state" class="w-full" @submit="onSubmit" @error="onError">
+	<SharedFormShell :validate="validate" :state="state" class="w-full" :on-submit="onSubmit" :on-error="onError">
 		<SharedLayoutSectionUCard title="Item Details">
 			<div class="space-y-4">
 				<UFormField id="itemName" name="itemName" label="Item Name" description="Use up to 100 letters and spaces" required>
@@ -21,14 +21,14 @@
 			</div>
 			<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
 				<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
-				<SharedButtonActionButton type="submit" label="Save Changes" color="secondary" :loading="isSaving" />
+				<SharedButtonActionButton type="submit" label="Save Changes" color="secondary" :loading="saving" />
 			</div>
 		</SharedLayoutSectionUCard>
-	</UForm>
+	</SharedFormShell>
 </template>
 
 <script setup lang="ts">
-import * as z from "zod"
+import { inventoryItemDetailsSchema, type InventoryItemDetailsForm } from "~/utils/formSchemas"
 
 const props = defineProps<{
 	itemID: string
@@ -36,24 +36,14 @@ const props = defineProps<{
 	originalCategoryID: string
 	originalArchived: boolean
 	categoryOptions: { label: string; value: string }[]
+	saving?: boolean
 }>()
-const emit = defineEmits<{ updated: [] }>()
-
-const formSchema = z.object({
-	itemName: z
-		.string()
-		.min(1, "Item name is required")
-		.max(100, "Item name must be at most 100 characters")
-		.regex(/^[A-Za-z ]+$/, "Item name must only contain letters and spaces"),
-	categoryID: z.string().min(1, "Category is required"),
-	archived: z.boolean(),
-})
-const { state, validate, onError } = createFormBuilder(formSchema, () => ({
+const emit = defineEmits<{ save: [payload: InventoryItemDetailsForm] }>()
+const { state, validate, onError } = createFormBuilder(inventoryItemDetailsSchema, () => ({
 	itemName: props.originalName,
 	categoryID: props.originalCategoryID,
 	archived: props.originalArchived,
 }))
-const isSaving = ref(false)
 const changesMade = computed(
 	() => state.value.itemName !== props.originalName || state.value.categoryID !== props.originalCategoryID || state.value.archived !== props.originalArchived
 )
@@ -71,18 +61,7 @@ const cancelChanges = () => {
 	state.value.archived = props.originalArchived
 }
 
-const onSubmit = async (event: { data: z.infer<typeof formSchema> }) => {
-	isSaving.value = true
-	try {
-		const formData = new FormData()
-		formData.append("itemID", props.itemID)
-		formData.append("itemName", event.data.itemName)
-		formData.append("categoryID", event.data.categoryID)
-		formData.append("archived", event.data.archived.toString())
-		await $fetch("/api/volunteer/inventory/item", { method: "PUT", body: formData })
-		emit("updated")
-	} finally {
-		isSaving.value = false
-	}
+const onSubmit = (event: { data: InventoryItemDetailsForm }) => {
+	emit("save", event.data)
 }
 </script>

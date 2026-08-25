@@ -3,7 +3,7 @@
 		<NuxtLayout name="main" title="Create Announcement" :back-navigation="{ text: 'Back to Announcements', to: '/admin/announcements' }">
 			<USeparator class="my-4" />
 			<div class="mx-auto w-full max-w-xl">
-				<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
+				<SharedFormShell :validate="validate" :state="state" class="w-full space-y-4" :on-submit="onSubmit" :on-error="onError">
 					<SharedLayoutSectionUCard title="Announcement Details">
 						<UFormField name="message" label="Message" description="Enter the announcement shown to users" required>
 							<UTextarea v-model="state.message" class="w-full" placeholder="Enter announcement message" />
@@ -14,7 +14,14 @@
 							<UInputDate v-model="state.startsDate">
 								<template #leading>
 									<UPopover>
-										<SharedButtonActionButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
+										<SharedButtonActionButton
+											color="neutral"
+											variant="link"
+											size="md"
+											icon="i-lucide-calendar"
+											aria-label="Select a date"
+											class="px-0"
+										/>
 
 										<template #content>
 											<UCalendar v-model="state.startsDate" class="p-2" />
@@ -32,7 +39,14 @@
 							<UInputDate v-model="state.endsDate">
 								<template #leading>
 									<UPopover>
-										<SharedButtonActionButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
+										<SharedButtonActionButton
+											color="neutral"
+											variant="link"
+											size="md"
+											icon="i-lucide-calendar"
+											aria-label="Select a date"
+											class="px-0"
+										/>
 
 										<template #content>
 											<UCalendar v-model="state.endsDate" class="p-2" />
@@ -46,28 +60,23 @@
 							<UInputTime v-model="state.endsTime" />
 						</UFormField>
 					</SharedLayoutSectionUCard>
-					<footer class="sticky right-4 bottom-8 flex justify-end"><SharedButtonActionButton action="positive" type="submit" text="Create announcement" /></footer>
-				</UForm>
+					<footer class="sticky right-4 bottom-8 flex justify-end">
+						<SharedButtonActionButton action="positive" type="submit" text="Create announcement" />
+					</footer>
+				</SharedFormShell>
 			</div>
 		</NuxtLayout>
 	</div>
 </template>
 
 <script setup lang="ts">
-import * as z from "zod"
+import { announcementSchema } from "~/utils/formSchemas"
 import { Time, getLocalTimeZone, today } from "@internationalized/date"
 
 definePageMeta({ layout: false })
 
 const timeZone = getLocalTimeZone()
-const formSchema = z.object({
-	message: z.string().trim().min(1, "Message is required"),
-	startsDate: z.any(),
-	endsDate: z.any(),
-	startsTime: z.any(),
-	endsTime: z.any(),
-})
-const { schema, state, validate, onError } = createFormBuilder(formSchema, () => ({
+const { schema, state, validate, onError } = createFormBuilder(announcementSchema, () => ({
 	message: undefined,
 	startsDate: today(timeZone) as any,
 	endsDate: today(timeZone) as any,

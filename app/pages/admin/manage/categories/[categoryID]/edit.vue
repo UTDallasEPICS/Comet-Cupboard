@@ -8,7 +8,7 @@
 			<USeparator class="my-4" />
 			<section>
 				<div class="mx-auto w-full max-w-xl">
-					<UForm :validate="validate" :state="state" class="w-full space-y-4" @submit="onSubmit" @error="onError">
+					<SharedFormShell :validate="validate" :state="state" class="w-full space-y-4" :on-submit="onSubmit" :on-error="onError">
 						<SharedLayoutSectionUCard title="Category Image">
 							<UFormField
 								id="image"
@@ -64,7 +64,7 @@
 						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
 							<SharedButtonActionButton action="positive" type="submit" text="Submit" />
 						</footer>
-					</UForm>
+					</SharedFormShell>
 				</div>
 			</section>
 		</NuxtLayout>
@@ -72,7 +72,7 @@
 </template>
 
 <script lang="ts" setup>
-import * as z from "zod"
+import { editCategorySchema } from "~/utils/formSchemas"
 
 definePageMeta({ layout: false })
 
@@ -102,22 +102,7 @@ watchEffect(async () => {
 	}
 })
 
-const formSchema = imageSchema
-	.extend({
-		categoryName: z
-			.string()
-			.min(1, "Category name is required")
-			.max(20, "Category name must be at most 20 characters")
-			.regex(/^[A-Za-z ]+$/, "Category name must only contain letters and spaces"),
-		archived: z.boolean().default(false),
-	})
-	.partial({
-		image: true,
-		categoryName: true,
-		archived: true,
-	})
-
-const { schema, state, validate, onError } = createFormBuilder(formSchema, () => ({
+const { schema, state, validate, onError } = createFormBuilder(editCategorySchema, () => ({
 	image: originalImage.value
 		? new File([originalImage.value], currentCategory.value?.imgName, {
 				type: originalImage.value.type,

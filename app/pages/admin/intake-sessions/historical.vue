@@ -32,7 +32,8 @@
 							<div v-if="session.notes" class="mt-1 text-sm">{{ session.notes }}</div>
 							<UCollapsible class="mt-3 border-t pt-2">
 								<SharedButtonActionButton color="neutral" variant="ghost" block class="justify-between" trailing-icon="i-lucide-chevron-down"
-									>{{ session.completedInventoryIntakeSessionItems.length }} Products Changed</SharedButtonActionButton>
+									>{{ session.completedInventoryIntakeSessionItems.length }} Products Changed</SharedButtonActionButton
+								>
 								<template #content>
 									<div class="mt-2 space-y-2">
 										<div

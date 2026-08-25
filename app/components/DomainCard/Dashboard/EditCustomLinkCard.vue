@@ -15,7 +15,13 @@
 				</SharedTextBase>
 			</div>
 
-			<SharedButtonActionButton class="ml-auto" icon="i-lucide-edit" variant="ghost" color="neutral" :to="`/head-admin/dashboard-links/${dashboardLinkID}/edit`" />
+			<SharedButtonActionButton
+				class="ml-auto"
+				icon="i-lucide-edit"
+				variant="ghost"
+				color="neutral"
+				:to="`/head-admin/dashboard-links/${dashboardLinkID}/edit`"
+			/>
 		</div>
 	</UCard>
 </template>

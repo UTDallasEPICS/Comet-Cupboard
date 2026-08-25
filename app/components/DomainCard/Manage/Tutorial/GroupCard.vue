@@ -23,11 +23,16 @@
 							:tutorial="getPreviewTutorial(tutorial)"
 							:edit-tutorial-url="`/admin/manage/tutorials/${tutorialGroupID}/${tutorial.tutorialID}/edit`"
 						>
-							<SharedButtonActionButton class="flex-1" color="neutral" variant="subtle" size="xl">
-								<div class="flex w-full items-center justify-between">
-									<SharedTextBase class="text-black">{{ tutorial.tutorialName }}</SharedTextBase>
-									<SharedIcon name="i-lucide-chevron-right" />
-								</div>
+							<SharedButtonActionButton
+								class="flex-1"
+								action="custom"
+								custom-color="neutral"
+								:text="tutorial.tutorialName"
+								justify="between"
+								trailing-icon="i-lucide-chevron-right"
+								variant="outline"
+								size="xl"
+							>
 							</SharedButtonActionButton>
 						</SharedTutorial>
 
@@ -47,6 +52,7 @@
 						color="secondary"
 						variant="solid"
 						class="w-max"
+						text="Create new tutorial"
 						trailing-icon="i-lucide-plus"
 						@click="navigateTo(`/admin/manage/tutorials/${tutorialGroupID}/add`)"
 					/>

@@ -18,15 +18,13 @@
 									v-for="(tutorial, index) in tutorials"
 									:key="tutorial.tutorialID"
 									color="neutral"
-									variant="subtle"
+									:text="tutorial.tutorialName"
+									trailing-icon="i-lucide-chevron-right"
+									justify="between"
+									variant="outline"
 									size="xl"
 									@click="selectTutorial(index)"
-								>
-									<div class="flex w-full items-center justify-between">
-										<SharedTextBase class="text-left">{{ tutorial.tutorialName }}</SharedTextBase>
-										<SharedIcon name="i-lucide-chevron-right" class="size-6" />
-									</div>
-								</SharedButtonActionButton>
+								/>
 							</div>
 							<div v-else>
 								<SharedTextBaseSecondary>This tutorial group doesn't have any tutorials yet.</SharedTextBaseSecondary>
@@ -36,7 +34,9 @@
 							<SharedTextBase class="text-center">{{ activeTutorial.tutorialName }}</SharedTextBase>
 							<div v-if="activeTutorial.tutorialSteps.length === 0" class="flex flex-col items-center justify-center gap-4 py-8 text-center">
 								<SharedTextBaseSecondary>This tutorial doesn't have any steps yet.</SharedTextBaseSecondary>
-								<SharedButtonActionButton color="secondary" variant="solid" size="xl" class="mt-4" @click="backToTutorials"> Back to Tutorials </SharedButtonActionButton>
+								<SharedButtonActionButton color="secondary" variant="solid" size="xl" class="mt-4" @click="backToTutorials">
+									Back to Tutorials
+								</SharedButtonActionButton>
 							</div>
 							<template v-else>
 								<UCarousel

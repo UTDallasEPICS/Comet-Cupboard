@@ -46,7 +46,13 @@
 						<SharedIcon name="i-lucide-megaphone" class="text-text-soft mb-2 h-10 w-10" />
 						<SharedTextCardTitle>No announcements scheduled</SharedTextCardTitle>
 						<SharedTextSecondary class="mt-1"> Create an announcement to notify users. </SharedTextSecondary>
-						<SharedButtonActionButton to="/admin/announcements/add" icon="i-lucide-plus" color="secondary" label="Create announcement" class="mt-4" />
+						<SharedButtonActionButton
+							to="/admin/announcements/add"
+							icon="i-lucide-plus"
+							color="secondary"
+							label="Create announcement"
+							class="mt-4"
+						/>
 					</div>
 				</UCard>
 			</section>

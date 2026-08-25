@@ -4,7 +4,7 @@
 			<SharedTextCardTitle>Start Intake Session</SharedTextCardTitle>
 			<SharedButtonActionButton icon="i-lucide-arrow-left" color="neutral" variant="ghost" aria-label="Back to intake sessions" @click="emit('cancel')" />
 		</div>
-		<UForm :state="state" :validate="validate" class="space-y-4" @submit="startSession">
+		<SharedFormShell :state="state" :validate="validate" class="space-y-4" :on-submit="startSession" :on-error="onError">
 			<SharedLayoutSectionUCard title="Session Details">
 				<div class="space-y-4">
 					<UFormField label="Session Name" name="inventoryIntakeSessionName" required
@@ -65,25 +65,19 @@
 				<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="emit('cancel')" />
 				<SharedButtonActionButton type="submit" label="Start Session" color="secondary" :loading="isSaving" />
 			</div>
-		</UForm>
+		</SharedFormShell>
 	</div>
 </template>
 
 <script setup lang="ts">
-import * as z from "zod"
+import { intakeSessionSchema, type IntakeSessionForm } from "~/utils/formSchemas"
 
 type Source = { sourceID: string; sourceName: string }
 type SourceField = { fieldID: string; fieldName: string; type: "TEXT" | "NUMBER" | "DATE" | "BOOLEAN" | "CHOICE"; choices: unknown; optional: boolean }
 
 const props = defineProps<{ sources: Source[] }>()
 const emit = defineEmits<{ cancel: []; started: [inventoryIntakeSessionID: string] }>()
-const formSchema = z.object({
-	sourceID: z.string().min(1, "Source is required"),
-	inventoryIntakeSessionName: z.string().min(1, "Session name is required"),
-	intakeDate: z.string().min(1, "Intake date is required"),
-	notes: z.string(),
-})
-const { state, validate } = createFormBuilder(formSchema, () => ({
+const { state, validate, onError } = createFormBuilder(intakeSessionSchema, () => ({
 	sourceID: "",
 	inventoryIntakeSessionName: "",
 	intakeDate: new Date().toISOString().slice(0, 10),
@@ -103,7 +97,7 @@ const setTextMetadata = (fieldName: string, value: unknown) => {
 	textMetadata[fieldName] = typeof value === "string" || typeof value === "number" ? value.toString() : ""
 }
 
-const startSession = async (event: { data: z.infer<typeof formSchema> }) => {
+const startSession = async (event: { data: IntakeSessionForm }) => {
 	isSaving.value = true
 	try {
 		const session = await $fetch<{ inventoryIntakeSessionID: string }>("/api/volunteer/inventory/inventory-intake-session", {
