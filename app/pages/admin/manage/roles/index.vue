@@ -3,9 +3,9 @@
 		<NuxtLayout name="main" title="Manage Roles" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
 			<section>
 				<div class="flex flex-row flex-nowrap items-center gap-2">
-					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search users by name or email" class="grow" />
+					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search users by name or email" class="grow" />
 					<UPopover>
-						<UButton :icon="icons['sortFilter']" variant="ghost" color="neutral" size="md" />
+						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" variant="ghost" color="neutral" size="md" />
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">

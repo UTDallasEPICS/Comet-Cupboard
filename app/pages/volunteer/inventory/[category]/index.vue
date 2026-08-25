@@ -3,9 +3,9 @@
 		<NuxtLayout name="main" :title="`${currentCategory}`" :back-navigation="{ text: `Back to Categories`, to: '/volunteer/inventory' }">
 			<section>
 				<div class="flex flex-row flex-nowrap items-center gap-2">
-					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search items" class="relative grow">
-						<UButton
-							:icon="icons['add']"
+					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search items" class="relative grow">
+						<SharedButtonActionButton
+							icon="i-lucide-plus"
 							variant="ghost"
 							color="neutral"
 							class="bg-utd-green absolute right-0 text-white"
@@ -13,7 +13,7 @@
 						/>
 					</UInput>
 					<UPopover>
-						<UButton :icon="icons['sortFilter']" variant="ghost" color="neutral" size="md" />
+						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" variant="ghost" color="neutral" size="md" />
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">

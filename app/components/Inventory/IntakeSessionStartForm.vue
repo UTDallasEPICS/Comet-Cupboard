@@ -2,7 +2,7 @@
 	<div class="space-y-4">
 		<div class="flex items-center justify-between gap-3">
 			<SharedTextCardTitle>Start Intake Session</SharedTextCardTitle>
-			<UButton :icon="icons.back" color="neutral" variant="ghost" aria-label="Back to intake sessions" @click="emit('cancel')" />
+			<SharedButtonActionButton icon="i-lucide-arrow-left" color="neutral" variant="ghost" aria-label="Back to intake sessions" @click="emit('cancel')" />
 		</div>
 		<UForm :state="state" :validate="validate" class="space-y-4" @submit="startSession">
 			<SharedLayoutSectionUCard title="Session Details">
@@ -62,8 +62,8 @@
 				</div>
 			</SharedLayoutSectionUCard>
 			<div class="flex justify-end gap-2">
-				<UButton type="button" label="Cancel" color="neutral" variant="outline" @click="emit('cancel')" />
-				<UButton type="submit" label="Start Session" color="secondary" :loading="isSaving" />
+				<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="emit('cancel')" />
+				<SharedButtonActionButton type="submit" label="Start Session" color="secondary" :loading="isSaving" />
 			</div>
 		</UForm>
 	</div>

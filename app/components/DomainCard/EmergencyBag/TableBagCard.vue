@@ -5,11 +5,11 @@
 				<UCheckbox :model-value="selected" @update:model-value="emit('update:selected', $event)" />
 				<div class="flex flex-col items-start">
 					<div class="flex items-center gap-1">
-						<UIcon v-if="props.bag.private" name="i-lucide-hat-glasses" />
+						<SharedIcon v-if="props.bag.private" name="i-lucide-hat-glasses" />
 						<SharedTextBase class="font-bold">{{ props.bag.label }}</SharedTextBase>
 					</div>
 					<div class="flex items-center gap-1">
-						<UIcon name="i-lucide-calendar" />
+						<SharedIcon name="i-lucide-calendar" />
 						<SharedTextBase> Expiration: {{ props.bag.expiryDate.split("T")[0] }}</SharedTextBase>
 					</div>
 
@@ -31,7 +31,7 @@
 					props.bag.location?.locationName ?? "Unassigned"
 				}}</UBadge>
 
-				<UButton
+				<SharedButtonActionButton
 					class="w-min"
 					color="neutral"
 					variant="ghost"
@@ -75,20 +75,20 @@
 						</div>
 					</div>
 					<div v-if="!props.bag.private" class="flex justify-end">
-						<UButton
+						<SharedButtonActionButton
 							label="Edit Bag"
 							class="bg-utd-orange text-white"
 							variant="outline"
 							trailing-icon="i-lucide-square-pen"
 							@click="navigateTo(`/volunteer/emergency-bag/${props.bag.emergencyBagID}/edit`)"
 						/>
-						<UButton label="Duplicate" color="neutral" variant="outline" trailing-icon="i-lucide-copy" @click="duplicateBag" />
+						<SharedButtonActionButton label="Duplicate" color="neutral" variant="outline" trailing-icon="i-lucide-copy" @click="duplicateBag" />
 					</div>
 				</ul>
 				<div class="mt-2 max-w-sm">
 					<div v-if="props.bag.private">
 						<UAlert
-							:icon="icons['information']"
+							icon="i-lucide-info"
 							:title="props.bag.bagDescription"
 							color="neutral"
 							variant="outline"
@@ -96,7 +96,7 @@
 						/>
 
 						<div class="flex justify-end pt-2">
-							<UButton
+							<SharedButtonActionButton
 								label="Edit Bag"
 								class="bg-utd-orange text-white"
 								variant="outline"

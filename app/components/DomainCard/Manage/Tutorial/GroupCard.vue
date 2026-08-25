@@ -8,7 +8,7 @@
 		<div class="p-4">
 			<div class="flex flex-col items-center justify-between gap-2">
 				<SharedTextBase class="flex flex-row gap-1 font-semibold"
-					><UIcon :name="icon" class="size-5" /> {{ tutorialGroupName }} Tutorials</SharedTextBase
+					><SharedIcon :name="icon" class="size-5" /> {{ tutorialGroupName }} Tutorials</SharedTextBase
 				>
 				<USeparator />
 			</div>
@@ -23,26 +23,26 @@
 							:tutorial="getPreviewTutorial(tutorial)"
 							:edit-tutorial-url="`/admin/manage/tutorials/${tutorialGroupID}/${tutorial.tutorialID}/edit`"
 						>
-							<UButton class="flex-1" color="neutral" variant="subtle" size="xl">
+							<SharedButtonActionButton class="flex-1" color="neutral" variant="subtle" size="xl">
 								<div class="flex w-full items-center justify-between">
 									<SharedTextBase class="text-black">{{ tutorial.tutorialName }}</SharedTextBase>
-									<UIcon name="i-lucide-chevron-right" />
+									<SharedIcon name="i-lucide-chevron-right" />
 								</div>
-							</UButton>
+							</SharedButtonActionButton>
 						</SharedTutorial>
 
-						<UButton
+						<SharedButtonActionButton
 							class="w-min"
 							color="neutral"
 							variant="ghost"
 							size="xl"
-							:icon="icons['edit']"
+							icon="i-lucide-edit"
 							@click="navigateTo(`/admin/manage/tutorials/${tutorialGroupID}/${tutorial.tutorialID}/edit`)"
 						/>
 					</li>
 				</ul>
 				<div class="flex justify-center p-4">
-					<UButton
+					<SharedButtonActionButton
 						label="Create new tutorial"
 						color="secondary"
 						variant="solid"
@@ -57,11 +57,13 @@
 </template>
 
 <script setup lang="ts">
+import type { PropType } from "vue"
+
 const props = defineProps({
 	tutorialGroupID: { type: String, required: true },
 	tutorialGroupName: { type: String, required: true },
 	tutorials: { type: Array, default: () => [] },
-	icon: { type: String, required: true },
+	icon: { type: String as PropType<Icon>, required: true },
 })
 
 const emit = defineEmits<{

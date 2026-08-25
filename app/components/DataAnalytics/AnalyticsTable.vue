@@ -7,7 +7,7 @@
 					><SharedTextSectionTitle class="mt-1">{{ title }}</SharedTextSectionTitle>
 				</div>
 				<UTooltip text="Export will be available soon"
-					><UButton icon="i-lucide-download" color="neutral" variant="outline" disabled aria-label="Export data"
+					><SharedButtonActionButton icon="i-lucide-download" color="neutral" variant="outline" disabled aria-label="Export data"
 				/></UTooltip>
 			</div>
 		</template>

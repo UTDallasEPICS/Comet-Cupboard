@@ -10,14 +10,14 @@
 				<div class="mx-auto w-full max-w-xl">
 					<div class="flex w-full flex-row items-center justify-center">
 						<UModal v-model:open="isDeleteModalOpen">
-							<UButton label="Delete Custom Link" color="error" variant="outline" :icon="icons['delete']" />
+							<SharedButtonActionButton label="Delete Custom Link" color="error" variant="outline" icon="i-lucide-trash-2" />
 							<template #content>
 								<UCard>
 									<SharedTextCardTitle>Confirm Deletion?</SharedTextCardTitle>
 									<USeparator class="my-2" />
 									<div class="mt-4 flex flex-row items-center justify-center gap-2">
-										<SharedButtonCancel text="Cancel" @click="isDeleteModalOpen = false" />
-										<SharedButtonNegativeAction text="Confirm Deletion" @click="deactivate(route.params.dashboardLinkID)" />
+										<SharedButtonActionButton action="cancel" text="Cancel" @click="isDeleteModalOpen = false" />
+										<SharedButtonActionButton action="negative" text="Confirm Deletion" @click="deactivate(route.params.dashboardLinkID)" />
 									</div>
 								</UCard>
 							</template>
@@ -79,7 +79,7 @@
 								</UFormField>
 							</div>
 						</SharedLayoutSectionUCard>
-						<footer class="flex justify-end"><SharedButtonPositiveAction type="submit" text="Save changes" /></footer>
+						<footer class="flex justify-end"><SharedButtonActionButton action="positive" type="submit" text="Save changes" /></footer>
 					</UForm>
 				</div>
 			</section>

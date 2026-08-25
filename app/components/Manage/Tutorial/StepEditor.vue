@@ -3,7 +3,7 @@
 		<UCard>
 			<div class="mb-4 flex items-center justify-between">
 				<SharedTextCardTitle>Step {{ props.stepIndex }}</SharedTextCardTitle>
-				<UButton icon="i-lucide-x" color="error" variant="ghost" size="sm" @click="removeStep" />
+				<SharedButtonActionButton icon="i-lucide-x" color="error" variant="ghost" size="sm" @click="removeStep" />
 			</div>
 			<USeparator class="mb-4" />
 
@@ -24,8 +24,8 @@
 			</UFormField>
 
 			<div v-if="stepChanged" class="mt-4 flex justify-end gap-2">
-				<SharedButtonCancel text="Cancel" @click="cancelStepEdit" />
-				<SharedButtonPositiveAction type="submit" text="Save changes" />
+				<SharedButtonActionButton action="cancel" text="Cancel" @click="cancelStepEdit" />
+				<SharedButtonActionButton action="positive" type="submit" text="Save changes" />
 			</div>
 		</UCard>
 	</UForm>

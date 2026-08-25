@@ -7,7 +7,7 @@
 					<UCard>
 						<div class="flex items-center justify-between gap-2">
 							<SharedTextCardTitle>Inventory Intake Session</SharedTextCardTitle>
-							<UButton icon="i-lucide-plus" label="Start session" color="secondary" @click="view = 'create'" />
+							<SharedButtonActionButton icon="i-lucide-plus" label="Start session" color="secondary" @click="view = 'create'" />
 						</div>
 						<USelectMenu
 							v-model="selectedSessionID"
@@ -20,7 +20,7 @@
 						<SharedTextBaseSecondary v-if="selectedSession" class="mt-2">
 							{{ selectedSession.sourceName }} · {{ selectedSession.notes || "No notes" }}
 						</SharedTextBaseSecondary>
-						<UButton
+						<SharedButtonActionButton
 							v-if="selectedSession"
 							label="Clear Session"
 							icon="i-lucide-x"
@@ -33,13 +33,13 @@
 					<div v-if="inventoryStore.hasInventoryChanges">
 						<div class="flex justify-end">
 							<UButtonGroup>
-								<UButton
+								<SharedButtonActionButton
 									label="Incremental"
 									color="neutral"
 									:variant="changeView === 'incremental' ? 'solid' : 'outline'"
 									@click="changeView = 'incremental'"
 								/>
-								<UButton
+								<SharedButtonActionButton
 									label="Aggregated"
 									color="neutral"
 									:variant="changeView === 'aggregated' ? 'solid' : 'outline'"
@@ -73,9 +73,9 @@
 						>
 							<template #header="{ group, open }">
 								<div class="flex flex-col gap-2">
-									<SharedButtonPositiveAction
+									<SharedButtonActionButton action="positive"
 										:text="group"
-										:trailing-icon="icons['chevronDown']"
+										trailing-icon="i-lucide-chevron-down"
 										block
 										class="group w-full rounded-lg"
 										:ui="{
@@ -105,7 +105,7 @@
 						</SharedLayoutGroupedCollapsible>
 
 						<div class="flex justify-center pt-6">
-							<SharedButtonPositiveAction text="Submit" @click="inventoryStore.submitChanges()" />
+							<SharedButtonActionButton action="positive" text="Submit" @click="inventoryStore.submitChanges()" />
 						</div>
 					</div>
 				</template>

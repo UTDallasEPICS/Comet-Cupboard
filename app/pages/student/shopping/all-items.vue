@@ -3,9 +3,9 @@
 		<NuxtLayout name="main" title="All Items" :back-navigation="{ text: 'Back to Categories', to: '/student/shopping' }">
 			<section>
 				<div class="flex flex-row flex-nowrap items-center gap-2">
-					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search items" class="grow" />
+					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search items" class="grow" />
 					<UPopover>
-						<UButton :icon="icons['sortFilter']" variant="ghost" color="neutral" size="md" />
+						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" variant="ghost" color="neutral" size="md" />
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">

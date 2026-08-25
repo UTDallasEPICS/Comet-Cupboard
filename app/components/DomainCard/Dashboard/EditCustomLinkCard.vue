@@ -6,7 +6,7 @@
 		}"
 	>
 		<div class="flex items-center gap-4">
-			<UIcon name="i-lucide-external-link" class="text-text-soft h-8 w-8" />
+			<SharedIcon name="i-lucide-external-link" class="text-text-soft h-8 w-8" />
 
 			<div class="flex flex-col text-left">
 				<SharedTextCardTitle>{{ displayName }}</SharedTextCardTitle>
@@ -15,7 +15,7 @@
 				</SharedTextBase>
 			</div>
 
-			<UButton class="ml-auto" icon="i-lucide-edit" variant="ghost" color="neutral" :to="`/head-admin/dashboard-links/${dashboardLinkID}/edit`" />
+			<SharedButtonActionButton class="ml-auto" icon="i-lucide-edit" variant="ghost" color="neutral" :to="`/head-admin/dashboard-links/${dashboardLinkID}/edit`" />
 		</div>
 	</UCard>
 </template>

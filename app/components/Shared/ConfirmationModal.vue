@@ -8,8 +8,8 @@
 				<USeparator class="my-2" />
 				<SharedTextBase v-if="description" class="mt-4 text-center">{{ description }}</SharedTextBase>
 				<div class="mt-4 flex flex-row items-center justify-center gap-2">
-					<SharedButtonCancel :text="cancelText" :disabled="loading" @click="isOpen = false" />
-					<SharedButtonNegativeAction :text="confirmText" :loading="loading" @click="handleConfirm" />
+					<SharedButtonActionButton action="cancel" :text="cancelText" :disabled="loading" @click="isOpen = false" />
+					<SharedButtonActionButton action="negative" :text="confirmText" :loading="loading" @click="handleConfirm" />
 				</div>
 			</UCard>
 		</template>

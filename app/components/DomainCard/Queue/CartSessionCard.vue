@@ -1,10 +1,10 @@
 <template>
 	<UCollapsible class="w-full">
-		<UButton color="neutral" variant="ghost" block class="w-full justify-between">
+		<SharedButtonActionButton color="neutral" variant="ghost" block class="w-full justify-between">
 			<UUser :name="cart.publicCode" :avatar="{ icon: cart.publicIcon }" size="lg" />
 
-			<UIcon name="i-lucide-chevron-down" class="size-5" />
-		</UButton>
+			<SharedIcon name="i-lucide-chevron-down" class="size-5" />
+		</SharedButtonActionButton>
 
 		<template #content>
 			<div class="flex flex-wrap items-center justify-between gap-3 border-t p-3">
@@ -16,7 +16,7 @@
 					confirm-text="Confirm Cancel"
 					@confirm="emit('cancel', cart.publicCode)"
 				>
-					<UButton label="Cancel Session" icon="i-lucide-x" color="error" />
+					<SharedButtonActionButton label="Cancel Session" icon="i-lucide-x" color="error" />
 				</SharedConfirmationModal>
 			</div>
 		</template>

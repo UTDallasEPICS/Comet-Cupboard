@@ -1,6 +1,6 @@
 <template>
 	<UCollapsible class="w-full">
-		<UButton color="neutral" variant="ghost" block class="w-full justify-between">
+		<SharedButtonActionButton color="neutral" variant="ghost" block class="w-full justify-between">
 			<div class="flex min-w-0 items-center gap-3 text-left">
 				<UUser :name="queueEntry.publicCode" :description="`Position: ${queueEntry.position}`" :avatar="{ icon: queueEntry.publicIcon }" size="lg" />
 			</div>
@@ -10,9 +10,9 @@
 
 				<UBadge v-else-if="queueEntry.queuePingSentAt" label="Ping sent" color="neutral" variant="subtle" />
 
-				<UIcon name="i-lucide-chevron-down" class="size-5" />
+				<SharedIcon name="i-lucide-chevron-down" class="size-5" />
 			</div>
-		</UButton>
+		</SharedButtonActionButton>
 
 		<template #content>
 			<div class="flex flex-wrap justify-end gap-2 border-t p-3">
@@ -22,12 +22,12 @@
 					confirm-text="Confirm Removal"
 					@confirm="emit('remove', queueEntry.publicCode)"
 				>
-					<UButton label="Remove" icon="i-lucide-user-round-minus" color="error" />
+					<SharedButtonActionButton label="Remove" icon="i-lucide-user-round-minus" color="error" />
 				</SharedConfirmationModal>
 
-				<UButton label="Approve" icon="i-lucide-check" color="secondary" @click="emit('approve', queueEntry)" />
+				<SharedButtonActionButton label="Approve" icon="i-lucide-check" color="secondary" @click="emit('approve', queueEntry)" />
 
-				<UButton
+				<SharedButtonActionButton
 					label="Ping"
 					icon="i-lucide-send"
 					color="neutral"

@@ -12,7 +12,7 @@
 					<SharedTextHeroDescription class="mt-4 text-white"> Supporting academic success by meeting basic needs. </SharedTextHeroDescription>
 
 					<div class="mt-4 flex flex-row gap-4">
-						<SharedButtonNavigateTo text="Login with SSO" @click="startLogin" />
+						<SharedButtonActionButton action="navigate-to" text="Login with SSO" @click="startLogin" />
 						<UForm v-if="isDevMode" @submit="startDevLogin">
 							<UFormField>
 								<UInput v-model="devUsernameInput" placeholder="NONPROD Dev Username" class="w-64" @keyup.enter="startDevLogin" />
@@ -64,7 +64,7 @@
 				<SharedTextSectionTitle> Find an Emergency Bag </SharedTextSectionTitle>
 				<SharedTextBase class="max-w-xl"> Check availability at locations across campus </SharedTextBase>
 				<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
-				<SharedButtonNavigateTo text="View Locations" to="/public/emergency-bag/locations" />
+				<SharedButtonActionButton action="navigate-to" text="View Locations" to="/public/emergency-bag/locations" />
 			</UContainer>
 		</section>
 	</div>

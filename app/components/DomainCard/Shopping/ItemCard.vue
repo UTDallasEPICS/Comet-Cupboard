@@ -25,7 +25,7 @@
 					<SharedTextBaseSecondary> {{ quantity }} available </SharedTextBaseSecondary>
 				</div>
 
-				<UButton
+				<SharedButtonActionButton
 					v-if="orderedSpecificItems.length"
 					color="neutral"
 					variant="ghost"
@@ -69,7 +69,7 @@
 										/>
 									</div>
 								</div>
-								<SharedButtonPositiveAction text="Add" class="ml-auto" color="secondary" @click="emit('add', specificItem.specificItemID)" />
+								<SharedButtonActionButton action="positive" text="Add" class="ml-auto" @click="emit('add', specificItem.specificItemID)" />
 							</div>
 						</div>
 					</div>

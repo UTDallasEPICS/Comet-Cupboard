@@ -62,10 +62,10 @@
 							>
 								<UInput v-model="state.mapEmbedUrl" placeholder="https://map.concept3d.com/?id=1772#!m/551906" class="w-full" />
 
-								<UButton variant="link" color="primary" class="mt-2 px-0" @click="showMapDirections = true">
-									<UIcon name="i-lucide-circle-help" class="mr-1" />
+								<SharedButtonActionButton variant="link" color="primary" class="mt-2 px-0" @click="showMapDirections = true">
+									<SharedIcon name="i-lucide-circle-help" class="mr-1" />
 									Click for directions on getting this information
-								</UButton>
+								</SharedButtonActionButton>
 							</UFormField>
 						</SharedLayoutSectionUCard>
 
@@ -108,7 +108,7 @@
 						</SharedLayoutSectionUCard>
 
 						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
-							<SharedButtonPositiveAction type="submit" text="Submit" />
+							<SharedButtonActionButton action="positive" type="submit" text="Submit" />
 						</footer>
 					</UForm>
 				</div>

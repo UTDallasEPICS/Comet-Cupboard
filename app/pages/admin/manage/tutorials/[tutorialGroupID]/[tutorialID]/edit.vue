@@ -8,14 +8,14 @@
 			<USeparator class="my-4" />
 			<div class="flex flex-col items-center justify-center gap-4">
 				<UModal v-model:open="isDeleteModalOpen">
-					<UButton label="Delete Tutorial" color="error" variant="outline" :icon="icons['delete']" />
+					<SharedButtonActionButton label="Delete Tutorial" color="error" variant="outline" icon="i-lucide-trash-2" />
 					<template #content>
 						<UCard>
 							<SharedTextCardTitle>Confirm Deletion?</SharedTextCardTitle>
 							<USeparator class="my-2" />
 							<div class="mt-4 flex flex-row items-center justify-center gap-2">
-								<SharedButtonCancel text="Cancel" @click="isDeleteModalOpen = false" />
-								<SharedButtonNegativeAction text="Confirm Deletion" @click="deleteTutorial" />
+								<SharedButtonActionButton action="cancel" text="Cancel" @click="isDeleteModalOpen = false" />
+								<SharedButtonActionButton action="negative" text="Confirm Deletion" @click="deleteTutorial" />
 							</div>
 						</UCard>
 					</template>
@@ -45,11 +45,11 @@
 						/>
 
 						<div class="flex justify-center">
-							<UButton v-if="canAddStep" label="Add step" color="neutral" variant="outline" trailing-icon="i-lucide-plus" @click="addStep" />
+							<SharedButtonActionButton v-if="canAddStep" label="Add step" color="neutral" variant="outline" trailing-icon="i-lucide-plus" @click="addStep" />
 							<UAlert
 								v-else
 								title="You must save the current step before adding a new one"
-								:icon="icons['information']"
+								icon="i-lucide-info"
 								color="warning"
 								variant="solid"
 								class="text-black"

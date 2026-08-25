@@ -2,7 +2,7 @@
 	<UCard>
 		<div class="flex items-center justify-between gap-3">
 			<SharedTextCardTitle>Source Fields</SharedTextCardTitle>
-			<UButton label="Add Field" icon="i-lucide-plus" color="secondary" @click="addField" />
+			<SharedButtonActionButton label="Add Field" icon="i-lucide-plus" color="secondary" @click="addField" />
 		</div>
 		<USeparator class="my-4" />
 		<div v-if="editableFields.length" class="space-y-4">
@@ -18,12 +18,12 @@
 					<div v-if="field.type === 'CHOICE'" class="space-y-2 rounded-lg border p-3">
 						<div class="flex items-center justify-between gap-2">
 							<SharedTextBaseSecondary>Choice Values</SharedTextBaseSecondary>
-							<UButton type="button" label="Add Choice" icon="i-lucide-plus" color="neutral" variant="outline" @click="field.choices.push('')" />
+							<SharedButtonActionButton type="button" label="Add Choice" icon="i-lucide-plus" color="neutral" variant="outline" @click="field.choices.push('')" />
 						</div>
 						<UFormField v-for="(_choice, index) in field.choices" :key="index" :name="`choices.${index}`">
 							<div class="flex items-center gap-2">
 								<UInput v-model="field.choices[index]" placeholder="Choice value" class="grow" />
-								<UButton
+								<SharedButtonActionButton
 									type="button"
 									icon="i-lucide-trash-2"
 									color="error"
@@ -35,10 +35,10 @@
 						</UFormField>
 					</div>
 					<div v-if="fieldChanged(field) || field.isNew" class="flex justify-end gap-2">
-						<UButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelField(field)" />
-						<UButton type="submit" label="Save Changes" color="secondary" :loading="savingFieldKey === field.key" />
+						<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelField(field)" />
+						<SharedButtonActionButton type="submit" label="Save Changes" color="secondary" :loading="savingFieldKey === field.key" />
 					</div>
-					<UButton v-else type="button" label="Remove" color="error" variant="outline" @click="openRemoveFieldModal(field.fieldID)" />
+					<SharedButtonActionButton v-else type="button" label="Remove" color="error" variant="outline" @click="openRemoveFieldModal(field.fieldID)" />
 				</div>
 			</UForm>
 		</div>
@@ -51,8 +51,8 @@
 				<SharedTextCardTitle>Confirm Field Removal?</SharedTextCardTitle>
 				<USeparator class="my-2" />
 				<div class="mt-4 flex justify-center gap-2">
-					<UButton label="Cancel" color="neutral" variant="outline" @click="isRemoveFieldModalOpen = false" />
-					<UButton label="Confirm Removal" color="error" @click="confirmRemoveField" />
+					<SharedButtonActionButton label="Cancel" color="neutral" variant="outline" @click="isRemoveFieldModalOpen = false" />
+					<SharedButtonActionButton label="Confirm Removal" color="error" @click="confirmRemoveField" />
 				</div>
 			</UCard>
 		</template>

@@ -20,7 +20,7 @@
 			</div>
 		</div>
 		<div class="flex flex-col items-end justify-between gap-2">
-			<UButton variant="ghost" :icon="icons['close']" class="absolute top-2 right-2 shrink-0" color="neutral" size="xs" @click="emit('remove', itemID)" />
+			<SharedButtonActionButton variant="ghost" icon="i-lucide-x" class="absolute top-2 right-2 shrink-0" color="neutral" size="xs" @click="emit('remove', itemID)" />
 			<SharedIncrementDecrementPill
 				class="absolute right-2 bottom-2"
 				:count="itemCount"

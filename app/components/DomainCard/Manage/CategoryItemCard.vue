@@ -5,12 +5,12 @@
 			body: 'p-0 py-0 sm:p-0 sm:py-0',
 		}"
 	>
-		<UButton
+		<SharedButtonActionButton
 			class="absolute top-2 right-2"
 			variant="ghost"
 			color="neutral"
 			size="sm"
-			:icon="icons['edit']"
+			icon="i-lucide-edit"
 			@click="navigateTo(`/admin/manage/categories/${categoryID}/edit`)"
 		/>
 

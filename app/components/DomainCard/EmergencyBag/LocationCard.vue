@@ -4,7 +4,7 @@
 			<img :alt="locationName" :src="`/api/public/image/${imgName}`" class="h-44 w-full object-cover" />
 			<UCollapsible>
 				<template #default="{ open }">
-					<UButton
+					<SharedButtonActionButton
 						color="neutral"
 						variant="ghost"
 						block
@@ -15,7 +15,7 @@
 							<SharedTextCardTitle>{{ locationName }}</SharedTextCardTitle>
 							<SharedTextBase class="mt-1 text-sm text-gray-600">Available Bags: {{ visibleBags.length }}</SharedTextBase>
 						</div>
-					</UButton>
+					</SharedButtonActionButton>
 				</template>
 				<template #content>
 					<div class="space-y-4 border-t border-gray-200 p-4">

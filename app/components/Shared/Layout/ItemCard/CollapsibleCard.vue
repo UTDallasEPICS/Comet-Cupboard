@@ -11,7 +11,7 @@
 				<slot name="actions" />
 			</div>
 
-			<UButton
+			<SharedButtonActionButton
 				:trailing-icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
 				size="sm"
 				variant="ghost"

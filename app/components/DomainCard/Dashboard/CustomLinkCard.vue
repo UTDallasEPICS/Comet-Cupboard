@@ -1,7 +1,7 @@
 <template>
-	<UButton :to="url" class="border-border-soft w-full border bg-white p-4 shadow-md">
+	<SharedButtonActionButton left-align :to="url" class="border-border-soft w-full border bg-white p-4 shadow-md">
 		<div class="flex items-center gap-4">
-			<UIcon name="i-lucide-external-link" class="text-text-soft h-8 w-8" />
+			<SharedIcon name="i-lucide-external-link" class="text-text-soft h-8 w-8" />
 
 			<div class="flex flex-col text-left">
 				<SharedTextCardTitle>{{ displayName }}</SharedTextCardTitle>
@@ -10,7 +10,7 @@
 				</SharedTextBase>
 			</div>
 		</div>
-	</UButton>
+	</SharedButtonActionButton>
 </template>
 
 <script setup lang="ts">

@@ -14,7 +14,7 @@
 							<UInputDate v-model="state.startsDate">
 								<template #leading>
 									<UPopover>
-										<UButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
+										<SharedButtonActionButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
 
 										<template #content>
 											<UCalendar v-model="state.startsDate" class="p-2" />
@@ -32,7 +32,7 @@
 							<UInputDate v-model="state.endsDate">
 								<template #leading>
 									<UPopover>
-										<UButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
+										<SharedButtonActionButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
 
 										<template #content>
 											<UCalendar v-model="state.endsDate" class="p-2" />
@@ -46,7 +46,7 @@
 							<UInputTime v-model="state.endsTime" />
 						</UFormField>
 					</SharedLayoutSectionUCard>
-					<footer class="sticky right-4 bottom-8 flex justify-end"><SharedButtonPositiveAction type="submit" text="Create announcement" /></footer>
+					<footer class="sticky right-4 bottom-8 flex justify-end"><SharedButtonActionButton action="positive" type="submit" text="Create announcement" /></footer>
 				</UForm>
 			</div>
 		</NuxtLayout>

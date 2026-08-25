@@ -9,7 +9,7 @@
 				<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 			</div>
 			<div v-else>
-				<UButton
+				<SharedButtonActionButton
 					v-for="pendingCart in pendingPublicCodesAndAdjQTY"
 					:key="pendingCart.publicCode"
 					variant="ghost"
@@ -17,7 +17,7 @@
 					@click="emit('update:select-cart', pendingCart.publicCode)"
 				>
 					<UUser :name="pendingCart.publicCode" :avatar="{ icon: pendingCart.publicIcon }" size="lg" />
-				</UButton>
+				</SharedButtonActionButton>
 			</div>
 		</div>
 	</UCard>

@@ -26,10 +26,10 @@ definePageMeta({ layout: false })
 const { data: groups, refresh } = await useFetch("/api/admin/tutorial/tutorial/all-tutorials")
 
 const groupConfigs = [
-	{ name: "Student", icon: icons.student },
-	{ name: "Volunteer", icon: icons.volunteer },
-	{ name: "Admin", icon: icons.admin },
-	{ name: "Head Admin", icon: icons.headAdmin },
+	{ name: "Student", icon: "i-lucide-user" },
+	{ name: "Volunteer", icon: "i-lucide-users" },
+	{ name: "Admin", icon: "i-lucide-shield" },
+	{ name: "Head Admin", icon: "i-lucide-shield-keyhole" },
 ]
 
 const findGroup = (name: string) => {

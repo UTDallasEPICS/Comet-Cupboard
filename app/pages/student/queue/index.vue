@@ -16,18 +16,18 @@
 								:avatar="{ icon: queueStore.queueStatus.publicIcon }"
 								size="lg"
 							/>
-							<SharedButtonCancel text="Leave Queue" class="my-auto h-min" @click="isLeaveQueueModalOpen = true" />
+							<SharedButtonActionButton action="cancel" text="Leave Queue" class="my-auto h-min" @click="isLeaveQueueModalOpen = true" />
 						</div>
 						<div v-else-if="cartStore.cart" class="flex flex-col items-center justify-center gap-4">
 							<SharedTextBase> You currently have an active cart. </SharedTextBase>
-							<SharedButtonNavigateTo text="Browse Items" to="/student/shopping" />
+							<SharedButtonActionButton action="navigate-to" text="Browse Items" to="/student/shopping" />
 						</div>
 						<div v-else class="flex flex-col items-center justify-center gap-4">
 							<SharedTextBase> Currently not in queue </SharedTextBase>
 							<form class="flex w-full max-w-sm flex-col items-center gap-3" @submit.prevent="joinQueue">
 								<SharedTextBaseSecondary>Enter the 6-digit queue code</SharedTextBaseSecondary>
 								<UPinInput v-model="accessCode" type="number" :length="6" required size="lg" />
-								<UButton
+								<SharedButtonActionButton
 									type="submit"
 									label="Join Queue"
 									color="secondary"
@@ -46,8 +46,8 @@
 						<SharedTextCardTitle>Confirm Leaving Queue?</SharedTextCardTitle>
 						<USeparator class="my-2" />
 						<div class="mt-4 flex flex-row items-center justify-center gap-2">
-							<SharedButtonCancel text="Cancel" @click="isLeaveQueueModalOpen = false" />
-							<SharedButtonNegativeAction text="Confirm Leave" @click="confirmLeaveQueue" />
+							<SharedButtonActionButton action="cancel" text="Cancel" @click="isLeaveQueueModalOpen = false" />
+							<SharedButtonActionButton action="negative" text="Confirm Leave" @click="confirmLeaveQueue" />
 						</div>
 					</UCard>
 				</template>

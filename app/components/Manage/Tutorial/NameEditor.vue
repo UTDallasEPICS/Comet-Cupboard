@@ -11,8 +11,8 @@
 				<UInput v-model="state.name" placeholder="Enter new tutorial name" class="w-full" />
 			</UFormField>
 			<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
-				<SharedButtonCancel text="Cancel" @click="cancelName" />
-				<SharedButtonPositiveAction type="submit" text="Save changes" />
+				<SharedButtonActionButton action="cancel" text="Cancel" @click="cancelName" />
+				<SharedButtonActionButton action="positive" type="submit" text="Save changes" />
 			</div>
 		</SharedLayoutSectionUCard>
 	</UForm>

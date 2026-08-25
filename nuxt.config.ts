@@ -22,5 +22,10 @@ export default defineNuxtConfig({
 			"0 0 * * *": ["db:cleanup"],
 		},
 	},
+	icon: {
+		clientBundle: {
+			scan: true,
+		},
+	},
 	compatibilityDate: "2025-03-07",
 })

@@ -19,7 +19,7 @@
 							<USeparator class="mb-4" />
 							<UAlert
 								title="Please read the following disclosures before proceeding to checkout."
-								:icon="icons['information']"
+								icon="i-lucide-info"
 								color="neutral"
 								variant="outline"
 							/>
@@ -45,8 +45,8 @@
 									</SharedTextBase>
 								</UCard>
 								<div class="flex flex-row justify-between gap-4">
-									<SharedButtonCancel text="Back" @click="goToShopping" />
-									<SharedButtonPositiveAction text="I Agree" @click="incrementStepper" />
+									<SharedButtonActionButton action="cancel" text="Back" @click="goToShopping" />
+									<SharedButtonActionButton action="positive" text="I Agree" @click="incrementStepper" />
 								</div>
 							</div>
 						</template>
@@ -55,7 +55,7 @@
 							<USeparator class="mb-4" />
 							<UAlert
 								title="Please adjust counts per expired, damaged, or overstocked items."
-								:icon="icons['information']"
+								icon="i-lucide-info"
 								color="neutral"
 								variant="outline"
 							/>
@@ -68,9 +68,9 @@
 								<SharedLayoutGroupedCollapsible :groups="groupedCartItems" :get-key="(item) => item.itemID" :default-open="true">
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
-											<SharedButtonPositiveAction
+											<SharedButtonActionButton action="positive"
 												:text="group"
-												:trailing-icon="icons['chevronDown']"
+												trailing-icon="i-lucide-chevron-down"
 												block
 												class="group w-full rounded-lg"
 												:ui="{
@@ -93,8 +93,8 @@
 								</SharedLayoutGroupedCollapsible>
 
 								<div class="flex flex-row justify-between gap-4">
-									<SharedButtonCancel text="Back" @click="decrementStepper" />
-									<SharedButtonPositiveAction text="Next" @click="incrementStepper" />
+									<SharedButtonActionButton action="cancel" text="Back" @click="decrementStepper" />
+									<SharedButtonActionButton action="positive" text="Next" @click="incrementStepper" />
 								</div>
 							</div>
 						</template>
@@ -104,7 +104,7 @@
 
 							<UAlert
 								title="Review your cart one last time before submitting for verification."
-								:icon="icons['information']"
+								icon="i-lucide-info"
 								color="neutral"
 								variant="outline"
 							/>
@@ -118,9 +118,9 @@
 								<SharedLayoutGroupedCollapsible :groups="groupedCartItems" :get-key="(item) => item.itemID" :default-open="true">
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
-											<SharedButtonPositiveAction
+											<SharedButtonActionButton action="positive"
 												:text="group"
-												:trailing-icon="icons['chevronDown']"
+												trailing-icon="i-lucide-chevron-down"
 												block
 												class="group w-full rounded-lg"
 												:ui="{
@@ -141,8 +141,8 @@
 									</template>
 								</SharedLayoutGroupedCollapsible>
 								<div class="flex flex-row justify-between gap-4">
-									<SharedButtonCancel text="Back" @click="decrementStepper" />
-									<SharedButtonPositiveAction text="Submit Cart" @click="submitCart" />
+									<SharedButtonActionButton action="cancel" text="Back" @click="decrementStepper" />
+									<SharedButtonActionButton action="positive" text="Submit Cart" @click="submitCart" />
 								</div>
 							</div>
 						</template>
@@ -152,7 +152,7 @@
 
 							<UAlert
 								title="Your cart has been submitted and is awaiting verification. A staff member will review the items and finalize your request."
-								:icon="icons['information']"
+								icon="i-lucide-info"
 								color="neutral"
 								variant="outline"
 							/>
@@ -162,9 +162,9 @@
 								<SharedLayoutGroupedCollapsible :groups="groupedCartItems" :get-key="(item) => item.itemID" :default-open="true">
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
-											<SharedButtonPositiveAction
+											<SharedButtonActionButton action="positive"
 												:text="group"
-												:trailing-icon="icons['chevronDown']"
+												trailing-icon="i-lucide-chevron-down"
 												block
 												class="group w-full rounded-lg"
 												:ui="{
@@ -185,7 +185,7 @@
 									</template>
 								</SharedLayoutGroupedCollapsible>
 								<div class="flex flex-row justify-center gap-4">
-									<SharedButtonCancel text="Cancel Request" @click="cancelCart" />
+									<SharedButtonActionButton action="cancel" text="Cancel Request" @click="cancelCart" />
 								</div>
 							</div>
 						</template>
@@ -202,7 +202,7 @@
 									</div>
 								</UCard>
 								<div class="mt-4 flex flex-row justify-center gap-4">
-									<SharedButtonNavigateTo text="Back to Shopping" class="w-48" @click="goToShopping" />
+									<SharedButtonActionButton action="navigate-to" text="Back to Shopping" class="w-48" @click="goToShopping" />
 								</div>
 							</template>
 							<template v-else>
@@ -214,7 +214,7 @@
 									</div>
 								</UCard>
 								<div class="mt-4 flex flex-row justify-center gap-4">
-									<SharedButtonNavigateTo text="Back to Dashboard" class="w-48" @click="navigateTo('/student')" />
+									<SharedButtonActionButton action="navigate-to" text="Back to Dashboard" class="w-48" @click="navigateTo('/student')" />
 								</div>
 							</template>
 						</template>
@@ -239,27 +239,27 @@ const items: StepperItem[] = [
 	{
 		slot: "Disclosures" as const,
 		title: "Disclosures",
-		icon: icons["disclosures"],
+		icon: "i-lucide-file-text",
 	},
 	{
 		slot: "EditCart" as const,
 		title: "Edit Cart",
-		icon: icons["edit"],
+		icon: "i-lucide-edit",
 	},
 	{
 		slot: "ReviewCart" as const,
 		title: "Review Cart",
-		icon: icons["shopping"],
+		icon: "i-lucide-shopping-cart",
 	},
 	{
 		slot: "Verifying" as const,
 		title: "Verifying",
-		icon: icons["pending"],
+		icon: "i-lucide-hourglass",
 	},
 	{
 		slot: "Confirmed" as const,
 		title: "Confirmed",
-		icon: icons["confirmation"],
+		icon: "i-lucide-check-circle",
 	},
 ]
 

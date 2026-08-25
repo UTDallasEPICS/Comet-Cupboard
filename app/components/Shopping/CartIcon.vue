@@ -8,7 +8,7 @@
 	>
 		<div class="relative cursor-pointer" :class="{ 'cursor-not-allowed opacity-50': cartDisabled }">
 			<div class="relative flex items-center justify-center rounded-md" style="width: 24px; height: 24px">
-				<UIcon :name="icons['shopping']" class="hover:text-utd-orange text-white transition-colors duration-200" style="width: 40px; height: 40px" />
+				<SharedIcon name="i-lucide-shopping-cart" class="hover:text-utd-orange text-white transition-colors duration-200" style="width: 40px; height: 40px" />
 				<!-- cart item animate open/close -->
 				<div
 					class="absolute origin-bottom transform rounded-sm bg-white transition-all duration-300"

@@ -12,7 +12,7 @@
 						<UInputDate ref="inputDate" v-model="bagDetails.expirationDate" class="mt-2">
 							<template #leading>
 								<UPopover :reference="inputDate?.inputsRef[3]?.$el">
-									<UButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
+									<SharedButtonActionButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
 
 									<template #content>
 										<UCalendar v-model="bagDetails.expirationDate" class="p-2" />

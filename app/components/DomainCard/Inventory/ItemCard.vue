@@ -10,7 +10,7 @@
 		<UCard :class="`${changeCount != 0 ? 'border-utd-orange' : ''} relative w-full min-w-72 overflow-hidden shadow-md`" :ui="{ body: 'p-0 sm:p-0' }">
 			<div class="absolute top-2 right-2 z-10 flex flex-row gap-2">
 				<SharedDealBadge :item-deal="itemDeal" />
-				<UButton :to="`/volunteer/inventory/${category}/${itemID}/edit`" :icon="icons.edit" size="sm" color="neutral" variant="ghost" />
+				<SharedButtonActionButton :to="`/volunteer/inventory/${category}/${itemID}/edit`" icon="i-lucide-edit" size="sm" color="neutral" variant="ghost" />
 			</div>
 
 			<div class="relative flex min-h-24 items-center gap-4 p-4">
@@ -19,7 +19,7 @@
 					<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
 					<SharedTextBaseSecondary>{{ currentCount }} in stock</SharedTextBaseSecondary>
 				</div>
-				<UButton
+				<SharedButtonActionButton
 					:trailing-icon="isOpen ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
 					size="sm"
 					variant="ghost"
@@ -36,7 +36,7 @@
 
 					<div v-if="normalizedSpecificItems.length" class="border-border-soft">
 						<div class="space-y-2 p-2">
-							<UButton
+							<SharedButtonActionButton
 								v-for="product in orderedSpecificItems"
 								:key="product.specificItemID"
 								color="neutral"
@@ -76,14 +76,14 @@
 										</div>
 									</div>
 								</div>
-							</UButton>
+							</SharedButtonActionButton>
 						</div>
 						<form class="p-2" @submit.prevent="confirmRestock">
 							<USeparator class="mb-4" />
 							<div class="flex flex-wrap items-center justify-end gap-2">
 								<USelect v-model="restockDirection" :items="['+', '-']" class="w-16" aria-label="Change direction" />
 								<UInput v-model.number="restockAmount" type="number" min="1" step="1" class="w-16" aria-label="Change amount" />
-								<UButton type="submit" :loading="isSaving" :disabled="isSaving || !restockSpecificItemID" label="Confirm" color="secondary" />
+								<SharedButtonActionButton type="submit" :loading="isSaving" :disabled="isSaving || !restockSpecificItemID" label="Confirm" color="secondary" />
 							</div>
 						</form>
 					</div>

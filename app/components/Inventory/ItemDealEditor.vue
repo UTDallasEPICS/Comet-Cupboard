@@ -6,8 +6,8 @@
 			<UFormField label="Adjusted Count"><UInputNumber v-model="adjustedCount" :min="0" /></UFormField>
 		</div>
 		<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
-			<UButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
-			<UButton label="Save Changes" color="secondary" :loading="isSaving" @click="saveDeal" />
+			<SharedButtonActionButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+			<SharedButtonActionButton label="Save Changes" color="secondary" :loading="isSaving" @click="saveDeal" />
 		</div>
 	</SharedLayoutSectionUCard>
 </template>

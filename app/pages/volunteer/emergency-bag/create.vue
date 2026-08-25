@@ -18,7 +18,7 @@
 				</div>
 			</div>
 			<div class="my-4 flex justify-between">
-				<UButton
+				<SharedButtonActionButton
 					v-if="stepper?.hasPrev"
 					leading-icon="i-lucide-arrow-left"
 					color="neutral"
@@ -27,15 +27,15 @@
 					@click="prevStepper()"
 				>
 					Back
-				</UButton>
+				</SharedButtonActionButton>
 
-				<UButton
+				<SharedButtonActionButton
 					:trailing-icon="stepper?.hasNext ? 'i-lucide-arrow-right' : ''"
 					class="bg-utd-green ml-auto"
 					@click="stepper?.hasNext ? nextStepper() : submitBag()"
 				>
 					{{ stepper?.hasNext ? "Next" : "Confirm Bag" }}
-				</UButton>
+				</SharedButtonActionButton>
 			</div>
 		</NuxtLayout>
 	</div>

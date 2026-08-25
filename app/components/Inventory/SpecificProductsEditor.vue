@@ -2,7 +2,7 @@
 	<UCard>
 		<div class="flex items-center justify-between gap-3">
 			<SharedTextCardTitle>Specific Products</SharedTextCardTitle>
-			<UButton label="Add Product" :icon="icons.add" color="neutral" variant="outline" @click="addProduct" />
+			<SharedButtonActionButton label="Add Product" icon="i-lucide-plus" color="neutral" variant="outline" @click="addProduct" />
 		</div>
 		<USeparator class="my-4" />
 		<div class="space-y-4">
@@ -34,8 +34,8 @@
 			</div>
 		</div>
 		<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
-			<UButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
-			<UButton label="Save Changes" color="secondary" :loading="isSaving" @click="saveProducts" />
+			<SharedButtonActionButton label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+			<SharedButtonActionButton label="Save Changes" color="secondary" :loading="isSaving" @click="saveProducts" />
 		</div>
 	</UCard>
 </template>

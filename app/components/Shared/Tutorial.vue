@@ -14,7 +14,7 @@
 					<section :key="viewModel.isTutorialGroup ? (selectedTutorialIndex ?? 'tutorial-list') : 'tutorial'">
 						<div v-if="viewModel.isTutorialGroup && selectedTutorialIndex === null">
 							<div v-if="tutorials.length !== 0" class="flex w-full flex-col gap-2">
-								<UButton
+								<SharedButtonActionButton
 									v-for="(tutorial, index) in tutorials"
 									:key="tutorial.tutorialID"
 									color="neutral"
@@ -24,9 +24,9 @@
 								>
 									<div class="flex w-full items-center justify-between">
 										<SharedTextBase class="text-left">{{ tutorial.tutorialName }}</SharedTextBase>
-										<UIcon :name="icons['tutorial_right']" class="size-6" />
+										<SharedIcon name="i-lucide-chevron-right" class="size-6" />
 									</div>
-								</UButton>
+								</SharedButtonActionButton>
 							</div>
 							<div v-else>
 								<SharedTextBaseSecondary>This tutorial group doesn't have any tutorials yet.</SharedTextBaseSecondary>
@@ -36,7 +36,7 @@
 							<SharedTextBase class="text-center">{{ activeTutorial.tutorialName }}</SharedTextBase>
 							<div v-if="activeTutorial.tutorialSteps.length === 0" class="flex flex-col items-center justify-center gap-4 py-8 text-center">
 								<SharedTextBaseSecondary>This tutorial doesn't have any steps yet.</SharedTextBaseSecondary>
-								<UButton color="secondary" variant="solid" size="xl" class="mt-4" @click="backToTutorials"> Back to Tutorials </UButton>
+								<SharedButtonActionButton color="secondary" variant="solid" size="xl" class="mt-4" @click="backToTutorials"> Back to Tutorials </SharedButtonActionButton>
 							</div>
 							<template v-else>
 								<UCarousel
@@ -57,7 +57,7 @@
 									>{{ currentCarouselNumber + 1 }} / {{ activeTutorial.tutorialSteps.length }}</SharedTextBase
 								>
 								<div class="flex w-full flex-row items-center justify-center">
-									<UButton
+									<SharedButtonActionButton
 										v-if="viewModel.isTutorialGroup && currentCarouselNumber === activeTutorial.tutorialSteps.length - 1"
 										color="secondary"
 										variant="solid"
@@ -66,7 +66,7 @@
 										@click="backToTutorials"
 									>
 										Back to Tutorials
-									</UButton>
+									</SharedButtonActionButton>
 								</div>
 							</template>
 						</div>

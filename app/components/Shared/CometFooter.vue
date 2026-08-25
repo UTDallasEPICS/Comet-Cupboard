@@ -20,20 +20,20 @@
 						<div class="flex flex-col items-start gap-1">
 							<!-- Location -->
 							<div class="flex items-center gap-3 py-2">
-								<UIcon name="i-lucide-map-pin" class="size-5 shrink-0 text-white" />
+								<SharedIcon name="i-lucide-map-pin" class="size-5 shrink-0 text-white" />
 
 								<SharedTextBase class="text-white/75">{{ room }}</SharedTextBase>
 							</div>
 
 							<!-- Email -->
 							<ULink :to="`mailto:${email}`" class="inline-flex items-center gap-3 py-2">
-								<UIcon name="i-lucide-mail" class="size-5 shrink-0 text-white" />
+								<SharedIcon name="i-lucide-mail" class="size-5 shrink-0 text-white" />
 								<SharedTextBase class="text-white/75">{{ email }}</SharedTextBase>
 							</ULink>
 
 							<!-- Phone -->
 							<ULink :to="`tel:${phone}`" class="inline-flex items-center gap-3 py-2">
-								<UIcon name="i-lucide-phone" class="size-5 shrink-0 text-white" />
+								<SharedIcon name="i-lucide-phone" class="size-5 shrink-0 text-white" />
 								<SharedTextBase class="text-white/75">{{ phone }}</SharedTextBase>
 							</ULink>
 						</div>
@@ -72,7 +72,7 @@
 									class="flex size-11 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-white/20"
 									aria-label="Follow Comet Cupboard on Instagram"
 								>
-									<UIcon :name="icons.instagram" class="size-6" />
+									<SharedIcon name="i-lucide-instagram" class="size-6" />
 								</ULink>
 							</UTooltip>
 
@@ -85,7 +85,7 @@
 									class="flex size-11 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-white/20"
 									aria-label="Follow Comet Cupboard on Facebook"
 								>
-									<UIcon name="i-simple-icons-facebook" class="size-5" />
+									<SharedIcon name="i-simple-icons-facebook" class="size-5" />
 								</ULink>
 							</UTooltip>
 
@@ -98,7 +98,7 @@
 									class="flex size-11 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-white/20"
 									aria-label="Follow Comet Cupboard on LinkedIn"
 								>
-									<UIcon name="i-simple-icons-linkedin" class="size-5" />
+									<SharedIcon name="i-simple-icons-linkedin" class="size-5" />
 								</ULink>
 							</UTooltip>
 
@@ -111,7 +111,7 @@
 									class="flex size-11 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-white/20"
 									aria-label="Visit the Comet Cupboard website"
 								>
-									<UIcon name="i-lucide-globe" class="size-5" />
+									<SharedIcon name="i-lucide-globe" class="size-5" />
 								</ULink>
 							</UTooltip>
 						</div>
@@ -131,7 +131,7 @@
 							rel="noopener noreferrer"
 							class="inline-flex min-h-11 items-center gap-3 rounded-lg bg-white/10 px-4 py-2.5 font-medium text-white transition hover:bg-white/20"
 						>
-							<UIcon name="i-lucide-heart" class="size-5 shrink-0" />
+							<SharedIcon name="i-lucide-heart" class="size-5 shrink-0" />
 
 							<SharedTextBase class="text-white">Amazon Wishlist</SharedTextBase>
 						</ULink>

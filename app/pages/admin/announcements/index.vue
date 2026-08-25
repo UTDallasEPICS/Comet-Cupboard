@@ -9,7 +9,7 @@
 							<SharedTextSecondary>Manage upcoming announcements</SharedTextSecondary>
 						</div>
 
-						<UButton to="/admin/announcements/add" icon="i-lucide-plus" color="secondary" label="Create announcement" />
+						<SharedButtonActionButton to="/admin/announcements/add" icon="i-lucide-plus" color="secondary" label="Create announcement" />
 					</div>
 
 					<USeparator class="my-4" />
@@ -31,7 +31,7 @@
 									</div>
 								</div>
 
-								<UButton
+								<SharedButtonActionButton
 									:to="`/admin/announcements/${announcement.announcementID}/edit`"
 									icon="i-lucide-edit"
 									color="neutral"
@@ -43,10 +43,10 @@
 					</div>
 
 					<div v-else class="flex flex-col items-center justify-center py-12 text-center">
-						<UIcon name="i-lucide-megaphone" class="text-text-soft mb-2 h-10 w-10" />
+						<SharedIcon name="i-lucide-megaphone" class="text-text-soft mb-2 h-10 w-10" />
 						<SharedTextCardTitle>No announcements scheduled</SharedTextCardTitle>
 						<SharedTextSecondary class="mt-1"> Create an announcement to notify users. </SharedTextSecondary>
-						<UButton to="/admin/announcements/add" icon="i-lucide-plus" color="secondary" label="Create announcement" class="mt-4" />
+						<SharedButtonActionButton to="/admin/announcements/add" icon="i-lucide-plus" color="secondary" label="Create announcement" class="mt-4" />
 					</div>
 				</UCard>
 			</section>

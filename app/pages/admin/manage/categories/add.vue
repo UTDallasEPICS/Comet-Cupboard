@@ -50,7 +50,7 @@
 							</UFormField>
 						</SharedLayoutSectionUCard>
 						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
-							<SharedButtonPositiveAction type="submit" text="Submit" />
+							<SharedButtonActionButton action="positive" type="submit" text="Submit" />
 						</footer>
 					</UForm>
 				</div>

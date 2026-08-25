@@ -1,14 +1,14 @@
 <template>
 	<div class="flex flex-wrap items-center justify-between gap-3">
 		<UPopover :content="{ align: 'start' }" :modal="true">
-			<UButton color="neutral" variant="ghost" icon="i-lucide-calendar" class="group data-[state=open]:bg-gray-100">
+			<SharedButtonActionButton color="neutral" variant="ghost" icon="i-lucide-calendar" class="group data-[state=open]:bg-gray-100">
 				{{ dateLabel }}
-				<template #trailing><UIcon name="i-lucide-chevron-down" class="transition-transform group-data-[state=open]:rotate-180" /></template>
-			</UButton>
+				<template #trailing><SharedIcon name="i-lucide-chevron-down" class="transition-transform group-data-[state=open]:rotate-180" /></template>
+			</SharedButtonActionButton>
 			<template #content>
 				<div class="flex sm:divide-x sm:divide-gray-200">
 					<div class="hidden flex-col sm:flex">
-						<UButton
+						<SharedButtonActionButton
 							v-for="preset in presets"
 							:key="preset.label"
 							:label="preset.label"

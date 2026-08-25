@@ -20,7 +20,7 @@
 						</SharedTextBase>
 
 						<div class="flex justify-end">
-							<SharedButtonPositiveAction text="Submit" :disabled="isLoading" @click="submitBagID" />
+							<SharedButtonActionButton action="positive" text="Submit" :disabled="isLoading" @click="submitBagID" />
 						</div>
 					</div>
 				</UCard>

@@ -18,12 +18,12 @@
 				}"
 				v-model:open="openNavigationMenu"
 			>
-				<UButton variant="ghost" class="hover:bg-transparent active:bg-transparent" size="xl" :icon="icons['hamburger']" />
+				<SharedButtonActionButton variant="ghost" class="hover:bg-transparent active:bg-transparent" size="xl" icon="i-lucide-menu" />
 
 				<template #header="{ close }">
 					<div class="flex w-full flex-row items-center justify-between">
 						<img src="/CometCupboardLogo2.png" class="aspect-auto h-8" />
-						<UButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" :icon="icons['close']" @click="close" />
+						<SharedButtonActionButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" icon="i-lucide-x" @click="close" />
 					</div>
 				</template>
 
@@ -52,7 +52,7 @@
 						:text="unreadNotificationCount"
 						:ui="{ base: 'top-2 right-2 h-[20px] min-w-[20px] text-sm ring-0' }"
 					>
-						<UButton
+						<SharedButtonActionButton
 							variant="ghost"
 							icon="i-lucide-inbox"
 							class="text-white hover:bg-transparent focus-visible:ring-0 active:bg-transparent"
@@ -62,7 +62,7 @@
 					<template #header="{ close }">
 						<div class="flex w-full items-center justify-between">
 							<SharedTextBase class="font-semibold text-white">Notifications</SharedTextBase
-							><UButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" :icon="icons['close']" @click="close" />
+							><SharedButtonActionButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" icon="i-lucide-x" @click="close" />
 						</div>
 					</template>
 					<template #body>
@@ -75,7 +75,7 @@
 								placeholder="Minutes until you arrive (optional)"
 								class="w-full"
 							/>
-							<UButton label="Acknowledge" :loading="isAcknowledgingPing" @click="acknowledgeQueuePing" />
+							<SharedButtonActionButton label="Acknowledge" :loading="isAcknowledgingPing" @click="acknowledgeQueuePing" />
 						</div>
 						<SharedTextBase v-else>No notifications</SharedTextBase>
 					</template>
@@ -97,9 +97,9 @@
 							base: 'top-2 right-2 h-[20px] min-w-[20px] text-[20px] ring-0 text-sm',
 						}"
 					>
-						<UButton
+						<SharedButtonActionButton
 							variant="ghost"
-							:icon="icons['inventory']"
+							icon="i-lucide-box"
 							class="text-white hover:bg-transparent focus-visible:ring-0 active:bg-transparent"
 						/>
 					</UChip>
@@ -107,7 +107,7 @@
 					<template #header="{ close }">
 						<div class="flex w-full flex-row items-center justify-between">
 							<SharedTextBase class="font-semibold text-white">Inventory Changes</SharedTextBase>
-							<UButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" :icon="icons['close']" @click="close" />
+							<SharedButtonActionButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" icon="i-lucide-x" @click="close" />
 						</div>
 					</template>
 
@@ -125,19 +125,19 @@
 						header: 'bg-utd-orange',
 					}"
 				>
-					<UButton
+					<SharedButtonActionButton
 						variant="ghost"
 						class="hover:bg-transparent focus-visible:ring-0 active:bg-transparent"
 						aria-label="Open cart"
 						@click="cartStore.cartView = true"
 					>
 						<ShoppingCartIcon :cart-view="cartStore.cartView" :cart-disabled="false" :cart-total-count="cartStore.cartTotalCount" />
-					</UButton>
+					</SharedButtonActionButton>
 
 					<template #header="{ close }">
 						<div class="flex w-full flex-row items-center justify-between">
 							<SharedTextBase class="font-semibold text-white">Your Cart</SharedTextBase>
-							<UButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" :icon="icons['close']" @click="close" />
+							<SharedButtonActionButton variant="ghost" class="text-white hover:bg-transparent active:bg-transparent" icon="i-lucide-x" @click="close" />
 						</div>
 					</template>
 					<template #body>
@@ -151,7 +151,7 @@
 						sideOffset: 8,
 					}"
 				>
-					<UButton v-if="permissionsStore.canStudentAccess" variant="ghost" :icon="icons['profile']" size="lg" />
+					<SharedButtonActionButton v-if="permissionsStore.canStudentAccess" variant="ghost" icon="i-lucide-circle-user" size="lg" />
 
 					<template #content>
 						<div class="flex w-64 flex-col items-start gap-2 p-4">
@@ -165,7 +165,7 @@
 							/>
 							<SharedTextBase class="text-utd-orange">{{ permissionsStore.roleText }}</SharedTextBase>
 							<USeparator />
-							<UButton variant="outline" color="neutral" :icon="icons['logout']" class="w-full" @click="logout"> Logout </UButton>
+							<SharedButtonActionButton variant="outline" color="neutral" icon="i-lucide-log-out" class="w-full" @click="logout"> Logout </SharedButtonActionButton>
 						</div>
 					</template>
 				</UPopover>
@@ -236,7 +236,7 @@ const items = ref<NavigationMenuItem[]>(
 		// Student Group
 		permissionsStore.canStudentAccess && {
 			label: "Student",
-			icon: icons["student"],
+			icon: "i-lucide-user",
 			open: true,
 			children: roleLinks["student"],
 		},
@@ -244,7 +244,7 @@ const items = ref<NavigationMenuItem[]>(
 		// Volunteer Group
 		permissionsStore.canVolunteerAccess && {
 			label: "Volunteer",
-			icon: icons["volunteer"],
+			icon: "i-lucide-users",
 			open: true,
 			children: roleLinks["volunteer"],
 		},
@@ -252,7 +252,7 @@ const items = ref<NavigationMenuItem[]>(
 		// Admin Group
 		permissionsStore.canAdminAccess && {
 			label: "Admin",
-			icon: icons["admin"],
+			icon: "i-lucide-shield",
 			open: true,
 			children: roleLinks["admin"].map((item) => ({
 				...item,
@@ -263,7 +263,7 @@ const items = ref<NavigationMenuItem[]>(
 		// Head Admin Group
 		permissionsStore.canHeadAdminAccess && {
 			label: "Head Admin",
-			icon: icons["headAdmin"],
+			icon: "i-lucide-shield-keyhole",
 			open: true,
 			children: roleLinks["headAdmin"].map((item) => ({
 				...item,

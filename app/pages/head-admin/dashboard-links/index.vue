@@ -6,7 +6,7 @@
 				<div class="flex w-full flex-col gap-4">
 					<SharedLayoutSectionUCard v-for="section in sections" :key="section.audience" :title="section.label" empty-text="No custom links">
 						<template #header>
-							<UButton
+							<SharedButtonActionButton
 								icon="i-lucide-plus"
 								color="secondary"
 								variant="solid"

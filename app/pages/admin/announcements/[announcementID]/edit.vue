@@ -5,14 +5,14 @@
 			<div class="mx-auto w-full max-w-xl">
 				<div class="flex w-full flex-row items-center justify-center">
 					<UModal v-model:open="isDeleteModalOpen">
-						<UButton label="Delete Announcement" color="error" variant="outline" :icon="icons['delete']" />
+						<SharedButtonActionButton label="Delete Announcement" color="error" variant="outline" icon="i-lucide-trash-2" />
 						<template #content>
 							<UCard>
 								<SharedTextCardTitle>Confirm Deletion?</SharedTextCardTitle>
 								<USeparator class="my-2" />
 								<div class="mt-4 flex flex-row items-center justify-center gap-2">
-									<SharedButtonCancel text="Cancel" @click="isDeleteModalOpen = false" />
-									<SharedButtonNegativeAction text="Confirm Deletion" @click="archiveAnnouncement(announcementID)" />
+									<SharedButtonActionButton action="cancel" text="Cancel" @click="isDeleteModalOpen = false" />
+									<SharedButtonActionButton action="negative" text="Confirm Deletion" @click="archiveAnnouncement(announcementID)" />
 								</div>
 							</UCard>
 						</template>
@@ -30,7 +30,7 @@
 							<UInputDate v-model="state.startsDate">
 								<template #leading>
 									<UPopover>
-										<UButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
+										<SharedButtonActionButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
 										<template #content><UCalendar v-model="state.startsDate" class="p-2" /></template>
 									</UPopover>
 								</template>
@@ -43,7 +43,7 @@
 							<UInputDate v-model="state.endsDate">
 								<template #leading>
 									<UPopover>
-										<UButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
+										<SharedButtonActionButton color="neutral" variant="link" size="md" icon="i-lucide-calendar" aria-label="Select a date" class="px-0" />
 										<template #content><UCalendar v-model="state.endsDate" class="p-2" /></template>
 									</UPopover>
 								</template>
@@ -53,7 +53,7 @@
 							<UInputTime v-model="state.endsTime" />
 						</UFormField>
 					</SharedLayoutSectionUCard>
-					<footer class="sticky right-4 bottom-8 flex justify-end"><SharedButtonPositiveAction type="submit" text="Save changes" /></footer>
+					<footer class="sticky right-4 bottom-8 flex justify-end"><SharedButtonActionButton action="positive" type="submit" text="Save changes" /></footer>
 				</UForm>
 			</div>
 		</NuxtLayout>

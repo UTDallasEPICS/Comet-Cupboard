@@ -1,5 +1,5 @@
 <template>
-	<UButton
+	<SharedButtonActionButton
 		:to="
 			allItems
 				? `/${variant == 'shopping' ? 'student' : 'volunteer'}/${variant}/all-items`
@@ -14,7 +14,7 @@
 			<img v-if="!allItems" :alt="categoryName" :src="`/api/public/image/${imgName}`" :style="clipStyle" class="h-full w-full object-cover" />
 			<img v-else alt="All Items" src="/shelves.jpg" :style="clipStyle" class="h-full w-full object-cover" />
 		</div>
-	</UButton>
+	</SharedButtonActionButton>
 </template>
 
 <script lang="ts" setup>

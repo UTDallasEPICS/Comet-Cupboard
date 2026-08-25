@@ -20,8 +20,8 @@
 				</UFormField>
 			</div>
 			<div v-if="changesMade" class="mt-4 flex justify-end gap-2">
-				<UButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
-				<UButton type="submit" label="Save Changes" color="secondary" :loading="isSaving" />
+				<SharedButtonActionButton type="button" label="Cancel" color="neutral" variant="outline" @click="cancelChanges" />
+				<SharedButtonActionButton type="submit" label="Save Changes" color="secondary" :loading="isSaving" />
 			</div>
 		</SharedLayoutSectionUCard>
 	</UForm>

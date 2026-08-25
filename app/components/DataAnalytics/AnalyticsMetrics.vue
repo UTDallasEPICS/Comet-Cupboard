@@ -6,12 +6,12 @@
 					<SharedTextBase class="text-xs font-medium tracking-wide text-gray-500 uppercase">{{ metric.label }}</SharedTextBase>
 					<SharedTextBase class="mt-2 text-2xl font-semibold text-gray-900">{{ metric.value }}</SharedTextBase>
 				</div>
-				<div class="text-utd-orange rounded-full bg-orange-50 p-2"><UIcon :name="metric.icon" class="size-5" /></div>
+				<div class="text-utd-orange rounded-full bg-orange-50 p-2"><SharedIcon :name="metric.icon" class="size-5" /></div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-defineProps<{ metrics: Array<{ label: string; value: number | string; icon: string }> }>()
+defineProps<{ metrics: Array<{ label: string; value: number | string; icon: Icon }> }>()
 </script>

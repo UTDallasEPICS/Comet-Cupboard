@@ -10,7 +10,7 @@
 						<USelect v-model="timeRange" :items="timeRangeOptions" class="w-full" />
 					</div>
 					<UPopover class="mt-3">
-						<UButton color="neutral" variant="outline" icon="i-lucide-calendar">{{ dateRangeLabel }}</UButton>
+						<SharedButtonActionButton color="neutral" variant="outline" icon="i-lucide-calendar">{{ dateRangeLabel }}</SharedButtonActionButton>
 						<template #content><UCalendar v-model="customDateRange" range :number-of-months="2" class="p-2" /></template>
 					</UPopover>
 					<SharedTextBaseSecondary class="mt-3"
@@ -31,9 +31,8 @@
 							<div class="mt-1 text-sm">{{ new Date(session.intakeDate).toLocaleDateString() }}</div>
 							<div v-if="session.notes" class="mt-1 text-sm">{{ session.notes }}</div>
 							<UCollapsible class="mt-3 border-t pt-2">
-								<UButton color="neutral" variant="ghost" block class="justify-between" trailing-icon="i-lucide-chevron-down"
-									>{{ session.completedInventoryIntakeSessionItems.length }} Products Changed</UButton
-								>
+								<SharedButtonActionButton color="neutral" variant="ghost" block class="justify-between" trailing-icon="i-lucide-chevron-down"
+									>{{ session.completedInventoryIntakeSessionItems.length }} Products Changed</SharedButtonActionButton>
 								<template #content>
 									<div class="mt-2 space-y-2">
 										<div

@@ -3,9 +3,9 @@
 		<NuxtLayout name="main" title="Manage Categories" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
 			<section>
 				<div class="flex flex-row flex-nowrap items-center gap-2">
-					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search categories" class="relative grow">
-						<UButton
-							:icon="icons['add']"
+					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search categories" class="relative grow">
+						<SharedButtonActionButton
+							icon="i-lucide-plus"
 							variant="ghost"
 							color="neutral"
 							class="bg-utd-green absolute right-0 text-white"

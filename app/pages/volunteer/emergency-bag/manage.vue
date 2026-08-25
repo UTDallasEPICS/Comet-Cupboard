@@ -3,9 +3,9 @@
 		<NuxtLayout name="main" title="Manage Emergency Bags" :back-navigation="{ text: 'Back to Dashboard', to: '/volunteer' }">
 			<section>
 				<div class="flex flex-row flex-nowrap items-center gap-2">
-					<UInput v-model="searchQuery" type="text" :icon="icons['search']" placeholder="Search bags" class="relative grow">
-						<UButton
-							:icon="icons['add']"
+					<UInput v-model="searchQuery" type="text" icon="i-lucide-search" placeholder="Search bags" class="relative grow">
+						<SharedButtonActionButton
+							icon="i-lucide-plus"
 							color="secondary"
 							label="Add"
 							class="absolute right-0"
@@ -13,7 +13,7 @@
 						/>
 					</UInput>
 					<UPopover>
-						<UButton :icon="icons['sortFilter']" variant="ghost" color="neutral" size="md" />
+						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" variant="ghost" color="neutral" size="md" />
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">
@@ -38,7 +38,7 @@
 					<div class="flex items-center justify-between gap-3">
 						<SharedTextSectionTitle>Emergency Bags</SharedTextSectionTitle>
 						<UPopover>
-							<UButton label="Move Bag" class="bg-utd-green" trailing-icon="i-lucide-arrow-left-right" />
+							<SharedButtonActionButton label="Move Bag" class="bg-utd-green" trailing-icon="i-lucide-arrow-left-right" />
 
 							<template #content>
 								<div class="flex flex-col gap-2 p-4">
@@ -50,7 +50,7 @@
 									<div>
 										<SharedTextBase>To:</SharedTextBase>
 										<UDropdownMenu :items="items" :ui="{ content: 'w-48' }">
-											<UButton label="Choose Location" color="neutral" variant="outline" trailing-icon="i-lucide-chevron-down" />
+											<SharedButtonActionButton label="Choose Location" color="neutral" variant="outline" trailing-icon="i-lucide-chevron-down" />
 										</UDropdownMenu>
 									</div>
 								</div>
@@ -60,7 +60,7 @@
 					<USeparator class="my-4" />
 					<div v-if="groupedBags.length === 0" class="flex flex-col items-center justify-center gap-y-4 py-8">
 						<SharedTextBase>{{ emergencyBags?.length ? "No bags match the current filters" : "No bags have been created" }}</SharedTextBase>
-						<UButton
+						<SharedButtonActionButton
 							label="Create new bag"
 							color="neutral"
 							variant="outline"

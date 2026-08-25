@@ -4,7 +4,7 @@
 			<div v-if="validPublicCode" class="flex flex-row items-center justify-between">
 				<UUser :name="cart.publicCode" :avatar="{ icon: cart.publicIcon }" size="lg" />
 
-				<SharedButtonNavigateTo text="Back to carts" @click="emit('update:select-cart', '')" />
+				<SharedButtonActionButton action="navigate-to" text="Back to carts" @click="emit('update:select-cart', '')" />
 			</div>
 			<SharedTextCardTitle v-else>Cart Preview</SharedTextCardTitle>
 		</template>
@@ -14,14 +14,13 @@
 			<SharedLayoutGroupedCollapsible :groups="categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
 				<template #header="{ group, open }">
 					<div class="flex flex-col gap-2">
-						<SharedButtonPositiveAction
+						<SharedButtonActionButton
+							action="positive"
 							:text="group"
-							:trailing-icon="icons['chevronDown']"
+							trailing-icon="i-lucide-chevron-down"
 							block
 							class="group w-full rounded-lg"
-							:ui="{
-								trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200',
-							}"
+							:ui="{ trailingIcon: open ? 'rotate-180 transition-transform duration-200' : 'transition-transform duration-200' }"
 						/>
 					</div>
 				</template>
@@ -43,8 +42,8 @@
 				<UTextarea v-model="reason" placeholder="Add a reason for declining or accepting the cart" class="w-full max-w-96" />
 			</div>
 			<div class="flex flex-row justify-center gap-x-4 sm:justify-end">
-				<SharedButtonNegativeAction text="Decline" @click="emit('cart-declined', publicCode, reason)" />
-				<SharedButtonPositiveAction text="Accept" @click="emit('cart-accepted', publicCode, reason)" />
+				<SharedButtonActionButton action="negative" text="Decline" @click="emit('cart-declined', publicCode, reason)" />
+				<SharedButtonActionButton action="positive" text="Accept" @click="emit('cart-accepted', publicCode, reason)" />
 			</div>
 		</div>
 		<div v-else class="flex flex-col items-center justify-center gap-4">

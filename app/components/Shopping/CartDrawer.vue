@@ -5,14 +5,14 @@
 				<div class="flex w-full flex-col items-center gap-2">
 					<SharedTextBase>Currently waiting in queue</SharedTextBase>
 					<UProgress :indeterminate="true" class="mt-4" />
-					<SharedButtonNavigateTo text="Go to Queue" to="/student/queue" />
+					<SharedButtonActionButton action="navigate-to" text="Go to Queue" to="/student/queue" />
 				</div>
 			</template>
 			<template v-else>
 				<div class="flex w-full flex-col items-center gap-4">
 					<SharedTextBase>You need to join queue before shopping</SharedTextBase>
 					<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
-					<SharedButtonNavigateTo text="Go to Queue" to="/student/queue" />
+					<SharedButtonActionButton action="navigate-to" text="Go to Queue" to="/student/queue" />
 				</div>
 			</template>
 		</template>
@@ -20,11 +20,11 @@
 			<div class="flex w-full flex-col items-center gap-4">
 				<SharedTextBase>Your cart is empty</SharedTextBase>
 				<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
-				<SharedButtonNavigateTo text="Browse Items" to="/student/shopping" />
+				<SharedButtonActionButton action="navigate-to" text="Browse Items" to="/student/shopping" />
 			</div>
 		</template>
 		<template v-else>
-			<UAlert :icon="icons['information']" color="neutral" variant="outline">
+			<UAlert icon="i-lucide-info" color="neutral" variant="outline">
 				<template #title>
 					<SharedTextBase>Friendly reminders!</SharedTextBase>
 					<ul class="ml-4 list-disc">
@@ -42,9 +42,9 @@
 			<SharedLayoutGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.specificItemID" :default-open="true">
 				<template #header="{ group, open }">
 					<div class="flex flex-col gap-2">
-						<SharedButtonPositiveAction
+						<SharedButtonActionButton action="positive"
 							:text="group"
-							:trailing-icon="icons['chevronDown']"
+							trailing-icon="i-lucide-chevron-down"
 							block
 							class="group w-full rounded-lg"
 							:ui="{
@@ -78,7 +78,7 @@
 			</SharedLayoutGroupedCollapsible>
 
 			<div class="flex justify-center pt-6">
-				<SharedButtonNavigateTo text="Proceed to Checkout" class="w-48" @click="proceedToCheckout" />
+				<SharedButtonActionButton action="navigate-to" text="Proceed to Checkout" class="w-48" @click="proceedToCheckout" />
 			</div>
 		</template>
 	</UContainer>

@@ -13,7 +13,7 @@
 							<UCard>
 								<div class="mx-auto mb-2 flex justify-end">
 									<UDropdownMenu :items="items(step.tutorialStepID)" :ui="{ content: 'align-end' }">
-										<UButton :icon="icons['ellipsesActions']" color="neutral" variant="ghost" />
+										<SharedButtonActionButton icon="i-lucide-ellipsis" color="neutral" variant="ghost" />
 									</UDropdownMenu>
 								</div>
 								<img :src="`/api/public/image/${step.imageUrl}`" class="mx-auto aspect-auto h-152 rounded-lg" loading="lazy" />
@@ -21,7 +21,7 @@
 							</UCard>
 						</div>
 					</UCarousel>
-					<UButton
+					<SharedButtonActionButton
 						label="Create a new step"
 						color="neutral"
 						variant="outline"

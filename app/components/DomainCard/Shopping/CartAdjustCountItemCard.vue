@@ -12,7 +12,7 @@
 				<SharedTextBaseSecondary>{{ totalCount }} in cart</SharedTextBaseSecondary>
 				<SharedTextBaseSecondary v-if="itemFinalCount !== totalCount">{{ itemFinalCount }} counted</SharedTextBaseSecondary>
 			</div>
-			<UButton
+			<SharedButtonActionButton
 				:trailing-icon="isOpen ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
 				size="sm"
 				variant="ghost"
