@@ -8,63 +8,7 @@
 			<USeparator class="my-4" />
 			<section>
 				<div class="mx-auto w-full max-w-xl">
-					<SharedFormShell :validate="validate" :state="state" class="w-full space-y-4" :on-submit="onSubmit" :on-error="onError">
-						<SharedLayoutSectionUCard title="Category Image">
-							<UFormField
-								id="image"
-								name="image"
-								label="Item Image"
-								description="JPG or PNG. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels"
-								required
-							>
-								<div class="flex flex-col gap-2">
-									<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png" />
-								</div>
-							</UFormField>
-						</SharedLayoutSectionUCard>
-
-						<SharedLayoutSectionUCard title="Category Details">
-							<UFormField
-								id="categoryName"
-								name="categoryName"
-								label="Category Name"
-								description="Category name must be at most 20 characters and only contain letters and spaces"
-								required
-							>
-								<UInput v-model="state.categoryName" placeholder="Enter category name" />
-
-								<div v-if="mostSimilarItems.length" class="border-border-soft mt-2 rounded-lg border p-2">
-									<div class="mb-2 flex items-center gap-2">
-										<SharedTextBaseSecondary> Similar existing categories </SharedTextBaseSecondary>
-									</div>
-
-									<div class="flex flex-wrap gap-2">
-										<UBadge
-											v-for="similarItem in mostSimilarItems"
-											:key="similarItem.id"
-											:label="similarItem.categoryName"
-											color="neutral"
-											variant="soft"
-										/>
-									</div>
-
-									<SharedTextBaseSecondary class="mt-2 text-xs">
-										Check that you're not creating a duplicate category.
-									</SharedTextBaseSecondary>
-								</div>
-							</UFormField>
-						</SharedLayoutSectionUCard>
-
-						<SharedLayoutSectionUCard title="Availability">
-							<UFormField id="archived" name="archived" label="Archived" description="Check if the category is archived">
-								<UCheckbox v-model="state.archived" label="Archived" />
-							</UFormField>
-						</SharedLayoutSectionUCard>
-
-						<footer class="sticky right-4 bottom-8 mt-4 flex justify-end space-x-2 sm:ml-auto">
-							<SharedButtonActionButton action="positive" type="submit" text="Submit" />
-						</footer>
-					</SharedFormShell>
+					<ManageCategoryEditorCategoryForm :categories="categories ?? []" :initial-values="initialValues" :show-archived="true" @submit="onSubmit" />
 				</div>
 			</section>
 		</NuxtLayout>
@@ -72,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { editCategorySchema } from "~/utils/formSchemas"
+import type { EditCategoryForm } from "~/utils/formSchemas"
 
 definePageMeta({ layout: false })
 
@@ -90,52 +34,38 @@ const currentCategory = computed(() => {
 })
 
 const originalImage = ref<Blob | null>(null)
+const image = ref<File>()
 
 watchEffect(async () => {
 	if (currentCategory.value) {
 		originalImage.value = await $fetch<Blob>(`/api/public/image/${currentCategory.value.imgName}`, { responseType: "blob" })
-		state.value.image = new File([originalImage.value], currentCategory.value.imgName, {
+		image.value = new File([originalImage.value], currentCategory.value.imgName, {
 			type: originalImage.value.type,
 		})
 	} else {
 		originalImage.value = null
+		image.value = undefined
 	}
 })
 
-const { schema, state, validate, onError } = createFormBuilder(editCategorySchema, () => ({
-	image: originalImage.value
-		? new File([originalImage.value], currentCategory.value?.imgName, {
-				type: originalImage.value.type,
-			})
-		: undefined,
-	categoryName: currentCategory.value?.categoryName || undefined,
-	archived: currentCategory.value?.archived || false,
+const initialValues = computed<EditCategoryForm>(() => ({
+	image: image.value,
+	categoryName: currentCategory.value?.categoryName,
+	archived: currentCategory.value?.archived ?? false,
 }))
 
-const { query, filtered } = useFuzzySearch(categories ?? ref([]), { searchKeys: ["categoryName"] })
-watch(
-	() => state.value.categoryName,
-	(name) => {
-		query.value = name || ""
-	},
-	{ immediate: true }
-)
-const mostSimilarItems = computed(() => {
-	return filtered.value.slice(0, 5)
-})
-
-const onSubmit = async (event) => {
+const onSubmit = async (data: EditCategoryForm) => {
 	try {
 		const formData = new FormData()
 		formData.append("categoryID", categoryID)
-		if (event.data.categoryName) {
-			formData.append("categoryName", event.data.categoryName)
+		if (data.categoryName) {
+			formData.append("categoryName", data.categoryName)
 		}
-		if (event.data.archived !== undefined) {
-			formData.append("archived", event.data.archived.toString())
+		if (data.archived !== undefined) {
+			formData.append("archived", data.archived.toString())
 		}
-		if (event.data.image) {
-			formData.append("image", event.data.image)
+		if (data.image) {
+			formData.append("image", data.image)
 		}
 
 		await $fetch("/api/admin/inventory/category", {
@@ -147,5 +77,5 @@ const onSubmit = async (event) => {
 	} catch (error) {
 		// idk for now
 	}
-}
+})
 </script>

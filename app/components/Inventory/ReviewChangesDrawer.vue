@@ -2,7 +2,12 @@
 	<UContainer>
 		<Transition name="slide" mode="out-in">
 			<div :key="view" class="space-y-4">
-				<InventoryIntakeSessionStartForm v-if="view === 'create'" :sources="sources ?? []" @cancel="view = 'review'" @started="handleSessionStarted" />
+				<InventoryEditorIntakeSessionStartForm
+					v-if="view === 'create'"
+					:sources="sources ?? []"
+					@cancel="view = 'review'"
+					@started="handleSessionStarted"
+				/>
 				<template v-else>
 					<UCard>
 						<div class="flex items-center justify-between gap-2">

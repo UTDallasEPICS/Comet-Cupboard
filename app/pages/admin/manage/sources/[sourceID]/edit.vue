@@ -7,7 +7,7 @@
 		>
 			<USeparator class="my-4" />
 			<section class="mx-auto w-full max-w-xl space-y-4">
-				<ManageSourceDetailsEditor
+				<ManageSourceEditorDetailsForm
 					v-if="currentSource"
 					:source-i-d="sourceID"
 					:original-name="currentSource.sourceName"
@@ -15,7 +15,7 @@
 					:saving="isSavingSourceDetails"
 					@save="saveSourceDetails"
 				/>
-				<ManageSourceFieldsEditor :source-i-d="sourceID" :refresh-token="fieldRefreshToken" @save="saveField" @remove="removeField" />
+				<ManageSourceEditorFieldsForm :source-i-d="sourceID" :refresh-token="fieldRefreshToken" @save="saveField" @remove="removeField" />
 			</section>
 		</NuxtLayout>
 	</div>

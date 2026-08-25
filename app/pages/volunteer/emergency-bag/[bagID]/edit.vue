@@ -7,8 +7,8 @@
 		>
 			<USeparator class="my-4" />
 			<section v-if="emergencyBag" class="mx-auto w-full max-w-xl space-y-4">
-				<EmergencyBagAddItem ref="addItemRef" v-model:bag-items="bagItems" />
-				<EmergencyBagDetails ref="detailsRef" v-model:bag-details="bagDetails" />
+				<EmergencyBagEditorAddItemForm ref="addItemRef" v-model:bag-items="bagItems" />
+				<EmergencyBagEditorDetailsForm ref="detailsRef" v-model:bag-details="bagDetails" />
 				<div class="flex justify-end">
 					<SharedButtonActionButton action="positive" text="Save Changes" :loading="isSaving" @click="saveBag" />
 				</div>

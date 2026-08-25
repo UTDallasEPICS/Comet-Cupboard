@@ -10,9 +10,9 @@
 					<UStepper ref="stepper" disabled :items="steps">
 						<template #content="{ item }">
 							<USeparator class="mb-4" />
-							<EmergencyBagAddItem v-if="item.label === 'Add'" ref="addItemRef" v-model:bag-items="bagItems" />
-							<EmergencyBagDetails v-if="item.label === 'Details'" ref="detailsRef" v-model:bag-details="bagDetails" />
-							<EmergencyBagConfirmBag v-if="item.label === 'Confirm'" :bag-items="bagItems" :bag-details="bagDetails" />
+							<EmergencyBagEditorAddItemForm v-if="item.label === 'Add'" ref="addItemRef" v-model:bag-items="bagItems" />
+							<EmergencyBagEditorDetailsForm v-if="item.label === 'Details'" ref="detailsRef" v-model:bag-details="bagDetails" />
+							<EmergencyBagEditorConfirmBagForm v-if="item.label === 'Confirm'" :bag-items="bagItems" :bag-details="bagDetails" />
 						</template>
 					</UStepper>
 				</div>

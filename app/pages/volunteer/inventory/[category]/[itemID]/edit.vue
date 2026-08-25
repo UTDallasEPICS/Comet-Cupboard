@@ -8,7 +8,7 @@
 			<USeparator class="my-4" />
 			<section>
 				<div v-if="item" class="mx-auto w-full max-w-xl space-y-4">
-					<InventoryItemDetailsEditor
+					<InventoryEditorItemDetailsForm
 						:item-i-d="itemID"
 						:original-name="item.itemName"
 						:original-category-i-d="item.categoryID"
@@ -17,8 +17,13 @@
 						:saving="isSavingItemDetails"
 						@save="saveItemDetails"
 					/>
-					<InventoryItemDealEditor :item-i-d="itemID" :original-deal="item.deal" :saving="isSavingDeal" @save="saveDeal" />
-					<InventorySpecificProductsEditor :item-i-d="itemID" :specific-items="item.specificItems" :saving="isSavingProducts" @save="saveProducts" />
+					<InventoryEditorItemDealForm :item-i-d="itemID" :original-deal="item.deal" :saving="isSavingDeal" @save="saveDeal" />
+					<InventoryEditorSpecificProductsForm
+						:item-i-d="itemID"
+						:specific-items="item.specificItems"
+						:saving="isSavingProducts"
+						@save="saveProducts"
+					/>
 				</div>
 			</section>
 		</NuxtLayout>
