@@ -1,6 +1,6 @@
 <template>
 	<UCard class="relative w-full">
-		<SharedLabel :label="itemLabelName" :archived="archived" />
+		<SharedLabel :label="itemLabelName" :color="color" :archived="archived" />
 		<SharedButtonActionButton
 			icon="i-lucide-pencil"
 			action="neutral"
@@ -13,6 +13,6 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ itemLabelName: string; archived: boolean }>()
+defineProps<{ itemLabelName: string; color: string; archived: boolean }>()
 const emit = defineEmits<{ edit: [] }>()
 </script>

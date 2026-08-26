@@ -129,9 +129,10 @@ model Item {
 }
 
 model ItemLabel {
-    itemLabelID   String @id @default(cuid()) @map("item_label_id")
-    itemLabelName String @unique @map("item_label_name")
+    itemLabelID   String  @id @default(cuid()) @map("item_label_id")
+    itemLabelName String  @unique @map("item_label_name")
     archived      Boolean @default(false) @map("archived")
+    color         String  @default("#6B7280") @map("color")
 
     specificItems SpecificItem[]
 
@@ -248,9 +249,10 @@ model Location {
 }
 
 model EmergencyBagLabel {
-    emergencyBagLabelID   String @id @default(cuid()) @map("emergency_bag_label_id")
-    emergencyBagLabelName String @unique @map("emergency_bag_label_name")
+    emergencyBagLabelID   String  @id @default(cuid()) @map("emergency_bag_label_id")
+    emergencyBagLabelName String  @unique @map("emergency_bag_label_name")
     archived              Boolean @default(false) @map("archived")
+    color                 String  @default("#6B7280") @map("color")
 
     emergencyBags       EmergencyBag[]
     issuedEmergencyBags IssuedEmergencyBag[]

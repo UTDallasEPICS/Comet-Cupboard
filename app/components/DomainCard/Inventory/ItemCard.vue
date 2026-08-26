@@ -75,6 +75,7 @@
 												v-for="label in product.itemLabels.filter((label) => !label.archived)"
 												:key="label.itemLabelName"
 												:label="label.itemLabelName"
+												:color="label.color"
 											/>
 										</div>
 									</div>
@@ -109,7 +110,7 @@ type SpecificItem = {
 	productName: string
 	imgName: string
 	quantity: number
-	itemLabels: { itemLabelName: string; archived: boolean }[]
+	itemLabels: { itemLabelName: string; color: string; archived: boolean }[]
 }
 
 const props = defineProps({

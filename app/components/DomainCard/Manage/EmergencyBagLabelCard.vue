@@ -1,6 +1,6 @@
 <template>
 	<UCard class="relative w-full">
-		<SharedLabel :label="emergencyBagLabelName" :archived="archived" />
+		<SharedLabel :label="emergencyBagLabelName" :color="color" :archived="archived" />
 		<SharedButtonActionButton
 			icon="i-lucide-pencil"
 			action="neutral"
@@ -13,6 +13,6 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ emergencyBagLabelName: string; archived: boolean }>()
+defineProps<{ emergencyBagLabelName: string; color: string; archived: boolean }>()
 const emit = defineEmits<{ edit: [] }>()
 </script>

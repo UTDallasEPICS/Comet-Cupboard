@@ -9,7 +9,7 @@
 				<SharedTextBase v-if="description" class="mt-4 text-center">{{ description }}</SharedTextBase>
 				<div class="mt-4 flex flex-row items-center justify-center gap-2">
 					<SharedButtonActionButton action="cancel" :text="cancelText" :disabled="loading" @click="isOpen = false" />
-					<SharedButtonActionButton action="negative" leading-icon="i-lucide-check" :text="confirmText" :loading="loading" @click="handleConfirm" />
+					<SharedButtonActionButton :action="action" leading-icon="i-lucide-check" :text="confirmText" :loading="loading" @click="handleConfirm" />
 				</div>
 			</UCard>
 		</template>
@@ -23,12 +23,14 @@ const props = withDefaults(
 		description?: string
 		cancelText?: string
 		confirmText?: string
+		action?: "positive" | "negative" | "cancel"
 	}>(),
 	{
 		title: "Confirm Action?",
 		description: undefined,
 		cancelText: "Cancel",
 		confirmText: "Confirm",
+		action: "negative",
 	}
 )
 

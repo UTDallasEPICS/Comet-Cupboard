@@ -5,7 +5,7 @@
 			<section class="space-y-4">
 				<SharedLayoutSectionUCard title="Active Labels">
 					<div class="flex items-center justify-between gap-4">
-						<SharedTextSectionTitle>Specific Item Labels</SharedTextSectionTitle>
+						<SharedTextCardTitle>Specific Item Labels</SharedTextCardTitle>
 						<SharedButtonActionButton icon="i-lucide-plus" action="positive" aria-label="Add specific item label" @click="openCreate('item')" />
 					</div>
 					<USeparator class="my-4" />
@@ -13,6 +13,7 @@
 						<li v-for="label in activeItemLabels" :key="label.itemLabelID">
 							<DomainCardManageItemLabelCard
 								:item-label-name="label.itemLabelName"
+								:color="label.color"
 								:archived="label.archived"
 								@edit="openEdit({ type: 'item', label })"
 							/>
@@ -21,7 +22,7 @@
 					<SharedTextBaseSecondary v-else class="block text-center">No active specific item labels found</SharedTextBaseSecondary>
 
 					<div class="mt-6 flex items-center justify-between gap-4">
-						<SharedTextSectionTitle>Emergency Bag Labels</SharedTextSectionTitle>
+						<SharedTextCardTitle>Emergency Bag Labels</SharedTextCardTitle>
 						<SharedButtonActionButton icon="i-lucide-plus" action="positive" aria-label="Add emergency bag label" @click="openCreate('emergency')" />
 					</div>
 					<USeparator class="my-4" />
@@ -29,6 +30,7 @@
 						<li v-for="label in activeEmergencyBagLabels" :key="label.emergencyBagLabelID">
 							<DomainCardManageEmergencyBagLabelCard
 								:emergency-bag-label-name="label.emergencyBagLabelName"
+								:color="label.color"
 								:archived="label.archived"
 								@edit="openEdit({ type: 'emergency', label })"
 							/>
@@ -38,12 +40,13 @@
 				</SharedLayoutSectionUCard>
 
 				<SharedLayoutSectionUCard title="Archived Labels">
-					<SharedTextSectionTitle>Specific Item Labels</SharedTextSectionTitle>
+					<SharedTextCardTitle>Specific Item Labels</SharedTextCardTitle>
 					<USeparator class="my-4" />
 					<SharedLayoutGrid v-if="archivedItemLabels.length">
 						<li v-for="label in archivedItemLabels" :key="label.itemLabelID">
 							<DomainCardManageItemLabelCard
 								:item-label-name="label.itemLabelName"
+								:color="label.color"
 								:archived="label.archived"
 								@edit="openEdit({ type: 'item', label })"
 							/>
@@ -51,12 +54,13 @@
 					</SharedLayoutGrid>
 					<SharedTextBaseSecondary v-else class="block text-center">No archived specific item labels found</SharedTextBaseSecondary>
 
-					<SharedTextSectionTitle class="mt-6">Emergency Bag Labels</SharedTextSectionTitle>
+					<SharedTextCardTitle class="mt-6">Emergency Bag Labels</SharedTextCardTitle>
 					<USeparator class="my-4" />
 					<SharedLayoutGrid v-if="archivedEmergencyBagLabels.length">
 						<li v-for="label in archivedEmergencyBagLabels" :key="label.emergencyBagLabelID">
 							<DomainCardManageEmergencyBagLabelCard
 								:emergency-bag-label-name="label.emergencyBagLabelName"
+								:color="label.color"
 								:archived="label.archived"
 								@edit="openEdit({ type: 'emergency', label })"
 							/>
@@ -98,12 +102,14 @@ definePageMeta({ layout: false })
 interface ItemLabel {
 	itemLabelID: string
 	itemLabelName: string
+	color: string
 	archived: boolean
 }
 
 interface EmergencyBagLabel {
 	emergencyBagLabelID: string
 	emergencyBagLabelName: string
+	color: string
 	archived: boolean
 }
 
@@ -127,10 +133,12 @@ const archivedEmergencyBagLabels = computed(() => (emergencyBagLabels.value ?? [
 
 const itemLabelInitialValues = computed<ItemLabelForm>(() => ({
 	itemLabelName: editingLabel.value?.type === "item" ? (editingLabel.value.label?.itemLabelName ?? "") : "",
+	color: editingLabel.value?.type === "item" ? (editingLabel.value.label?.color ?? "#6B7280") : "#6B7280",
 	archived: editingLabel.value?.type === "item" ? (editingLabel.value.label?.archived ?? false) : false,
 }))
 const emergencyBagLabelInitialValues = computed<EmergencyBagLabelForm>(() => ({
 	emergencyBagLabelName: editingLabel.value?.type === "emergency" ? (editingLabel.value.label?.emergencyBagLabelName ?? "") : "",
+	color: editingLabel.value?.type === "emergency" ? (editingLabel.value.label?.color ?? "#6B7280") : "#6B7280",
 	archived: editingLabel.value?.type === "emergency" ? (editingLabel.value.label?.archived ?? false) : false,
 }))
 const editorTitle = computed(() => {

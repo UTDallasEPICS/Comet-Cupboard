@@ -19,6 +19,7 @@
 							v-for="emergencyBagLabel in activeEmergencyBagLabels"
 							:key="emergencyBagLabel.emergencyBagLabelID"
 							:label="emergencyBagLabel.emergencyBagLabelName"
+							:color="emergencyBagLabel.color"
 						/>
 					</div>
 				</div>
@@ -65,6 +66,7 @@
 										v-for="label in item.specificItem.itemLabels.filter((label) => !label.archived)"
 										:key="label.itemLabelName"
 										:label="label.itemLabelName"
+										:color="label.color"
 									/>
 								</div>
 							</div>
@@ -124,13 +126,13 @@ const props = defineProps<{
 		location: { locationID: string; locationName: string } | null
 		private: boolean
 		bagDescription: string
-		emergencyBagLabels: { emergencyBagLabelID: string; emergencyBagLabelName: string; archived: boolean }[]
+		emergencyBagLabels: { emergencyBagLabelID: string; emergencyBagLabelName: string; color: string; archived: boolean }[]
 		emergencyBagItems: {
 			specificItem: {
 				specificItemID: string
 				productName: string
 				imgName: string
-				itemLabels: { itemLabelName: string; archived: boolean }[]
+				itemLabels: { itemLabelName: string; color: string; archived: boolean }[]
 				item: {
 					itemName: string
 				}

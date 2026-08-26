@@ -3,6 +3,9 @@
 		<UFormField name="emergencyBagLabelName" v-bind="emergencyBagLabelFormFields.emergencyBagLabelName" required>
 			<UInput v-model="state.emergencyBagLabelName" :placeholder="emergencyBagLabelFormFields.emergencyBagLabelName.placeholder" class="w-full" />
 		</UFormField>
+		<UFormField name="color" v-bind="emergencyBagLabelFormFields.color" class="mt-4">
+			<UColorPicker v-model="state.color" />
+		</UFormField>
 		<UFormField name="archived" v-bind="emergencyBagLabelFormFields.archived" class="mt-4">
 			<UCheckbox v-model="state.archived" :label="emergencyBagLabelFormFields.archived.label" />
 		</UFormField>

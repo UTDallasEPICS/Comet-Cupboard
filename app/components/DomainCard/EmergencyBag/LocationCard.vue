@@ -28,7 +28,12 @@
 						<div v-if="visibleBags.length" class="space-y-2">
 							<div v-for="(bag, index) in visibleBags" :key="index" class="rounded-lg border border-gray-200 p-2">
 								<div v-if="bag.emergencyBagLabels.length" class="flex flex-wrap gap-1">
-									<SharedLabel v-for="label in bag.emergencyBagLabels" :key="label.emergencyBagLabelName" :label="label.emergencyBagLabelName" />
+									<SharedLabel
+										v-for="label in bag.emergencyBagLabels"
+										:key="label.emergencyBagLabelName"
+										:label="label.emergencyBagLabelName"
+										:color="label.color"
+									/>
 								</div>
 
 								<SharedTextBaseSecondary v-else> No labels </SharedTextBaseSecondary>
@@ -80,7 +85,7 @@ defineProps<{
 	description: string
 	mapEmbedUrl?: string | null
 	visibleBags: Array<{
-		emergencyBagLabels: Array<{ emergencyBagLabelName: string }>
+		emergencyBagLabels: Array<{ emergencyBagLabelName: string; color: string }>
 	}>
 }>()
 </script>

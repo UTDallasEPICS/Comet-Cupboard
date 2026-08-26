@@ -53,7 +53,8 @@ CREATE TABLE "item" (
 CREATE TABLE "item_label" (
     "item_label_id" TEXT NOT NULL PRIMARY KEY,
     "item_label_name" TEXT NOT NULL,
-    "archived" BOOLEAN NOT NULL DEFAULT false
+    "archived" BOOLEAN NOT NULL DEFAULT false,
+    "color" TEXT NOT NULL DEFAULT '#6B7280'
 );
 
 -- CreateTable
@@ -140,7 +141,8 @@ CREATE TABLE "location" (
 CREATE TABLE "emergency_bag_label" (
     "emergency_bag_label_id" TEXT NOT NULL PRIMARY KEY,
     "emergency_bag_label_name" TEXT NOT NULL,
-    "archived" BOOLEAN NOT NULL DEFAULT false
+    "archived" BOOLEAN NOT NULL DEFAULT false,
+    "color" TEXT NOT NULL DEFAULT '#6B7280'
 );
 
 -- CreateTable

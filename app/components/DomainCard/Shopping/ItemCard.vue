@@ -63,6 +63,7 @@
 											v-for="label in specificItem.itemLabels.filter((label) => !label.archived)"
 											:key="label.itemLabelName"
 											:label="label.itemLabelName"
+											:color="label.color"
 										/>
 									</div>
 								</div>

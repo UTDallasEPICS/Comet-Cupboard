@@ -4,13 +4,14 @@
 			<SharedTextCardTitle>Start Intake Session</SharedTextCardTitle>
 			<SharedButtonActionButton
 				icon="i-lucide-arrow-left"
+				text="Back"
 				action="neutral"
 				variant="ghost"
 				aria-label="Back to intake sessions"
 				@click="emit('cancel')"
 			/>
 		</div>
-		<SharedFormShell :state="state" :validate="validate" class="space-y-4" :on-submit="startSession" :on-error="onError">
+		<SharedFormShell :state="state" :validate="validate" class="space-y-4" :on-submit="startSession" :on-error="onError" width-class="w-full">
 			<SharedLayoutSectionUCard title="Session Details">
 				<div class="space-y-4">
 					<UFormField name="inventoryIntakeSessionName" v-bind="intakeSessionFormFields.inventoryIntakeSessionName" required

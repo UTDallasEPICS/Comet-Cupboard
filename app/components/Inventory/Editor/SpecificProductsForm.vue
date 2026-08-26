@@ -2,41 +2,49 @@
 	<SharedFormShell :validate="validate" :state="state" :on-submit="saveProducts" :on-error="onError" width-class="w-full">
 		<SharedLayoutSectionUCard title="Specific Products">
 			<template #header>
-				<SharedButtonActionButton type="button" icon="i-lucide-plus" action="positive" text="Add" aria-label="Add product" @click="addProduct" />
+				<SharedConfirmationModal
+					action="positive"
+					title="Confirm Adding Specific Product?"
+					description="Specific products cannot be deleted and are archived if the general item is archived."
+					confirm-text="Confirm Addition"
+					@confirm="addProduct"
+				>
+					<SharedButtonActionButton type="button" icon="i-lucide-plus" action="positive" text="Add" aria-label="Add product" />
+				</SharedConfirmationModal>
 			</template>
 			<div class="space-y-4">
-			<div v-for="product in orderedProducts" :key="product.key" class="border-border-soft rounded-lg border p-3">
-				<div class="mb-3 flex items-center justify-between gap-2">
-					<SharedTextBase class="font-semibold">{{ product.productName || "New Product" }}</SharedTextBase>
+				<div v-for="product in orderedProducts" :key="product.key" class="border-border-soft rounded-lg border p-3">
+					<div class="mb-3 flex items-center justify-between gap-2">
+						<SharedTextBase class="font-semibold">{{ product.productName || "New Product" }}</SharedTextBase>
+					</div>
+					<div class="space-y-3">
+						<UFormField :name="`products.${productIndex(product.key)}.productName`" v-bind="specificProductFormFields.productName" required
+							><UInput
+								v-model="product.productName"
+								:placeholder="specificProductFormFields.productName.placeholder"
+								class="w-full"
+								:readonly="product.productName === 'Default'"
+						/></UFormField>
+						<UFormField v-bind="specificProductFormFields.productImage">
+							<UFileUpload
+								v-model="productImages[product.key]"
+								accept=".jpg,.jpeg,.png,.webp"
+								label="Upload image"
+								class="aspect-square w-full"
+								@update:model-value="markImageChanged(product.key)"
+							/>
+						</UFormField>
+						<UFormField :name="`products.${productIndex(product.key)}.itemLabels`" v-bind="specificProductFormFields.itemLabels">
+							<USelectMenu
+								v-model="product.itemLabels"
+								:items="itemLabelOptions"
+								multiple
+								:placeholder="specificProductFormFields.itemLabels.placeholder"
+								class="w-full"
+							/>
+						</UFormField>
+					</div>
 				</div>
-				<div class="space-y-3">
-					<UFormField :name="`products.${productIndex(product.key)}.productName`" v-bind="specificProductFormFields.productName" required
-						><UInput
-							v-model="product.productName"
-							:placeholder="specificProductFormFields.productName.placeholder"
-							class="w-full"
-							:readonly="product.productName === 'Default'"
-					/></UFormField>
-					<UFormField v-bind="specificProductFormFields.productImage">
-						<UFileUpload
-							v-model="productImages[product.key]"
-							accept=".jpg,.jpeg,.png,.webp"
-							label="Upload image"
-							class="aspect-square w-full"
-							@update:model-value="markImageChanged(product.key)"
-						/>
-					</UFormField>
-					<UFormField :name="`products.${productIndex(product.key)}.itemLabels`" v-bind="specificProductFormFields.itemLabels">
-						<USelectMenu
-							v-model="product.itemLabels"
-							:items="itemLabelOptions"
-							multiple
-							:placeholder="specificProductFormFields.itemLabels.placeholder"
-							class="w-full"
-						/>
-					</UFormField>
-				</div>
-			</div>
 			</div>
 			<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
 				<template #cancel>

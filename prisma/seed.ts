@@ -175,8 +175,16 @@ const createLocations = async () => {
 }
 
 const createLabels = async () => {
+	const itemLabelColors: Record<string, string> = {
+		"Gluten Free": "#F59E0B",
+		Halal: "#10B981",
+		Kosher: "#3B82F6",
+		Vegan: "#22C55E",
+		Vegetarian: "#84CC16",
+	}
+
 	await prisma.itemLabel.createMany({
-		data: ["Gluten Free", "Halal", "Kosher", "Vegan", "Vegetarian"].map((itemLabelName) => ({ itemLabelName, archived: false })),
+		data: Object.entries(itemLabelColors).map(([itemLabelName, color]) => ({ itemLabelName, color, archived: false })),
 	})
 }
 
@@ -193,7 +201,7 @@ const createEmergencyBags = async () => {
 				emergencyBagLabels: {
 					connectOrCreate: bag.labels.map((emergencyBagLabelName) => ({
 						where: { emergencyBagLabelName },
-						create: { emergencyBagLabelName, archived: false },
+						create: { emergencyBagLabelName, color: "#6B7280", archived: false },
 					})),
 				},
 			},

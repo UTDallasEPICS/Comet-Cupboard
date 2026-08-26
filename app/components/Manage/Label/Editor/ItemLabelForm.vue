@@ -3,6 +3,9 @@
 		<UFormField name="itemLabelName" v-bind="itemLabelFormFields.itemLabelName" required>
 			<UInput v-model="state.itemLabelName" :placeholder="itemLabelFormFields.itemLabelName.placeholder" class="w-full" />
 		</UFormField>
+		<UFormField name="color" v-bind="itemLabelFormFields.color" class="mt-4">
+			<UColorPicker v-model="state.color" />
+		</UFormField>
 		<UFormField name="archived" v-bind="itemLabelFormFields.archived" class="mt-4">
 			<UCheckbox v-model="state.archived" :label="itemLabelFormFields.archived.label" />
 		</UFormField>

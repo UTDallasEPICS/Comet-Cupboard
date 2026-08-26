@@ -1,5 +1,7 @@
 <template>
-	<UContainer>
+	<UContainer :ui="{
+		base: 'px-2 sm:px-2 lg:px-2'
+	}">
 		<Transition name="slide" mode="out-in">
 			<div :key="view" class="space-y-4">
 				<InventoryEditorIntakeSessionStartForm

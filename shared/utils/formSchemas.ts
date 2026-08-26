@@ -152,6 +152,14 @@ export const notesSchema = z.string().trim().max(2_000, "Notes must be 2,000 cha
  */
 export const requiredIDSchema = (fieldName: string) => z.string().trim().min(1, `${fieldName} is required`)
 
+/**
+ * Standard schema for hex color values (e.g. #6B7280).
+ */
+export const hexColorSchema = z
+	.string()
+	.trim()
+	.regex(/^#[0-9A-Fa-f]{6}$/, "Color must be a valid hex code (e.g. #6B7280)")
+
 // ============================================================================
 // Source
 // ============================================================================
@@ -749,6 +757,8 @@ export const specificProductsSchema = z.object({
 export const itemLabelSchema = z.object({
 	itemLabelName: nameSchema("Item label"),
 
+	color: hexColorSchema.default("#6B7280"),
+
 	archived: z.boolean().default(false),
 })
 
@@ -761,6 +771,12 @@ export const itemLabelFormFields = {
 		placeholder: "Enter item label",
 	},
 
+	color: {
+		id: "color",
+		label: "Color",
+		description: "Pick a color to identify this label",
+	},
+
 	archived: {
 		id: "archived",
 		label: "Archived",
@@ -770,6 +786,8 @@ export const itemLabelFormFields = {
 
 export const emergencyBagLabelSchema = z.object({
 	emergencyBagLabelName: nameSchema("Emergency bag label"),
+
+	color: hexColorSchema.default("#6B7280"),
 
 	archived: z.boolean().default(false),
 })
@@ -781,6 +799,12 @@ export const emergencyBagLabelFormFields = {
 		id: "emergencyBagLabelName",
 		label: "Emergency Bag Label",
 		placeholder: "Enter emergency bag label",
+	},
+
+	color: {
+		id: "color",
+		label: "Color",
+		description: "Pick a color to identify this label",
 	},
 
 	archived: {

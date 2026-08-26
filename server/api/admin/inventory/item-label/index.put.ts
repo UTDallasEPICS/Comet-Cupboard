@@ -7,18 +7,18 @@ import { itemLabelSchema } from "#shared/utils/formSchemas"
 const schema = itemLabelSchema.extend({ itemLabelID: z.string().optional() }).strict()
 
 export default defineSafeHandler(async (event) => {
-	const { itemLabelID, itemLabelName, archived } = await validateBody(event, schema)
+	const { itemLabelID, itemLabelName, color, archived } = await validateBody(event, schema)
 
 	return await prisma.$transaction(async (tx) => {
 		if (!itemLabelID) {
-			const itemLabel = await tx.itemLabel.create({ data: { itemLabelName, archived } })
+			const itemLabel = await tx.itemLabel.create({ data: { itemLabelName, color, archived } })
 			await tx.auditLog.create({
 				data: { action: "ITEM_LABEL_CREATED", message: `Item label created: ${itemLabel.itemLabelName}`, userID: event.context.userSession.userID },
 			})
 			return itemLabel
 		}
 
-		const itemLabel = await tx.itemLabel.update({ where: { itemLabelID }, data: { itemLabelName, archived } })
+		const itemLabel = await tx.itemLabel.update({ where: { itemLabelID }, data: { itemLabelName, color, archived } })
 		await tx.auditLog.create({
 			data: { action: "ITEM_LABEL_EDITED", message: `Item label updated: ${itemLabel.itemLabelName}`, userID: event.context.userSession.userID },
 		})
