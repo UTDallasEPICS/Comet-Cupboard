@@ -5,101 +5,83 @@ import { defineSafeHandler } from "#server/utils/handler"
 import { validateFormData } from "#server/utils/validation"
 import { Prisma } from "../../../../prisma/generated/prisma/client"
 import { imageSchema, deleteImage, uploadImage, processImage } from "#server/utils/image"
+import { descriptionSchema, editLocationSchema, locationNameSchema } from "#shared/utils/formSchemas"
 
-const schema = imageSchema
+const schema = editLocationSchema
 	.extend({
-		originalName: z.string().default(""),
-		name: z.string().min(1, "Location name cannot be empty"),
-		description: z.string().or(z.literal("")),
+		locationID: z.string(),
+		locationName: locationNameSchema,
+		description: descriptionSchema,
 		archived: z.enum(["true", "false"]),
+		image: imageSchema.shape.image,
 	})
 	.strict()
-	.partial({
-		name: true,
-		description: true,
-		archived: true,
-		image: true,
-	})
-	.refine(
-		({ originalName, name, description, archived, image }) => {
-			if (originalName === "") {
-				if (!name || !description || !archived || !image) {
-					return false
-				}
-			}
-			return true
-		},
-		{
-			message: "name, description, archived, and image are required when creating a new location",
-		}
-	)
 
 export default defineSafeHandler(async (event) => {
-	const { originalName, name, description, archived, image } = await validateFormData(event, schema)
+	const { locationID, locationName, description, mapEmbedUrl, archived, image } = await validateFormData(event, schema)
 
-	const result = await prisma.$transaction(async (tx) => {
-		let oldImgName = ""
-
-		if (originalName) {
-			const existingLocation = await tx.location.findUnique({ where: { name: originalName } })
-			if (!existingLocation) {
-				throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Location does not exist" })
-			}
-			oldImgName = existingLocation.imgName
+	if (!locationID) {
+		let newImgName = undefined
+		if (image) {
+			newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
 		}
-
+		return await prisma.$transaction(async (tx) => {
+			const newLocation = await tx.location.create({
+				data: {
+					locationName: locationName,
+					imgName: newImgName!,
+					description: description,
+					mapEmbedUrl: mapEmbedUrl || null,
+					archived: archived === "true",
+				},
+			})
+			await tx.auditLog.create({
+				data: {
+					action: "LOCATION_CREATED",
+					message: `Location created: ${newLocation.locationID}`,
+					userID: event.context.userSession.userID,
+				},
+			})
+			return newLocation
+		})
+	} else {
+		let oldImgName = ""
+		const existingLocation = await prisma.location.findUnique({ where: { locationID } })
+		if (!existingLocation) {
+			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Location does not exist` })
+		}
+		oldImgName = existingLocation.imgName
 		let newImgName = undefined
 		if (image) {
 			newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
 		}
 
-		let location
-		if (originalName) {
-			try {
-				if (name && name !== originalName) {
-					await tx.location.delete({ where: { name: originalName } })
-					location = await tx.location.create({
-						data: {
-							name: name,
-							imgName: newImgName || oldImgName,
-							description: description || "",
-							archived: archived === "true",
-						},
-					})
-				} else {
-					location = await tx.location.update({
-						where: { name: originalName },
-						data: {
-							...(name !== undefined && { name }),
-							...(description !== undefined && { description }),
-							...(newImgName !== undefined && { imgName: newImgName }),
-							...(archived !== undefined && { archived: archived === "true" }),
-						},
-					})
-				}
-			} catch (error: unknown) {
-				if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
-					throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: "Location not found" })
-				}
-				throw error
-			}
-		} else {
-			location = await tx.location.create({
+		const transactionResult = await prisma.$transaction(async (tx) => {
+			const updatedLocation = await tx.location.update({
+				where: { locationID },
 				data: {
-					name: name!,
-					imgName: newImgName!,
-					description: description || "",
+					locationName,
+					description,
+					mapEmbedUrl: mapEmbedUrl || null,
 					archived: archived === "true",
+					imgName: newImgName ?? oldImgName,
 				},
 			})
-		}
+			await tx.auditLog.create({
+				data: {
+					action: "LOCATION_EDITED",
+					message: `Location updated: ${updatedLocation.locationID}`,
+					userID: event.context.userSession.userID,
+				},
+			})
+			return updatedLocation
+		})
 
+		// safest way to ensure we don't accidentally delete an image if something goes wrong during the transaction
 		if (oldImgName && newImgName) {
 			await deleteImage(oldImgName)
 		}
 
-		return location
-	})
-
-	return "Successfully updated/created location"
+		return transactionResult
+	}
 })

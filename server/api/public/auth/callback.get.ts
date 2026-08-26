@@ -15,7 +15,6 @@ const schema = z
 		state: z.string().min(1),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const { code, state } = validateQuery(event, schema)
@@ -54,7 +53,7 @@ export default defineSafeHandler(async (event) => {
 		},
 		secure: {
 			userID: user.userID,
-		}
+		},
 	})
 
 	const existingUserSession = await prisma.userSession.findUnique({

@@ -12,7 +12,7 @@
 					<SharedTextHeroDescription class="mt-4 text-white"> Supporting academic success by meeting basic needs. </SharedTextHeroDescription>
 
 					<div class="mt-4 flex flex-row gap-4">
-						<SharedButtonNavigateTo text="Login with SSO" @click="startLogin" />
+						<SharedButtonActionButton action="navigate-to" leading-icon="i-lucide-log-in" text="Login with SSO" @click="startLogin" />
 						<UForm v-if="isDevMode" @submit="startDevLogin">
 							<UFormField>
 								<UInput v-model="devUsernameInput" placeholder="NONPROD Dev Username" class="w-64" @keyup.enter="startDevLogin" />
@@ -23,7 +23,23 @@
 			</UContainer>
 		</section>
 
-		<section class="py-16">
+		<section v-if="announcements?.length" class="py-8">
+			<UContainer>
+				<SharedTextSectionTitle class="text-center"> Announcements </SharedTextSectionTitle>
+				<USeparator class="my-4" />
+				<div class="space-y-2">
+					<UAlert v-for="announcement in announcements" :key="announcement.announcementID" color="secondary" :title="announcement.message" icon="i-lucide-megaphone">
+						<template #description>
+							<SharedTextBaseSecondary class="text-right text-white"
+								>Posted {{ new Date(announcement.startsAt).toLocaleDateString() }}</SharedTextBaseSecondary
+							>
+						</template>
+					</UAlert>
+				</div>
+			</UContainer>
+		</section>
+
+		<section class="py-8">
 			<UContainer>
 				<div class="mx-auto max-w-4xl text-center">
 					<SharedTextSectionTitle> Comet Cupboard Calendar </SharedTextSectionTitle>
@@ -43,18 +59,24 @@
 
 		<USeparator />
 
-		<section class="relative overflow-hidden bg-gray-50/50 py-16">
+		<section class="relative overflow-hidden bg-gray-50/50 py-8">
 			<UContainer class="relative flex flex-col items-center gap-4 text-center">
 				<SharedTextSectionTitle> Find an Emergency Bag </SharedTextSectionTitle>
 				<SharedTextBase class="max-w-xl"> Check availability at locations across campus </SharedTextBase>
-				<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
-				<SharedButtonNavigateTo text="View Locations" to="/public/emergency-bag/locations" />
+				<SharedButtonActionButton
+					action="navigate-to"
+					text="View Locations"
+					trailing-icon="i-lucide-arrow-right"
+					to="/public/emergency-bag/locations"
+				/>
 			</UContainer>
 		</section>
 	</div>
 </template>
 
 <script lang="ts" setup>
+const { data: announcements } = await useFetch("/api/public/announcements")
+
 const startLogin = async () => {
 	await navigateTo("/api/public/auth/login", { external: true })
 }
@@ -65,5 +87,4 @@ const devUsernameInput = ref("")
 const startDevLogin = async () => {
 	await navigateTo(`/api/public/auth/DEV_MODE-callback?username=${devUsernameInput.value}`, { external: true })
 }
-
 </script>

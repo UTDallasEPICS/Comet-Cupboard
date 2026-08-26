@@ -7,14 +7,13 @@ import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 const schema = z
 	.object({
-		itemID: z.string(),
+		specificItemID: z.string(),
 		incrementChange: z.number().int().min(-1).max(1),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { itemID, incrementChange } = await validateBody(event, schema)
+	const { specificItemID, incrementChange } = await validateBody(event, schema)
 	const publicCode = event.context.userSession.publicCode
 
 	if (incrementChange === 0) {
@@ -40,20 +39,20 @@ export default defineSafeHandler(async (event) => {
 
 		if (incrementChange > 0) {
 			return await tx.cartItem.upsert({
-				where: { cartItemID: { publicCode: cart.publicCode, itemID: itemID } },
+				where: { cartItemID: { publicCode: cart.publicCode, specificItemID } },
 				update: { count: { increment: incrementChange } },
-				create: { publicCode: cart.publicCode, itemID: itemID, count: incrementChange },
+				create: { publicCode: cart.publicCode, specificItemID, count: incrementChange },
 			})
 		} else {
 			try {
 				const updatedItem = await tx.cartItem.update({
-					where: { cartItemID: { publicCode: cart.publicCode, itemID: itemID } },
+					where: { cartItemID: { publicCode: cart.publicCode, specificItemID } },
 					data: { count: { increment: incrementChange } },
 				})
 
 				if (updatedItem.count <= 0) {
 					await tx.cartItem.delete({
-						where: { cartItemID: { publicCode: cart.publicCode, itemID: itemID } },
+						where: { cartItemID: { publicCode: cart.publicCode, specificItemID } },
 					})
 					return null
 				}

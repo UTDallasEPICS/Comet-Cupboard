@@ -2,11 +2,19 @@
 	<UContainer class="py-4 sm:py-8">
 		<header class="mb-4">
 			<div class="flex flex-row items-center">
-				<SharedButtonNavigateBack v-if="backNavigation" :text="backNavigation.text" :to="backNavigation.to" />
+				<SharedButtonActionButton
+					action="navigate-back"
+					button-variant="ghost"
+					v-if="backNavigation"
+					:text="backNavigation.text"
+					:to="backNavigation.to"
+				/>
 			</div>
 			<div class="flex flex-row flex-nowrap items-center gap-2">
 				<SharedTextPageTitle>{{ props.title }}</SharedTextPageTitle>
-				<SharedTutorial v-if="props.tutorialData" :tutorial="props.tutorialData" />
+				<SharedTutorial v-if="props.tutorialData" :tutorial="props.tutorialData">
+					<SharedButtonActionButton action="neutral" button-variant="ghost" icon="i-lucide-info" />
+				</SharedTutorial>
 			</div>
 		</header>
 
@@ -22,12 +30,16 @@ const props = defineProps<{
 		to: string
 	}
 	tutorialData?: {
-		title: string
-		tutorialPages: {
-			title: string
-			content: {
-				imageURL: string
+		tutorialGroupID: string
+		tutorialGroupName: string
+		tutorials: {
+			tutorialID: string
+			tutorialName: string
+			tutorialSteps: {
+				tutorialStepID: string
+				imageUrl: string
 				description: string
+				stepOrdering: number
 			}[]
 		}[]
 	}

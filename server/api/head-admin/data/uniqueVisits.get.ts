@@ -21,11 +21,11 @@ export default defineSafeHandler(async (event) => {
 
 	const { timeLevel, startDate, endDate } = result.data
 
-	if(startDate) {
+	if (startDate) {
 		startDate.setHours(0, 0, 0, 0)
 	}
 
-	if(endDate) {
+	if (endDate) {
 		endDate.setHours(23, 59, 59, 999)
 	}
 
@@ -46,15 +46,18 @@ export default defineSafeHandler(async (event) => {
 	const rows = sessions.map((row) => {
 		return {
 			createdAt: row.createdAt,
-			label: row.netID,
+			label: row.userID,
 			count: 1,
 		}
 	})
 
-	const firstDate = startDate ?? new Date(rows[0]?.createdAt)
-	const lastDate = endDate ?? new Date(rows[rows.length - 1]?.createdAt)
+	const firstDate = startDate ?? rows[0]?.createdAt
+	const lastDate = endDate ?? rows.at(-1)?.createdAt
+	if (!firstDate || !lastDate) {
+		return {}
+	}
 	const lastTimeLevel = getTimeLevel(lastDate, timeLevel)
-	const allTimeLevels = {}
+	const allTimeLevels: Record<string, Record<string, number> | number> = {}
 	let curDate = new Date(firstDate)
 	while (curDate <= lastDate || getTimeLevel(curDate, timeLevel) === lastTimeLevel) {
 		const level = getTimeLevel(curDate, timeLevel)
@@ -80,17 +83,18 @@ export default defineSafeHandler(async (event) => {
 	}
 
 	//fill data into allTimeLevels
-	for(const {createdAt, label, count} of rows){
+	for (const { createdAt, label, count } of rows) {
 		const time = getTimeLevel(createdAt, timeLevel)
-		if (!allTimeLevels[time][label]){
-			allTimeLevels[time][label] = 0
+		const levelLabels = allTimeLevels[time] as Record<string, number>
+		if (!levelLabels[label]) {
+			levelLabels[label] = 0
 		}
-		allTimeLevels[time][label] += count
+		levelLabels[label] += count
 	}
 
 	// sum up unique users per time level
-	for (const time in allTimeLevels){
-		const labels = allTimeLevels[time]
+	for (const time in allTimeLevels) {
+		const labels = allTimeLevels[time] as Record<string, number>
 		allTimeLevels[time] = Object.keys(labels).length
 	}
 

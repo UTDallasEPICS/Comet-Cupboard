@@ -3,18 +3,18 @@
 		<NuxtLayout name="main" title="Manage Tutorials" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
 			<section>
 				<USeparator class="my-4" />
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				<SharedLayoutGrid class="mt-4">
 					<li v-for="groupConfig in groupConfigs" :key="groupConfig.name">
-						<ManageTutorialGroupCard
+						<DomainCardManageTutorialGroupCard
 							v-if="findGroup(groupConfig.name)"
-							:id="findGroup(groupConfig.name).id"
-							:name="findGroup(groupConfig.name).name"
-							:pages="findGroup(groupConfig.name).pages"
+							:tutorialGroupID="findGroup(groupConfig.name).tutorialGroupID"
+							:tutorialGroupName="findGroup(groupConfig.name).tutorialGroupName"
+							:tutorials="findGroup(groupConfig.name).tutorials"
 							:icon="groupConfig.icon"
 							@refresh="refresh"
 						/>
 					</li>
-				</ul>
+				</SharedLayoutGrid>
 			</section>
 		</NuxtLayout>
 	</div>
@@ -23,16 +23,16 @@
 <script setup lang="ts">
 definePageMeta({ layout: false })
 
-const { data: groups, refresh } = await useFetch("/api/admin/tutorial/groups")
+const { data: groups, refresh } = await useFetch("/api/admin/tutorial/tutorial/all-tutorials")
 
 const groupConfigs = [
-	{ name: "Student", icon: icons.student },
-	{ name: "Volunteer", icon: icons.volunteer },
-	{ name: "Admin", icon: icons.admin },
-	{ name: "Head Admin", icon: icons.headAdmin },
+	{ name: "Student", icon: "i-lucide-user" },
+	{ name: "Volunteer", icon: "i-lucide-users" },
+	{ name: "Admin", icon: "i-lucide-shield" },
+	{ name: "Head Admin", icon: "i-lucide-shield-keyhole" },
 ]
 
 const findGroup = (name: string) => {
-	return groups.value?.find((group) => group.name === name)
+	return groups.value?.find((group) => group.tutorialGroupName === name)
 }
 </script>

@@ -3,7 +3,7 @@ import { unlink, writeFile } from "node:fs/promises"
 import { nanoid } from "nanoid"
 import { z } from "zod"
 
-const uploadDirectory = process.env.IMAGE_UPLOAD_DIRECTORY ?? "images"
+export const imageUploadDirectory = process.env.FILE_STORAGE_DIRECTORY + "/images"
 const MAX_FILE_SIZE = 2 * 1024 * 1024
 
 export const imageSchema = z.object({
@@ -20,13 +20,13 @@ export const processImage = async (buffer: Buffer) => {
 }
 
 export const deleteImage = async (imgName: string) => {
-	await unlink(`${uploadDirectory}/${imgName}`).catch(() => {})
+	await unlink(`${imageUploadDirectory}/${imgName}`).catch(() => {})
 }
 
 export const uploadImage = async (buffer: Buffer) => {
 	const processedBuffer = await processImage(buffer)
 	const newImgName = `${nanoid()}.webp`
-	const newPath = `${uploadDirectory}/${newImgName}`
+	const newPath = `${imageUploadDirectory}/${newImgName}`
 	await writeFile(newPath, processedBuffer)
 	return newImgName
 }

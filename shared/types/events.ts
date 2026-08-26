@@ -2,6 +2,9 @@ export interface QueueEntryNonSensitive {
 	position: number
 	publicCode: string
 	publicIcon: string
+	queuePingSentAt?: string | Date | null
+	queuePingAcknowledgedAt?: string | Date | null
+	queuePingAcknowledgementMessage?: string | null
 }
 
 export interface QueueFullPayloadNonSensitive {
@@ -20,6 +23,10 @@ export interface EventMap {
 	"queue.entryApproved": QueueEntryNonSensitive
 	"queue.queueUpdated": QueueEntryNonSensitive[]
 
+	/* queue.notification */
+	"queue.notification.sent": { publicCode: string; userID: string; sentAt: Date }
+	"queue.notification.acknowledged": { publicCode: string; userID: string; acknowledgedAt: Date; acknowledgementMessage: string }
+
 	/* cart session */
 	"cartSession.created": { publicCode: string; publicIcon: string }
 	"cartSession.removed": { publicCode: string }
@@ -30,6 +37,17 @@ export interface EventMap {
 	/* verify cart list */
 	"verifyCartList.cart.added": { cart: any }
 	"verifyCartList.cart.removed": { publicCode: string }
+
+	/* global inventory intake session */
+	"inventoryIntakeSession.specificItemAmountChange": {
+		inventoryIntakeSessionID: string
+		specificItemID: string
+		productName: string
+		imgName: string
+		amountChanged: number
+		inventoryIntakeSessionItemChangeID: string
+	}
+	"inventoryIntakeSession.submitted": { inventoryIntakeSessionID: string }
 }
 
 export type AppEvent = {

@@ -12,7 +12,6 @@ const schema = z
 		username: z.string().min(1),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
 	const NODE_ENV = useRuntimeConfig(event).public.NODE_ENV
@@ -60,7 +59,7 @@ export default defineSafeHandler(async (event) => {
 		},
 		secure: {
 			userID: user.userID,
-		}
+		},
 	})
 
 	const userRole = user.role

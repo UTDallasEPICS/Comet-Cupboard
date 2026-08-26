@@ -7,13 +7,12 @@ import { Prisma } from "../../../../prisma/generated/prisma/client"
 
 const schema = z
 	.object({
-		itemID: z.string(),
+		specificItemID: z.string(),
 	})
 	.strict()
-	.required()
 
 export default defineSafeHandler(async (event) => {
-	const { itemID } = await validateBody(event, schema)
+	const { specificItemID } = await validateBody(event, schema)
 	const publicCode = event.context.userSession.publicCode
 
 	try {
@@ -21,9 +20,9 @@ export default defineSafeHandler(async (event) => {
 			where: {
 				cartItemID: {
 					publicCode: publicCode,
-					itemID: itemID,
+					specificItemID,
 				},
-				Cart: {
+				cart: {
 					pending: false,
 				},
 			},

@@ -1,0 +1,215 @@
+{
+	"app": "dbdiga",
+	"version": 1,
+	"sql": "generator client {\n    provider = \"prisma-client\"\n    output   = \"./generated/prisma\"\n}\n\ndatasource db {\n    provider = \"sqlite\"\n}\n\nenum RoleType {\n    STUDENT\n    VOLUNTEER\n    ADMIN\n    HEAD_ADMIN\n}\n\nenum SourceFieldType {\n    TEXT\n    NUMBER\n    DATE\n    BOOLEAN\n    CHOICE\n}\n\nenum AuditAction {\n    INVENTORY_INTAKE_SESSION_CREATED\n    INVENTORY_INTAKE_SESSION_DELETED\n    INVENTORY_INTAKE_SESSION_COMPLETED\n    VERIFY_CART_APPROVED\n    VERIFY_CART_REJECTED\n    EMERGENCY_BAG_CREATED\n    EMERGENCY_BAG_EDITED\n    SOURCE_CREATED\n    SOURCE_EDITED\n    CATEGORY_CREATED\n    CATEGORY_EDITED\n    ITEM_CREATED\n    ITEM_EDITED\n    LOCATION_CREATED\n    LOCATION_EDITED\n    TUTORIAL_CREATED\n    TUTORIAL_EDITED\n    USER_ROLE_EDITED\n    ANNOUNCEMENT_CREATED\n    ANNOUNCEMENT_EDITED\n    DASHBOARD_LINKS_EDITED\n    OTHER\n}\n\nenum AcademicSemester {\n    FALL\n    SPRING\n    SUMMER\n}\n\nmodel User {\n    userID      String   @id @map(\"user_id\")\n    displayName String   @default(\"\") @map(\"display_name\")\n    role        RoleType @map(\"role\")\n\n    userSession            UserSession?\n    orders                 Order[]\n    queueNotificationsSent QueueNotification[]\n    tutorialCompletions    TutorialCompletion[]\n    auditLogs              AuditLog[]\n\n    @@map(\"user\")\n}\n\nmodel UserSession {\n    userID     String @id @map(\"user_id\")\n    publicCode String @unique @map(\"public_code\")\n    publicIcon String @map(\"public_icon\")\n\n    user       User        @relation(fields: [userID], references: [userID], onDelete: Cascade, onUpdate: Cascade)\n    cart       Cart?\n    queueEntry QueueEntry?\n\n    @@map(\"user_session\")\n}\n\nmodel QueueEntry {\n    publicCode String   @id @map(\"public_code\")\n    joinedAt   DateTime @default(now()) @map(\"joined_at\")\n    position   Int      @map(\"position\")\n\n    userSession   UserSession         @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)\n    notifications QueueNotification[]\n\n    @@map(\"queue_entry\")\n}\n\nmodel QueueNotification {\n    queueNotificationID    String    @id @default(cuid()) @map(\"queue_notification_id\")\n    publicCode             String    @map(\"public_code\")\n    senderUserID           String    @map(\"sender_user_id\")\n    message                String    @map(\"message\")\n    createdAt              DateTime  @default(now()) @map(\"created_at\")\n    acknowledgedAt         DateTime? @map(\"acknowledged_at\")\n    acknowledgementMessage String?   @map(\"acknowledgement_message\")\n\n    queueEntry QueueEntry @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)\n    sender     User       @relation(fields: [senderUserID], references: [userID], onDelete: Restrict, onUpdate: Cascade)\n\n    @@map(\"queue_notification\")\n}\n\nmodel Category {\n    categoryID   String  @id @default(cuid()) @map(\"category_id\")\n    categoryName String  @unique @map(\"category_name\")\n    imgName      String  @map(\"img_name\")\n    archived     Boolean @default(false) @map(\"archived\")\n\n    items Item[]\n\n    @@map(\"category\")\n}\n\nmodel Deal {\n    itemID        String @id @map(\"item_id\")\n    actualCount   Int    @map(\"actual_count\")\n    adjustedCount Int    @map(\"adjusted_count\")\n\n    item Item @relation(fields: [itemID], references: [itemID], onDelete: Cascade, onUpdate: Cascade)\n\n    @@map(\"deal\")\n}\n\nmodel Item {\n    itemID     String  @id @default(cuid()) @map(\"item_id\")\n    itemName   String  @unique @map(\"item_name\")\n    categoryID String  @map(\"category_id\")\n    imgName    String  @map(\"img_name\")\n    archived   Boolean @default(false) @map(\"archived\")\n\n    category      Category       @relation(fields: [categoryID], references: [categoryID], onDelete: Restrict, onUpdate: Cascade)\n    deal          Deal?\n    specificItems SpecificItem[]\n\n    @@map(\"item\")\n}\n\nmodel ItemLabel {\n    itemLabelID   String @id @default(cuid()) @map(\"item_label_id\")\n    itemLabelName String @unique @map(\"item_label_name\")\n\n    specificItems SpecificItem[]\n\n    @@map(\"item_label\")\n}\n\nmodel SpecificItem {\n    specificItemID String @id @default(cuid()) @map(\"specific_item_id\")\n    productName    String @map(\"product_name\")\n    quantity       String @map(\"quantity\")\n    itemID         String @map(\"item_id\")\n\n    item                                 Item                                  @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)\n    itemLabels                           ItemLabel[]\n    cartItems                            CartItem[]\n    orderItems                           OrderItem[]\n    emergencyBagItems                    EmergencyBagItem[]\n    issuedEmergencyBagItems              IssuedEmergencyBagItem[]\n    inventoryIntakeSessionItemChanges    InventoryIntakeSessionItemChange[]\n    completedInventoryIntakeSessionItems CompletedInventoryIntakeSessionItem[]\n\n    @@map(\"specific_item\")\n}\n\nmodel Source {\n    sourceID   String  @id @default(cuid()) @map(\"source_id\")\n    sourceName String  @unique @map(\"source_name\")\n    archived   Boolean @default(false) @map(\"archived\")\n\n    fields                           Field[]\n    inventoryIntakeSessions          InventoryIntakeSession[]\n    completedInventoryIntakeSessions CompletedInventoryIntakeSession[]\n\n    @@map(\"source\")\n}\n\nmodel Field {\n    fieldID   String          @id @default(cuid()) @map(\"field_id\")\n    fieldName String          @map(\"field_name\")\n    sourceID  String          @map(\"source_id\")\n    type      SourceFieldType @default(TEXT) @map(\"type\")\n    choices   Json?           @map(\"choices\")\n    optional  Boolean         @default(false) @map(\"optional\")\n\n    source Source @relation(fields: [sourceID], references: [sourceID], onDelete: Restrict, onUpdate: Cascade)\n\n    @@map(\"field\")\n}\n\nmodel InventoryIntakeSession {\n    inventoryIntakeSessionID   String   @id @default(cuid()) @map(\"inventory_intake_session_id\")\n    inventoryIntakeSessionName String   @map(\"inventory_intake_session_name\")\n    notes                      String   @default(\"\") @map(\"notes\")\n    intakeDate                 DateTime @map(\"intake_date\")\n    sourceID                   String   @map(\"source_id\")\n    sourceName                 String   @map(\"source_name\")\n    sourceMetadata             Json?    @map(\"source_metadata\")\n\n    source                            Source                             @relation(fields: [sourceID], references: [sourceID], onDelete: Restrict, onUpdate: Cascade)\n    inventoryIntakeSessionItemChanges InventoryIntakeSessionItemChange[]\n\n    @@map(\"inventory_intake_session\")\n}\n\nmodel InventoryIntakeSessionItemChange {\n    inventoryIntakeSessionID String @map(\"inventory_intake_session_id\")\n    specificItemID           String @map(\"specific_item_id\")\n    amountChanged            Int    @map(\"amount_changed\")\n\n    inventoryIntakeSession InventoryIntakeSession @relation(fields: [inventoryIntakeSessionID], references: [inventoryIntakeSessionID], onDelete: Cascade, onUpdate: Cascade)\n    specificItem           SpecificItem           @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)\n\n    @@id(name: \"inventoryIntakeSessionItemChangeID\", [inventoryIntakeSessionID, specificItemID])\n    @@map(\"inventory_intake_session_item_change\")\n}\n\nmodel Cart {\n    publicCode String   @id @map(\"public_code\")\n    createdAt  DateTime @default(now()) @map(\"created_at\")\n    pending    Boolean  @default(false) @map(\"pending\")\n\n    userSession UserSession @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)\n    cartItems   CartItem[]\n\n    @@map(\"cart\")\n}\n\nmodel CartItem {\n    publicCode      String @map(\"public_code\")\n    specificItemID  String @map(\"specific_item_id\")\n    count           Int    @map(\"count\")\n    countAdjustment Int    @default(0) @map(\"count_adjustment\")\n\n    cart         Cart         @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)\n    specificItem SpecificItem @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)\n\n    @@id(name: \"cartItemID\", [specificItemID, publicCode])\n    @@map(\"cart_item\")\n}\n\nmodel Location {\n    locationID   String  @id @default(cuid()) @map(\"location_id\")\n    locationName String  @unique @map(\"location_name\")\n    description  String  @map(\"description\")\n    archived     Boolean @default(false) @map(\"archived\")\n    imgName      String  @map(\"img_name\")\n    mapEmbedUrl  String? @map(\"map_embed_url\")\n\n    emergencyBags       EmergencyBag[]\n    issuedEmergencyBags IssuedEmergencyBag[]\n\n    @@map(\"location\")\n}\n\nmodel EmergencyBagLabel {\n    emergencyBagLabelID   String @id @default(cuid()) @map(\"emergency_bag_label_id\")\n    emergencyBagLabelName String @unique @map(\"emergency_bag_label_name\")\n\n    emergencyBags       EmergencyBag[]\n    issuedEmergencyBags IssuedEmergencyBag[]\n\n    @@map(\"emergency_bag_label\")\n}\n\nmodel EmergencyBag {\n    emergencyBagID String   @id @default(cuid()) @map(\"emergency_bag_id\")\n    locationID     String?  @map(\"location_id\")\n    private        Boolean  @default(false) @map(\"private\")\n    bagDescription String   @default(\"\") @map(\"bag_description\")\n    expiryDate     DateTime @map(\"expiry_date\")\n    label          String   @unique @map(\"label\")\n\n    location           Location?           @relation(fields: [locationID], references: [locationID], onDelete: Restrict, onUpdate: Cascade)\n    emergencyBagLabels EmergencyBagLabel[]\n    emergencyBagItems  EmergencyBagItem[]\n\n    @@map(\"emergency_bag\")\n}\n\nmodel EmergencyBagItem {\n    emergencyBagID String @map(\"emergency_bag_id\")\n    specificItemID String @map(\"specific_item_id\")\n    count          Int    @map(\"count\")\n\n    emergencyBag EmergencyBag @relation(fields: [emergencyBagID], references: [emergencyBagID], onDelete: Cascade, onUpdate: Cascade)\n    specificItem SpecificItem @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)\n\n    @@id(name: \"emergencyBagItemID\", [specificItemID, emergencyBagID])\n    @@map(\"emergency_bag_item\")\n}\n\nmodel TutorialGroup {\n    tutorialGroupID   String @id @default(cuid()) @map(\"tutorial_group_id\")\n    tutorialGroupName String @unique @map(\"tutorial_group_name\")\n\n    tutorials Tutorial[]\n\n    @@map(\"tutorial_group\")\n}\n\nmodel Tutorial {\n    tutorialID      String @id @default(cuid()) @map(\"tutorial_id\")\n    tutorialName    String @map(\"tutorial_name\")\n    tutorialGroupID String @map(\"tutorial_group_id\")\n\n    tutorialGroup TutorialGroup        @relation(fields: [tutorialGroupID], references: [tutorialGroupID], onDelete: Cascade, onUpdate: Cascade)\n    tutorialSteps TutorialStep[]\n    completions   TutorialCompletion[]\n\n    @@map(\"tutorial\")\n}\n\nmodel TutorialStep {\n    tutorialStepID String @id @default(cuid()) @map(\"tutorial_step_id\")\n    imageUrl       String @map(\"image_url\")\n    description    String @map(\"description\")\n    stepOrdering   Int    @map(\"step_ordering\")\n    tutorialID     String @map(\"tutorial_id\")\n\n    tutorial Tutorial @relation(fields: [tutorialID], references: [tutorialID], onDelete: Cascade, onUpdate: Cascade)\n\n    @@map(\"tutorial_step\")\n}\n\nmodel TutorialCompletion {\n    userID     String   @map(\"user_id\")\n    tutorialID String   @map(\"tutorial_id\")\n    lastSeenAt DateTime @default(now()) @map(\"last_seen_at\")\n\n    user     User     @relation(fields: [userID], references: [userID], onDelete: Restrict, onUpdate: Cascade)\n    tutorial Tutorial @relation(fields: [tutorialID], references: [tutorialID], onDelete: Restrict, onUpdate: Cascade)\n\n    @@id(name: \"tutorialCompletionID\", [userID, tutorialID])\n    @@map(\"tutorial_completion\")\n}\n\nmodel Announcement {\n    announcementID String   @id @default(cuid()) @map(\"announcement_id\")\n    message        String   @map(\"message\")\n    startsAt       DateTime @map(\"starts_at\")\n    endsAt         DateTime @map(\"ends_at\")\n\n    @@map(\"announcement\")\n}\n\nmodel DashboardLink {\n    dashboardLinkID   String   @id @default(cuid()) @map(\"dashboard_link_id\")\n    displayName       String   @map(\"display_name\")\n    url               String   @map(\"url\")\n    description       String   @default(\"\") @map(\"description\")\n    dashboardRolePage RoleType @map(\"dashboard_role_page\")\n    displayOrder      Int      @default(0) @map(\"display_order\")\n\n    @@map(\"dashboard_link\")\n}\n\nmodel AuditLog {\n    auditLogID String      @id @default(cuid()) @map(\"audit_log_id\")\n    timestamp  DateTime    @default(now()) @map(\"timestamp\")\n    action     AuditAction @map(\"action\")\n    message    String      @map(\"message\")\n    userID     String?     @map(\"user_id\")\n\n    user User? @relation(fields: [userID], references: [userID], onDelete: SetNull, onUpdate: Cascade)\n\n    @@map(\"audit_log\")\n}\n\n// ********** HISTORICAL TABLES **********\n\nmodel CompletedInventoryIntakeSession {\n    completedInventoryIntakeSessionID String   @id @default(cuid()) @map(\"completed_inventory_intake_session_id\")\n    inventoryIntakeSessionName        String   @map(\"inventory_intake_session_name\")\n    intakeDate                        DateTime @map(\"intake_date\")\n    completedAt                       DateTime @default(now()) @map(\"completed_at\")\n    notes                             String   @default(\"\") @map(\"notes\")\n    sourceID                          String   @map(\"source_id\")\n    sourceName                        String   @map(\"source_name\")\n    sourceMetadata                    Json?    @map(\"source_metadata\")\n\n    source                               Source                                @relation(fields: [sourceID], references: [sourceID], onDelete: Restrict, onUpdate: Cascade)\n    completedInventoryIntakeSessionItems CompletedInventoryIntakeSessionItem[]\n\n    @@map(\"completed_inventory_intake_session\")\n}\n\nmodel CompletedInventoryIntakeSessionItem {\n    completedInventoryIntakeSessionID String @map(\"completed_inventory_intake_session_id\")\n    specificItemID                    String @map(\"specific_item_id\")\n    amountChanged                     Int    @map(\"amount_changed\")\n\n    completedInventoryIntakeSession CompletedInventoryIntakeSession @relation(fields: [completedInventoryIntakeSessionID], references: [completedInventoryIntakeSessionID], onDelete: Cascade, onUpdate: Cascade)\n    specificItem                    SpecificItem                    @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)\n\n    @@id(name: \"completedInventoryIntakeSessionItemID\", [completedInventoryIntakeSessionID, specificItemID])\n    @@map(\"completed_inventory_intake_session_item\")\n}\n\nmodel Order {\n    orderID       String   @id @default(cuid()) @map(\"order_id\")\n    userID        String   @map(\"user_id\")\n    cartCreatedAt DateTime @map(\"cart_created_at\")\n    createdAt     DateTime @default(now()) @map(\"created_at\")\n\n    user       User        @relation(fields: [userID], references: [userID], onDelete: Restrict, onUpdate: Cascade)\n    orderItems OrderItem[]\n\n    @@map(\"order\")\n}\n\nmodel OrderItem {\n    orderID        String @map(\"order_id\")\n    specificItemID String @map(\"specific_item_id\")\n    count          Int    @map(\"count\")\n\n    order        Order        @relation(fields: [orderID], references: [orderID], onDelete: Cascade, onUpdate: Cascade)\n    specificItem SpecificItem @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)\n\n    @@id(name: \"orderItemID\", [specificItemID, orderID])\n    @@map(\"order_item\")\n}\n\nmodel IssuedEmergencyBag {\n    issuedEmergencyBagID String   @id @default(cuid()) @map(\"issued_emergency_bag_id\")\n    locationID           String?  @map(\"location_id\")\n    private              Boolean  @map(\"private\")\n    bagDescription       String   @default(\"\") @map(\"bag_description\")\n    expiryDate           DateTime @map(\"expiry_date\")\n    label                String   @map(\"label\")\n    issuedAt             DateTime @default(now()) @map(\"issued_at\")\n\n    location                 Location?                @relation(fields: [locationID], references: [locationID], onDelete: Restrict, onUpdate: Cascade)\n    issuedEmergencyBagLabels EmergencyBagLabel[]\n    issuedEmergencyBagItems  IssuedEmergencyBagItem[]\n\n    @@map(\"issued_emergency_bag\")\n}\n\nmodel IssuedEmergencyBagItem {\n    issuedEmergencyBagID String @map(\"issued_emergency_bag_id\")\n    specificItemID       String @map(\"specific_item_id\")\n    count                Int    @map(\"count\")\n\n    issuedEmergencyBag IssuedEmergencyBag @relation(fields: [issuedEmergencyBagID], references: [issuedEmergencyBagID], onDelete: Cascade, onUpdate: Cascade)\n    specificItem       SpecificItem       @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)\n\n    @@id(name: \"issuedEmergencyBagItemID\", [specificItemID, issuedEmergencyBagID])\n    @@map(\"issued_emergency_bag_item\")\n}\n",
+	"dialect": "postgres",
+	"positions": {
+		"usersession": {
+			"x": 1655,
+			"y": -799
+		},
+		"category": {
+			"x": 1258,
+			"y": -337
+		},
+		"deal": {
+			"x": 1019,
+			"y": -170
+		},
+		"item": {
+			"x": 1259,
+			"y": -169
+		},
+		"itemlabel": {
+			"x": 1030,
+			"y": 23
+		},
+		"specificitem": {
+			"x": 1248,
+			"y": 28
+		},
+		"source": {
+			"x": 1776,
+			"y": -332
+		},
+		"field": {
+			"x": 1755,
+			"y": -197
+		},
+		"inventoryintakesession": {
+			"x": 2095,
+			"y": -369
+		},
+		"inventoryintakesessionitemchange": {
+			"x": 2095,
+			"y": -134
+		},
+		"cart": {
+			"x": 1954,
+			"y": -843
+		},
+		"cartitem": {
+			"x": 1944,
+			"y": -695
+		},
+		"emergencybaglabel": {
+			"x": 1862,
+			"y": 457
+		},
+		"emergencybag": {
+			"x": 2137,
+			"y": 462
+		},
+		"emergencybagitem": {
+			"x": 2143,
+			"y": 679
+		},
+		"tutorialgroup": {
+			"x": 1895,
+			"y": -1531
+		},
+		"tutorial": {
+			"x": 1909,
+			"y": -1426
+		},
+		"tutorialstep": {
+			"x": 1903,
+			"y": -1296
+		},
+		"tutorialcompletion": {
+			"x": 1534,
+			"y": -1256
+		},
+		"announcement": {
+			"x": 2343,
+			"y": -1529
+		},
+		"dashboardlink": {
+			"x": 2629,
+			"y": -1536
+		},
+		"completedinventoryintakesession": {
+			"x": 2750,
+			"y": -375
+		},
+		"completedinventoryintakesessionitem": {
+			"x": 2743,
+			"y": -125
+		},
+		"order": {
+			"x": 2790,
+			"y": -808
+		},
+		"orderitem": {
+			"x": 2798,
+			"y": -641
+		},
+		"issuedemergencybag": {
+			"x": 2786,
+			"y": 416
+		},
+		"issuedemergencybagitem": {
+			"x": 2787,
+			"y": 656
+		},
+		"queueentry": {
+			"x": 1944,
+			"y": -1048
+		},
+		"queuenotification": {
+			"x": 2172,
+			"y": -1044
+		},
+		"location": {
+			"x": 1911,
+			"y": 668
+		},
+		"user": {
+			"x": 1252,
+			"y": -843
+		},
+		"auditlog": {
+			"x": 1264,
+			"y": -708
+		}
+	},
+	"camera": {
+		"x": -2,
+		"y": 755,
+		"scale": 0.3811
+	},
+	"annotations": [
+		{
+			"id": "amt4h8tfs-7",
+			"type": "group",
+			"x": 2701.2297979850873,
+			"y": -889.600794420646,
+			"w": 500.49844153664526,
+			"h": 1737.2931743490149,
+			"text": "Historical Tables",
+			"color": "amber"
+		},
+		{
+			"id": "amt4h6w9w-4",
+			"type": "group",
+			"x": 1907.5006922262266,
+			"y": -1095.5510243268782,
+			"w": 1130.381569218344,
+			"h": 602.6193632683701,
+			"text": "Shopping",
+			"color": "green"
+		},
+		{
+			"id": "amt4h5mpm-3",
+			"type": "group",
+			"x": 1491.7735549528938,
+			"y": -1564.0585054701007,
+			"w": 1415.7629755289465,
+			"h": 463.11915791313413,
+			"text": "Miscellaneous",
+			"color": "purple"
+		},
+		{
+			"id": "amt4h7id8-5",
+			"type": "group",
+			"x": 1742.8353230884368,
+			"y": -403.45784298744405,
+			"w": 1406.3909085864138,
+			"h": 448.99547722911115,
+			"text": "Inventory Intake",
+			"color": "green"
+		},
+		{
+			"id": "amt4h8i0h-6",
+			"type": "group",
+			"x": 1753.0766743238162,
+			"y": 377.79611034998186,
+			"w": 1398.67433847923,
+			"h": 574.115415924141,
+			"text": "Emergency Bags",
+			"color": "green"
+		},
+		{
+			"id": "amt4hbyi6-9",
+			"type": "group",
+			"x": 922.2658335745086,
+			"y": -404.5426435551402,
+			"w": 758.3832913187346,
+			"h": 663.3243232963355,
+			"text": "Inventory",
+			"color": "blue"
+		},
+		{
+			"id": "amt4hbgx6-8",
+			"type": "group",
+			"x": 1146.030384169355,
+			"y": -925.5529650850826,
+			"w": 732.1247443478967,
+			"h": 470.03871795836835,
+			"text": "User Related Information",
+			"color": "blue"
+		}
+	],
+	"hidden": [],
+	"manualLinks": []
+}

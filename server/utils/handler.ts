@@ -7,6 +7,9 @@ export const defineSafeHandler = (fn: (event: H3Event) => Promise<any>) => {
 			return await fn(event)
 		} catch (error: any) {
 			// If the error already has a status code, assume it's a well-formed error and pass it through
+
+			console.error("Unexpected error in handler:", error)
+
 			if (error.statusCode) {
 				throw error
 			}

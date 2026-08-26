@@ -1,15 +1,20 @@
 <template>
-	<UButton
-		:to="`/${variant == 'shopping' ? 'student' : 'volunteer'}/${variant}/${categoryName}`"
+	<SharedButtonActionButton
+		:to="
+			allItems
+				? `/${variant == 'shopping' ? 'student' : 'volunteer'}/${variant}/all-items`
+				: `/${variant == 'shopping' ? 'student' : 'volunteer'}/${variant}/${categoryName}`
+		"
 		class="border-border-soft h-20 w-full min-w-72 overflow-hidden border bg-white p-0 pl-2 shadow-md"
 	>
 		<div class="text-text-soft flex w-full min-w-32 flex-1 items-center px-4">
 			<SharedTextBase class="font-semibold">{{ categoryName }}</SharedTextBase>
 		</div>
-		<div class="h-full w-40 min-w-20 shrink-0 ">
-			<img :alt="categoryName" :src="`/api/public/image/${imgName}`" :style="clipStyle" class="h-full w-full object-cover" />
+		<div class="h-full w-40 min-w-20 shrink-0">
+			<img v-if="!allItems" :alt="categoryName" :src="`/api/public/image/${imgName}`" :style="clipStyle" class="h-full w-full object-cover" />
+			<img v-else alt="All Items" src="/shelves.jpg" :style="clipStyle" class="h-full w-full object-cover" />
 		</div>
-	</UButton>
+	</SharedButtonActionButton>
 </template>
 
 <script lang="ts" setup>
@@ -27,6 +32,10 @@ const props = defineProps({
 	imgName: {
 		type: String,
 		default: "",
+	},
+	allItems: {
+		type: Boolean,
+		default: false,
 	},
 })
 

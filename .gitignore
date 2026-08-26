@@ -31,3 +31,4 @@ prisma/generated
 
 # Test images for database seeding
 images
+storage

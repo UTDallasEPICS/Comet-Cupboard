@@ -1,0 +1,26 @@
+<template>
+	<SharedButtonActionButton justify="start" :to="url" class="border-border-soft w-full border bg-white p-4 shadow-md">
+		<div class="flex w-full items-center gap-4">
+			<SharedIcon name="i-lucide-external-link" class="text-text-soft h-8 w-8 shrink-0" />
+
+			<div class="flex min-w-0 flex-col text-left">
+				<SharedTextCardTitle class="wrap-break-word whitespace-normal">
+					{{ displayName }}
+				</SharedTextCardTitle>
+
+				<SharedTextBase class="wrap-break-word whitespace-normal">
+					{{ description }}
+				</SharedTextBase>
+			</div>
+		</div>
+	</SharedButtonActionButton>
+</template>
+
+<script setup lang="ts">
+const props = defineProps({
+	dashboardLinkID: { type: String, required: true },
+	url: { type: String, required: true },
+	displayName: { type: String, required: true },
+	description: { type: String, required: true },
+})
+</script>

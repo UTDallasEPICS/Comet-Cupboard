@@ -8,7 +8,7 @@ declare module "h3" {
 			userID: string
 			publicCode: string
 			publicIcon: string
-			User: {
+			user: {
 				userID: string
 				displayName: string
 				role: RoleType
@@ -31,8 +31,8 @@ export default defineSafeHandler(async (event) => {
 				userID: userID,
 			},
 			include: {
-				User: true,
-			}
+				user: true,
+			},
 		})
 
 		if (userSession) {
@@ -40,25 +40,25 @@ export default defineSafeHandler(async (event) => {
 				userID: userID,
 				publicCode: userSession.publicCode,
 				publicIcon: userSession.publicIcon,
-				User: {
-					userID: userSession.User.userID,
-					displayName: userSession.User.displayName,
-					role: userSession.User.role,
+				user: {
+					userID: userSession.user.userID,
+					displayName: userSession.user.displayName,
+					role: userSession.user.role,
 				},
 			}
-			if (userSession.User.role === RoleType.STUDENT) {
+			if (userSession.user.role === RoleType.STUDENT) {
 				event.context.permissions[AccessPermission.STUDENT] = true
 			}
-			if (userSession.User.role === RoleType.VOLUNTEER) {
+			if (userSession.user.role === RoleType.VOLUNTEER) {
 				event.context.permissions[AccessPermission.STUDENT] = true
 				event.context.permissions[AccessPermission.VOLUNTEER] = true
 			}
-			if (userSession.User.role === RoleType.ADMIN) {
+			if (userSession.user.role === RoleType.ADMIN) {
 				event.context.permissions[AccessPermission.STUDENT] = true
 				event.context.permissions[AccessPermission.VOLUNTEER] = true
 				event.context.permissions[AccessPermission.ADMIN] = true
 			}
-			if (userSession.User.role === RoleType.HEAD_ADMIN) {
+			if (userSession.user.role === RoleType.HEAD_ADMIN) {
 				event.context.permissions[AccessPermission.STUDENT] = true
 				event.context.permissions[AccessPermission.VOLUNTEER] = true
 				event.context.permissions[AccessPermission.ADMIN] = true

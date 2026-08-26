@@ -20,7 +20,7 @@ export default defineSafeHandler(async (event) => {
 			createdAt: "asc",
 		},
 		include: {
-			UserSession: {
+			userSession: {
 				select: {
 					publicCode: true,
 					publicIcon: true,
@@ -30,8 +30,8 @@ export default defineSafeHandler(async (event) => {
 	})
 
 	const formattedCarts = carts.map((cart) => ({
-		publicCode: cart.UserSession.publicCode,
-		publicIcon: cart.UserSession.publicIcon,
+		publicCode: cart.userSession.publicCode,
+		publicIcon: cart.userSession.publicIcon,
 		pending: cart.pending,
 		createdAt: cart.createdAt,
 	}))

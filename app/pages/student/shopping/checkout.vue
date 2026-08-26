@@ -19,7 +19,7 @@
 							<USeparator class="mb-4" />
 							<UAlert
 								title="Please read the following disclosures before proceeding to checkout."
-								:icon="icons['information']"
+								icon="i-lucide-info"
 								color="neutral"
 								variant="outline"
 							/>
@@ -45,8 +45,8 @@
 									</SharedTextBase>
 								</UCard>
 								<div class="flex flex-row justify-between gap-4">
-									<SharedButtonCancel text="Back" @click="goToShopping" />
-									<SharedButtonPositiveAction text="I Agree" @click="incrementStepper" />
+									<SharedButtonActionButton action="cancel" text="Back" leading-icon="i-lucide-arrow-left" @click="goToShopping" />
+									<SharedButtonActionButton action="positive" text="I Agree" leading-icon="i-lucide-check" @click="incrementStepper" />
 								</div>
 							</div>
 						</template>
@@ -55,7 +55,7 @@
 							<USeparator class="mb-4" />
 							<UAlert
 								title="Please adjust counts per expired, damaged, or overstocked items."
-								:icon="icons['information']"
+								icon="i-lucide-info"
 								color="neutral"
 								variant="outline"
 							/>
@@ -65,12 +65,13 @@
 								class="mt-4"
 							/>
 							<div class="mt-4 flex flex-col gap-4">
-								<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+								<SharedLayoutGroupedCollapsible :groups="groupedCartItems" :get-key="(item) => item.itemID" :default-open="true">
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
-											<SharedButtonPositiveAction
+											<SharedButtonActionButton
+												action="positive"
 												:text="group"
-												:trailing-icon="icons['chevronDown']"
+												trailing-icon="i-lucide-chevron-down"
 												block
 												class="group w-full rounded-lg"
 												:ui="{
@@ -80,34 +81,21 @@
 										</div>
 									</template>
 
-									<template #item="{ item: cartItem }">
-										<ShoppingCartAdjustCountItemCard
-											:item-deal="
-												cartItem.Item.Deal
-													? {
-															actualCount: cartItem.Item.Deal.actualCount,
-															adjustedCount: cartItem.Item.Deal.adjustedCount,
-														}
-													: {}
-											"
+									<template #item="{ item }">
+										<DomainCardShoppingCartAdjustCountItemCard
 											class="w-full"
-											:count="cartItem.count"
-											:img-name="cartItem.Item.imgName"
-											:item-i-d="cartItem.itemID"
-											:name="cartItem.Item.name"
-											:count-adjustment="countAdjustments[cartItem.itemID] || 0"
-											@update:model-value="
-												(countAdjustment) => {
-													countAdjustments[cartItem.itemID] = countAdjustment
-												}
-											"
+											:item-deal="item.itemDeal"
+											:name="item.name"
+											:specific-items="item.specificItems"
+											:item-final-count="itemFinalCounts[item.itemID] ?? 0"
+											@update:adjustment="(specificItemID, countAdjustment) => (countAdjustments[specificItemID] = countAdjustment)"
 										/>
 									</template>
-								</SharedGroupedCollapsible>
+								</SharedLayoutGroupedCollapsible>
 
 								<div class="flex flex-row justify-between gap-4">
-									<SharedButtonCancel text="Back" @click="decrementStepper" />
-									<SharedButtonPositiveAction text="Next" @click="incrementStepper" />
+									<SharedButtonActionButton action="cancel" text="Back" leading-icon="i-lucide-arrow-left" @click="decrementStepper" />
+									<SharedButtonActionButton action="positive" text="Next" trailing-icon="i-lucide-arrow-right" @click="incrementStepper" />
 								</div>
 							</div>
 						</template>
@@ -117,7 +105,7 @@
 
 							<UAlert
 								title="Review your cart one last time before submitting for verification."
-								:icon="icons['information']"
+								icon="i-lucide-info"
 								color="neutral"
 								variant="outline"
 							/>
@@ -128,12 +116,13 @@
 								class="mt-4"
 							/>
 							<div class="mt-4 flex flex-col gap-4">
-								<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+								<SharedLayoutGroupedCollapsible :groups="groupedCartItems" :get-key="(item) => item.itemID" :default-open="true">
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
-											<SharedButtonPositiveAction
+											<SharedButtonActionButton
+												action="positive"
 												:text="group"
-												:trailing-icon="icons['chevronDown']"
+												trailing-icon="i-lucide-chevron-down"
 												block
 												class="group w-full rounded-lg"
 												:ui="{
@@ -143,28 +132,19 @@
 										</div>
 									</template>
 
-									<template #item="{ item: cartItem }">
-										<ShoppingCartReviewItemCard
-											:item-deal="
-												cartItem.Item.Deal
-													? {
-															actualCount: cartItem.Item.Deal.actualCount,
-															adjustedCount: cartItem.Item.Deal.adjustedCount,
-														}
-													: {}
-											"
+									<template #item="{ item }">
+										<DomainCardShoppingCartReviewItemCard
 											class="w-full"
-											:count="cartItem.count"
-											:img-name="cartItem.Item.imgName"
-											:item-i-d="cartItem.itemID"
-											:name="cartItem.Item.name"
-											:count-adjustment="countAdjustments[cartItem.itemID] || 0"
+											:item-deal="item.itemDeal"
+											:name="item.name"
+											:specific-items="item.specificItems"
+											:item-final-count="itemFinalCounts[item.itemID] ?? 0"
 										/>
 									</template>
-								</SharedGroupedCollapsible>
+								</SharedLayoutGroupedCollapsible>
 								<div class="flex flex-row justify-between gap-4">
-									<SharedButtonCancel text="Back" @click="decrementStepper" />
-									<SharedButtonPositiveAction text="Submit Cart" @click="submitCart" />
+									<SharedButtonActionButton action="cancel" text="Back" leading-icon="i-lucide-arrow-left" @click="decrementStepper" />
+									<SharedButtonActionButton action="positive" text="Submit Cart" leading-icon="i-lucide-check" @click="submitCart" />
 								</div>
 							</div>
 						</template>
@@ -173,20 +153,21 @@
 							<USeparator class="mb-4" />
 
 							<UAlert
-								:title="`Your cart has been submitted and is awaiting verification. A staff member will review the items and finalize your request${loadingDots}`"
-								:icon="icons['information']"
+								title="Your cart has been submitted and is awaiting verification. A staff member will review the items and finalize your request."
+								icon="i-lucide-info"
 								color="neutral"
 								variant="outline"
 							/>
 							<UProgress :indeterminate="true" class="mt-4" />
 
 							<div class="mt-4 flex flex-col gap-4">
-								<SharedGroupedCollapsible :groups="cartStore.categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+								<SharedLayoutGroupedCollapsible :groups="groupedCartItems" :get-key="(item) => item.itemID" :default-open="true">
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
-											<SharedButtonPositiveAction
+											<SharedButtonActionButton
+												action="positive"
 												:text="group"
-												:trailing-icon="icons['chevronDown']"
+												trailing-icon="i-lucide-chevron-down"
 												block
 												class="group w-full rounded-lg"
 												:ui="{
@@ -196,27 +177,18 @@
 										</div>
 									</template>
 
-									<template #item="{ item: cartItem }">
-										<ShoppingCartReviewItemCard
-											:item-deal="
-												cartItem.Item.Deal
-													? {
-															actualCount: cartItem.Item.Deal.actualCount,
-															adjustedCount: cartItem.Item.Deal.adjustedCount,
-														}
-													: {}
-											"
+									<template #item="{ item }">
+										<DomainCardShoppingCartReviewItemCard
 											class="w-full"
-											:count="cartItem.count"
-											:img-name="cartItem.Item.imgName"
-											:item-i-d="cartItem.itemID"
-											:name="cartItem.Item.name"
-											:count-adjustment="cartItem.countAdjustment"
+											:item-deal="item.itemDeal"
+											:name="item.name"
+											:specific-items="item.specificItems"
+											:item-final-count="itemFinalCounts[item.itemID] ?? 0"
 										/>
 									</template>
-								</SharedGroupedCollapsible>
+								</SharedLayoutGroupedCollapsible>
 								<div class="flex flex-row justify-center gap-4">
-									<SharedButtonCancel text="Cancel Request" @click="cancelCart" />
+									<SharedButtonActionButton action="cancel" text="Cancel Request" @click="cancelCart" />
 								</div>
 							</div>
 						</template>
@@ -224,30 +196,35 @@
 						<template #Confirmed>
 							<USeparator class="mb-4" />
 
-							<template v-if="cartRejected">
-								<UCard variant="outline">
-									<div class="flex flex-col items-center justify-center gap-4">
-										<SharedTextBase>Your cart was <span class="text-negative-red">Rejected</span>.</SharedTextBase>
-										<SharedTextBase>Volunteer Message: {{ cartVerificationReason }}</SharedTextBase>
-										<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
+							<SharedLayoutSectionUCard title="Cart Verification Result" class="w-full">
+								<div class="flex flex-col items-center gap-6 py-4">
+									<div class="text-center">
+										<SharedTextBase class="text-xl font-semibold">
+											Cart <span :class="verificationResult.textClass">{{ verificationResult.status }}</span>
+										</SharedTextBase>
+
+										<SharedTextBaseSecondary class="mt-2">{{ verificationResult.description }}</SharedTextBaseSecondary>
 									</div>
-								</UCard>
-								<div class="mt-4 flex flex-row justify-center gap-4">
-									<SharedButtonNavigateTo text="Back to Shopping" class="w-48" @click="goToShopping" />
+
+									<UAlert
+										v-if="cartVerificationReason"
+										icon="i-lucide-info"
+										title="Volunteer Message"
+										:description="cartVerificationReason"
+										color="neutral"
+										variant="subtle"
+										class="w-full max-w-2xl"
+									/>
+
+									<SharedButtonActionButton
+										action="navigate-to"
+										:text="verificationResult.actionText"
+										leading-icon="i-lucide-arrow-left"
+										class="w-48"
+										:to="verificationResult.actionTo"
+									/>
 								</div>
-							</template>
-							<template v-else>
-								<UCard variant="outline">
-									<div class="flex flex-col items-center justify-center gap-4">
-										<SharedTextBase>Your cart was <span class="text-utd-green">Accepted</span>.</SharedTextBase>
-										<SharedTextBase>Volunteer Message: {{ cartVerificationReason }}</SharedTextBase>
-										<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
-									</div>
-								</UCard>
-								<div class="mt-4 flex flex-row justify-center gap-4">
-									<SharedButtonNavigateTo text="Back to Dashboard" class="w-48" @click="navigateTo('/student')" />
-								</div>
-							</template>
+							</SharedLayoutSectionUCard>
 						</template>
 					</UStepper>
 				</div>
@@ -270,27 +247,27 @@ const items: StepperItem[] = [
 	{
 		slot: "Disclosures" as const,
 		title: "Disclosures",
-		icon: icons["disclosures"],
+		icon: "i-lucide-file-text",
 	},
 	{
 		slot: "EditCart" as const,
 		title: "Edit Cart",
-		icon: icons["edit"],
+		icon: "i-lucide-edit",
 	},
 	{
 		slot: "ReviewCart" as const,
 		title: "Review Cart",
-		icon: icons["shopping"],
+		icon: "i-lucide-shopping-cart",
 	},
 	{
 		slot: "Verifying" as const,
 		title: "Verifying",
-		icon: icons["pending"],
+		icon: "i-lucide-hourglass",
 	},
 	{
 		slot: "Confirmed" as const,
 		title: "Confirmed",
-		icon: icons["confirmation"],
+		icon: "i-lucide-check-circle",
 	},
 ]
 
@@ -298,6 +275,28 @@ const active = ref(0)
 const cartRejected = ref(false)
 const cartVerificationReason = ref("")
 const cartStore = useCartStore()
+
+const verificationResult = computed(() => {
+	if (cartRejected.value) {
+		return {
+			status: "Rejected",
+			description: "Your cart was not approved. Please review the reason, make any necessary adjustments, and resubmit.",
+			iconBackgroundClass: "bg-red-100",
+			textClass: "text-negative-red",
+			actionText: "Back to Shopping",
+			actionTo: "/student/shopping",
+		}
+	}
+
+	return {
+		status: "Accepted",
+		description: "Your cart has been approved and is ready to go.",
+		iconBackgroundClass: "bg-green-100",
+		textClass: "text-utd-green",
+		actionText: "Back to Dashboard",
+		actionTo: "/student",
+	}
+})
 
 const { onEvent } = useStudentEventStream()
 
@@ -324,12 +323,12 @@ const countAdjustments = ref<Record<string, number>>({})
 
 const combineCartAndTemporaryAdjustments = computed(() => {
 	return {
-		CartItems:
+		cartItems:
 			cartStore.categorizedCartItems && Object.keys(cartStore.categorizedCartItems).length > 0
 				? Object.values(cartStore.categorizedCartItems)
 						.flatMap((items) => items)
 						.map((cartItem) => {
-							const adjustment = countAdjustments.value[cartItem.itemID] || 0
+							const adjustment = countAdjustments.value[cartItem.specificItemID] || 0
 							return {
 								...cartItem,
 								countAdjustment: adjustment,
@@ -339,7 +338,50 @@ const combineCartAndTemporaryAdjustments = computed(() => {
 	}
 })
 
-const { loadingDots } = useLoadingDots()
+const groupedCartItems = computed<Record<string, any[]>>(() => {
+	const categoryGroups = Object.groupBy(
+		combineCartAndTemporaryAdjustments.value.cartItems,
+		(cartItem: any) => cartItem.specificItem?.item?.category?.categoryName ?? "Uncategorized"
+	) as Record<string, any[]>
+
+	return Object.fromEntries(
+		Object.entries(categoryGroups).map(([categoryName, categoryCartItems]) => {
+			const itemGroups = Object.groupBy(
+				categoryCartItems ?? [],
+				(cartItem: any) => cartItem.specificItem?.itemID ?? cartItem.specificItem?.item?.itemID
+			) as Record<string, any[]>
+
+			return [
+				categoryName,
+				Object.entries(itemGroups).map(([itemID, itemCartItems]) => {
+					const cartItems = itemCartItems ?? []
+					const firstCartItem: any = cartItems[0]
+					return {
+						itemID,
+						name: firstCartItem.specificItem.item.itemName,
+						itemDeal: firstCartItem.specificItem.item.deal ?? {},
+						specificItems: cartItems.map((cartItem: any) => ({
+							specificItemID: cartItem.specificItemID,
+							productName: cartItem.specificItem.productName,
+							imgName: cartItem.specificItem.imgName,
+							count: cartItem.count,
+							countAdjustment: cartItem.countAdjustment,
+						})),
+					}
+				}),
+			]
+		})
+	)
+})
+
+const itemFinalCounts = computed(() => cartItemFinalCounts(combineCartAndTemporaryAdjustments.value))
+const itemFinalCount = (cartItem: any) => {
+	const itemID = cartItem.specificItem?.itemID ?? cartItem.specificItem?.item?.itemID
+	const firstCartItem = combineCartAndTemporaryAdjustments.value.cartItems.find(
+		(item: any) => (item.specificItem?.itemID ?? item.specificItem?.item?.itemID) === itemID
+	)
+	return firstCartItem?.specificItemID === cartItem.specificItemID && itemID ? itemFinalCounts.value[itemID] : undefined
+}
 
 onBeforeUnmount(() => {
 	unsubscribe()
@@ -368,8 +410,8 @@ const submitCart = async () => {
 					.flatMap((items) => items)
 					.map((cartItem) => {
 						return {
-							itemID: cartItem.itemID,
-							countAdjustment: countAdjustments.value[cartItem.itemID] || 0,
+							specificItemID: cartItem.specificItemID,
+							countAdjustment: countAdjustments.value[cartItem.specificItemID] || 0,
 						}
 					})
 			: []
