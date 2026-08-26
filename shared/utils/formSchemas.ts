@@ -268,13 +268,48 @@ export const dashboardLinkFormFields = {
 // Announcements
 // ============================================================================
 
-export const announcementSchema = z.object({
-	message: z.string().trim().min(1, "Message is required").max(2_000, "Message must be 2,000 characters or fewer"),
-	startsDate: z.any(),
-	endsDate: z.any(),
-	startsTime: z.any(),
-	endsTime: z.any(),
+const announcementDateSchema = z
+	.object({
+		year: z.number().int(),
+		month: z.number().int().min(1).max(12),
+		day: z.number().int().min(1).max(31),
+	})
+	.refine(
+		({ year, month, day }) => {
+			const date = new Date(year, month - 1, day)
+			return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day
+		},
+		{ message: "Enter a valid date" }
+	)
+
+const announcementTimeSchema = z.object({
+	hour: z.number().int().min(0).max(23),
+	minute: z.number().int().min(0).max(59),
+	second: z.number().int().min(0).max(59).optional(),
 })
+
+export const announcementDateTime = (
+	date: z.infer<typeof announcementDateSchema>,
+	time: z.infer<typeof announcementTimeSchema>
+) => new Date(date.year, date.month - 1, date.day, time.hour, time.minute, time.second ?? 0)
+
+export const announcementSchema = z
+	.object({
+		message: z.string().trim().min(1, "Message is required").max(2_000, "Message must be 2,000 characters or fewer"),
+		startsDate: announcementDateSchema,
+		endsDate: announcementDateSchema,
+		startsTime: announcementTimeSchema,
+		endsTime: announcementTimeSchema,
+	})
+	.refine(
+		(data) => {
+			return announcementDateTime(data.startsDate, data.startsTime) < announcementDateTime(data.endsDate, data.endsTime)
+		},
+		{
+			message: "End date and time must be after start date and time",
+			path: ["endsDate"],
+		}
+	)
 export type AnnouncementForm = z.infer<typeof announcementSchema>
 export const announcementFormFields = {
 	message: { id: "message", label: "Message", description: "Enter the announcement shown to users", placeholder: "Enter announcement message" },

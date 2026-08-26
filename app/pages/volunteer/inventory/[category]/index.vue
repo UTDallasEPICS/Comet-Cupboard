@@ -6,14 +6,13 @@
 					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search items" class="relative grow">
 						<SharedButtonActionButton
 							leading-icon="i-lucide-plus"
-							variant="ghost"
 							color="neutral"
 							class="bg-utd-green absolute right-0 text-white"
 							:to="`/volunteer/inventory/${currentCategory}/add`"
 						/>
 					</UInput>
 					<UPopover>
-						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" variant="ghost" action="neutral" size="md" />
+						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" button-variant="ghost" action="neutral" size="md" />
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">
@@ -32,7 +31,7 @@
 				</div>
 				<USeparator class="my-4" />
 				<SharedLayoutSectionUCard title="Active Items">
-					<ul v-if="shownActiveItems.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<SharedLayoutGrid v-if="shownActiveItems.length">
 						<li v-for="item in shownActiveItems" :key="item.itemID">
 							<DomainCardInventoryItemCard
 								:specific-items="item.specificItems"
@@ -45,12 +44,12 @@
 								:category="item.category.categoryName"
 							/>
 						</li>
-					</ul>
+					</SharedLayoutGrid>
 					<SharedTextBase v-else class="block text-center">No active items found</SharedTextBase>
 				</SharedLayoutSectionUCard>
 
 				<SharedLayoutSectionUCard title="Archived Items" class="mt-4">
-					<ul v-if="shownArchivedItems.length" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<SharedLayoutGrid v-if="shownArchivedItems.length">
 						<li v-for="item in shownArchivedItems" :key="item.itemID">
 							<DomainCardInventoryItemCard
 								:specific-items="item.specificItems"
@@ -63,7 +62,7 @@
 								:category="item.category.categoryName"
 							/>
 						</li>
-					</ul>
+					</SharedLayoutGrid>
 					<SharedTextBase v-else class="block text-center">No archived items found</SharedTextBase>
 				</SharedLayoutSectionUCard>
 			</section>

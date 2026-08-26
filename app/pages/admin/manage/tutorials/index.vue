@@ -3,7 +3,7 @@
 		<NuxtLayout name="main" title="Manage Tutorials" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
 			<section>
 				<USeparator class="my-4" />
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				<SharedLayoutGrid class="mt-4">
 					<li v-for="groupConfig in groupConfigs" :key="groupConfig.name">
 						<DomainCardManageTutorialGroupCard
 							v-if="findGroup(groupConfig.name)"
@@ -14,7 +14,7 @@
 							@refresh="refresh"
 						/>
 					</li>
-				</ul>
+				</SharedLayoutGrid>
 			</section>
 		</NuxtLayout>
 	</div>

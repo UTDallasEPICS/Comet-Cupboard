@@ -1,6 +1,6 @@
 <template>
 	<UCollapsible class="w-full">
-		<SharedButtonActionButton action="neutral" variant="ghost" block class="w-full justify-between">
+		<SharedButtonActionButton action="neutral" button-variant="ghost" block class="w-full justify-between">
 			<UUser :name="cart.publicCode" :avatar="{ icon: cart.publicIcon }" size="lg" />
 
 			<SharedIcon name="i-lucide-chevron-down" class="size-5" />

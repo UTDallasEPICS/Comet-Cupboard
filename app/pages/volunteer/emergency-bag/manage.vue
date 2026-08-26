@@ -13,7 +13,7 @@
 						/>
 					</UInput>
 					<UPopover>
-						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" variant="ghost" action="neutral" size="md" />
+						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" button-variant="ghost" action="neutral" size="md" />
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">

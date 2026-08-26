@@ -24,7 +24,7 @@
 							Queue Access Code (Rotating in {{ accessCodeSecondsRemaining }} seconds)
 						</SharedTextBaseSecondary>
 
-						<UPinInput :model-value="queueAccessCodeDigits" type="number" :length="6" readonly size="lg" />
+						<UPinInput :model-value="queueAccessCodeDigits" type="number" autocomplete="one-time-code" :length="6" readonly size="lg" />
 					</div>
 				</template>
 

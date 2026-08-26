@@ -18,7 +18,7 @@
 				}"
 				v-model:open="openNavigationMenu"
 			>
-				<SharedButtonActionButton variant="ghost" class="hover:bg-transparent active:bg-transparent" size="xl" icon="i-lucide-menu" />
+				<SharedButtonActionButton button-variant="ghost" class="hover:bg-transparent active:bg-transparent" size="xl" icon="i-lucide-menu" />
 
 				<template #header="{ close }">
 					<div class="flex w-full flex-row items-center justify-between">
@@ -77,22 +77,41 @@
 					</template>
 					<template #body>
 						<div v-if="hasActiveQueuePing" class="space-y-3">
-							<SharedTextBase>A volunteer is ready to help you.</SharedTextBase>
-							<UInput
-								v-model.number="timeEstimateMinutes"
-								type="number"
-								min="1"
-								placeholder="Minutes until you arrive (optional)"
+							<UAlert
+								icon="i-lucide-message-square"
+								title="Volunteer Message"
+								description="A volunteer is ready to help you."
+								color="neutral"
+								variant="subtle"
 								class="w-full"
 							/>
-							<SharedButtonActionButton
-								text="Acknowledge"
-								leading-icon="i-lucide-check"
-								:loading="isAcknowledgingPing"
-								@click="acknowledgeQueuePing"
-							/>
+
+							<UCard>
+								<div class="mb-2">
+									<SharedTextBase> When will you arrive? </SharedTextBase>
+									<SharedTextBaseSecondary>Let the volunteer know roughly how many minutes until you arrive.</SharedTextBaseSecondary>
+								</div>
+
+								<UInput
+									v-model.number="timeEstimateMinutes"
+									type="number"
+									min="0"
+									placeholder="Minutes until you arrive (optional)"
+									class="w-full"
+								/>
+							</UCard>
+
+							<div class="flex w-full flex-row items-center justify-end">
+								<SharedButtonActionButton
+									text="Acknowledge"
+									leading-icon="i-lucide-check"
+									:loading="isAcknowledgingPing"
+									@click="acknowledgeQueuePing"
+								/>
+							</div>
 						</div>
-						<SharedTextBase v-else>No notifications</SharedTextBase>
+
+						<SharedTextBase v-else> No notifications </SharedTextBase>
 					</template>
 				</USlideover>
 				<USlideover
@@ -176,7 +195,7 @@
 						sideOffset: 8,
 					}"
 				>
-					<SharedButtonActionButton v-if="permissionsStore.canStudentAccess" variant="ghost" icon="i-lucide-circle-user" size="lg" />
+					<SharedButtonActionButton v-if="permissionsStore.canStudentAccess" button-variant="ghost" icon="i-lucide-circle-user" size="lg" />
 
 					<template #content>
 						<div class="flex w-64 flex-col items-start gap-2 p-4">
@@ -190,9 +209,7 @@
 							/>
 							<SharedTextBase class="text-utd-orange">{{ permissionsStore.roleText }}</SharedTextBase>
 							<USeparator />
-							<SharedButtonActionButton variant="outline" action="neutral" icon="i-lucide-log-out" class="w-full" @click="logout">
-								Logout
-							</SharedButtonActionButton>
+							<SharedButtonActionButton action="cancel" text="Logout" icon="i-lucide-log-out" class="w-full" @click="logout" />
 						</div>
 					</template>
 				</UPopover>

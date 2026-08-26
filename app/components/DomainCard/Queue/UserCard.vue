@@ -1,6 +1,6 @@
 <template>
 	<UCollapsible class="w-full">
-		<SharedButtonActionButton action="neutral" variant="ghost" block class="w-full justify-between">
+		<SharedButtonActionButton action="neutral" button-variant="ghost" block class="w-full justify-between">
 			<div class="flex min-w-0 items-center gap-3 text-left">
 				<UUser :name="queueEntry.publicCode" :description="`Position: ${queueEntry.position}`" :avatar="{ icon: queueEntry.publicIcon }" size="lg" />
 			</div>
@@ -31,7 +31,7 @@
 					text="Ping"
 					leading-icon="i-lucide-send"
 					action="neutral"
-					variant="outline"
+					variant="solid"
 					:loading="isSendingNotification && notificationPublicCode === queueEntry.publicCode"
 					@click="emit('ping', queueEntry.publicCode)"
 				/>

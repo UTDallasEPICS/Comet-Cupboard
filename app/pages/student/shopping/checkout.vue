@@ -196,42 +196,35 @@
 						<template #Confirmed>
 							<USeparator class="mb-4" />
 
-							<template v-if="cartRejected">
-								<UCard variant="outline">
-									<div class="flex flex-col items-center justify-center gap-4">
-										<SharedTextBase>Your cart was <span class="text-negative-red">Rejected</span>.</SharedTextBase>
-										<SharedTextBase>Volunteer Message: {{ cartVerificationReason }}</SharedTextBase>
-										<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
+							<SharedLayoutSectionUCard title="Cart Verification Result" class="w-full">
+								<div class="flex flex-col items-center gap-6 py-4">
+									<div class="text-center">
+										<SharedTextBase class="text-xl font-semibold">
+											Cart <span :class="verificationResult.textClass">{{ verificationResult.status }}</span>
+										</SharedTextBase>
+
+										<SharedTextBaseSecondary class="mt-2">{{ verificationResult.description }}</SharedTextBaseSecondary>
 									</div>
-								</UCard>
-								<div class="mt-4 flex flex-row justify-center gap-4">
+
+									<UAlert
+										v-if="cartVerificationReason"
+										icon="i-lucide-info"
+										title="Volunteer Message"
+										:description="cartVerificationReason"
+										color="neutral"
+										variant="subtle"
+										class="w-full max-w-2xl"
+									/>
+
 									<SharedButtonActionButton
 										action="navigate-to"
-										text="Back to Shopping"
+										:text="verificationResult.actionText"
 										leading-icon="i-lucide-arrow-left"
 										class="w-48"
-										@click="goToShopping"
+										:to="verificationResult.actionTo"
 									/>
 								</div>
-							</template>
-							<template v-else>
-								<UCard variant="outline">
-									<div class="flex flex-col items-center justify-center gap-4">
-										<SharedTextBase>Your cart was <span class="text-utd-green">Accepted</span>.</SharedTextBase>
-										<SharedTextBase>Volunteer Message: {{ cartVerificationReason }}</SharedTextBase>
-										<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
-									</div>
-								</UCard>
-								<div class="mt-4 flex flex-row justify-center gap-4">
-									<SharedButtonActionButton
-										action="navigate-to"
-										text="Back to Dashboard"
-										leading-icon="i-lucide-arrow-left"
-										class="w-48"
-										@click="navigateTo('/student')"
-									/>
-								</div>
-							</template>
+							</SharedLayoutSectionUCard>
 						</template>
 					</UStepper>
 				</div>
@@ -282,6 +275,28 @@ const active = ref(0)
 const cartRejected = ref(false)
 const cartVerificationReason = ref("")
 const cartStore = useCartStore()
+
+const verificationResult = computed(() => {
+	if (cartRejected.value) {
+		return {
+			status: "Rejected",
+			description: "Your cart was not approved. Please review the reason, make any necessary adjustments, and resubmit.",
+			iconBackgroundClass: "bg-red-100",
+			textClass: "text-negative-red",
+			actionText: "Back to Shopping",
+			actionTo: "/student/shopping",
+		}
+	}
+
+	return {
+		status: "Accepted",
+		description: "Your cart has been approved and is ready to go.",
+		iconBackgroundClass: "bg-green-100",
+		textClass: "text-utd-green",
+		actionText: "Back to Dashboard",
+		actionTo: "/student",
+	}
+})
 
 const { onEvent } = useStudentEventStream()
 

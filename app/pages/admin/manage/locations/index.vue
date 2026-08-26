@@ -19,7 +19,7 @@
 					<SharedTextSectionTitle>Active Locations</SharedTextSectionTitle>
 					<USeparator class="my-4" />
 
-					<ul v-if="shownActiveLocations.length != 0" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<SharedLayoutGrid v-if="shownActiveLocations.length != 0" class="mt-4">
 						<li v-for="location in shownActiveLocations" :key="location.locationID">
 							<DomainCardManageLocationItemCard
 								:name="location.locationName"
@@ -28,7 +28,7 @@
 								:location-i-d="location.locationID"
 							/>
 						</li>
-					</ul>
+					</SharedLayoutGrid>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">
 						<SharedTextBaseSecondary>No active locations found</SharedTextBaseSecondary>
 					</div>
@@ -37,7 +37,7 @@
 				<UCard class="mt-4">
 					<SharedTextSectionTitle>Archived Locations</SharedTextSectionTitle>
 					<USeparator class="my-4" />
-					<ul v-if="shownArchivedLocations.length != 0" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<SharedLayoutGrid v-if="shownArchivedLocations.length != 0" class="mt-4">
 						<li v-for="location in shownArchivedLocations" :key="location.locationID">
 							<DomainCardManageLocationItemCard
 								:name="location.locationName"
@@ -46,7 +46,7 @@
 								:location-i-d="location.locationID"
 							/>
 						</li>
-					</ul>
+					</SharedLayoutGrid>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">
 						<SharedTextBaseSecondary>No archived locations found</SharedTextBaseSecondary>
 					</div>

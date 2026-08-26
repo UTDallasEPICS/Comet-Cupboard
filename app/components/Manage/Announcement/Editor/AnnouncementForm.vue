@@ -12,7 +12,7 @@
 						<UPopover>
 							<SharedButtonActionButton
 								action="neutral"
-								variant="link"
+								variant="ghost"
 								size="md"
 								icon="i-lucide-calendar"
 								aria-label="Select a date"
@@ -32,7 +32,7 @@
 						<UPopover>
 							<SharedButtonActionButton
 								action="neutral"
-								variant="link"
+								variant="ghost"
 								size="md"
 								icon="i-lucide-calendar"
 								aria-label="Select a date"

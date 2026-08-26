@@ -5,7 +5,7 @@
 			<div class="mx-auto w-full max-w-xl">
 				<div class="flex w-full flex-row items-center justify-center">
 					<SharedConfirmationModal title="Confirm Deletion?" confirm-text="Confirm Deletion" @confirm="archiveAnnouncement(announcementID)">
-						<SharedButtonActionButton text="Delete Announcement" action="negative" variant="outline" leading-icon="i-lucide-trash-2" />
+						<SharedButtonActionButton text="Delete Announcement" action="negative" leading-icon="i-lucide-trash-2" />
 					</SharedConfirmationModal>
 				</div>
 

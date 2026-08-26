@@ -15,7 +15,7 @@
 					icon="i-lucide-edit"
 					size="sm"
 					action="neutral"
-					variant="ghost"
+					button-variant="ghost"
 				/>
 			</div>
 
@@ -28,7 +28,7 @@
 				<SharedButtonActionButton
 					:trailing-icon="isOpen ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
 					size="sm"
-					variant="ghost"
+					button-variant="ghost"
 					action="neutral"
 					class="absolute right-2 bottom-1"
 					text="Restock item"
@@ -46,7 +46,7 @@
 								v-for="product in orderedSpecificItems"
 								:key="product.specificItemID"
 								action="neutral"
-								variant="ghost"
+								button-variant="ghost"
 								class="border-border-soft w-full border"
 								:class="{ 'border-secondary bg-secondary/10': restockSpecificItemID === product.specificItemID }"
 								@click="restockSpecificItemID = product.specificItemID"

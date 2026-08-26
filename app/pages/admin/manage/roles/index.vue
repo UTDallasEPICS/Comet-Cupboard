@@ -5,7 +5,7 @@
 				<div class="flex flex-row flex-nowrap items-center gap-2">
 					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search users by name or email" class="grow" />
 					<UPopover>
-						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" variant="ghost" action="neutral" size="md" />
+						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" button-variant="ghost" action="neutral" size="md" />
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">
@@ -19,7 +19,7 @@
 				<USeparator class="my-4" />
 
 				<SharedLayoutSectionUCard title="Users">
-					<ul class="my-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<SharedLayoutGrid class="my-4">
 						<li v-for="user in paginatedUsers" :key="user.userID">
 							<DomainCardManageUserRoleItemCard
 								:user-i-d="user.userID"
@@ -29,7 +29,7 @@
 								@self-demote="headAdminSelfDemote"
 							/>
 						</li>
-					</ul>
+					</SharedLayoutGrid>
 					<UPagination
 						v-model:page="page"
 						:items-per-page="pageSize"

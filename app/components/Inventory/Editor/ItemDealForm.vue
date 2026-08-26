@@ -7,7 +7,7 @@
 		</div>
 		<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
 			<template #cancel>
-				<SharedButtonActionButton text="Cancel" action="cancel" variant="outline" @click="cancelChanges" />
+				<SharedButtonActionButton text="Cancel" action="cancel" button-variant="outline" @click="cancelChanges" />
 			</template>
 			<SharedButtonActionButton text="Save Changes" leading-icon="i-lucide-check" action="positive" :loading="saving" @click="saveDeal" />
 		</SharedFormActions>

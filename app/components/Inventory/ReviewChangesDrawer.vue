@@ -41,13 +41,13 @@
 								<SharedButtonActionButton
 									text="Incremental"
 									action="neutral"
-									:variant="changeView === 'incremental' ? 'solid' : 'outline'"
+									:button-variant="changeView === 'incremental' ? 'solid' : 'outline'"
 									@click="changeView = 'incremental'"
 								/>
 								<SharedButtonActionButton
 									text="Aggregated"
 									action="neutral"
-									:variant="changeView === 'aggregated' ? 'solid' : 'outline'"
+									:button-variant="changeView === 'aggregated' ? 'solid' : 'outline'"
 									@click="changeView = 'aggregated'"
 								/>
 							</UButtonGroup>

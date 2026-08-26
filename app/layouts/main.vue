@@ -13,7 +13,7 @@
 			<div class="flex flex-row flex-nowrap items-center gap-2">
 				<SharedTextPageTitle>{{ props.title }}</SharedTextPageTitle>
 				<SharedTutorial v-if="props.tutorialData" :tutorial="props.tutorialData">
-					<SharedButtonActionButton action="neutral" variant="ghost" icon="i-lucide-info" />
+					<SharedButtonActionButton action="neutral" button-variant="ghost" icon="i-lucide-info" />
 				</SharedTutorial>
 			</div>
 		</header>

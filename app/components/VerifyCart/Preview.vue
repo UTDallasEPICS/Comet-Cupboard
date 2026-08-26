@@ -1,19 +1,15 @@
 <template>
-	<UCard class="w-full">
+	<SharedLayoutSectionUCard :title="validPublicCode ? publicCode : 'Cart Preview'" class="w-full">
 		<template #header>
-			<div v-if="validPublicCode" class="flex flex-row items-center justify-between">
-				<UUser :name="cart.publicCode" :avatar="{ icon: cart.publicIcon }" size="lg" />
-
-				<SharedButtonActionButton
-					action="navigate-to"
-					text="Back to carts"
-					leading-icon="i-lucide-arrow-left"
-					@click="emit('update:select-cart', '')"
-				/>
-			</div>
-			<SharedTextCardTitle v-else>Cart Preview</SharedTextCardTitle>
+			<SharedButtonActionButton
+				v-if="validPublicCode"
+				action="navigate-to"
+				text="Back to carts"
+				leading-icon="i-lucide-arrow-left"
+				@click="emit('update:select-cart', '')"
+			/>
 		</template>
-		<div v-if="validPublicCode" class="flex h-full flex-col gap-y-4">
+		<div v-if="validPublicCode && cart" class="flex h-full flex-col gap-y-4">
 			<SharedWarningsList v-if="pendingCartWarnings(cart).length > 0" :warnings="pendingCartWarnings(cart)" />
 
 			<SharedLayoutGroupedCollapsible :groups="categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
@@ -51,19 +47,22 @@
 				<SharedButtonActionButton action="positive" text="Accept" leading-icon="i-lucide-check" @click="emit('cart-accepted', publicCode, reason)" />
 			</div>
 		</div>
-		<div v-else class="flex flex-col items-center justify-center gap-4">
-			<SharedTextBase class="text-center">No carts currently selected</SharedTextBase>
-			<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
-		</div>
-	</UCard>
+		<SharedTextBase v-else class="block text-center"> {{ validPublicCode ? "Loading cart..." : "No carts currently selected" }} </SharedTextBase>
+	</SharedLayoutSectionUCard>
 </template>
 
 <script lang="ts" setup>
+import type { PropType } from "vue"
+
 const props = defineProps({
 	publicCode: {
 		type: String,
 		required: false,
 		default: "",
+	},
+	cart: {
+		type: Object as PropType<any | null>,
+		default: null,
 	},
 })
 
@@ -79,22 +78,7 @@ const validPublicCode = computed(() => {
 	return props.publicCode !== ""
 })
 
-const { data: cart } = await useAsyncData(
-	"pending-cart",
-	async () => {
-		if (props.publicCode === "") {
-			return await Promise.resolve(null)
-		}
-		const response = await $fetch("/api/volunteer/verification/pendingCart", {
-			query: { publicCode: props.publicCode },
-		})
-		return response
-	},
-	{
-		immediate: false,
-		watch: [() => props.publicCode],
-	}
-)
+const cart = toRef(props, "cart")
 
 const categorizedCartItems = computed<Record<string, any[]>>(() => {
 	if (cart.value === null || "cartItems" in cart.value === false) {
@@ -167,3 +151,5 @@ const cartTotalCount = computed(() => {
 	return totCount
 })
 </script>
+
+

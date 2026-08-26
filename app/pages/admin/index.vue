@@ -3,17 +3,17 @@
 		<NuxtLayout name="main" title="Admin Dashboard" :tutorial-data="tutorialData">
 			<USeparator class="my-4" />
 			<section>
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				<SharedLayoutGrid class="mt-4">
 					<li v-for="link in adminLinks" :key="link.label">
 						<DomainCardDashboardDefaultLinkCard :to="link.to" :icon="link.icon" :label="link.label" :description="link.description" />
 					</li>
-				</ul>
+				</SharedLayoutGrid>
 			</section>
 			<template v-if="customAdminLinks.length > 0">
 				<USeparator class="my-4" />
 				<SharedTextSectionTitle>Custom Links</SharedTextSectionTitle>
 				<section>
-					<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<SharedLayoutGrid class="mt-4">
 						<li v-for="link in customAdminLinks" :key="link.label">
 							<DomainCardDashboardCustomLinkCard
 								:dashboardLinkID="link.dashboardLinkID"
@@ -22,7 +22,7 @@
 								:description="link.description"
 							/>
 						</li>
-					</ul>
+					</SharedLayoutGrid>
 				</section>
 			</template>
 		</NuxtLayout>

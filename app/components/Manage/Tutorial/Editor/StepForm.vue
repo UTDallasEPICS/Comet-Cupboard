@@ -3,7 +3,7 @@
 		<SharedFormCard>
 			<div class="mb-4 flex items-center justify-between">
 				<SharedTextCardTitle>Step {{ stepIndex }}</SharedTextCardTitle>
-				<SharedButtonActionButton icon="i-lucide-x" action="negative" variant="ghost" size="sm" @click="remove" />
+				<SharedButtonActionButton icon="i-lucide-x" action="negative" button-variant="ghost" size="sm" @click="remove" />
 			</div>
 			<USeparator class="mb-4" />
 

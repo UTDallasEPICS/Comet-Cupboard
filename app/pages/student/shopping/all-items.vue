@@ -5,7 +5,7 @@
 				<div class="flex flex-row flex-nowrap items-center gap-2">
 					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search items" class="grow" />
 					<UPopover>
-						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" variant="ghost" action="neutral" size="md" />
+						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" button-variant="ghost" action="neutral" size="md" />
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">
@@ -20,7 +20,7 @@
 					</UPopover>
 				</div>
 				<USeparator class="my-4" />
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				<SharedLayoutGrid class="mt-4">
 					<li v-for="item in filtered" :key="item.itemID">
 						<DomainCardShoppingItemCard
 							type-of-card="SHOPPING"
@@ -32,7 +32,7 @@
 							@add="cartStore.addCartItem"
 						/>
 					</li>
-				</ul>
+				</SharedLayoutGrid>
 			</section>
 		</NuxtLayout>
 	</div>

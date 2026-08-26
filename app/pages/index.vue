@@ -28,7 +28,7 @@
 				<SharedTextSectionTitle class="text-center"> Announcements </SharedTextSectionTitle>
 				<USeparator class="my-4" />
 				<div class="space-y-2">
-					<UAlert v-for="announcement in announcements" :key="announcement.announcementID" color="secondary" :title="announcement.message">
+					<UAlert v-for="announcement in announcements" :key="announcement.announcementID" color="secondary" :title="announcement.message" icon="i-lucide-megaphone">
 						<template #description>
 							<SharedTextBaseSecondary class="text-right text-white"
 								>Posted {{ new Date(announcement.startsAt).toLocaleDateString() }}</SharedTextBaseSecondary
@@ -63,7 +63,6 @@
 			<UContainer class="relative flex flex-col items-center gap-4 text-center">
 				<SharedTextSectionTitle> Find an Emergency Bag </SharedTextSectionTitle>
 				<SharedTextBase class="max-w-xl"> Check availability at locations across campus </SharedTextBase>
-				<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 				<SharedButtonActionButton
 					action="navigate-to"
 					text="View Locations"

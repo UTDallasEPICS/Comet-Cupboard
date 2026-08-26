@@ -9,7 +9,7 @@
 		<div class="mt-1 text-sm">{{ new Date(session.intakeDate).toLocaleDateString() }}</div>
 		<div v-if="session.notes" class="mt-1 text-sm">{{ session.notes }}</div>
 		<UCollapsible class="mt-3 border-t pt-2">
-			<SharedButtonActionButton action="neutral" variant="ghost" block class="justify-between" trailing-icon="i-lucide-chevron-down">
+			<SharedButtonActionButton action="neutral" button-variant="ghost" block class="justify-between" trailing-icon="i-lucide-chevron-down">
 				{{ session.completedInventoryIntakeSessionItems.length }} Products Changed
 			</SharedButtonActionButton>
 			<template #content>

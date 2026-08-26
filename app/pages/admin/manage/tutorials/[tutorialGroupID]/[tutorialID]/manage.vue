@@ -13,7 +13,7 @@
 							<UCard>
 								<div class="mx-auto mb-2 flex justify-end">
 									<UDropdownMenu :items="items(step.tutorialStepID)" :ui="{ content: 'align-end' }">
-										<SharedButtonActionButton icon="i-lucide-ellipsis" action="neutral" variant="ghost" />
+										<SharedButtonActionButton icon="i-lucide-ellipsis" action="neutral" button-variant="ghost" />
 									</UDropdownMenu>
 								</div>
 								<img :src="`/api/public/image/${step.imageUrl}`" class="mx-auto aspect-auto h-152 rounded-lg" loading="lazy" />

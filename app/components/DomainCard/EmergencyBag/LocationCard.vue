@@ -6,7 +6,7 @@
 				<template #default="{ open }">
 					<SharedButtonActionButton
 						action="neutral"
-						variant="ghost"
+						button-variant="ghost"
 						block
 						class="h-auto justify-between rounded-none p-4"
 						:trailing-icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"

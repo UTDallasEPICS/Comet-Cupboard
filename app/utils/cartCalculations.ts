@@ -27,6 +27,10 @@ export const cartItemFinalCounts = (cart: any): Record<string, number> => {
 
 export const pendingCartWarnings = (cart: any) => {
 	const warnings: Array<string> = []
+	if (!cart?.cartItems) {
+		return warnings
+	}
+
 	if (cartCountAdjustment(cart) > 6) {
 		warnings.push("Cart exceeds 6 item limit")
 	}

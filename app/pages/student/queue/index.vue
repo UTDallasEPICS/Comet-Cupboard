@@ -57,7 +57,6 @@
 					</div>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">
 						<SharedTextBase> No students in queue </SharedTextBase>
-						<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
 					</div>
 				</UCard>
 			</section>

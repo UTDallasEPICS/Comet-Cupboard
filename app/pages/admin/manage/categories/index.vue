@@ -18,11 +18,11 @@
 				<UCard>
 					<SharedTextSectionTitle>Active Categories</SharedTextSectionTitle>
 					<USeparator class="my-4" />
-					<ul v-if="shownActiveCategories.length != 0" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<SharedLayoutGrid v-if="shownActiveCategories.length != 0">
 						<li v-for="category in shownActiveCategories" :key="category.categoryID">
 							<DomainCardManageCategoryItemCard :name="category.categoryName" :img-name="category.imgName" :category-i-d="category.categoryID" />
 						</li>
-					</ul>
+					</SharedLayoutGrid>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">
 						<SharedTextBaseSecondary>No active categories found</SharedTextBaseSecondary>
 					</div>
@@ -30,11 +30,11 @@
 				<UCard class="mt-4">
 					<SharedTextSectionTitle>Archived Categories</SharedTextSectionTitle>
 					<USeparator class="my-4" />
-					<ul v-if="shownArchivedCategories.length != 0" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<SharedLayoutGrid v-if="shownArchivedCategories.length != 0" class="mt-4">
 						<li v-for="category in shownArchivedCategories" :key="category.categoryID">
 							<DomainCardManageCategoryItemCard :name="category.categoryName" :img-name="category.imgName" :category-i-d="category.categoryID" />
 						</li>
-					</ul>
+					</SharedLayoutGrid>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">
 						<SharedTextBaseSecondary>No archived categories found</SharedTextBaseSecondary>
 					</div>

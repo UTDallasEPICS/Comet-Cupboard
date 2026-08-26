@@ -21,7 +21,7 @@
 			</div>
 			<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
 				<template #cancel>
-					<SharedButtonActionButton type="button" text="Cancel" action="cancel" variant="outline" @click="cancelChanges" />
+					<SharedButtonActionButton type="button" text="Cancel" action="cancel" button-variant="outline" @click="cancelChanges" />
 				</template>
 				<SharedButtonActionButton type="submit" text="Save Changes" leading-icon="i-lucide-check" action="positive" :loading="saving" />
 			</SharedFormActions>

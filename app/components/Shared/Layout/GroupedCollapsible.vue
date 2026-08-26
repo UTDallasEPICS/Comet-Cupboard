@@ -6,11 +6,11 @@
 			</template>
 
 			<template #content>
-				<ul class="m-2 grid list-none gap-4 p-0" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))">
+				<SharedLayoutGrid class="m-2 list-none p-0" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))">
 					<li v-for="item in items" :key="getKey(item)">
 						<slot name="item" :item="item" :group="group" />
 					</li>
-				</ul>
+				</SharedLayoutGrid>
 			</template>
 		</UCollapsible>
 	</div>

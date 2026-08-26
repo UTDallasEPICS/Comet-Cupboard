@@ -18,11 +18,11 @@
 				<UCard>
 					<SharedTextSectionTitle>Active Sources</SharedTextSectionTitle>
 					<USeparator class="my-4" />
-					<ul v-if="shownActiveSources.length !== 0" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<SharedLayoutGrid v-if="shownActiveSources.length !== 0">
 						<li v-for="source in shownActiveSources" :key="source.sourceID">
 							<DomainCardManageSourceItemCard :name="source.sourceName" :source-i-d="source.sourceID" />
 						</li>
-					</ul>
+					</SharedLayoutGrid>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">
 						<SharedTextBaseSecondary>No active sources found</SharedTextBaseSecondary>
 					</div>
@@ -31,11 +31,11 @@
 				<UCard class="mt-4">
 					<SharedTextSectionTitle>Archived Sources</SharedTextSectionTitle>
 					<USeparator class="my-4" />
-					<ul v-if="shownArchivedSources.length !== 0" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<SharedLayoutGrid v-if="shownArchivedSources.length !== 0">
 						<li v-for="source in shownArchivedSources" :key="source.sourceID">
 							<DomainCardManageSourceItemCard :name="source.sourceName" :source-i-d="source.sourceID" />
 						</li>
-					</ul>
+					</SharedLayoutGrid>
 					<div v-else class="flex flex-col items-center justify-center gap-y-4">
 						<SharedTextBaseSecondary>No archived sources found</SharedTextBaseSecondary>
 					</div>

@@ -2,7 +2,7 @@
 	<SharedFormCard>
 		<div class="flex items-center justify-between gap-3">
 			<SharedTextCardTitle>Specific Products</SharedTextCardTitle>
-			<SharedButtonActionButton text="Add Product" leading-icon="i-lucide-plus" action="neutral" variant="outline" @click="addProduct" />
+			<SharedButtonActionButton text="Add Product" leading-icon="i-lucide-plus" action="neutral" button-variant="outline" @click="addProduct" />
 		</div>
 		<USeparator class="my-4" />
 		<div class="space-y-4">
@@ -45,7 +45,7 @@
 		</div>
 		<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
 			<template #cancel>
-				<SharedButtonActionButton text="Cancel" action="cancel" variant="outline" @click="cancelChanges" />
+				<SharedButtonActionButton text="Cancel" action="cancel" button-variant="outline" @click="cancelChanges" />
 			</template>
 			<SharedButtonActionButton text="Save Changes" leading-icon="i-lucide-check" action="positive" :loading="saving" @click="saveProducts" />
 		</SharedFormActions>

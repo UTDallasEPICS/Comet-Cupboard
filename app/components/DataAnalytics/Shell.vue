@@ -9,7 +9,7 @@
 					:leading-icon="item.icon"
 					:text="item.label"
 					action="neutral"
-					:variant="route.path === item.to ? 'soft' : 'ghost'"
+					:button-variant="route.path === item.to ? 'soft' : 'ghost'"
 					size="sm"
 					class="shrink-0"
 				/>

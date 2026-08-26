@@ -1,4 +1,5 @@
 export type Icon =
+	// Lucide Icons
 	| "i-lucide-activity"
 	| "i-lucide-arrow-left"
 	| "i-lucide-arrow-left-right"
@@ -17,9 +18,11 @@ export type Icon =
 	| "i-lucide-chevron-down"
 	| "i-lucide-chevron-right"
 	| "i-lucide-chevron-up"
+	| "i-lucide-circle-check"
 	| "i-lucide-circle-check-big"
 	| "i-lucide-circle-help"
 	| "i-lucide-circle-user"
+	| "i-lucide-circle-x"
 	| "i-lucide-clock"
 	| "i-lucide-clipboard-clock"
 	| "i-lucide-clipboard-list"
@@ -45,6 +48,7 @@ export type Icon =
 	| "i-lucide-map-pin"
 	| "i-lucide-megaphone"
 	| "i-lucide-menu"
+	| "i-lucide-message-square"
 	| "i-lucide-minus"
 	| "i-lucide-package"
 	| "i-lucide-package-minus"
@@ -70,6 +74,15 @@ export type Icon =
 	| "i-lucide-users"
 	| "i-lucide-users-round"
 	| "i-lucide-x"
+	// Profile Icons
+	| "i-lucide-bird"
+	| "i-lucide-cat"
+	| "i-lucide-dog"
+	| "i-lucide-fish"
+	| "i-lucide-panda"
+	| "i-lucide-turtle"
+	| "i-lucide-bot"
+	// Simple Icons
 	| "i-simple-icons-facebook"
 	| "i-simple-icons-instagram"
 	| "i-simple-icons-linkedin"

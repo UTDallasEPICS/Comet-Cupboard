@@ -18,7 +18,7 @@
 			<SharedButtonActionButton
 				class="ml-auto"
 				icon="i-lucide-edit"
-				variant="ghost"
+				button-variant="ghost"
 				action="neutral"
 				:to="`/head-admin/dashboard-links/${dashboardLinkID}/edit`"
 			/>

@@ -34,7 +34,7 @@
 				<SharedButtonActionButton
 					class="w-min"
 					action="neutral"
-					variant="ghost"
+					button-variant="ghost"
 					trailing-icon="i-lucide-chevron-down"
 					:ui="{ trailingIcon: ['transition-transform duration-200', expand ? 'rotate-180' : ''] }"
 					@click="expand = !expand"
@@ -46,7 +46,7 @@
 			<template #content>
 				<USeparator class="mt-2" />
 				<SharedTextBase class="p-2 font-bold">Items ({{ bag.emergencyBagItems.length }})</SharedTextBase>
-				<ul class="grid gap-2 sm:grid-cols-1 lg:grid-cols-1">
+				<SharedLayoutGrid :columns="1" class="gap-2">
 					<div v-for="item in bag.emergencyBagItems" :key="item.specificItemID" class="border-border-soft rounded-lg border">
 						<div class="flex flex-row items-center gap-2 px-2">
 							<img
@@ -78,13 +78,13 @@
 						<SharedButtonActionButton
 							text="Edit Bag"
 							class="bg-utd-orange text-white"
-							variant="outline"
+							button-variant="outline"
 							leading-icon="i-lucide-square-pen"
 							@click="navigateTo(`/volunteer/emergency-bag/${props.bag.emergencyBagID}/edit`)"
 						/>
-						<SharedButtonActionButton text="Duplicate" action="neutral" variant="outline" leading-icon="i-lucide-copy" @click="duplicateBag" />
+						<SharedButtonActionButton text="Duplicate" action="neutral" button-variant="outline" leading-icon="i-lucide-copy" @click="duplicateBag" />
 					</div>
-				</ul>
+				</SharedLayoutGrid>
 				<div class="mt-2 max-w-sm">
 					<div v-if="props.bag.private">
 						<UAlert
@@ -99,7 +99,7 @@
 							<SharedButtonActionButton
 								text="Edit Bag"
 								class="bg-utd-orange text-white"
-								variant="outline"
+								button-variant="outline"
 								leading-icon="i-lucide-square-pen"
 								@click="navigateTo(`/volunteer/emergency-bag/${props.bag.emergencyBagID}/edit`)"
 							/>
