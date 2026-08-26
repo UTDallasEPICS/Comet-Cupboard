@@ -29,12 +29,16 @@ enum AuditAction {
     VERIFY_CART_REJECTED
     EMERGENCY_BAG_CREATED
     EMERGENCY_BAG_EDITED
+    EMERGENCY_BAG_LABEL_CREATED
+    EMERGENCY_BAG_LABEL_EDITED
     SOURCE_CREATED
     SOURCE_EDITED
     CATEGORY_CREATED
     CATEGORY_EDITED
     ITEM_CREATED
     ITEM_EDITED
+    ITEM_LABEL_CREATED
+    ITEM_LABEL_EDITED
     LOCATION_CREATED
     LOCATION_EDITED
     TUTORIAL_CREATED
@@ -127,6 +131,7 @@ model Item {
 model ItemLabel {
     itemLabelID   String @id @default(cuid()) @map("item_label_id")
     itemLabelName String @unique @map("item_label_name")
+    archived      Boolean @default(false) @map("archived")
 
     specificItems SpecificItem[]
 
@@ -245,6 +250,7 @@ model Location {
 model EmergencyBagLabel {
     emergencyBagLabelID   String @id @default(cuid()) @map("emergency_bag_label_id")
     emergencyBagLabelName String @unique @map("emergency_bag_label_name")
+    archived              Boolean @default(false) @map("archived")
 
     emergencyBags       EmergencyBag[]
     issuedEmergencyBags IssuedEmergencyBag[]

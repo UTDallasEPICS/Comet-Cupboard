@@ -22,6 +22,7 @@
 						:item-i-d="itemID"
 						:specific-items="item.specificItems"
 						:saving="isSavingProducts"
+						:refresh-token="productRefreshToken"
 						@save="saveProducts"
 					/>
 				</div>
@@ -80,6 +81,7 @@ const saveDeal = async (deal: { actualCount: number; adjustedCount: number } | n
 }
 
 const isSavingProducts = ref(false)
+const productRefreshToken = ref(0)
 
 const saveProducts = async (payloads: FormData[]) => {
 	isSavingProducts.value = true
@@ -88,6 +90,7 @@ const saveProducts = async (payloads: FormData[]) => {
 			await $fetch("/api/volunteer/inventory/item/specific-item", { method: "PUT", body: payload })
 		}
 		await refreshItem()
+		productRefreshToken.value++
 	} finally {
 		isSavingProducts.value = false
 	}

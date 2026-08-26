@@ -9,7 +9,7 @@
 						<div class="flex w-64 flex-col items-start gap-2 p-4">
 							<SharedTextBase class="w-full font-semibold">Filter Labels</SharedTextBase>
 							<USeparator />
-							<UCheckboxGroup v-model="selectedLabels" :items="labelOptions" orientation="vertical" />
+							<UCheckboxGroup v-model="selectedLabels" :items="labelOptions" orientation="vertical" class="w-full pl-2" />
 						</div>
 					</template>
 				</UPopover>
@@ -45,19 +45,16 @@ interface LocationData {
 }
 
 const { data: locationResults, pending } = await useFetch<LocationData[]>("/api/public/emergency-bag/location-information")
+const { data: emergencyBagLabels } = await useFetch<{ emergencyBagLabelName: string }[]>("/api/public/emergency-bag/label")
 const selectedLabels = ref<string[]>([])
 const locations = computed(() => locationResults.value ?? [])
 
-const labelOptions = computed(() => {
-	const labels = locations.value.flatMap((location) =>
-		location.emergencyBags.flatMap((bag) => bag.emergencyBagLabels.map((label) => label.emergencyBagLabelName))
-	)
-	return [...new Set(labels)].sort((first, second) => first.localeCompare(second))
-})
+const labelOptions = computed(() => (emergencyBagLabels.value ?? []).map((label) => label.emergencyBagLabelName))
+const activeSelectedLabels = computed(() => selectedLabels.value.filter((label) => labelOptions.value.includes(label)))
 
 const visibleBags = (location: LocationData) => {
 	return location.emergencyBags.filter((bag) =>
-		selectedLabels.value.every((selectedLabel) => bag.emergencyBagLabels.some((label) => label.emergencyBagLabelName === selectedLabel))
+		activeSelectedLabels.value.every((selectedLabel) => bag.emergencyBagLabels.some((label) => label.emergencyBagLabelName === selectedLabel))
 	)
 }
 </script>

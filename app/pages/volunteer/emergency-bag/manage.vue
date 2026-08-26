@@ -20,16 +20,16 @@
 							<div class="flex w-64 flex-col items-start gap-2 p-4">
 								<SharedTextBase class="w-full font-semibold">Filter</SharedTextBase>
 								<USeparator />
-								<UCheckboxGroup v-model="toggleBags" :items="toggleOptions" orientation="vertical" />
-								<SharedTextBase class="w-full font-semibold">Location</SharedTextBase>
+								<UCheckboxGroup v-model="toggleBags" :items="toggleOptions" orientation="vertical" class="w-full pl-2" />
+								<SharedTextBase class="w-full pl-2 font-semibold">Location</SharedTextBase>
 								<USeparator />
-								<UCheckboxGroup v-model="locationFilter" :items="locationFilterOptions" orientation="vertical" />
-								<SharedTextBase class="w-full font-semibold">Bag Labels</SharedTextBase>
+								<UCheckboxGroup v-model="locationFilter" :items="locationFilterOptions" orientation="vertical" class="w-full pl-2" />
+								<SharedTextBase class="w-full pl-2 font-semibold">Bag Labels</SharedTextBase>
 								<USeparator />
-								<UCheckboxGroup v-model="emergencyBagLabelFilter" :items="emergencyBagLabelOptions" orientation="vertical" />
-								<SharedTextBase class="w-full font-semibold">Sort</SharedTextBase>
+								<UCheckboxGroup v-model="emergencyBagLabelFilter" :items="emergencyBagLabelOptions" orientation="vertical" class="w-full pl-2" />
+								<SharedTextBase class="w-full pl-2 font-semibold">Sort</SharedTextBase>
 								<USeparator />
-								<USelect v-model="sortOption" :items="sortOptions" class="w-full max-w-md grow" />
+								<USelect v-model="sortOption" :items="sortOptions" class="w-full max-w-md grow pl-2" />
 							</div>
 						</template>
 					</UPopover>
@@ -106,6 +106,7 @@ const emergencyBagLabelFilter = ref<string[]>([])
 const { data: emergencyBags, refresh } = await useFetch("/api/volunteer/emergency-bag")
 
 const { data: locations } = await useFetch("/api/volunteer/location")
+const { data: emergencyBagLabels } = await useFetch<{ emergencyBagLabelName: string }[]>("/api/public/emergency-bag/label")
 
 const toggleOptions = ref(["Private", "Public"])
 const toggleBags = ref<string[]>([])
@@ -116,10 +117,8 @@ const locationFilterOptions = computed(() => [
 	"Unassigned",
 	...(locations.value ?? []).filter((location) => !location.archived).map((location) => location.locationName),
 ])
-const emergencyBagLabelOptions = computed(() => {
-	const labels = (emergencyBags.value ?? []).flatMap((bag) => bag.emergencyBagLabels.map((label) => label.emergencyBagLabelName))
-	return [...new Set(labels)].sort((first, second) => first.localeCompare(second))
-})
+const emergencyBagLabelOptions = computed(() => (emergencyBagLabels.value ?? []).map((label) => label.emergencyBagLabelName))
+const activeEmergencyBagLabelFilter = computed(() => emergencyBagLabelFilter.value.filter((label) => emergencyBagLabelOptions.value.includes(label)))
 
 const shownBags = computed(() => {
 	if (!emergencyBags.value) return []
@@ -127,8 +126,8 @@ const shownBags = computed(() => {
 		const matchesPrivacy = toggleBags.value.length === 0 || (bag.private ? toggleBags.value.includes("Private") : toggleBags.value.includes("Public"))
 		const locationName = bag.location?.locationName ?? "Unassigned"
 		const matchesLocation = locationFilter.value.length === 0 || locationFilter.value.includes(locationName)
-		const bagLabels = bag.emergencyBagLabels.map((label) => label.emergencyBagLabelName)
-		const matchesLabels = emergencyBagLabelFilter.value.length === 0 || emergencyBagLabelFilter.value.some((label) => bagLabels.includes(label))
+		const bagLabels = bag.emergencyBagLabels.filter((label) => !label.archived).map((label) => label.emergencyBagLabelName)
+		const matchesLabels = activeEmergencyBagLabelFilter.value.length === 0 || activeEmergencyBagLabelFilter.value.some((label) => bagLabels.includes(label))
 		return matchesPrivacy && matchesLocation && matchesLabels
 	})
 })

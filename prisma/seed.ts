@@ -174,6 +174,12 @@ const createLocations = async () => {
 	})
 }
 
+const createLabels = async () => {
+	await prisma.itemLabel.createMany({
+		data: ["Gluten Free", "Halal", "Kosher", "Vegan", "Vegetarian"].map((itemLabelName) => ({ itemLabelName, archived: false })),
+	})
+}
+
 const createEmergencyBags = async () => {
 	const locations = await prisma.location.findMany()
 	for (const bag of emergencyBagSeeds) {
@@ -187,7 +193,7 @@ const createEmergencyBags = async () => {
 				emergencyBagLabels: {
 					connectOrCreate: bag.labels.map((emergencyBagLabelName) => ({
 						where: { emergencyBagLabelName },
-						create: { emergencyBagLabelName },
+						create: { emergencyBagLabelName, archived: false },
 					})),
 				},
 			},
@@ -353,6 +359,7 @@ const main = async () => {
 	await createOrders()
 
 	await createLocations()
+	await createLabels()
 	await createTutorialGroups()
 	await createEmergencyBags()
 	await createEmergencyBagItems()

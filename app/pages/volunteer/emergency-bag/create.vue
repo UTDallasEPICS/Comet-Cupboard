@@ -89,7 +89,7 @@ if (route.query.duplicateFrom) {
 			productName: item.specificItem.productName,
 			imgName: item.specificItem.imgName,
 			quantity: Number(item.specificItem.quantity),
-			itemLabels: item.specificItem.itemLabels.map((label: any) => label.itemLabelName),
+			itemLabels: item.specificItem.itemLabels.filter((label: any) => !label.archived).map((label: any) => label.itemLabelName),
 		}))
 		bagDetails.value.selectedCategory = sourceBag.emergencyBagLabels.map((label: any) => label.emergencyBagLabelName)
 		bagDetails.value.isPrivate = sourceBag.private

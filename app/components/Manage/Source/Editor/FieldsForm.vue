@@ -49,7 +49,7 @@
 						</UFormField>
 					</div>
 					<div v-if="fieldChanged(field) || field.isNew" class="flex justify-end gap-2">
-						<SharedButtonActionButton type="button" text="Cancel" action="cancel" button-variant="outline" @click="cancelField(field)" />
+						<SharedButtonActionButton type="button" text="Cancel" action="cancel" " @click="cancelField(field)" />
 						<SharedButtonActionButton
 							type="submit"
 							text="Save Changes"
@@ -59,7 +59,7 @@
 						/>
 					</div>
 					<SharedConfirmationModal v-else title="Confirm Field Removal?" confirm-text="Confirm Removal" @confirm="confirmRemoveField(field.fieldID)">
-						<SharedButtonActionButton type="button" text="Remove" leading-icon="i-lucide-trash-2" action="negative" button-variant="outline" />
+						<SharedButtonActionButton type="button" text="Remove" leading-icon="i-lucide-trash-2" action="negative" " />
 					</SharedConfirmationModal>
 				</div>
 			</SharedFormShell>

@@ -76,7 +76,7 @@
 			</SharedLayoutSectionUCard>
 			<SharedFormActions submit-text="Start Session">
 				<template #cancel>
-					<SharedButtonActionButton type="button" text="Cancel" action="cancel" button-variant="outline" @click="emit('cancel')" />
+					<SharedButtonActionButton type="button" text="Cancel" action="cancel" @click="emit('cancel')" />
 				</template>
 				<SharedButtonActionButton type="submit" text="Start Session" leading-icon="i-lucide-plus" action="positive" :loading="isSaving" />
 			</SharedFormActions>

@@ -12,7 +12,7 @@ export const createFormBuilder = <T extends z.ZodTypeAny>(schema: T, defaults?: 
 		const errors = []
 		const result = await schema.safeParseAsync(formState)
 		if (!result.success) {
-			errors.push(...result.error.issues.map((err) => ({ name: String(err.path[0]), message: err.message })))
+			errors.push(...result.error.issues.map((err) => ({ name: err.path.map(String).join("."), message: err.message })))
 		}
 		return errors
 	}

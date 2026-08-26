@@ -45,7 +45,7 @@ watch(
 			productName: item.specificItem.productName,
 			imgName: item.specificItem.imgName,
 			quantity: Number(item.specificItem.quantity) + item.count,
-			itemLabels: item.specificItem.itemLabels.map((label: any) => label.itemLabelName),
+			itemLabels: item.specificItem.itemLabels.filter((label: any) => !label.archived).map((label: any) => label.itemLabelName),
 		}))
 		bagDetails.value = {
 			selectedCategory: bag.emergencyBagLabels.map((label: any) => label.emergencyBagLabelName),

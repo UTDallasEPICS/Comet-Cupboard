@@ -59,13 +59,10 @@
 										}}
 									</SharedTextBaseSecondary>
 									<div class="flex flex-row gap-2">
-										<UBadge
-											v-for="label in specificItem.itemLabels"
+										<SharedLabel
+											v-for="label in specificItem.itemLabels.filter((label) => !label.archived)"
 											:key="label.itemLabelName"
 											:label="label.itemLabelName"
-											color="neutral"
-											variant="subtle"
-											size="md"
 										/>
 									</div>
 								</div>

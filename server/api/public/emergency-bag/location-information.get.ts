@@ -17,6 +17,7 @@ export default defineSafeHandler(async (event) => {
 				where: { private: false },
 				select: {
 					emergencyBagLabels: {
+							where: { archived: false },
 						select: { emergencyBagLabelName: true },
 					},
 				},

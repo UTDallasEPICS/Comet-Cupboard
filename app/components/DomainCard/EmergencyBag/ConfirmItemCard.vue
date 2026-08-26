@@ -12,7 +12,7 @@
 				<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
 				<SharedTextBaseSecondary v-if="productName">{{ productName }}</SharedTextBaseSecondary>
 				<div v-if="itemLabels.length" class="mt-1 flex flex-wrap gap-1">
-					<UBadge v-for="label in itemLabels" :key="label" :label="label" color="neutral" variant="outline" />
+					<SharedLabel v-for="label in itemLabels" :key="label" :label="label" />
 				</div>
 			</div>
 

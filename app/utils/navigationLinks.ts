@@ -99,6 +99,12 @@ export const roleLinks: Record<Role, AppLink[]> = {
 					to: "/admin/manage/locations",
 				},
 				{
+					label: "Manage Labels",
+					description: "Add, edit, or archive labels",
+					icon: "i-lucide-bookmark",
+					to: "/admin/manage/labels",
+				},
+				{
 					label: "Manage Tutorials",
 					description: "Add or edit tutorials",
 					icon: "i-lucide-info",

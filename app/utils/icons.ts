@@ -5,6 +5,7 @@ export type Icon =
 	| "i-lucide-arrow-left-right"
 	| "i-lucide-arrow-right"
 	| "i-lucide-book"
+	| "i-lucide-bookmark"
 	| "i-lucide-box"
 	| "i-lucide-boxes"
 	| "i-lucide-building-2"

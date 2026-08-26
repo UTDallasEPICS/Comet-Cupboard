@@ -121,7 +121,7 @@ const specificItemOptions = computed(() => {
 			productName: specificItem.productName,
 			imgName: specificItem.imgName,
 			quantity: Number(specificItem.quantity),
-			itemLabels: specificItem.itemLabels.map((label: any) => label.itemLabelName),
+			itemLabels: specificItem.itemLabels.filter((label: any) => !label.archived).map((label: any) => label.itemLabelName),
 		}))
 	)
 })

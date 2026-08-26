@@ -11,13 +11,13 @@
 							<div class="flex w-64 flex-col items-start gap-2 p-4">
 								<SharedTextBase class="w-full font-semibold">Filter</SharedTextBase>
 								<USeparator />
-								<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="vertical" />
-								<SharedTextBase class="w-full font-semibold">Item Labels</SharedTextBase>
+								<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="vertical" class="w-full pl-2" />
+								<SharedTextBase class="w-full pl-2 font-semibold">Item Labels</SharedTextBase>
 								<USeparator />
-								<UCheckboxGroup v-model="selectedItemLabels" :items="itemLabelOptions" orientation="vertical" />
-								<SharedTextBase class="w-full font-semibold">Sort</SharedTextBase>
+								<UCheckboxGroup v-model="selectedItemLabels" :items="itemLabelOptions" orientation="vertical" class="w-full pl-2" />
+								<SharedTextBase class="w-full pl-2 font-semibold">Sort</SharedTextBase>
 								<USeparator />
-								<USelect v-model="sortOption" :items="sortOptions" class="w-full max-w-md grow" />
+								<USelect v-model="sortOption" :items="sortOptions" class="w-full max-w-md grow pl-2" />
 							</div>
 						</template>
 					</UPopover>
@@ -77,8 +77,10 @@ const { data: items } = await useFetch("/api/student/inventory/items", {
 
 const toggleOptions = ref(["In Stock", "Deal", "Archived"])
 const toggleItems = ref([])
-const itemLabelOptions = ["Gluten Free", "Halal", "Kosher", "Vegan", "Vegetarian"]
 const selectedItemLabels = ref<string[]>([])
+const { data: itemLabels } = await useFetch<{ itemLabelName: string }[]>("/api/public/inventory/item-label")
+const itemLabelOptions = computed(() => (itemLabels.value ?? []).map((label) => label.itemLabelName))
+const activeSelectedItemLabels = computed(() => selectedItemLabels.value.filter((label) => itemLabelOptions.value.includes(label)))
 
 const itemQuantityTotal = (item: { specificItems: Array<{ quantity: string }> }) => {
 	return item.specificItems.reduce((sum, si) => sum + Number(si.quantity), 0)
@@ -96,8 +98,10 @@ const shownItems = computed(() => {
 			(!toggleItems.value.includes("Deal") || item.deal !== null) &&
 			(!toggleItems.value.includes("Archived") || item.archived === true) &&
 			(!toggleItems.value.includes("In Stock") || itemQuantityTotal(item) > 0) &&
-			(selectedItemLabels.value.length === 0 ||
-				item.specificItems.some((product) => product.itemLabels.some((label) => selectedItemLabels.value.includes(label.itemLabelName))))
+			(activeSelectedItemLabels.value.length === 0 ||
+				item.specificItems.some((product) =>
+					product.itemLabels.some((label) => !label.archived && activeSelectedItemLabels.value.includes(label.itemLabelName))
+				))
 		)
 	})
 })

@@ -71,13 +71,10 @@
 											}}
 										</SharedTextBaseSecondary>
 										<div class="flex flex-row gap-2">
-											<UBadge
-												v-for="label in product.itemLabels"
+											<SharedLabel
+												v-for="label in product.itemLabels.filter((label) => !label.archived)"
 												:key="label.itemLabelName"
 												:label="label.itemLabelName"
-												color="neutral"
-												variant="subtle"
-												size="md"
 											/>
 										</div>
 									</div>
@@ -112,7 +109,7 @@ type SpecificItem = {
 	productName: string
 	imgName: string
 	quantity: number
-	itemLabels: { itemLabelName: string }[]
+	itemLabels: { itemLabelName: string; archived: boolean }[]
 }
 
 const props = defineProps({

@@ -1,21 +1,23 @@
 <template>
-	<SharedLayoutSectionUCard title="Deal">
-		<URadioGroup v-model="selectedDealOption" :items="dealOptions" />
-		<div v-if="selectedDealOption === 'Deal is X for Y'" class="mt-4 grid gap-4 sm:grid-cols-2">
-			<UFormField v-bind="dealFormFields.actualCount"><UInputNumber v-model="actualCount" :min="1" /></UFormField>
-			<UFormField v-bind="dealFormFields.adjustedCount"><UInputNumber v-model="adjustedCount" :min="0" /></UFormField>
-		</div>
-		<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
-			<template #cancel>
-				<SharedButtonActionButton text="Cancel" action="cancel" button-variant="outline" @click="cancelChanges" />
-			</template>
-			<SharedButtonActionButton text="Save Changes" leading-icon="i-lucide-check" action="positive" :loading="saving" @click="saveDeal" />
-		</SharedFormActions>
-	</SharedLayoutSectionUCard>
+	<SharedFormShell :validate="validate" :state="state" :on-submit="saveDeal" :on-error="onError" width-class="w-full">
+		<SharedLayoutSectionUCard title="Deal">
+			<URadioGroup v-model="selectedDealOption" :items="dealOptions" />
+			<div v-if="selectedDealOption === 'Deal is X for Y'" class="mt-4 grid gap-4 sm:grid-cols-2">
+				<UFormField name="actualCount" v-bind="dealFormFields.actualCount"><UInputNumber v-model="state.actualCount" :min="1" /></UFormField>
+				<UFormField name="adjustedCount" v-bind="dealFormFields.adjustedCount"><UInputNumber v-model="state.adjustedCount" :min="0" /></UFormField>
+			</div>
+			<SharedFormActions v-if="changesMade" submit-text="Save Changes" class-name="mt-4">
+				<template #cancel>
+					<SharedButtonActionButton type="button" text="Cancel" action="cancel" @click="cancelChanges" />
+				</template>
+				<SharedButtonActionButton type="submit" text="Save Changes" leading-icon="i-lucide-check" action="positive" :loading="saving" />
+			</SharedFormActions>
+		</SharedLayoutSectionUCard>
+	</SharedFormShell>
 </template>
 
 <script setup lang="ts">
-import { dealFormFields } from "#shared/utils/formSchemas"
+import { dealFormFields, dealSchema } from "#shared/utils/formSchemas"
 const props = defineProps<{
 	itemID: string
 	originalDeal: { actualCount: number; adjustedCount: number } | null
@@ -24,9 +26,8 @@ const props = defineProps<{
 const emit = defineEmits<{ save: [deal: { actualCount: number; adjustedCount: number } | null] }>()
 
 const dealOptions = ["No deal", "Deal is X for Y", "Free deal"]
+const { state, validate, onError } = createFormBuilder(dealSchema, () => ({ actualCount: 2, adjustedCount: 1 }))
 const selectedDealOption = ref("No deal")
-const actualCount = ref(2)
-const adjustedCount = ref(1)
 const originalOption = computed(() =>
 	!props.originalDeal ? "No deal" : props.originalDeal.actualCount === 1 && props.originalDeal.adjustedCount === 0 ? "Free deal" : "Deal is X for Y"
 )
@@ -34,13 +35,13 @@ const changesMade = computed(
 	() =>
 		selectedDealOption.value !== originalOption.value ||
 		(selectedDealOption.value === "Deal is X for Y" &&
-			(actualCount.value !== props.originalDeal?.actualCount || adjustedCount.value !== props.originalDeal?.adjustedCount))
+			(state.value.actualCount !== props.originalDeal?.actualCount || state.value.adjustedCount !== props.originalDeal?.adjustedCount))
 )
 
 const cancelChanges = () => {
 	selectedDealOption.value = originalOption.value
-	actualCount.value = props.originalDeal?.actualCount ?? 2
-	adjustedCount.value = props.originalDeal?.adjustedCount ?? 1
+	state.value.actualCount = props.originalDeal?.actualCount ?? 2
+	state.value.adjustedCount = props.originalDeal?.adjustedCount ?? 1
 }
 
 watch(
@@ -51,15 +52,15 @@ watch(
 	{ immediate: true }
 )
 
-const saveDeal = () => {
-	if (selectedDealOption.value === "Deal is X for Y" && actualCount.value <= adjustedCount.value) return
+const saveDeal = (event: { data: { actualCount: number; adjustedCount: number } }) => {
+	const { actualCount, adjustedCount } = event.data
 	emit(
 		"save",
 		selectedDealOption.value === "No deal"
 			? null
 			: {
-					actualCount: selectedDealOption.value === "Free deal" ? 1 : actualCount.value,
-					adjustedCount: selectedDealOption.value === "Free deal" ? 0 : adjustedCount.value,
+					actualCount: selectedDealOption.value === "Free deal" ? 1 : actualCount,
+					adjustedCount: selectedDealOption.value === "Free deal" ? 0 : adjustedCount,
 				}
 	)
 }

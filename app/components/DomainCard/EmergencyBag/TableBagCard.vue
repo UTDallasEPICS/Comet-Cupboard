@@ -13,15 +13,13 @@
 						<SharedTextBase> Expiration: {{ props.bag.expiryDate.split("T")[0] }}</SharedTextBase>
 					</div>
 
-					<UBadge v-if="props.bag.emergencyBagLabels.length === 0" class="rounded-full bg-gray-400 font-bold">No Labels</UBadge>
+					<SharedLabel v-if="activeEmergencyBagLabels.length === 0" label="No Labels" />
 					<div class="flex gap-1">
-						<UBadge
-							v-for="emergencyBagLabel in props.bag.emergencyBagLabels"
+						<SharedLabel
+							v-for="emergencyBagLabel in activeEmergencyBagLabels"
 							:key="emergencyBagLabel.emergencyBagLabelID"
-							class="bg-badge-vege rounded-full border border-green-500 font-bold text-green-950"
-						>
-							{{ emergencyBagLabel.emergencyBagLabelName }}
-						</UBadge>
+							:label="emergencyBagLabel.emergencyBagLabelName"
+						/>
 					</div>
 				</div>
 			</div>
@@ -63,12 +61,10 @@
 									<UBadge :label="`QTY: ${item.count}`" variant="outline" color="neutral" />
 								</div>
 								<div v-if="item.specificItem.itemLabels.length" class="mt-1 flex flex-wrap gap-1">
-									<UBadge
-										v-for="label in item.specificItem.itemLabels"
+									<SharedLabel
+										v-for="label in item.specificItem.itemLabels.filter((label) => !label.archived)"
 										:key="label.itemLabelName"
 										:label="label.itemLabelName"
-										color="neutral"
-										variant="outline"
 									/>
 								</div>
 							</div>
@@ -77,12 +73,16 @@
 					<div v-if="!props.bag.private" class="flex justify-end">
 						<SharedButtonActionButton
 							text="Edit Bag"
-							class="bg-utd-orange text-white"
-							button-variant="outline"
+							action="positive"
 							leading-icon="i-lucide-square-pen"
 							@click="navigateTo(`/volunteer/emergency-bag/${props.bag.emergencyBagID}/edit`)"
 						/>
-						<SharedButtonActionButton text="Duplicate" action="neutral" button-variant="outline" leading-icon="i-lucide-copy" @click="duplicateBag" />
+						<SharedButtonActionButton
+							text="Duplicate"
+							action="neutral"
+							leading-icon="i-lucide-copy"
+							@click="duplicateBag"
+						/>
 					</div>
 				</SharedLayoutGrid>
 				<div class="mt-2 max-w-sm">
@@ -98,8 +98,7 @@
 						<div class="flex justify-end pt-2">
 							<SharedButtonActionButton
 								text="Edit Bag"
-								class="bg-utd-orange text-white"
-								button-variant="outline"
+								action="positive"
 								leading-icon="i-lucide-square-pen"
 								@click="navigateTo(`/volunteer/emergency-bag/${props.bag.emergencyBagID}/edit`)"
 							/>
@@ -125,13 +124,13 @@ const props = defineProps<{
 		location: { locationID: string; locationName: string } | null
 		private: boolean
 		bagDescription: string
-		emergencyBagLabels: { emergencyBagLabelID: string; emergencyBagLabelName: string }[]
+		emergencyBagLabels: { emergencyBagLabelID: string; emergencyBagLabelName: string; archived: boolean }[]
 		emergencyBagItems: {
 			specificItem: {
 				specificItemID: string
 				productName: string
 				imgName: string
-				itemLabels: { itemLabelName: string }[]
+				itemLabels: { itemLabelName: string; archived: boolean }[]
 				item: {
 					itemName: string
 				}
@@ -146,4 +145,6 @@ const props = defineProps<{
 const duplicateBag = async () => {
 	await navigateTo(`/volunteer/emergency-bag/create?duplicateFrom=${props.bag.emergencyBagID}`)
 }
+
+const activeEmergencyBagLabels = computed(() => props.bag.emergencyBagLabels.filter((label) => !label.archived))
 </script>
