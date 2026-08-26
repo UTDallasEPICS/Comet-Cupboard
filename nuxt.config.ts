@@ -10,7 +10,7 @@ export default defineNuxtConfig({
 	},
 	vite: {
 		optimizeDeps: {
-			include: ["zod", "fuse.js", "nanoid"],
+			include: ["zod", "fuse.js", "nanoid", "qrcode"],
 		},
 	},
 	nitro: {

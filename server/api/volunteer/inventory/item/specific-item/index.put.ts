@@ -17,17 +17,20 @@ const schema = specificProductSchema
 
 export default defineSafeHandler(async (event) => {
 	const { specificItemID, productName, itemID, image, itemLabels } = await validateFormData(event, schema)
+
 	const itemLabelNames = itemLabels ? specificProductSchema.shape.itemLabels.parse(JSON.parse(itemLabels)) : []
+
 	const itemLabelConnections = itemLabelNames.map((itemLabelName) => ({
-		where: { itemLabelName },
-		create: { itemLabelName },
+		itemLabelName,
 	}))
 
 	if (!specificItemID) {
 		let newImgName = ""
+
 		if (image) {
 			newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
 		}
+
 		return await prisma.$transaction(async (tx) => {
 			const newSpecificItem = await tx.specificItem.create({
 				data: {
@@ -36,10 +39,11 @@ export default defineSafeHandler(async (event) => {
 					itemID,
 					quantity: 0,
 					itemLabels: {
-						connectOrCreate: itemLabelConnections,
+						connect: itemLabelConnections,
 					},
 				},
 			})
+
 			await tx.auditLog.create({
 				data: {
 					action: "ITEM_EDITED",
@@ -47,19 +51,31 @@ export default defineSafeHandler(async (event) => {
 					userID: event.context.userSession.userID,
 				},
 			})
+
 			return newSpecificItem
 		})
 	} else {
-		let oldImgName = ""
-		const existingSpecificItem = await prisma.specificItem.findUnique({ where: { specificItemID } })
+		const existingSpecificItem = await prisma.specificItem.findUnique({
+			where: { specificItemID },
+		})
+
 		if (!existingSpecificItem) {
-			throw createError({ statusCode: StatusCodes.NOT_FOUND, statusMessage: `Specific Item does not exist` })
+			throw createError({
+				statusCode: StatusCodes.NOT_FOUND,
+				statusMessage: "Specific Item does not exist",
+			})
 		}
+
 		if (existingSpecificItem.productName === "Default" && productName !== "Default") {
-			throw createError({ statusCode: StatusCodes.BAD_REQUEST, statusMessage: "The Default specific product cannot be renamed" })
+			throw createError({
+				statusCode: StatusCodes.BAD_REQUEST,
+				statusMessage: "The Default specific product cannot be renamed",
+			})
 		}
-		oldImgName = existingSpecificItem.imgName
-		let newImgName = undefined
+
+		const oldImgName = existingSpecificItem.imgName
+		let newImgName: string | undefined
+
 		if (image) {
 			newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
 		}
@@ -72,10 +88,11 @@ export default defineSafeHandler(async (event) => {
 					imgName: newImgName ?? oldImgName,
 					itemLabels: {
 						set: [],
-						connectOrCreate: itemLabelConnections,
+						connect: itemLabelConnections,
 					},
 				},
 			})
+
 			await tx.auditLog.create({
 				data: {
 					action: "ITEM_EDITED",
@@ -83,10 +100,11 @@ export default defineSafeHandler(async (event) => {
 					userID: event.context.userSession.userID,
 				},
 			})
+
 			return updatedSpecificItem
 		})
 
-		// safest way to ensure we don't accidentally delete an image if something goes wrong during the transaction
+		// Delete the old image only after the database transaction succeeds.
 		if (oldImgName && newImgName) {
 			await deleteImage(oldImgName)
 		}

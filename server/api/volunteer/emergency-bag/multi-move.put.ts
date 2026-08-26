@@ -7,7 +7,7 @@ import { AccessPermission } from "#shared/utils/permissions"
 const schema = z
 	.object({
 		bagIDs: z.array(z.string().min(1)).min(1),
-		locationID: z.string(),
+		locationID: z.string().nullable(),
 	})
 	.strict()
 
@@ -30,7 +30,7 @@ export default defineSafeHandler(async (event) => {
 		await tx.auditLog.create({
 			data: {
 				action: "EMERGENCY_BAG_EDITED",
-				message: `Moved ${movedBags.count} emergency bag(s) to location ${locationID}.`,
+				message: `Moved ${movedBags.count} emergency bag(s) to ${locationID ? `location ${locationID}` : "Unassigned"}.`,
 				userID: event.context.userSession.userID,
 			},
 		})

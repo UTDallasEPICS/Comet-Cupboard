@@ -3,7 +3,7 @@
 		<DataAnalyticsToolbar v-model:range="range" :show-grouping="false" />
 		<DataAnalyticsMetrics :metrics="metrics" />
 		<DataAnalyticsChart eyebrow="Recorded actions" title="Audit activity by day" :labels="chartLabels" :datasets="chartDatasets" />
-		<DataAnalyticsTable title="Recent audit records" :columns="columns" :rows="tableRows" />
+		<DataAnalyticsTable title="Recent audit records" :columns="columns" :rows="tableRows" :export-href="exportHref" />
 	</DataAnalyticsShell>
 </template>
 
@@ -18,6 +18,18 @@ const auditQuery = computed(() => ({
 	startDate: range.value.start?.toDate(getLocalTimeZone()).toISOString(),
 	endDate: range.value.end?.toDate(getLocalTimeZone()).toISOString(),
 }))
+const exportHref = computed(() => {
+	const params = new URLSearchParams()
+	for (const [key, value] of Object.entries(auditQuery.value)) {
+		if (value != null && value !== "") {
+			params.set(key, String(value))
+		}
+	}
+
+	const suffix = params.toString()
+	const endpoint = "/api/head-admin/data/auditLogExport"
+	return suffix ? `${endpoint}?${suffix}` : endpoint
+})
 const { data } = await useFetch<AuditLog[]>("/api/head-admin/audit-logs", { query: auditQuery, default: () => [] })
 const logs = computed(() => data.value ?? [])
 const tableRows = computed(() =>

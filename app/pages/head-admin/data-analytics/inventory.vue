@@ -2,7 +2,7 @@
 	<DataAnalyticsShell title="Current Inventory">
 		<DataAnalyticsMetrics :metrics="metrics" />
 		<DataAnalyticsChart eyebrow="Inventory by category" title="Current stock levels" :labels="chartLabels" :datasets="chartDatasets" />
-		<DataAnalyticsTable title="Inventory by item" :columns="columns" :rows="tableRows" />
+		<DataAnalyticsTable title="Inventory by item" :columns="columns" :rows="tableRows" export-href="/api/head-admin/data/categoryExport" />
 	</DataAnalyticsShell>
 </template>
 

@@ -639,6 +639,8 @@ export const editLocationFormFields = {
 // ============================================================================
 
 export const emergencyBagDetailsSchema = z.object({
+	labels: z.array(z.string().trim().min(1)).default([]),
+
 	expirationDate: z
 		.any()
 		.refine((value) => value !== null && value !== undefined, {
@@ -649,15 +651,36 @@ export const emergencyBagDetailsSchema = z.object({
 			message: "Expiration date must be in the future",
 			path: ["expirationDate"],
 		}),
+
+	private: z.boolean().default(false),
+
+	bagDescription: notesSchema.default(""),
 })
 
 export type EmergencyBagDetailsForm = z.infer<typeof emergencyBagDetailsSchema>
 
 export const emergencyBagDetailsFormFields = {
+	labels: {
+		id: "labels",
+		label: "Select Labels",
+	},
+
 	expirationDate: {
 		id: "expirationDate",
 		label: "Expiration Date",
 		placeholder: "Select expiration date",
+	},
+
+	private: {
+		id: "private",
+		label: "Privacy",
+		description: "Only admins and head admins can create or edit private bags",
+	},
+
+	bagDescription: {
+		id: "bagDescription",
+		label: "Bag Description",
+		placeholder: "Please enter a bag description...",
 	},
 } satisfies Record<keyof EmergencyBagDetailsForm, FormFieldConfig>
 
@@ -679,24 +702,6 @@ export const emergencyBagSchema = z.object({
 		)
 		.min(1),
 })
-
-export const emergencyBagDisplayFields = {
-	selectedCategory: {
-		id: "selectedCategory",
-		label: "Select Labels",
-	},
-
-	isPrivate: {
-		id: "isPrivate",
-		label: "Privacy",
-	},
-
-	bagDescription: {
-		id: "bagDescription",
-		label: "Bag Description",
-		placeholder: "Please enter a bag description...",
-	},
-} satisfies Record<"selectedCategory" | "isPrivate" | "bagDescription", FormFieldConfig>
 
 export const claimEmergencyBagSchema = z.object({
 	label: z.string().trim().length(5, "Bag ID must be 5 characters long"),

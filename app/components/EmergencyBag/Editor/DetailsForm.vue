@@ -1,10 +1,10 @@
 <template>
-	<SharedFormShell ref="formRef" :schema="schema" :state="bagDetails">
+	<SharedFormShell ref="formRef" :validate="validate" :state="bagDetails" :on-error="onError">
 		<div class="flex justify-center">
 			<div class="flex w-full max-w-100 flex-col gap-4">
 				<SharedFormCard>
-					<UFormField v-bind="emergencyBagDisplayFields.selectedCategory" class="text-xl">
-						<UCheckboxGroup v-model="bagDetails.selectedCategory" size="xl" class="mt-2" :items="labels" />
+					<UFormField name="labels" v-bind="emergencyBagDetailsFormFields.labels" class="text-xl">
+						<UCheckboxGroup v-model="bagDetails.labels" size="xl" class="mt-2" :items="labelOptions" />
 					</UFormField>
 				</SharedFormCard>
 				<SharedFormCard>
@@ -30,12 +30,12 @@
 					</UFormField>
 				</SharedFormCard>
 				<SharedFormCard v-if="permissionsStore.canAdminAccess">
-					<UFormField v-bind="emergencyBagDisplayFields.isPrivate" class="text-xl">
-						<UCheckbox v-model="bagDetails.isPrivate" label="Make this bag private" class="mt-2" />
+					<UFormField name="private" v-bind="emergencyBagDetailsFormFields.private" class="text-xl">
+						<UCheckbox v-model="bagDetails.private" label="Make this bag private" class="mt-2" />
 						<UTextarea
-							v-if="bagDetails.isPrivate"
+							v-if="bagDetails.private"
 							v-model="bagDetails.bagDescription"
-							:placeholder="emergencyBagDisplayFields.bagDescription.placeholder"
+							:placeholder="emergencyBagDetailsFormFields.bagDescription.placeholder"
 							class="mt-2 w-full"
 							:rows="4"
 						/>
@@ -47,25 +47,19 @@
 </template>
 
 <script lang="ts" setup>
-import { emergencyBagDetailsSchema, emergencyBagDetailsFormFields, emergencyBagDisplayFields } from "#shared/utils/formSchemas"
+import { emergencyBagDetailsSchema, emergencyBagDetailsFormFields, type EmergencyBagDetailsForm } from "#shared/utils/formSchemas"
 import type { DateValue } from "@internationalized/date"
 
 const permissionsStore = usePermissionsStore()
-const bagDetails = defineModel<{
-	selectedCategory: string[]
-	expirationDate: DateValue | null
-	isPrivate: boolean
-	bagDescription: string
-}>("bagDetails", { required: true })
+const bagDetails = defineModel<EmergencyBagDetailsForm & { expirationDate: DateValue | null }>("bagDetails", { required: true })
 const inputDate = useTemplateRef("inputDate")
 const formRef = useTemplateRef("formRef")
 
 const schema = emergencyBagDetailsSchema
+const { validate, onError } = createFormBuilder(schema)
 
-const labels = [
-	{ label: "Vegetarian", value: "Vegetarian" },
-	{ label: "Peanut Butter", value: "Peanut Butter" },
-]
+const { data: emergencyBagLabels } = useFetch<{ emergencyBagLabelName: string }[]>("/api/public/emergency-bag/label")
+const labelOptions = computed(() => (emergencyBagLabels.value ?? []).map((label) => ({ label: label.emergencyBagLabelName, value: label.emergencyBagLabelName })))
 
 watch(
 	() => bagDetails.value.expirationDate,

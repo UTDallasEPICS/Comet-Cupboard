@@ -6,9 +6,19 @@
 					<SharedTextBase class="text-xs font-medium tracking-wide text-gray-500 uppercase">Underlying data</SharedTextBase
 					><SharedTextSectionTitle class="mt-1">{{ title }}</SharedTextSectionTitle>
 				</div>
-				<UTooltip text="Export will be available soon"
-					><SharedButtonActionButton icon="i-lucide-download" action="positive" disabled aria-label="Export data"
-				/></UTooltip>
+				<div class="flex items-center gap-2">
+					<USelect v-model="exportFormat" :items="exportFormats" variant="ghost" class="w-24 data-[state=open]:bg-gray-100" />
+					<UTooltip :text="exportHref ? 'Export data' : 'Export unavailable for this table'">
+					<SharedButtonActionButton
+						icon="i-lucide-download"
+						action="positive"
+						aria-label="Export data"
+						:disabled="!exportHref"
+						:to="resolvedExportHref"
+						target="_blank"
+					/>
+					</UTooltip>
+				</div>
 			</div>
 		</template>
 		<div class="overflow-x-auto">
@@ -32,5 +42,17 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ title: string; columns: Array<{ key: string; label: string }>; rows: Array<Record<string, string | number>> }>()
+const props = defineProps<{ title: string; columns: Array<{ key: string; label: string }>; rows: Array<Record<string, string | number>>; exportHref?: string }>()
+
+const exportFormats = ["xlsx", "csv"]
+const exportFormat = ref<(typeof exportFormats)[number]>("xlsx")
+
+const resolvedExportHref = computed(() => {
+	if (!props.exportHref) {
+		return undefined
+	}
+
+	const separator = props.exportHref.includes("?") ? "&" : "?"
+	return `${props.exportHref}${separator}format=${exportFormat.value}`
+})
 </script>

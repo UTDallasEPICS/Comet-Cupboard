@@ -3,7 +3,7 @@
 		<DataAnalyticsToolbar v-model:range="range" v-model:grouping="grouping" />
 		<DataAnalyticsMetrics :metrics="metrics" />
 		<DataAnalyticsChart :eyebrow="eyebrow" :title="chartTitle" :labels="chartLabels" :datasets="chartDatasets" />
-		<DataAnalyticsTable :title="tableTitle" :columns="columns" :rows="tableRows" />
+		<DataAnalyticsTable :title="tableTitle" :columns="columns" :rows="tableRows" :export-href="exportHref" />
 	</DataAnalyticsShell>
 </template>
 
@@ -13,8 +13,20 @@ type MovementData = Record<string, Record<string, { total: number; items: Record
 
 const { range, grouping, query } = useAnalyticsRange()
 const endpoint = props.direction === "in" ? "/api/head-admin/data/itemsIn" : "/api/head-admin/data/itemsOut"
+const exportEndpoint = props.direction === "in" ? "/api/head-admin/data/itemsInExport" : "/api/head-admin/data/itemsOutExport"
 const { data } = await useFetch<MovementData>(endpoint, { query, default: () => ({}) })
 const movement = computed(() => data.value ?? {})
+const exportHref = computed(() => {
+	const params = new URLSearchParams()
+	for (const [key, value] of Object.entries(query.value)) {
+		if (value != null && value !== "") {
+			params.set(key, String(value))
+		}
+	}
+
+	const suffix = params.toString()
+	return suffix ? `${exportEndpoint}?${suffix}` : exportEndpoint
+})
 const isIncoming = computed(() => props.direction === "in")
 const title = computed(() => (isIncoming.value ? "Items Received" : "Items Distributed"))
 const eyebrow = computed(() => (isIncoming.value ? "Inventory intake" : "Student orders"))

@@ -26,7 +26,12 @@
 				<div class="space-y-4 p-4">
 					<div class="space-y-2">
 						<div v-if="visibleBags.length" class="space-y-2">
-							<div v-for="(bag, index) in visibleBags" :key="index" class="rounded-lg border border-gray-200 p-2">
+							<div
+								v-for="(bag, index) in visibleBags"
+								:key="index"
+								class="flex items-center gap-3 rounded-lg border border-gray-200 p-2"
+							>
+								<SharedIcon name="i-lucide-shopping-bag" class="shrink-0 text-gray-500" />
 								<div v-if="bag.emergencyBagLabels.length" class="flex flex-wrap gap-1">
 									<SharedLabel
 										v-for="label in bag.emergencyBagLabels"

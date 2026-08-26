@@ -6,8 +6,8 @@
 			:back-navigation="{ text: 'Back to Manage Bags', to: '/volunteer/emergency-bag/manage' }"
 		>
 			<USeparator class="my-4" />
-			<section v-if="emergencyBag" class="mx-auto w-full max-w-xl space-y-4">
-				<EmergencyBagEditorAddItemForm ref="addItemRef" v-model:bag-items="bagItems" />
+			<section v-if="emergencyBag" class="mx-auto w-full max-w-3xl space-y-4">
+				<EmergencyBagEditorAddItemForm ref="addItemRef" :items="itemsForAddForm" v-model:bag-items="bagItems" />
 				<EmergencyBagEditorDetailsForm ref="detailsRef" v-model:bag-details="bagDetails" />
 				<div class="flex justify-end">
 					<SharedButtonActionButton action="positive" text="Save Changes" leading-icon="i-lucide-check" :loading="isSaving" @click="saveBag" />
@@ -27,12 +27,29 @@ const addItemRef = useTemplateRef("addItemRef")
 const detailsRef = useTemplateRef("detailsRef")
 const isSaving = ref(false)
 const bagItems = ref<any[]>([])
-const bagDetails = ref<any>({ selectedCategory: [], expirationDate: null, isPrivate: false, bagDescription: "" })
+const bagDetails = ref<any>({ labels: [], expirationDate: null, private: false, bagDescription: "" })
 
 const { data: emergencyBags } = await useFetch<any[]>("/api/volunteer/emergency-bag", {
 	query: { emergencyBagID: route.params.bagID },
 })
 const emergencyBag = computed(() => emergencyBags.value?.[0])
+
+const { data: inventoryItems } = await useFetch("/api/student/inventory/items", {
+	query: { checkAvailability: "false" },
+})
+
+// Reserved counts from this bag are already subtracted from inventory, so add them back for accurate availability.
+const itemsForAddForm = computed(() => {
+	if (!emergencyBag.value) return inventoryItems.value ?? []
+	const reservedBySpecificItemID = new Map(emergencyBag.value.emergencyBagItems.map((item: any) => [item.specificItemID, item.count]))
+	return (inventoryItems.value ?? []).map((item: any) => ({
+		...item,
+		specificItems: item.specificItems.map((specificItem: any) => ({
+			...specificItem,
+			quantity: Number(specificItem.quantity) + (reservedBySpecificItemID.get(specificItem.specificItemID) ?? 0),
+		})),
+	}))
+})
 
 watch(
 	emergencyBag,
@@ -48,9 +65,9 @@ watch(
 			itemLabels: item.specificItem.itemLabels.filter((label: any) => !label.archived).map((label: any) => label.itemLabelName),
 		}))
 		bagDetails.value = {
-			selectedCategory: bag.emergencyBagLabels.map((label: any) => label.emergencyBagLabelName),
+			labels: bag.emergencyBagLabels.map((label: any) => label.emergencyBagLabelName),
 			expirationDate: parseDate(bag.expiryDate.slice(0, 10)),
-			isPrivate: bag.private,
+			private: bag.private,
 			bagDescription: bag.bagDescription ?? "",
 		}
 	},
@@ -69,9 +86,9 @@ const saveBag = async () => {
 			body: {
 				emergencyBagID: emergencyBag.value.emergencyBagID,
 				expiryDate: bagDetails.value.expirationDate.toDate(getLocalTimeZone()).toISOString(),
-				labels: bagDetails.value.selectedCategory,
-				private: bagDetails.value.isPrivate,
-				bagDescription: bagDetails.value.isPrivate ? bagDetails.value.bagDescription : "",
+				labels: bagDetails.value.labels,
+				private: bagDetails.value.private,
+				bagDescription: bagDetails.value.private ? bagDetails.value.bagDescription : "",
 				items: bagItems.value.map((item) => ({ specificItemID: item.specificItemID, count: item.count })),
 			},
 		})

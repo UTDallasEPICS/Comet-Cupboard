@@ -50,22 +50,29 @@
 									</div>
 									<div>
 										<SharedTextBase>To:</SharedTextBase>
-										<UDropdownMenu :items="items" :ui="{ content: 'w-48' }">
+										<UDropdownMenu :items="moveTargetItems" :ui="{ content: 'w-48' }">
 											<SharedButtonActionButton
-												text="Choose Location"
+												:text="targetLocationLabel"
 												action="neutral"
 												variant="outline"
 												trailing-icon="i-lucide-chevron-down"
 											/>
 										</UDropdownMenu>
 									</div>
+									<SharedButtonActionButton
+										text="Confirm Move"
+										action="positive"
+										leading-icon="i-lucide-check"
+										:disabled="!canConfirmMove"
+										@click="moveBag"
+									/>
 								</div>
 							</template>
 						</UPopover>
 					</div>
 					<USeparator class="my-4" />
-					<div v-if="groupedBags.length === 0" class="flex flex-col items-center justify-center gap-y-4 py-8">
-						<SharedTextBase>{{ emergencyBags?.length ? "No bags match the current filters" : "No bags have been created" }}</SharedTextBase>
+					<div v-if="emergencyBags?.length === 0" class="flex flex-col items-center justify-center gap-y-4 py-8">
+						<SharedTextBase>No bags have been created</SharedTextBase>
 						<SharedButtonActionButton
 							text="Create new bag"
 							action="positive"
@@ -75,16 +82,21 @@
 						/>
 					</div>
 					<div v-else class="flex w-full flex-col gap-6">
-						<section v-for="group in groupedBags" :key="group.locationName" class="space-y-3">
+						<section v-for="group in groupedBags" :key="group.key" class="space-y-3">
 							<div class="flex items-center gap-3">
 								<SharedTextSectionTitle>{{ group.locationName }}</SharedTextSectionTitle>
 								<UBadge :label="String(group.bags.length)" color="neutral" variant="subtle" />
 							</div>
-							<ul class="flex w-full flex-col gap-3">
+							<ul v-if="group.bags.length" class="flex w-full flex-col gap-3">
 								<li v-for="bag in group.bags" :key="bag.emergencyBagID" class="w-full">
-									<DomainCardEmergencyBagTableBagCard v-model:selected="selected[bag.emergencyBagID]" :bag="bag" />
+									<DomainCardEmergencyBagTableBagCard
+										:selected="selected[bag.emergencyBagID] ?? false"
+										:bag="bag"
+										@update:selected="(value) => (selected[bag.emergencyBagID] = value)"
+									/>
 								</li>
 							</ul>
+							<SharedTextBaseSecondary v-else>No bags match the current filters at this location</SharedTextBaseSecondary>
 						</section>
 					</div>
 				</UCard>
@@ -94,10 +106,11 @@
 </template>
 
 <script setup lang="ts">
-import { resolveComponent } from "vue"
 definePageMeta({ layout: false })
-const UButton = resolveComponent("UButton")
-const targetLocation = ref<string | null>(null)
+const permissionsStore = usePermissionsStore()
+const targetLocation = ref<string | null | undefined>(undefined)
+const hasChosenTarget = ref(false)
+const targetLocationName = ref("")
 const selected = ref<Record<string, boolean>>({})
 const searchQuery = ref("")
 const locationFilter = ref<string[]>([])
@@ -108,15 +121,13 @@ const { data: emergencyBags, refresh } = await useFetch("/api/volunteer/emergenc
 const { data: locations } = await useFetch("/api/volunteer/location")
 const { data: emergencyBagLabels } = await useFetch<{ emergencyBagLabelName: string }[]>("/api/public/emergency-bag/label")
 
-const toggleOptions = ref(["Private", "Public"])
+const toggleOptions = computed(() => (permissionsStore.canAdminAccess ? ["Private", "Public"] : ["Public"]))
 const toggleBags = ref<string[]>([])
 const sortOption = ref("Alphabetical")
 const sortOptions = ["Alphabetical", "Expiration Date"]
 
-const locationFilterOptions = computed(() => [
-	"Unassigned",
-	...(locations.value ?? []).filter((location) => !location.archived).map((location) => location.locationName),
-])
+const activeLocations = computed(() => (locations.value ?? []).filter((location) => !location.archived))
+const locationFilterOptions = computed(() => ["Unassigned", ...activeLocations.value.map((location) => location.locationName)])
 const emergencyBagLabelOptions = computed(() => (emergencyBagLabels.value ?? []).map((label) => label.emergencyBagLabelName))
 const activeEmergencyBagLabelFilter = computed(() => emergencyBagLabelFilter.value.filter((label) => emergencyBagLabelOptions.value.includes(label)))
 
@@ -149,33 +160,48 @@ const sortedBags = computed(() => {
 	return sorted
 })
 
+// Every active location is always shown (unless filtered out) so volunteers can move bags into empty locations.
 const groupedBags = computed(() => {
-	const groups = new Map<string, typeof sortedBags.value>()
+	const bagsByLocationKey = new Map<string, typeof sortedBags.value>()
 	for (const bag of sortedBags.value) {
-		const locationName = bag.location?.locationName ?? "Unassigned"
-		groups.set(locationName, [...(groups.get(locationName) ?? []), bag])
+		const key = bag.location?.locationID ?? "unassigned"
+		bagsByLocationKey.set(key, [...(bagsByLocationKey.get(key) ?? []), bag])
 	}
 
-	return [...groups.entries()]
-		.sort(([firstLocation], [secondLocation]) => {
-			if (firstLocation === "Unassigned") return -1
-			if (secondLocation === "Unassigned") return 1
-			return firstLocation.localeCompare(secondLocation)
-		})
-		.map(([locationName, bags]) => ({ locationName, bags }))
+	const groups: { key: string; locationName: string; bags: typeof sortedBags.value }[] = []
+
+	if (locationFilter.value.length === 0 || locationFilter.value.includes("Unassigned")) {
+		groups.push({ key: "unassigned", locationName: "Unassigned", bags: bagsByLocationKey.get("unassigned") ?? [] })
+	}
+
+	for (const location of activeLocations.value) {
+		if (locationFilter.value.length > 0 && !locationFilter.value.includes(location.locationName)) continue
+		groups.push({ key: location.locationID, locationName: location.locationName, bags: bagsByLocationKey.get(location.locationID) ?? [] })
+	}
+
+	return groups
 })
 
-const items = computed<DropdownMenuItem[]>(() =>
-	locations.value
-		.filter((loc) => !loc.archived)
-		.map((loc) => ({
-			label: loc.locationName,
-			onSelect: () => {
-				targetLocation.value = loc.locationID
-				moveBag()
-			},
-		}))
-)
+const moveTargetItems = computed<DropdownMenuItem[]>(() => [
+	{
+		label: "Unassigned",
+		onSelect: () => {
+			targetLocation.value = null
+			targetLocationName.value = "Unassigned"
+			hasChosenTarget.value = true
+		},
+	},
+	...activeLocations.value.map((location) => ({
+		label: location.locationName,
+		onSelect: () => {
+			targetLocation.value = location.locationID
+			targetLocationName.value = location.locationName
+			hasChosenTarget.value = true
+		},
+	})),
+])
+
+const targetLocationLabel = computed(() => (hasChosenTarget.value ? targetLocationName.value : "Choose Location"))
 
 const selectedBags = computed(() =>
 	(emergencyBags.value ?? [])
@@ -200,9 +226,16 @@ const selectedLocationLabel = computed(() => {
 	return "Multiple Locations"
 })
 
+const canConfirmMove = computed(() => selectedBags.value.length > 0 && hasChosenTarget.value)
+
 const moveBag = async () => {
 	if (selectedBags.value.length === 0) {
 		alert("Please select at least one bag to move")
+		return
+	}
+
+	if (!hasChosenTarget.value) {
+		alert("Please choose a location to move to")
 		return
 	}
 
@@ -217,6 +250,8 @@ const moveBag = async () => {
 
 		await refresh()
 		selected.value = {}
+		hasChosenTarget.value = false
+		targetLocationName.value = ""
 	} catch (err: any) {
 		console.error("Failed to move bag:", err)
 		alert(`Error: ${err.message || "Failed to move bag"}`)

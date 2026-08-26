@@ -9,10 +9,10 @@
 					<div class="flex gap-2">
 						<SharedTextBase class="font-bold">Label:</SharedTextBase>
 						<div class="flex items-center justify-center gap-1">
-							<UBadge v-if="props.bagDetails.selectedCategory.length === 0" class="rounded-full bg-gray-400 font-bold" label="Neither" />
+							<UBadge v-if="props.bagDetails.labels.length === 0" class="rounded-full bg-gray-400 font-bold" label="Neither" />
 
 							<UBadge
-								v-for="label in props.bagDetails.selectedCategory"
+								v-for="label in props.bagDetails.labels"
 								:key="label"
 								:label="label"
 								class="rounded-full bg-green-700 font-bold"
@@ -23,7 +23,7 @@
 						<SharedTextBase class="font-bold">Expiration Date:</SharedTextBase>
 						<SharedTextBase>{{ props.bagDetails.expirationDate }}</SharedTextBase>
 					</div>
-					<div v-if="props.bagDetails.isPrivate" class="mb-4 flex flex-col">
+					<div v-if="props.bagDetails.private" class="mb-4 flex flex-col">
 						<div class="flex gap-2">
 							<SharedTextBase class="font-bold">Privacy:</SharedTextBase>
 							<SharedTextBase>Private</SharedTextBase>
@@ -50,7 +50,7 @@
 					:name="item.name"
 					:product-name="item.productName"
 					:img-name="item.imgName"
-					:item-id="item.specificItemID"
+					:item-i-d="item.specificItemID"
 					:item-count="item.count"
 					:item-labels="item.itemLabels"
 				/>
@@ -70,9 +70,9 @@ type BagItem = {
 }
 
 type BagDetails = {
-	selectedCategory: string[]
+	labels: string[]
 	expirationDate: unknown
-	isPrivate: boolean
+	private: boolean
 	bagDescription: string
 }
 

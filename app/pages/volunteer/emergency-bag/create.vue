@@ -6,7 +6,7 @@
 			:back-navigation="{ text: 'Back to Manage Emergency Bags', to: '/volunteer/emergency-bag/manage' }"
 		>
 			<div class="flex justify-center">
-				<div class="flex w-full max-w-100 flex-col">
+				<div class="flex w-full max-w-3xl flex-col">
 					<UStepper ref="stepper" disabled :items="steps">
 						<template #content="{ item }">
 							<USeparator class="mb-4" />
@@ -70,9 +70,9 @@ const bagItems = ref<
 >([])
 
 const bagDetails = ref({
-	selectedCategory: [],
+	labels: [] as string[],
 	expirationDate: null,
-	isPrivate: null,
+	private: false,
 	bagDescription: "",
 })
 
@@ -91,8 +91,8 @@ if (route.query.duplicateFrom) {
 			quantity: Number(item.specificItem.quantity),
 			itemLabels: item.specificItem.itemLabels.filter((label: any) => !label.archived).map((label: any) => label.itemLabelName),
 		}))
-		bagDetails.value.selectedCategory = sourceBag.emergencyBagLabels.map((label: any) => label.emergencyBagLabelName)
-		bagDetails.value.isPrivate = sourceBag.private
+		bagDetails.value.labels = sourceBag.emergencyBagLabels.map((label: any) => label.emergencyBagLabelName)
+		bagDetails.value.private = sourceBag.private
 		bagDetails.value.bagDescription = sourceBag.bagDescription || ""
 		bagDetails.value.expirationDate = parseDate(sourceBag.expiryDate.slice(0, 10))
 	}
@@ -129,10 +129,10 @@ const submitBag = async () => {
 		await $fetch("/api/volunteer/emergency-bag/emergency-bag", {
 			method: "PUT",
 			body: {
-				labels: bagDetails.value.selectedCategory,
+				labels: bagDetails.value.labels,
 				expiryDate: bagDetails.value.expirationDate.toDate(getLocalTimeZone()).toISOString(),
-				private: bagDetails.value.isPrivate ?? false,
-				bagDescription: bagDetails.value.isPrivate ? bagDetails.value.bagDescription : "",
+				private: bagDetails.value.private ?? false,
+				bagDescription: bagDetails.value.private ? bagDetails.value.bagDescription : "",
 				items: bagItems.value.map((item) => ({
 					specificItemID: item.specificItemID,
 					count: item.count,

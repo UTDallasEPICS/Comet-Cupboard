@@ -3,7 +3,7 @@
 		<DataAnalyticsToolbar v-model:range="range" v-model:grouping="grouping" />
 		<DataAnalyticsMetrics :metrics="metrics" />
 		<DataAnalyticsChart eyebrow="Orders placed" title="Visits over time" type="line" :labels="chartLabels" :datasets="chartDatasets" />
-		<DataAnalyticsTable title="Visitor activity by period" :columns="columns" :rows="tableRows" />
+		<DataAnalyticsTable title="Visitor activity by period" :columns="columns" :rows="tableRows" :export-href="exportHref" />
 	</DataAnalyticsShell>
 </template>
 
@@ -12,6 +12,18 @@ definePageMeta({ layout: false })
 
 type TimeSeries = Record<string, number>
 const { range, grouping, query } = useAnalyticsRange()
+const exportHref = computed(() => {
+	const params = new URLSearchParams()
+	for (const [key, value] of Object.entries(query.value)) {
+		if (value != null && value !== "") {
+			params.set(key, String(value))
+		}
+	}
+
+	const suffix = params.toString()
+	const endpoint = "/api/head-admin/data/visitsExport"
+	return suffix ? `${endpoint}?${suffix}` : endpoint
+})
 const { data: totalData } = await useFetch<TimeSeries>("/api/head-admin/data/visitor", { query, default: () => ({}) })
 const { data: uniqueData } = await useFetch<TimeSeries>("/api/head-admin/data/uniqueVisits", { query, default: () => ({}) })
 const totalVisits = computed(() => totalData.value ?? {})

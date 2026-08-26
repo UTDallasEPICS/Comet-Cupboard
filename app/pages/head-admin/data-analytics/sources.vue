@@ -3,7 +3,7 @@
 		<DataAnalyticsToolbar v-model:range="range" :show-grouping="false" />
 		<DataAnalyticsMetrics :metrics="metrics" />
 		<DataAnalyticsChart eyebrow="Items received" title="Contributions by source" :labels="chartLabels" :datasets="chartDatasets" />
-		<DataAnalyticsTable title="Source contribution details" :columns="columns" :rows="tableRows" />
+		<DataAnalyticsTable title="Source contribution details" :columns="columns" :rows="tableRows" :export-href="exportHref" />
 	</DataAnalyticsShell>
 </template>
 
@@ -16,6 +16,18 @@ const sourceQuery = computed(() => ({
 	startDate: query.value.startDate,
 	endDate: query.value.endDate,
 }))
+const exportHref = computed(() => {
+	const params = new URLSearchParams()
+	for (const [key, value] of Object.entries(sourceQuery.value)) {
+		if (value != null && value !== "") {
+			params.set(key, String(value))
+		}
+	}
+
+	const suffix = params.toString()
+	const endpoint = "/api/head-admin/data/sourceExport"
+	return suffix ? `${endpoint}?${suffix}` : endpoint
+})
 const { data } = await useFetch<Sources>("/api/head-admin/data/source", { query: sourceQuery, default: () => ({}) })
 const sourceData = computed(() => data.value ?? {})
 const tableRows = computed(() =>

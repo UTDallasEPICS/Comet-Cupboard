@@ -1,25 +1,17 @@
 <template>
-	<UCard
-		class="relative w-full min-w-72 shadow-md"
-		:ui="{
-			body: 'p-0 py-0 sm:p-0 sm:py-0',
-		}"
-	>
-		<div class="flex flex-row items-center gap-2">
-			<img :src="`/api/public/image/${imgName}`" :alt="name" class="border-border-soft aspect-square h-full w-20 rounded-lg border object-cover" />
+	<UCard class="relative w-full overflow-hidden shadow-md" :ui="{ body: 'p-0 sm:p-0' }">
+		<div class="relative flex min-h-24 items-center gap-4 p-4">
+			<img :src="`/api/public/image/${imgName}`" :alt="name" class="border-border-soft h-16 w-16 shrink-0 rounded-lg border object-cover" />
 
-			<div class="flex w-full flex-col p-2">
+			<div class="min-w-0 flex-1">
 				<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
 				<SharedTextBaseSecondary v-if="productName">{{ productName }}</SharedTextBaseSecondary>
 				<div v-if="itemLabels.length" class="mt-1 flex flex-wrap gap-1">
 					<SharedLabel v-for="label in itemLabels" :key="label" :label="label" />
 				</div>
-				<div class="flex flex-row items-center justify-between">
-					<UBadge :label="`QTY: ${itemQuantity}`" variant="outline" color="neutral" />
-				</div>
+				<UBadge :label="`QTY: ${itemQuantity}`" variant="outline" color="neutral" class="mt-1" />
 			</div>
-		</div>
-		<div class="flex flex-col items-end justify-between gap-2">
+
 			<SharedButtonActionButton
 				variant="ghost"
 				icon="i-lucide-x"
