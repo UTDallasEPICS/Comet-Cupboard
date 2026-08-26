@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<NuxtLayout name="main" :title="`Edit ${currentLocation.name}`" :back-navigation="{ text: 'Back to Manage Locations', to: '/admin/manage/locations' }">
+		<NuxtLayout name="main" :title="`Edit ${currentLocation.locationName}`" :back-navigation="{ text: 'Back to Manage Locations', to: '/admin/manage/locations' }">
 			<USeparator class="my-4" />
 			<section>
 				<div class="mx-auto w-full max-w-xl">

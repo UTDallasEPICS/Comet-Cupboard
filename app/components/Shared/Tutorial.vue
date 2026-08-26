@@ -19,6 +19,7 @@
 									:key="tutorial.tutorialID"
 									action="neutral"
 									:text="tutorial.tutorialName"
+									leading-icon="i-lucide-book"
 									trailing-icon="i-lucide-chevron-right"
 									justify="between"
 									variant="outline"
@@ -40,10 +41,9 @@
 									size="xl"
 									class="mt-4"
 									leading-icon="i-lucide-arrow-left"
+									text="Back to tutorials"
 									@click="backToTutorials"
-								>
-									Back to Tutorials
-								</SharedButtonActionButton>
+								/>
 							</div>
 							<template v-else>
 								<UCarousel
@@ -70,10 +70,10 @@
 										variant="solid"
 										size="xl"
 										class="mt-4"
+										leading-icon="i-lucide-arrow-left"
+										text="Back to tutorials"
 										@click="backToTutorials"
-									>
-										Back to Tutorials
-									</SharedButtonActionButton>
+									/>
 								</div>
 							</template>
 						</div>

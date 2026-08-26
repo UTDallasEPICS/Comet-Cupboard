@@ -12,6 +12,7 @@
 							@click="navigateTo('/volunteer/emergency-bag/create')"
 						/>
 					</UInput>
+					<EmergencyBagQRCodeModal />
 					<UPopover>
 						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" button-variant="ghost" action="neutral" size="md" />
 

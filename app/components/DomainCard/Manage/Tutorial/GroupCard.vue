@@ -28,6 +28,7 @@
 								action="neutral"
 								:text="tutorial.tutorialName"
 								justify="between"
+								leading-icon="i-lucide-book"
 								trailing-icon="i-lucide-chevron-right"
 								variant="outline"
 								size="xl"

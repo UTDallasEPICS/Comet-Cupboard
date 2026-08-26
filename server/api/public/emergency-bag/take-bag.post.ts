@@ -1,14 +1,10 @@
-import { z } from "zod"
 import { prisma } from "#server/utils/db"
 import { defineSafeHandler } from "#server/utils/handler"
 import { validateBody } from "#server/utils/validation"
+import { claimEmergencyBagSchema } from "#shared/utils/formSchemas"
 import { StatusCodes } from "http-status-codes"
 
-const schema = z
-	.object({
-		label: z.string().length(5, "Bag ID must be 5 characters long"),
-	})
-	.strict()
+const schema = claimEmergencyBagSchema.strict()
 
 export default defineSafeHandler(async (event) => {
 	const { label } = await validateBody(event, schema)

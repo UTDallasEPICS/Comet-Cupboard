@@ -440,6 +440,15 @@ export const emergencyBagDisplayFields = {
 	isPrivate: { id: "isPrivate", label: "Privacy" },
 	bagDescription: { id: "bagDescription", label: "Bag Description", placeholder: "Please enter a bag description..." },
 } satisfies Record<"selectedCategory" | "isPrivate" | "bagDescription", FormFieldConfig>
+
+export const claimEmergencyBagSchema = z.object({
+	label: z.string().trim().length(5, "Bag ID must be 5 characters long"),
+})
+export type ClaimEmergencyBagForm = z.infer<typeof claimEmergencyBagSchema>
+export const claimEmergencyBagFormFields = {
+	label: { id: "label", label: "Bag ID", placeholder: "Enter Bag ID" },
+} satisfies Record<keyof ClaimEmergencyBagForm, FormFieldConfig>
+
 export const dealFormFields = {
 	actualCount: { id: "actualCount", label: "Actual Count" },
 	adjustedCount: { id: "adjustedCount", label: "Adjusted Count" },

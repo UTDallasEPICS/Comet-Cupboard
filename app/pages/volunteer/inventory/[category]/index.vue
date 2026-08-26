@@ -7,6 +7,7 @@
 						<SharedButtonActionButton
 							leading-icon="i-lucide-plus"
 							color="neutral"
+							text="Add"
 							class="bg-utd-green absolute right-0 text-white"
 							:to="`/volunteer/inventory/${currentCategory}/add`"
 						/>

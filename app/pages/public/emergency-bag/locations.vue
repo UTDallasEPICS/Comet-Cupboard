@@ -1,40 +1,31 @@
 <template>
 	<div>
 		<NuxtLayout name="main" title="Emergency Bag Locations" :back-navigation="{ text: 'Back to Home', to: '/' }">
-			<section class="space-y-6">
-				<div class="flex items-center justify-between gap-3">
-					<h2 class="text-lg font-semibold text-gray-900">Find A Pickup Point</h2>
-					<UPopover>
-						<SharedButtonActionButton
-							icon="i-lucide-sliders-horizontal"
-							variant="ghost"
-							action="neutral"
-							size="md"
-							aria-label="Filter bag labels"
-						/>
-						<template #content>
-							<div class="flex w-64 flex-col items-start gap-2 p-4">
-								<SharedTextBase class="w-full font-semibold">Filter Labels</SharedTextBase>
-								<USeparator />
-								<UCheckboxGroup v-model="selectedLabels" :items="labelOptions" orientation="vertical" />
-							</div>
-						</template>
-					</UPopover>
-				</div>
-
-				<div v-if="pending" class="py-8 text-center text-sm text-gray-500">Loading locations...</div>
-				<div v-else class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-					<DomainCardEmergencyBagLocationCard
-						v-for="location in locations"
-						:key="location.locationID"
-						:location-name="location.locationName"
-						:img-name="location.imgName"
-						:description="location.description"
-						:map-embed-url="location.mapEmbedUrl"
-						:visible-bags="visibleBags(location)"
-					/>
-				</div>
-			</section>
+			<div class="flex items-center justify-between">
+				<SharedTextSectionTitle>Find A Pickup Point</SharedTextSectionTitle>
+				<UPopover>
+					<SharedButtonActionButton icon="i-lucide-sliders-horizontal" variant="ghost" action="neutral" size="md" aria-label="Filter bag labels" />
+					<template #content>
+						<div class="flex w-64 flex-col items-start gap-2 p-4">
+							<SharedTextBase class="w-full font-semibold">Filter Labels</SharedTextBase>
+							<USeparator />
+							<UCheckboxGroup v-model="selectedLabels" :items="labelOptions" orientation="vertical" />
+						</div>
+					</template>
+				</UPopover>
+			</div>
+			<USeparator class="my-4" />
+			<SharedLayoutGrid :columns="1">
+				<DomainCardEmergencyBagLocationCard
+					v-for="location in locations"
+					:key="location.locationID"
+					:location-name="location.locationName"
+					:img-name="location.imgName"
+					:description="location.description"
+					:map-embed-url="location.mapEmbedUrl"
+					:visible-bags="visibleBags(location)"
+				/>
+			</SharedLayoutGrid>
 		</NuxtLayout>
 	</div>
 </template>

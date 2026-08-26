@@ -2,69 +2,56 @@
 	<div>
 		<NuxtLayout name="main" title="Claim Emergency Bag">
 			<USeparator class="my-4" />
-			<section>
-				<UCard>
-					<template #header>
-						<SharedTextSectionTitle>Claim Bag</SharedTextSectionTitle>
-					</template>
-
+			<SharedFormShell :validate="validate" :state="state" :on-submit="submit" :on-error="onError" width-class="w-full">
+				<SharedLayoutSectionUCard title="Claim Bag">
 					<div class="space-y-4">
-						<UInput v-model="bagID" placeholder="Bag ID" :disabled="isLoading" />
+						<UFormField name="label" v-bind="claimEmergencyBagFormFields.label" required>
+							<UInput v-model="state.label" :placeholder="claimEmergencyBagFormFields.label.placeholder" :disabled="isLoading" class="w-full" />
+						</UFormField>
 
-						<SharedTextBase v-if="errorMessage" class="text-red-500">
-							{{ errorMessage }}
-						</SharedTextBase>
-
-						<SharedTextBase v-if="successMessage" class="text-green-500">
-							{{ successMessage }}
-						</SharedTextBase>
-
-						<div class="flex justify-end">
-							<SharedButtonActionButton
-								action="positive"
-								text="Submit"
-								leading-icon="i-lucide-check"
-								:disabled="isLoading"
-								@click="submitBagID"
-							/>
-						</div>
+						<UAlert v-if="errorMessage" color="error" variant="subtle" :description="errorMessage" />
+						<UAlert v-if="successMessage" color="success" variant="subtle" :description="successMessage" />
 					</div>
-				</UCard>
-			</section>
+				</SharedLayoutSectionUCard>
+
+				<SharedFormActions class-name="sticky right-4 bottom-8 mt-4">
+					<SharedButtonActionButton action="positive" type="submit" text="Claim Bag" leading-icon="i-lucide-check" :loading="isLoading" />
+				</SharedFormActions>
+			</SharedFormShell>
 		</NuxtLayout>
 	</div>
 </template>
 
 <script lang="ts" setup>
+import {
+	claimEmergencyBagFormFields,
+	claimEmergencyBagSchema,
+	type ClaimEmergencyBagForm,
+} from "#shared/utils/formSchemas"
+
 definePageMeta({ layout: false })
 
-const bagID = ref("")
 const isLoading = ref(false)
 const errorMessage = ref("")
 const successMessage = ref("")
+const { state, validate, onError } = createFormBuilder(claimEmergencyBagSchema, () => ({ label: "" }))
 
-const submitBagID = async () => {
+const submit = async (event: { data: ClaimEmergencyBagForm }) => {
 	errorMessage.value = ""
 	successMessage.value = ""
-
-	if (bagID.value.length !== 5) {
-		errorMessage.value = "Please enter a valid 5-character Bag ID."
-		return
-	}
 
 	isLoading.value = true
 
 	try {
 		const response = await $fetch("/api/public/emergency-bag/take-bag", {
 			method: "POST",
-			body: { label: bagID.value },
+			body: event.data,
 		})
 
 		successMessage.value = response.message || "Bag claimed successfully!"
-		bagID.value = ""
-	} catch (error: any) {
-		console.error("Error details:", error.data)
-		errorMessage.value = error.data?.statusMessage || "Failed to submit Bag ID. Please try again."
+		state.value.label = ""
+	} catch (error: unknown) {
+		errorMessage.value = (error as { data?: { statusMessage?: string } }).data?.statusMessage ?? "Failed to claim Bag ID. Please try again."
 	} finally {
 		isLoading.value = false
 	}
