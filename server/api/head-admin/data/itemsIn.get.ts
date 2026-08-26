@@ -20,53 +20,58 @@ export default defineSafeHandler(async (event) => {
 
 	const { timeLevel, startDate, endDate } = result.data
 
-	if(startDate) {
+	if (startDate) {
 		startDate.setHours(0, 0, 0, 0)
 	}
 
-	if(endDate) {
+	if (endDate) {
 		endDate.setHours(23, 59, 59, 999)
 	}
 
-	const itemChanges = await prisma.itemCountChange.findMany({
+	const itemChanges = await prisma.completedInventoryIntakeSessionItem.findMany({
 		include: {
-			Item: {
-				select: {
-					name: true,
-					categoryName: true,
-					quantity: true,
+			completedInventoryIntakeSession: true,
+			specificItem: {
+				include: {
+					item: {
+						select: {
+							itemName: true,
+							category: { select: { categoryName: true } },
+						},
+					},
 				},
 			},
 		},
 		where: {
-			date: {
-				gte: startDate,
-				lte: endDate,
+			completedInventoryIntakeSession: {
+				intakeDate: {
+					gte: startDate,
+					lte: endDate,
+				},
 			},
 		},
 		orderBy: {
-			date: "asc",
+			completedInventoryIntakeSession: { intakeDate: "asc" },
 		},
 	})
 
-    const rows = itemChanges.map((row) => {
-        return{
-            date: row.date,
-            amountChanged: row.amountChanged,
-            itemName: row.Item.name,
-            itemCategory: row.Item.categoryName,
-            itemQty: row.Item.quantity,
-        }
-    })
+	const rows = itemChanges.map((row) => {
+		return {
+			date: row.completedInventoryIntakeSession.intakeDate,
+			amountChanged: row.amountChanged,
+			itemName: row.specificItem.item.itemName,
+			itemCategory: row.specificItem.item.category.categoryName,
+		}
+	})
 
 	if (rows.length === 0) {
 		return {}
 	}
-	
-	const firstDate = startDate ?? new Date(rows[0]?.date)
-	const lastDate = endDate ?? new Date(rows[rows.length - 1]?.date)
+
+	const firstDate = startDate ?? new Date(rows[0]!.date)
+	const lastDate = endDate ?? new Date(rows[rows.length - 1]!.date)
 	const lastTimeLevel = getTimeLevel(lastDate, timeLevel)
-	const donationsByTimeLevel = {}
+	const donationsByTimeLevel: Record<string, Record<string, { total: number; items: Record<string, number> }>> = {}
 	let curDate = new Date(firstDate)
 	while (curDate <= lastDate || getTimeLevel(curDate, timeLevel) === lastTimeLevel) {
 		const level = getTimeLevel(curDate, timeLevel)
@@ -95,18 +100,19 @@ export default defineSafeHandler(async (event) => {
 		const level = getTimeLevel(row.date, timeLevel)
 		const category = row.itemCategory
 		const item = row.itemName
+		const levelTotals = donationsByTimeLevel[level]!
 
-		if (!(category in donationsByTimeLevel[level])) {
-			donationsByTimeLevel[level][category] = { total: 0, items: {} }
+		if (!(category in levelTotals)) {
+			levelTotals[category] = { total: 0, items: {} }
 		}
 
-		donationsByTimeLevel[level][category].total += row.amountChanged
+		levelTotals[category]!.total += row.amountChanged
 
-		if (!(item in donationsByTimeLevel[level][category].items)){
-			donationsByTimeLevel[level][category].items[item] = 0
+		if (!(item in levelTotals[category]!.items)) {
+			levelTotals[category]!.items[item] = 0
 		}
 
-		donationsByTimeLevel[level][category].items[item] += row.amountChanged
+		levelTotals[category]!.items[item]! += row.amountChanged
 	}
 
 	return donationsByTimeLevel

@@ -1,11 +1,6 @@
-enum TimeLevelType {
-    Day = "Day",
-    Week = "Week",
-    Month = "Month",
-    Semester = "Semester",
-}
+type TimeLevel = "Day" | "Week" | "Month" | "Semester"
 
-const semesterFromDate = (date) => {
+const semesterFromDate = (date: Date) => {
 	const springSemesterStart = new Date(date.getFullYear(), 0)
 	const springSemesterEnd = new Date(date.getFullYear(), 4, 31)
 	const summerSemesterStart = new Date(date.getFullYear(), 5)
@@ -26,24 +21,22 @@ const semesterFromDate = (date) => {
 	return `${semester} ${date.getFullYear()}`
 }
 
-const getTimeLevel = (date, level) => {
-    if (level === TimeLevelType.Day){
-        return new Date(date).toLocaleDateString("en-US")
-    } else if (level === TimeLevelType.Week){
-        const weekStart = new Date(date)
+const getTimeLevel = (date: Date, level: TimeLevel): string => {
+	if (level === "Day") {
+		return new Date(date).toLocaleDateString("en-US")
+	} else if (level === "Week") {
+		const weekStart = new Date(date)
 		weekStart.setDate(weekStart.getDate() - weekStart.getDay())
 
 		const weekEnd = new Date(weekStart)
 		weekEnd.setDate(weekEnd.getDate() + 6)
 
-        return `${weekStart.toLocaleDateString("en-US")} - ${weekEnd.toLocaleDateString("en-US")}`
-    } else if (level === TimeLevelType.Month){
-        return new Date(date).toLocaleDateString("en-US", {month: "short", year: "numeric"})
-    } else if (level === TimeLevelType.Semester) {
-        return semesterFromDate(new Date(date))
-    } else {
-        return date
-    }
+		return `${weekStart.toLocaleDateString("en-US")} - ${weekEnd.toLocaleDateString("en-US")}`
+	} else if (level === "Month") {
+		return new Date(date).toLocaleDateString("en-US", { month: "short", year: "numeric" })
+	} else {
+		return semesterFromDate(new Date(date))
+	}
 }
 
-export {getTimeLevel}
+export { getTimeLevel }

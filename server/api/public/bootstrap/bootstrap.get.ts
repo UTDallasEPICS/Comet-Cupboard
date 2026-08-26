@@ -35,11 +35,15 @@ export default defineSafeHandler(async (event) => {
 						publicCode: publicCode,
 					},
 					include: {
-						CartItems: {
+						cartItems: {
 							include: {
-								Item: {
+								specificItem: {
 									include: {
-										Deal: true,
+										item: {
+											include: {
+												deal: true,
+											},
+										},
 									},
 								},
 							},
@@ -56,7 +60,7 @@ export default defineSafeHandler(async (event) => {
 				select: {
 					position: true,
 					publicCode: true,
-					UserSession: {
+					userSession: {
 						select: {
 							publicIcon: true,
 						},
@@ -66,7 +70,7 @@ export default defineSafeHandler(async (event) => {
 			const formattedQueue = queue.map((entry) => ({
 				position: entry.position,
 				publicCode: entry.publicCode,
-				publicIcon: entry.UserSession.publicIcon,
+				publicIcon: entry.userSession.publicIcon,
 			}))
 			bootstrapData.publicQueue = formattedQueue
 

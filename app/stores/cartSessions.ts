@@ -1,6 +1,7 @@
 interface CartSession {
 	publicCode: string
 	publicIcon: string
+	createdAt: string | Date
 }
 
 export const useCartSessionsStore = defineStore("cartSessions", () => {
@@ -9,7 +10,7 @@ export const useCartSessionsStore = defineStore("cartSessions", () => {
 	const getCartSessions = async () => {
 		try {
 			const response = await $fetch("/api/volunteer/cart/carts")
-			cartSessions.value = response.map((cart: any) => ({ publicCode: cart.publicCode, publicIcon: cart.publicIcon }))
+			cartSessions.value = response.map((cart: any) => ({ publicCode: cart.publicCode, publicIcon: cart.publicIcon, createdAt: cart.createdAt }))
 		} catch (e) {
 			cartSessions.value = []
 		}
@@ -18,7 +19,7 @@ export const useCartSessionsStore = defineStore("cartSessions", () => {
 	const handleCartSessionEvent = async (event: AppEvent) => {
 		switch (event.type) {
 			case "cartSession.created":
-				cartSessions.value.push({ publicCode: event.payload.publicCode, publicIcon: event.payload.publicIcon })
+				await getCartSessions()
 				break
 			case "cartSession.removed":
 				cartSessions.value = cartSessions.value.filter((cart) => cart.publicCode !== event.payload.publicCode)

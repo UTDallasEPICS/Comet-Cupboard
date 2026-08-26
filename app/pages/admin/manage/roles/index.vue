@@ -3,9 +3,9 @@
 		<NuxtLayout name="main" title="Manage Roles" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
 			<section>
 				<div class="flex flex-row flex-nowrap items-center gap-2">
-					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search users by name or email" class="grow" />
+					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search users by name or email" class="grow" />
 					<UPopover>
-						<UButton :icon="icons['sortFilter']" variant="ghost" color="neutral" size="md" />
+						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" button-variant="ghost" action="neutral" size="md" />
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">
@@ -17,20 +17,29 @@
 					</UPopover>
 				</div>
 				<USeparator class="my-4" />
-				<UPagination
-					v-model:page="page"
-					:items-per-page="pageSize"
-					:total="filtered.length"
-					class="w-full"
-					:ui="{
-						list: 'flex items-center justify-center gap-1',
-					}"
-				/>
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					<li v-for="user in paginatedUsers" :key="user.userID">
-						<ManageUserRoleItemCard :user-i-d="user.userID" :display-name="user.displayName" :role="user.role" />
-					</li>
-				</ul>
+
+				<SharedLayoutSectionUCard title="Users">
+					<SharedLayoutGrid class="my-4">
+						<li v-for="user in paginatedUsers" :key="user.userID">
+							<DomainCardManageUserRoleItemCard
+								:user-i-d="user.userID"
+								:display-name="user.displayName"
+								:role="user.role"
+								@set-role="setUserRole"
+								@self-demote="headAdminSelfDemote"
+							/>
+						</li>
+					</SharedLayoutGrid>
+					<UPagination
+						v-model:page="page"
+						:items-per-page="pageSize"
+						:total="filtered.length"
+						class="w-full"
+						:ui="{
+							list: 'flex items-center justify-center gap-1',
+						}"
+					/>
+				</SharedLayoutSectionUCard>
 			</section>
 		</NuxtLayout>
 	</div>
@@ -39,9 +48,24 @@
 <script lang="ts" setup>
 definePageMeta({ layout: false })
 
-const { data: users } = await useFetch("/api/admin/user/users", {
+const permissionsStore = usePermissionsStore()
+
+const { data: users, refresh } = await useFetch("/api/admin/user/users", {
 	method: "GET",
 })
+
+const setUserRole = async ({ userID, newRole }: { userID: string; newRole: string }) => {
+	await $fetch(permissionsStore.canHeadAdminAccess ? "/api/head-admin/user/role" : "/api/admin/user/role", {
+		method: "POST",
+		body: { userID, newRole },
+	})
+	await refresh()
+}
+
+const headAdminSelfDemote = async () => {
+	await $fetch("/api/head-admin/user/selfDemote", { method: "POST" })
+	await refresh()
+}
 
 const toggleOptions = ref(["Student", "Volunteer", "Admin", "Head Admin"])
 const toggleItems = ref([])

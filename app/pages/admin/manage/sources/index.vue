@@ -3,26 +3,43 @@
 		<NuxtLayout name="main" title="Manage Sources" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
 			<section>
 				<div class="flex flex-row flex-nowrap items-center gap-2">
-					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search sources" class="relative grow">
-						<UButton :icon="icons['add']" variant="ghost" color="neutral" class="absolute bg-utd-green text-white right-0" :to="`/admin/manage/sources/add`" />
+					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search sources" class="relative grow">
+						<SharedButtonActionButton
+							leading-icon="i-lucide-plus"
+							variant="ghost"
+							action="positive"
+							text="Add"
+							class="bg-utd-green absolute right-0 text-white"
+							:to="`/admin/manage/sources/add`"
+						/>
 					</UInput>
 				</div>
 				<USeparator class="my-4" />
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					<li v-for="source in shownActiveSources" :key="source.sourceID">
-						<ManageSourceItemCard :name="source.name" :source-i-d="source.sourceID" />
-					</li>
-				</ul>
+				<UCard>
+					<SharedTextSectionTitle>Active Sources</SharedTextSectionTitle>
+					<USeparator class="my-4" />
+					<SharedLayoutGrid v-if="shownActiveSources.length !== 0">
+						<li v-for="source in shownActiveSources" :key="source.sourceID">
+							<DomainCardManageSourceItemCard :name="source.sourceName" :source-i-d="source.sourceID" />
+						</li>
+					</SharedLayoutGrid>
+					<div v-else class="flex flex-col items-center justify-center gap-y-4">
+						<SharedTextBaseSecondary>No active sources found</SharedTextBaseSecondary>
+					</div>
+				</UCard>
 
-				<USeparator class="my-4" />
-
-				<SharedTextSectionTitle>Archived Sources</SharedTextSectionTitle>
-
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					<li v-for="source in shownArchivedSources" :key="source.sourceID">
-						<ManageSourceItemCard :name="source.name" :source-i-d="source.sourceID" />
-					</li>
-				</ul>
+				<UCard class="mt-4">
+					<SharedTextSectionTitle>Archived Sources</SharedTextSectionTitle>
+					<USeparator class="my-4" />
+					<SharedLayoutGrid v-if="shownArchivedSources.length !== 0">
+						<li v-for="source in shownArchivedSources" :key="source.sourceID">
+							<DomainCardManageSourceItemCard :name="source.sourceName" :source-i-d="source.sourceID" />
+						</li>
+					</SharedLayoutGrid>
+					<div v-else class="flex flex-col items-center justify-center gap-y-4">
+						<SharedTextBaseSecondary>No archived sources found</SharedTextBaseSecondary>
+					</div>
+				</UCard>
 			</section>
 		</NuxtLayout>
 	</div>
@@ -31,7 +48,13 @@
 <script setup lang="ts">
 definePageMeta({ layout: false })
 
-const { data: sources } = await useFetch("/api/volunteer/inventory/sources", {
+interface SourceSummary {
+	sourceID: string
+	sourceName: string
+	archived: boolean
+}
+
+const { data: sources } = await useFetch<SourceSummary[]>("/api/volunteer/inventory/source", {
 	query: { includeArchived: true },
 })
 
@@ -40,11 +63,11 @@ const sortedSources = computed(() => {
 		return []
 	}
 	const sorted = [...sources.value]
-	sorted.sort((a, b) => a.name.localeCompare(b.name))
+	sorted.sort((a, b) => a.sourceName.localeCompare(b.sourceName))
 	return sorted
 })
 
-const { query, filtered } = useFuzzySearch(sortedSources, { searchKeys: ["name"] })
+const { query, filtered } = useFuzzySearch(sortedSources, { searchKeys: ["sourceName"] })
 
 const shownActiveSources = computed(() => {
 	return filtered.value.filter((source) => {

@@ -3,62 +3,69 @@
 		<NuxtLayout name="main" :title="`${currentCategory}`" :back-navigation="{ text: `Back to Categories`, to: '/volunteer/inventory' }">
 			<section>
 				<div class="flex flex-row flex-nowrap items-center gap-2">
-					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search items" class="relative grow">
-						<UButton
-							:icon="icons['add']"
-							variant="ghost"
+					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search items" class="relative grow">
+						<SharedButtonActionButton
+							leading-icon="i-lucide-plus"
 							color="neutral"
-							class="absolute bg-utd-green text-white right-0"
+							text="Add"
+							class="bg-utd-green absolute right-0 text-white"
 							:to="`/volunteer/inventory/${currentCategory}/add`"
 						/>
 					</UInput>
 					<UPopover>
-						<UButton :icon="icons['sortFilter']" variant="ghost" color="neutral" size="md" />
+						<SharedButtonActionButton icon="i-lucide-sliders-horizontal" button-variant="ghost" action="neutral" size="md" />
 
 						<template #content>
 							<div class="flex w-64 flex-col items-start gap-2 p-4">
 								<SharedTextBase class="w-full font-semibold">Filter</SharedTextBase>
 								<USeparator />
-								<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="vertical" />
-								<SharedTextBase class="w-full font-semibold">Sort</SharedTextBase>
+								<UCheckboxGroup v-model="toggleItems" :items="toggleOptions" orientation="vertical" class="w-full pl-2" />
+								<SharedTextBase class="w-full pl-2 font-semibold">Item Labels</SharedTextBase>
 								<USeparator />
-								<USelect v-model="sortOption" :items="sortOptions" class="w-full max-w-md grow" />
+								<UCheckboxGroup v-model="selectedItemLabels" :items="itemLabelOptions" orientation="vertical" class="w-full pl-2" />
+								<SharedTextBase class="w-full pl-2 font-semibold">Sort</SharedTextBase>
+								<USeparator />
+								<USelect v-model="sortOption" :items="sortOptions" class="w-full max-w-md grow pl-2" />
 							</div>
 						</template>
 					</UPopover>
 				</div>
 				<USeparator class="my-4" />
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					<li v-for="item in shownActiveItems" :key="item.itemID">
-						<InventoryItemCard
-							:change-count="inventoryStore.inventoryChangesItems.find((i) => i.itemID === item.itemID)?.count || 0"
-							:current-count="item.quantity"
-							:img-name="item.imgName"
-							:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
-							:item-i-d="item.itemID"
-							:name="item.name"
-							:category="item.categoryName"
-						/>
-					</li>
-				</ul>
+				<SharedLayoutSectionUCard title="Active Items">
+					<SharedLayoutGrid v-if="shownActiveItems.length">
+						<li v-for="item in shownActiveItems" :key="item.itemID">
+							<DomainCardInventoryItemCard
+								:specific-items="item.specificItems"
+								:change-count="inventoryChangeCount(item)"
+								:current-count="itemQuantityTotal(item)"
+								:img-name="item.imgName"
+								:item-deal="item.deal ? { actualCount: item.deal.actualCount, adjustedCount: item.deal.adjustedCount } : {}"
+								:item-i-d="item.itemID"
+								:name="item.itemName"
+								:category="item.category.categoryName"
+							/>
+						</li>
+					</SharedLayoutGrid>
+					<SharedTextBase v-else class="block text-center">No active items found</SharedTextBase>
+				</SharedLayoutSectionUCard>
 
-				<USeparator class="my-4" />
-
-				<SharedTextSectionTitle>Archived Items</SharedTextSectionTitle>
-
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					<li v-for="item in shownArchivedItems" :key="item.itemID">
-						<InventoryItemCard
-							:change-count="inventoryStore.inventoryChangesItems.find((i) => i.itemID === item.itemID)?.count || 0"
-							:current-count="item.quantity"
-							:img-name="item.imgName"
-							:item-deal="item.Deal ? { actualCount: item.Deal.actualCount, adjustedCount: item.Deal.adjustedCount } : {}"
-							:item-i-d="item.itemID"
-							:name="item.name"
-							:category="item.categoryName"
-						/>
-					</li>
-				</ul>
+				<SharedLayoutSectionUCard title="Archived Items" class="mt-4">
+					<SharedLayoutGrid v-if="shownArchivedItems.length">
+						<li v-for="item in shownArchivedItems" :key="item.itemID">
+							<DomainCardInventoryItemCard
+								:specific-items="item.specificItems"
+								:change-count="inventoryChangeCount(item)"
+								:current-count="itemQuantityTotal(item)"
+								:img-name="item.imgName"
+								:item-deal="item.deal ? { actualCount: item.deal.actualCount, adjustedCount: item.deal.adjustedCount } : {}"
+								:item-i-d="item.itemID"
+								:name="item.itemName"
+								:category="item.category.categoryName"
+							/>
+						</li>
+					</SharedLayoutGrid>
+					<SharedTextBase v-else class="block text-center">No archived items found</SharedTextBase>
+				</SharedLayoutSectionUCard>
 			</section>
 		</NuxtLayout>
 	</div>
@@ -81,13 +88,31 @@ const { data: items } = await useFetch("/api/student/inventory/items", {
 
 const toggleOptions = ref(["In Stock", "Deal", "Archived"])
 const toggleItems = ref([])
+const selectedItemLabels = ref<string[]>([])
+const { data: itemLabels } = await useFetch<{ itemLabelName: string }[]>("/api/public/inventory/item-label")
+const itemLabelOptions = computed(() => (itemLabels.value ?? []).map((label) => label.itemLabelName))
+const activeSelectedItemLabels = computed(() => selectedItemLabels.value.filter((label) => itemLabelOptions.value.includes(label)))
+
+const itemQuantityTotal = (item: { specificItems: Array<{ quantity: string }> }) => {
+	return item.specificItems.reduce((sum, si) => sum + Number(si.quantity), 0)
+}
+
+const inventoryChangeCount = (item: { itemID: string }) => {
+	return inventoryStore.inventoryChangesItems
+		.filter((change) => change.specificItem.itemID === item.itemID)
+		.reduce((sum, change) => sum + change.amountChanged, 0)
+}
 
 const shownItems = computed(() => {
 	return items.value.filter((item) => {
 		return (
-			(!toggleItems.value.includes("Deal") || item.Deal !== null) &&
+			(!toggleItems.value.includes("Deal") || item.deal !== null) &&
 			(!toggleItems.value.includes("Archived") || item.archived === true) &&
-			(!toggleItems.value.includes("In Stock") || item.quantity > 0)
+			(!toggleItems.value.includes("In Stock") || itemQuantityTotal(item) > 0) &&
+			(activeSelectedItemLabels.value.length === 0 ||
+				item.specificItems.some((product) =>
+					product.itemLabels.some((label) => !label.archived && activeSelectedItemLabels.value.includes(label.itemLabelName))
+				))
 		)
 	})
 })
@@ -95,7 +120,7 @@ const shownItems = computed(() => {
 const categoryItems = computed(() => {
 	return (
 		shownItems.value?.filter((item) => {
-			const itemCategory = item.categoryName?.trim().toLowerCase() || ""
+			const itemCategory = item.category.categoryName?.trim().toLowerCase() || ""
 			const currentCategoryLower = currentCategory?.trim().toLowerCase() || ""
 			return itemCategory.includes(currentCategoryLower)
 		}) || []
@@ -108,14 +133,14 @@ const sortedItems = computed(() => {
 	}
 	const sorted = [...categoryItems.value]
 	if (sortOption.value === "Alphabetical") {
-		sorted.sort((a, b) => a.name.localeCompare(b.name))
+		sorted.sort((a, b) => a.itemName.localeCompare(b.itemName))
 	} else if (sortOption.value === "Quantity") {
-		sorted.sort((a, b) => b.quantity - a.quantity)
+		sorted.sort((a, b) => itemQuantityTotal(b) - itemQuantityTotal(a))
 	}
 	return sorted
 })
 
-const { query, filtered } = useFuzzySearch(sortedItems, { searchKeys: ["name"] })
+const { query, filtered } = useFuzzySearch(sortedItems, { searchKeys: ["itemName", "specificItems.productName", "specificItems.itemLabels.itemLabelName"] })
 
 const shownActiveItems = computed(() => {
 	return filtered.value.filter((item) => {

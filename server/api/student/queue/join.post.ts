@@ -3,9 +3,21 @@ import { createEvent } from "#server/utils/eventsFactory"
 import { publishEvent } from "#server/utils/eventBus"
 import { StatusCodes } from "http-status-codes"
 import { defineSafeHandler } from "#server/utils/handler"
+import { validateBody } from "#server/utils/validation"
+import { z } from "zod"
+import { getQueueAccessCode } from "#server/utils/queueAccessCode"
+
+const schema = z.object({ code: z.string().regex(/^\d{6}$/, "Queue access code must be six digits") }).strict()
 
 export default defineSafeHandler(async (event) => {
+	const { code } = await validateBody(event, schema)
+	if (code !== getQueueAccessCode()) {
+		throw createError({ statusCode: StatusCodes.FORBIDDEN, statusMessage: "Queue access code is invalid or expired" })
+	}
+
 	const publicCode = event.context.userSession.publicCode
+
+	// TODO: check if user has visited the cupboard within this week
 
 	let queueEntry = {
 		position: -1,
@@ -38,7 +50,7 @@ export default defineSafeHandler(async (event) => {
 				position: tempQueueNumber,
 			},
 			include: {
-				UserSession: {
+				userSession: {
 					select: {
 						publicCode: true,
 						publicIcon: true,
@@ -49,7 +61,7 @@ export default defineSafeHandler(async (event) => {
 		queueEntry = {
 			position: foundQueueEntry.position,
 			publicCode: foundQueueEntry.publicCode,
-			publicIcon: foundQueueEntry.UserSession.publicIcon,
+			publicIcon: foundQueueEntry.userSession.publicIcon,
 		}
 	})
 

@@ -17,7 +17,7 @@ export default defineSafeHandler(async (event) => {
 			...(includeArchived === "false" ? { archived: false } : {}),
 		},
 		orderBy: {
-			name: "asc",
+			categoryName: "asc",
 		},
 	})
 	return categories

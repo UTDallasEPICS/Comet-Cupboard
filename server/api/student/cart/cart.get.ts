@@ -10,11 +10,16 @@ export default defineSafeHandler(async (event) => {
 			publicCode: publicCode,
 		},
 		include: {
-			CartItems: {
+			cartItems: {
 				include: {
-					Item: {
+					specificItem: {
 						include: {
-							Deal: true,
+							item: {
+								include: {
+									deal: true,
+									category: true,
+								},
+							},
 						},
 					},
 				},

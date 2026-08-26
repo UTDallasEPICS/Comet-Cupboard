@@ -3,26 +3,54 @@
 		<NuxtLayout name="main" title="Manage Locations" :back-navigation="{ text: 'Back to Dashboard', to: '/admin' }">
 			<section>
 				<div class="flex flex-row flex-nowrap items-center gap-2">
-					<UInput v-model="query" type="text" :icon="icons['search']" placeholder="Search locations" class="relative grow">
-						<UButton :icon="icons['add']" variant="ghost" color="neutral" class="absolute bg-utd-green text-white right-0" :to="`/admin/manage/locations/add`" />
+					<UInput v-model="query" type="text" icon="i-lucide-search" placeholder="Search locations" class="relative grow">
+						<SharedButtonActionButton
+							leading-icon="i-lucide-plus"
+							variant="ghost"
+							action="positive"
+							text="Add"
+							class="bg-utd-green absolute right-0 text-white"
+							:to="`/admin/manage/locations/add`"
+						/>
 					</UInput>
 				</div>
 				<USeparator class="my-4" />
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					<li v-for="location in shownActiveLocations" :key="location.locationID">
-						<ManageLocationItemCard :name="location.name" :img-name="location.imgName" :description="location.description" />
-					</li>
-				</ul>
+				<UCard>
+					<SharedTextSectionTitle>Active Locations</SharedTextSectionTitle>
+					<USeparator class="my-4" />
 
-				<USeparator class="my-4" />
+					<SharedLayoutGrid v-if="shownActiveLocations.length != 0" class="mt-4">
+						<li v-for="location in shownActiveLocations" :key="location.locationID">
+							<DomainCardManageLocationItemCard
+								:name="location.locationName"
+								:img-name="location.imgName"
+								:description="location.description"
+								:location-i-d="location.locationID"
+							/>
+						</li>
+					</SharedLayoutGrid>
+					<div v-else class="flex flex-col items-center justify-center gap-y-4">
+						<SharedTextBaseSecondary>No active locations found</SharedTextBaseSecondary>
+					</div>
+				</UCard>
 
-				<SharedTextSectionTitle>Archived Locations</SharedTextSectionTitle>
-
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-					<li v-for="location in shownArchivedLocations" :key="location.locationID">
-						<ManageLocationItemCard :name="location.name" :img-name="location.imgName" :description="location.description" />
-					</li>
-				</ul>
+				<UCard class="mt-4">
+					<SharedTextSectionTitle>Archived Locations</SharedTextSectionTitle>
+					<USeparator class="my-4" />
+					<SharedLayoutGrid v-if="shownArchivedLocations.length != 0" class="mt-4">
+						<li v-for="location in shownArchivedLocations" :key="location.locationID">
+							<DomainCardManageLocationItemCard
+								:name="location.locationName"
+								:img-name="location.imgName"
+								:description="location.description"
+								:location-i-d="location.locationID"
+							/>
+						</li>
+					</SharedLayoutGrid>
+					<div v-else class="flex flex-col items-center justify-center gap-y-4">
+						<SharedTextBaseSecondary>No archived locations found</SharedTextBaseSecondary>
+					</div>
+				</UCard>
 			</section>
 		</NuxtLayout>
 	</div>
@@ -31,7 +59,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: false })
 
-const { data: locations } = await useFetch("/api/public/location/locations", {
+const { data: locations } = await useFetch("/api/volunteer/location", {
 	query: { includeArchived: true },
 })
 
@@ -40,11 +68,11 @@ const sortedLocations = computed(() => {
 		return []
 	}
 	const sorted = [...locations.value]
-	sorted.sort((a, b) => a.name.localeCompare(b.name))
+	sorted.sort((a, b) => a.locationName.localeCompare(b.locationName))
 	return sorted
 })
 
-const { query, filtered } = useFuzzySearch(sortedLocations, { searchKeys: ["name"] })
+const { query, filtered } = useFuzzySearch(sortedLocations, { searchKeys: ["locationName"] })
 
 const shownActiveLocations = computed(() => {
 	return filtered.value.filter((location) => {

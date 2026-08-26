@@ -14,263 +14,421 @@ enum RoleType {
     HEAD_ADMIN
 }
 
-enum Privacy {
-    PUBLIC
-    PRIVATE
+enum SourceFieldType {
+    TEXT
+    NUMBER
+    DATE
+    BOOLEAN
+    CHOICE
+}
+
+enum AuditAction {
+    INVENTORY_INTAKE_SESSION_CREATED
+    INVENTORY_INTAKE_SESSION_COMPLETED
+    VERIFY_CART_APPROVED
+    VERIFY_CART_REJECTED
+    EMERGENCY_BAG_CREATED
+    EMERGENCY_BAG_EDITED
+    EMERGENCY_BAG_LABEL_CREATED
+    EMERGENCY_BAG_LABEL_EDITED
+    SOURCE_CREATED
+    SOURCE_EDITED
+    CATEGORY_CREATED
+    CATEGORY_EDITED
+    ITEM_CREATED
+    ITEM_EDITED
+    ITEM_LABEL_CREATED
+    ITEM_LABEL_EDITED
+    LOCATION_CREATED
+    LOCATION_EDITED
+    TUTORIAL_CREATED
+    TUTORIAL_EDITED
+    USER_ROLE_EDITED
+    ANNOUNCEMENT_CREATED
+    ANNOUNCEMENT_EDITED
+    DASHBOARD_LINKS_CREATED
+    DASHBOARD_LINKS_EDITED
+    OTHER
+}
+
+enum AcademicSemester {
+    FALL
+    SPRING
+    SUMMER
 }
 
 model User {
-    userID      String       @id @map("userID")
-    displayName String       @default("") @map("display_name")
-    role        RoleType     @map("role")
-    Orders      Order[]
+    userID      String   @id @map("user_id")
+    displayName String   @default("") @map("display_name")
+    role        RoleType @map("role")
+
     userSession UserSession?
+    orders      Order[]
+    auditLogs   AuditLog[]
 
     @@map("user")
 }
 
 model UserSession {
-    userID                 String                  @id @map("userID")
-    User                   User                    @relation(fields: [userID], references: [userID], onDelete: Cascade, onUpdate: Cascade)
-    publicCode             String                  @unique @map("public_code")
-    publicIcon             String                  @map("public_icon")
-    Cart                   Cart?
-    QueueEntry             QueueEntry?
-    InventoryChangeSession InventoryChangeSession?
+    userID     String @id @map("user_id")
+    publicCode String @unique @map("public_code")
+    publicIcon String @map("public_icon")
+
+    user       User        @relation(fields: [userID], references: [userID], onDelete: Cascade, onUpdate: Cascade)
+    cart       Cart?
+    queueEntry QueueEntry?
 
     @@map("user_session")
 }
 
+model QueueEntry {
+    publicCode                      String    @id @map("public_code")
+    joinedAt                        DateTime  @default(now()) @map("joined_at")
+    position                        Int       @map("position")
+    queuePingSentAt                 DateTime? @map("queue_ping_sent_at")
+    queuePingAcknowledgedAt         DateTime? @map("queue_ping_ack_at")
+    queuePingAcknowledgementMessage String?   @map("queue_ping_ack_message")
+
+    userSession UserSession @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
+
+    @@map("queue_entry")
+}
+
 model Category {
-    categoryID String  @id @default(cuid()) @map("id")
-    name       String  @unique @map("name")
-    imgName    String  @map("img_name")
-    archived   Boolean @default(false) @map("archived")
-    Items      Item[]
+    categoryID   String  @id @default(cuid()) @map("category_id")
+    categoryName String  @unique @map("category_name")
+    imgName      String  @map("img_name")
+    archived     Boolean @default(false) @map("archived")
+
+    items Item[]
 
     @@map("category")
 }
 
+model Deal {
+    itemID        String @id @map("item_id")
+    actualCount   Int    @map("actual_count")
+    adjustedCount Int    @map("adjusted_count")
+
+    item Item @relation(fields: [itemID], references: [itemID], onDelete: Cascade, onUpdate: Cascade)
+
+    @@map("deal")
+}
+
 model Item {
-    itemID                      String                       @id @default(cuid()) @map("item_id")
-    name                        String                       @unique @map("name")
-    Category                    Category                     @relation(fields: [categoryName], references: [name], onDelete: Restrict, onUpdate: Cascade)
-    categoryName                String                       @map("category_name")
-    quantity                    Int                          @default(0) @map("quantity")
-    Deal                        Deal?
-    imgName                     String                       @map("img_name")
-    ItemCountChanges            ItemCountChange[]
-    InventoryChangeSessionItems InventoryChangeSessionItem[]
-    CartItems                   CartItem[]
-    OrderItems                  OrderItem[]
-    archived                    Boolean                      @default(false) @map("archived")
-    createdAt                   DateTime                     @default(now()) @map("created_at")
-    EmergencyBagItems           EmergencyBagItem[]
-    IssuedEmergencyBagItems     IssuedEmergencyBagItem[]
+    itemID     String  @id @default(cuid()) @map("item_id")
+    itemName   String  @unique @map("item_name")
+    categoryID String  @map("category_id")
+    archived   Boolean @default(false) @map("archived")
+
+    category      Category       @relation(fields: [categoryID], references: [categoryID], onDelete: Restrict, onUpdate: Cascade)
+    deal          Deal?
+    specificItems SpecificItem[]
 
     @@map("item")
 }
 
-model ItemCountChange {
-    countChangeID String   @id @default(cuid()) @map("count_change_id")
-    date          DateTime @default(now()) @map("date")
-    amountChanged Int      @map("amount_changed")
-    Item          Item     @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-    itemID        String   @map("item_id")
-    Source        Source   @relation(fields: [sourceID], references: [sourceID], onDelete: Restrict, onUpdate: Cascade)
-    sourceID      String   @map("source_id")
-    fieldMap      Json?    @map("field_map")
+model ItemLabel {
+    itemLabelID   String  @id @default(cuid()) @map("item_label_id")
+    itemLabelName String  @unique @map("item_label_name")
+    archived      Boolean @default(false) @map("archived")
+    color         String  @default("#6B7280") @map("color")
 
-    @@map("item_count_change")
+    specificItems SpecificItem[]
+
+    @@map("item_label")
 }
 
-model Field {
-    fieldID  String @id @default(cuid()) @map("field_id")
-    name     String
-    Source   Source @relation(fields: [sourceID], references: [sourceID], onDelete: Restrict, onUpdate: Cascade)
-    sourceID String @map("source_id")
+model SpecificItem {
+    specificItemID String @id @default(cuid()) @map("specific_item_id")
+    productName    String @map("product_name")
+    imgName        String @map("img_name")
+    quantity       Int    @map("quantity")
+    itemID         String @map("item_id")
 
-    @@map("field")
+    item                                 Item                                  @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
+    itemLabels                           ItemLabel[]
+    cartItems                            CartItem[]
+    orderItems                           OrderItem[]
+    emergencyBagItems                    EmergencyBagItem[]
+    issuedEmergencyBagItems              IssuedEmergencyBagItem[]
+    inventoryIntakeSessionItemChanges    InventoryIntakeSessionItemChange[]
+    completedInventoryIntakeSessionItems CompletedInventoryIntakeSessionItem[]
+
+    @@map("specific_item")
 }
 
 model Source {
-    sourceID         String            @id @default(cuid()) @map("source_id")
-    name             String            @unique @map("name")
-    ItemCountChanges ItemCountChange[]
-    Fields           Field[]
-    archived         Boolean           @default(false) @map("archived")
+    sourceID   String  @id @default(cuid()) @map("source_id")
+    sourceName String  @unique @map("source_name")
+    archived   Boolean @default(false) @map("archived")
+
+    fields                           Field[]
+    inventoryIntakeSessions          InventoryIntakeSession[]
+    completedInventoryIntakeSessions CompletedInventoryIntakeSession[]
 
     @@map("source")
 }
 
-model InventoryChangeSession {
-    publicCode                  String                       @id @map("public_code")
-    UserSession                 UserSession                  @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
-    InventoryChangeSessionItems InventoryChangeSessionItem[]
+model Field {
+    fieldID   String          @id @default(cuid()) @map("field_id")
+    fieldName String          @map("field_name")
+    sourceID  String          @map("source_id")
+    type      SourceFieldType @default(TEXT) @map("type")
+    choices   Json?           @map("choices")
+    optional  Boolean         @default(false) @map("optional")
 
-    @@map("inventory_change_session")
+    source Source @relation(fields: [sourceID], references: [sourceID], onDelete: Restrict, onUpdate: Cascade)
+
+    @@map("field")
 }
 
-model InventoryChangeSessionItem {
-    InventoryChangeSession InventoryChangeSession @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
-    publicCode             String                 @map("public_code")
-    Item                   Item                   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-    itemID                 String                 @map("item_id")
-    count                  Int                    @map("count")
+model InventoryIntakeSession {
+    inventoryIntakeSessionID   String   @id @default(cuid()) @map("inventory_intake_session_id")
+    inventoryIntakeSessionName String   @map("inventory_intake_session_name")
+    notes                      String   @default("") @map("notes")
+    intakeDate                 DateTime @map("intake_date")
+    sourceID                   String   @map("source_id")
+    sourceName                 String   @map("source_name")
+    sourceMetadata             Json?    @map("source_metadata")
 
-    @@id(name: "inventoryChangeSessionItemID", [publicCode, itemID])
-    @@map("inventory_change_session_item")
+    source                            Source                             @relation(fields: [sourceID], references: [sourceID], onDelete: Restrict, onUpdate: Cascade)
+    inventoryIntakeSessionItemChanges InventoryIntakeSessionItemChange[]
+
+    @@map("inventory_intake_session")
+}
+
+model InventoryIntakeSessionItemChange {
+    InventoryIntakeSessionItemChangeID String @id @default(cuid()) @map("inventory_intake_session_item_change_id")
+    inventoryIntakeSessionID String @map("inventory_intake_session_id")
+    specificItemID           String @map("specific_item_id")
+    amountChanged            Int    @map("amount_changed")
+
+    inventoryIntakeSession InventoryIntakeSession @relation(fields: [inventoryIntakeSessionID], references: [inventoryIntakeSessionID], onDelete: Cascade, onUpdate: Cascade)
+    specificItem           SpecificItem           @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)
+
+    @@map("inventory_intake_session_item_change")
 }
 
 model Cart {
-    UserSession UserSession @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
-    publicCode  String      @id @map("public_code")
-    createdAt   DateTime    @default(now()) @map("created_at")
-    CartItems   CartItem[]
-    pending     Boolean     @default(false) @map("pending")
+    publicCode String   @id @map("public_code")
+    createdAt  DateTime @default(now()) @map("created_at")
+    pending    Boolean  @default(false) @map("pending")
+
+    userSession UserSession @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
+    cartItems   CartItem[]
 
     @@map("cart")
 }
 
 model CartItem {
-    Cart            Cart   @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
     publicCode      String @map("public_code")
-    Item            Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-    itemID          String @map("item_id")
+    specificItemID  String @map("specific_item_id")
     count           Int    @map("count")
-    // Fields to track adjustments to decrease from total count
     countAdjustment Int    @default(0) @map("count_adjustment")
 
-    @@id(name: "cartItemID", [itemID, publicCode])
+    cart         Cart         @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
+    specificItem SpecificItem @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)
+
+    @@id(name: "cartItemID", [specificItemID, publicCode])
     @@map("cart_item")
 }
 
-model Order {
-    orderID       String      @id @default(cuid()) @map("order_id")
-    User          User        @relation(fields: [userID], references: [userID], onDelete: NoAction, onUpdate: Cascade)
-    userID        String      @map("userID")
-    cartCreatedAt DateTime    @map("cart_created_at")
-    createdAt     DateTime    @default(now()) @map("created_at")
-    OrderItems    OrderItem[]
-
-    @@map("order")
-}
-
-model OrderItem {
-    Item    Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-    itemID  String @map("item_id")
-    Order   Order  @relation(fields: [orderID], references: [orderID], onDelete: Restrict, onUpdate: Cascade)
-    orderID String @map("order_id")
-    count   Int    @map("count")
-
-    @@id(name: "orderItemID", [itemID, orderID])
-    @@map("order_item")
-}
-
-model Deal {
-    Item          Item   @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-    itemID        String @id @map("item_id")
-    actualCount   Int    @map("actual_count")
-    adjustedCount Int    @map("adjusted_count")
-
-    @@map("deal")
-}
-
-model QueueEntry {
-    UserSession UserSession @relation(fields: [publicCode], references: [publicCode], onDelete: Cascade, onUpdate: Cascade)
-    publicCode  String      @id @map("public_code")
-    joinedAt    DateTime    @default(now()) @map("joined_at")
-    position    Int         @map("position")
-
-    @@map("queue_entry")
-}
-
 model Location {
-    name                String               @id @map("name")
-    EmergencyBags       EmergencyBag[]
-    IssuedEmergencyBags IssuedEmergencyBag[]
-    description         String               @map("description")
-    archived            Boolean              @default(false) @map("archived")
-    imgName             String               @map("img_name")
+    locationID   String  @id @default(cuid()) @map("location_id")
+    locationName String  @unique @map("location_name")
+    description  String  @map("description")
+    archived     Boolean @default(false) @map("archived")
+    imgName      String  @map("img_name")
+    mapEmbedUrl  String? @map("map_embed_url")
+
+    emergencyBags       EmergencyBag[]
+    issuedEmergencyBags IssuedEmergencyBag[]
 
     @@map("location")
 }
 
+model EmergencyBagLabel {
+    emergencyBagLabelID   String  @id @default(cuid()) @map("emergency_bag_label_id")
+    emergencyBagLabelName String  @unique @map("emergency_bag_label_name")
+    archived              Boolean @default(false) @map("archived")
+    color                 String  @default("#6B7280") @map("color")
+
+    emergencyBags       EmergencyBag[]
+    issuedEmergencyBags IssuedEmergencyBag[]
+
+    @@map("emergency_bag_label")
+}
+
 model EmergencyBag {
-    bagID             String             @id @default(cuid()) @map("bag_id")
-    Location          Location?          @relation(fields: [locationName], references: [name], onDelete: Restrict, onUpdate: Cascade)
-    locationName      String?
-    isVegetarian      Boolean            @default(false) @map("is_vegetarian")
-    hasPeanutButter   Boolean            @default(false) @map("has_peanut_butter")
-    privacy           Privacy            @default(PUBLIC) @map("privacy")
-    EmergencyBagItems EmergencyBagItem[]
-    bagDescription    String?            @default("") @map("bag_description")
-    expiryDate        DateTime           @map("expiry_date")
-    // 5 digit ID for volunteers/students
-    label             String             @unique
+    emergencyBagID String   @id @default(cuid()) @map("emergency_bag_id")
+    locationID     String?  @map("location_id")
+    private        Boolean  @default(false) @map("private")
+    bagDescription String   @default("") @map("bag_description")
+    expiryDate     DateTime @map("expiry_date")
+    label          String   @unique @map("label")
+
+    location           Location?           @relation(fields: [locationID], references: [locationID], onDelete: Restrict, onUpdate: Cascade)
+    emergencyBagLabels EmergencyBagLabel[]
+    emergencyBagItems  EmergencyBagItem[]
 
     @@map("emergency_bag")
 }
 
 model EmergencyBagItem {
-    Item         Item         @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-    itemID       String       @map("item_id")
-    bagID        String       @map("bag_id")
-    EmergencyBag EmergencyBag @relation(fields: [bagID], references: [bagID], onDelete: Cascade, onUpdate: Cascade)
-    count        Int          @map("count")
+    emergencyBagID String @map("emergency_bag_id")
+    specificItemID String @map("specific_item_id")
+    count          Int    @map("count")
 
-    @@id(name: "emergencyBagItemID", [itemID, bagID])
+    emergencyBag EmergencyBag @relation(fields: [emergencyBagID], references: [emergencyBagID], onDelete: Cascade, onUpdate: Cascade)
+    specificItem SpecificItem @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)
+
+    @@id(name: "emergencyBagItemID", [specificItemID, emergencyBagID])
     @@map("emergency_bag_item")
 }
 
-//Table for Issued bags (archive)
-
-model IssuedEmergencyBag {
-    bagID             String                   @id @default(cuid()) @map("bag_id")
-    Location          Location                 @relation(fields: [location], references: [name], onDelete: Restrict, onUpdate: Cascade)
-    location          String
-    EmergencyBagItems IssuedEmergencyBagItem[]
-    bagDescription    String?                  @default("") @map("bag_description")
-    expiryDate        DateTime                 @map("expiry_date")
-    //5 digit ID for volunteers/students
-    label             String
-
-    @@map("issued_emergency_bag")
-}
-
-//Table for issued Bag items
-model IssuedEmergencyBagItem {
-    Item               Item               @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
-    itemID             String             @map("item_id")
-    bagID              String             @map("bag_id")
-    IssuedEmergencyBag IssuedEmergencyBag @relation(fields: [bagID], references: [bagID], onDelete: Cascade, onUpdate: Cascade)
-    count              Int                @map("count")
-
-    @@id(name: "emergencyBagItemID", [itemID, bagID])
-    @@map("issued_emergency_bag_item")
-}
-
 model TutorialGroup {
-    id    String         @id @default(cuid())
-    name  String         @unique
-    pages TutorialPage[]
+    tutorialGroupID   String @id @default(cuid()) @map("tutorial_group_id")
+    tutorialGroupName String @unique @map("tutorial_group_name")
+
+    tutorials Tutorial[]
 
     @@map("tutorial_group")
 }
 
-model TutorialPage {
-    id      String         @id @default(cuid())
-    name    String
-    groupID String
-    group   TutorialGroup  @relation(fields: [groupID], references: [id], onDelete: Cascade)
-    steps   TutorialStep[]
+model Tutorial {
+    tutorialID      String @id @default(cuid()) @map("tutorial_id")
+    tutorialName    String @map("tutorial_name")
+    tutorialGroupID String @map("tutorial_group_id")
+
+    tutorialGroup TutorialGroup  @relation(fields: [tutorialGroupID], references: [tutorialGroupID], onDelete: Cascade, onUpdate: Cascade)
+    tutorialSteps TutorialStep[]
+
+    @@map("tutorial")
 }
 
 model TutorialStep {
-    id          String       @id @default(cuid())
-    imageURL    String
-    description String
-    stepOrdering   Int
-    pageID      String
-    page        TutorialPage @relation(fields: [pageID], references: [id], onDelete: Cascade)
+    tutorialStepID String @id @default(cuid()) @map("tutorial_step_id")
+    imageUrl       String @map("image_url")
+    description    String @map("description")
+    stepOrdering   Int    @map("step_ordering")
+    tutorialID     String @map("tutorial_id")
+
+    tutorial Tutorial @relation(fields: [tutorialID], references: [tutorialID], onDelete: Cascade, onUpdate: Cascade)
+
+    @@map("tutorial_step")
+}
+
+model Announcement {
+    announcementID String   @id @default(cuid()) @map("announcement_id")
+    message        String   @map("message")
+    startsAt       DateTime @map("starts_at")
+    endsAt         DateTime @map("ends_at")
+
+    @@map("announcement")
+}
+
+model DashboardLink {
+    dashboardLinkID   String   @id @default(cuid()) @map("dashboard_link_id")
+    displayName       String   @map("display_name")
+    url               String   @map("url")
+    description       String   @default("") @map("description")
+    dashboardRolePage RoleType @map("dashboard_role_page")
+    displayOrder      Int      @default(0) @map("display_order")
+
+    @@map("dashboard_link")
+}
+
+model AuditLog {
+    auditLogID String      @id @default(cuid()) @map("audit_log_id")
+    timestamp  DateTime    @default(now()) @map("timestamp")
+    action     AuditAction @map("action")
+    message    String      @map("message")
+    userID     String?     @map("user_id")
+
+    user User? @relation(fields: [userID], references: [userID], onDelete: SetNull, onUpdate: Cascade)
+
+    @@map("audit_log")
+}
+
+// ********** HISTORICAL TABLES **********
+
+model CompletedInventoryIntakeSession {
+    completedInventoryIntakeSessionID String   @id @default(cuid()) @map("completed_inventory_intake_session_id")
+    inventoryIntakeSessionName        String   @map("inventory_intake_session_name")
+    intakeDate                        DateTime @map("intake_date")
+    completedAt                       DateTime @default(now()) @map("completed_at")
+    notes                             String   @default("") @map("notes")
+    sourceID                          String   @map("source_id")
+    sourceName                        String   @map("source_name")
+    sourceMetadata                    Json?    @map("source_metadata")
+
+    source                               Source                                @relation(fields: [sourceID], references: [sourceID], onDelete: Restrict, onUpdate: Cascade)
+    completedInventoryIntakeSessionItems CompletedInventoryIntakeSessionItem[]
+
+    @@map("completed_inventory_intake_session")
+}
+
+model CompletedInventoryIntakeSessionItem {
+    completedInventoryIntakeSessionID String @map("completed_inventory_intake_session_id")
+    specificItemID                    String @map("specific_item_id")
+    amountChanged                     Int    @map("amount_changed")
+
+    completedInventoryIntakeSession CompletedInventoryIntakeSession @relation(fields: [completedInventoryIntakeSessionID], references: [completedInventoryIntakeSessionID], onDelete: Cascade, onUpdate: Cascade)
+    specificItem                    SpecificItem                    @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)
+
+    @@id(name: "completedInventoryIntakeSessionItemID", [completedInventoryIntakeSessionID, specificItemID])
+    @@map("completed_inventory_intake_session_item")
+}
+
+model Order {
+    orderID       String   @id @default(cuid()) @map("order_id")
+    userID        String   @map("user_id")
+    cartCreatedAt DateTime @map("cart_created_at")
+    createdAt     DateTime @default(now()) @map("created_at")
+
+    user       User        @relation(fields: [userID], references: [userID], onDelete: Restrict, onUpdate: Cascade)
+    orderItems OrderItem[]
+
+    @@map("order")
+}
+
+model OrderItem {
+    orderID        String @map("order_id")
+    specificItemID String @map("specific_item_id")
+    count          Int    @map("count")
+
+    order        Order        @relation(fields: [orderID], references: [orderID], onDelete: Cascade, onUpdate: Cascade)
+    specificItem SpecificItem @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)
+
+    @@id(name: "orderItemID", [specificItemID, orderID])
+    @@map("order_item")
+}
+
+model IssuedEmergencyBag {
+    issuedEmergencyBagID String   @id @default(cuid()) @map("issued_emergency_bag_id")
+    locationID           String?  @map("location_id")
+    private              Boolean  @map("private")
+    bagDescription       String   @default("") @map("bag_description")
+    expiryDate           DateTime @map("expiry_date")
+    label                String   @map("label")
+    issuedAt             DateTime @default(now()) @map("issued_at")
+
+    location                 Location?                @relation(fields: [locationID], references: [locationID], onDelete: Restrict, onUpdate: Cascade)
+    issuedEmergencyBagLabels EmergencyBagLabel[]
+    issuedEmergencyBagItems  IssuedEmergencyBagItem[]
+
+    @@map("issued_emergency_bag")
+}
+
+model IssuedEmergencyBagItem {
+    issuedEmergencyBagID String @map("issued_emergency_bag_id")
+    specificItemID       String @map("specific_item_id")
+    count                Int    @map("count")
+
+    issuedEmergencyBag IssuedEmergencyBag @relation(fields: [issuedEmergencyBagID], references: [issuedEmergencyBagID], onDelete: Cascade, onUpdate: Cascade)
+    specificItem       SpecificItem       @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)
+
+    @@id(name: "issuedEmergencyBagItemID", [specificItemID, issuedEmergencyBagID])
+    @@map("issued_emergency_bag_item")
 }

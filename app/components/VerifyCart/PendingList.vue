@@ -1,76 +1,31 @@
 <template>
-	<UCard class="min-w-72">
-		<template #header>
-			<SharedTextCardTitle>Pending Carts</SharedTextCardTitle>
-		</template>
-		<div>
-			<div v-if="pendingPublicCodesAndAdjQTY.length === 0" class="flex grow flex-col items-center justify-center">
-				<SharedTextBase class="text-center text-black">No pending carts</SharedTextBase>
-				<!-- <img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" /> -->
-			</div>
-			<div v-else>
-				<UButton
-					v-for="pendingCart in pendingPublicCodesAndAdjQTY"
-					:key="pendingCart.publicCode"
-					variant="ghost"
-					class="h-12 w-full"
-					@click="emit('update:select-cart', pendingCart.publicCode)"
-				>
-					<UUser :name="pendingCart.publicCode" :avatar="{ icon: pendingCart.publicIcon }" size="lg" />
-				</UButton>
-			</div>
-		</div>
-	</UCard>
+	<SharedLayoutSectionUCard title="Pending Carts">
+		<SharedLayoutGrid v-if="pendingCarts.length !== 0" :columns="1">
+			<li v-for="pendingCart in pendingCarts" :key="pendingCart.publicCode">
+				<DomainCardVerifyCartPendingUserCard
+					:public-code="pendingCart.publicCode"
+					:public-icon="pendingCart.publicIcon"
+					:selected="selectedCart === pendingCart.publicCode"
+					@select="emit('update:select-cart', $event)"
+				/>
+			</li>
+		</SharedLayoutGrid>
+		<SharedTextBase v-else class="block text-center"> No pending carts found </SharedTextBase>
+	</SharedLayoutSectionUCard>
 </template>
 
 <script lang="ts" setup>
-const props = defineProps({
-	selectedCart: {
-		type: String,
-		required: true,
-	},
-})
+interface PendingCart {
+	publicCode: string
+	publicIcon: string
+}
 
-const emit = defineEmits(["update:select-cart"])
+defineProps<{
+	selectedCart: string
+	pendingCarts: PendingCart[]
+}>()
 
-const { data: pendingCarts } = await useFetch("/api/volunteer/cart/carts", {
-	method: "GET",
-	query: {
-		pending: "true",
-	},
-})
-
-const pendingCartsList = ref(pendingCarts.value)
-
-const pendingPublicCodesAndAdjQTY = computed(() => {
-	if (!pendingCartsList.value) {
-		return []
-	}
-	return pendingCartsList.value.map((pendingCart) => {
-		return { publicCode: pendingCart.publicCode, publicIcon: pendingCart.publicIcon }
-	})
-})
-
-const { onEvent } = useVolunteerEventStream()
-
-const unsubscribe = onEvent((event) => {
-	switch (event.type) {
-		case "verifyCartList.cart.added": {
-			const { cart } = event.payload
-			pendingCartsList.value.push(cart)
-			break
-		}
-		case "verifyCartList.cart.removed": {
-			const publicCodeToRemove = event.payload.publicCode
-			pendingCartsList.value = pendingCartsList.value.filter((pendingCart) => {
-				return pendingCart.publicCode != publicCodeToRemove
-			})
-			break
-		}
-	}
-})
-
-onBeforeUnmount(() => {
-	unsubscribe()
-})
+const emit = defineEmits<{
+	(event: "update:select-cart", publicCode: string): void
+}>()
 </script>

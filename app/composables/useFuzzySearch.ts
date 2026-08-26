@@ -34,7 +34,7 @@ export const useFuzzySearch = <T>(
 	})
 
 	const filtered = computed(() => {
-		return searched.value
+		return searched.value ?? []
 	})
 
 	return { query, filtered, selected }

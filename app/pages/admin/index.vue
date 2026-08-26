@@ -1,28 +1,30 @@
 <template>
 	<div>
-		<NuxtLayout name="main" :tutorial-data="tutorialData">
-			<div class="flex flex-row items-center gap-2">
-				<SharedTextPageTitle> Admin Dashboard </SharedTextPageTitle>
-				<SharedTutorial v-if="tutorialData" :tutorial="tutorialData">
-					<UButton :icon="icons['information']" color="neutral" variant="ghost" />
-				</SharedTutorial>
-			</div>
+		<NuxtLayout name="main" title="Admin Dashboard" :tutorial-data="tutorialData">
 			<USeparator class="my-4" />
 			<section>
-				<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				<SharedLayoutGrid class="mt-4">
 					<li v-for="link in adminLinks" :key="link.label">
-						<UButton :to="link.to" class="border-border-soft w-full border bg-white p-4 shadow-md">
-							<div class="flex items-center gap-4">
-								<UIcon :name="link.icon" class="text-text-soft h-8 w-8" />
-								<div class="flex flex-col">
-									<SharedTextCardTitle>{{ link.label }}</SharedTextCardTitle>
-									<SharedTextBase class="text-nowrap">{{ link.description }}</SharedTextBase>
-								</div>
-							</div>
-						</UButton>
+						<DomainCardDashboardDefaultLinkCard :to="link.to" :icon="link.icon" :label="link.label" :description="link.description" />
 					</li>
-				</ul>
+				</SharedLayoutGrid>
 			</section>
+			<template v-if="customAdminLinks.length > 0">
+				<USeparator class="my-4" />
+				<SharedTextSectionTitle>Custom Links</SharedTextSectionTitle>
+				<section>
+					<SharedLayoutGrid class="mt-4">
+						<li v-for="link in customAdminLinks" :key="link.label">
+							<DomainCardDashboardCustomLinkCard
+								:dashboardLinkID="link.dashboardLinkID"
+								:url="link.url"
+								:display-name="link.displayName"
+								:description="link.description"
+							/>
+						</li>
+					</SharedLayoutGrid>
+				</section>
+			</template>
 		</NuxtLayout>
 	</div>
 </template>
@@ -41,5 +43,6 @@ const adminLinks = roleLinks["admin"]
 		return link.label != "Dashboard"
 	})
 
-const { data: tutorialData } = await useTutorialForGroup("Admin")
+const { data: customAdminLinks } = await useFetch("/api/admin/dashboard-links")
+const { data: tutorialData } = await useFetch("/api/admin/tutorial")
 </script>
