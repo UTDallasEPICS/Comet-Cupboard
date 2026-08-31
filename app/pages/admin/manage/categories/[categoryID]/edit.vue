@@ -8,7 +8,13 @@
 			<USeparator class="my-4" />
 			<section>
 				<div class="mx-auto w-full max-w-xl">
-					<ManageCategoryEditorCategoryForm :categories="categories ?? []" :initial-values="initialValues" :show-archived="true" @submit="onSubmit" />
+					<ManageCategoryEditorCategoryForm
+						:category-i-d="categoryID"
+						:categories="categories ?? []"
+						:initial-values="initialValues"
+						:show-archived="true"
+						@submit="onSubmit"
+					/>
 				</div>
 			</section>
 		</NuxtLayout>

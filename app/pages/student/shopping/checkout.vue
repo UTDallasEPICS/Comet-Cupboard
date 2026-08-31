@@ -63,9 +63,15 @@
 								v-if="pendingCartWarnings(combineCartAndTemporaryAdjustments).length > 0"
 								:warnings="pendingCartWarnings(combineCartAndTemporaryAdjustments)"
 								class="mt-4"
+								@navigate="scrollToCartWarning"
 							/>
 							<div class="mt-4 flex flex-col gap-4">
-								<SharedLayoutGroupedCollapsible :groups="groupedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+								<SharedLayoutGroupedCollapsible
+									v-model:open-groups="openCartGroups"
+									:groups="groupedCartItems"
+									:get-key="(item) => item.itemID"
+									:default-open="true"
+								>
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
 											<SharedButtonActionButton
@@ -114,9 +120,15 @@
 								v-if="pendingCartWarnings(combineCartAndTemporaryAdjustments).length > 0"
 								:warnings="pendingCartWarnings(combineCartAndTemporaryAdjustments)"
 								class="mt-4"
+								@navigate="scrollToCartWarning"
 							/>
 							<div class="mt-4 flex flex-col gap-4">
-								<SharedLayoutGroupedCollapsible :groups="groupedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+								<SharedLayoutGroupedCollapsible
+									v-model:open-groups="openCartGroups"
+									:groups="groupedCartItems"
+									:get-key="(item) => item.itemID"
+									:default-open="true"
+								>
 									<template #header="{ group, open }">
 										<div class="flex flex-col gap-2">
 											<SharedButtonActionButton
@@ -381,6 +393,15 @@ const itemFinalCount = (cartItem: any) => {
 		(item: any) => (item.specificItem?.itemID ?? item.specificItem?.item?.itemID) === itemID
 	)
 	return firstCartItem?.specificItemID === cartItem.specificItemID && itemID ? itemFinalCounts.value[itemID] : undefined
+}
+
+const openCartGroups = ref<Record<string, boolean>>({})
+
+const scrollToCartWarning = async (link: { categoryName: string; itemID?: string }) => {
+	openCartGroups.value = { ...openCartGroups.value, [link.categoryName]: true }
+	await nextTick()
+	const targetID = link.itemID ? `cart-item-${link.itemID}` : `cart-group-${slugify(link.categoryName)}`
+	document.getElementById(targetID)?.scrollIntoView({ behavior: "smooth", block: "center" })
 }
 
 onBeforeUnmount(() => {

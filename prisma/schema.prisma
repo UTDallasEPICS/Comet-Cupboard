@@ -140,11 +140,12 @@ model ItemLabel {
 }
 
 model SpecificItem {
-    specificItemID String @id @default(cuid()) @map("specific_item_id")
-    productName    String @map("product_name")
-    imgName        String @map("img_name")
-    quantity       Int    @map("quantity")
-    itemID         String @map("item_id")
+    specificItemID        String  @id @default(cuid()) @map("specific_item_id")
+    productName           String  @map("product_name")
+    imgName               String  @map("img_name")
+    nutritionLabelImgName String? @map("nutrition_label_img_name")
+    quantity              Int     @map("quantity")
+    itemID                String  @map("item_id")
 
     item                                 Item                                  @relation(fields: [itemID], references: [itemID], onDelete: Restrict, onUpdate: Cascade)
     itemLabels                           ItemLabel[]
@@ -200,9 +201,9 @@ model InventoryIntakeSession {
 
 model InventoryIntakeSessionItemChange {
     InventoryIntakeSessionItemChangeID String @id @default(cuid()) @map("inventory_intake_session_item_change_id")
-    inventoryIntakeSessionID String @map("inventory_intake_session_id")
-    specificItemID           String @map("specific_item_id")
-    amountChanged            Int    @map("amount_changed")
+    inventoryIntakeSessionID           String @map("inventory_intake_session_id")
+    specificItemID                     String @map("specific_item_id")
+    amountChanged                      Int    @map("amount_changed")
 
     inventoryIntakeSession InventoryIntakeSession @relation(fields: [inventoryIntakeSessionID], references: [inventoryIntakeSessionID], onDelete: Cascade, onUpdate: Cascade)
     specificItem           SpecificItem           @relation(fields: [specificItemID], references: [specificItemID], onDelete: Restrict, onUpdate: Cascade)

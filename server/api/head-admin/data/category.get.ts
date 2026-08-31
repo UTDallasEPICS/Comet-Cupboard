@@ -12,22 +12,24 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
-	const rows = items.map((row) => {
-		return {
-			itemCategory: row.category.categoryName,
-			itemName: row.itemName,
-			itemQuantity: row.specificItems.reduce((total, specificItem) => total + Number(specificItem.quantity), 0),
-		}
-	})
+	const categoryTotal: Record<string, Record<string, { quantity: number; specificItems: Record<string, number> }>> = {}
 
-	const categoryTotal: Record<string, Record<string, number>> = {}
+	for (const item of items) {
+		const category = item.category.categoryName
 
-	for (const { itemCategory, itemName, itemQuantity } of rows) {
-		if (!(itemCategory in categoryTotal)) {
-			categoryTotal[itemCategory] = {}
+		if (!(category in categoryTotal)) {
+			categoryTotal[category] = {}
 		}
 
-		categoryTotal[itemCategory]![itemName] = itemQuantity
+		const specificItems: Record<string, number> = {}
+		for (const specificItem of item.specificItems) {
+			specificItems[specificItem.productName] = Number(specificItem.quantity)
+		}
+
+		categoryTotal[category]![item.itemName] = {
+			quantity: item.specificItems.reduce((total, specificItem) => total + Number(specificItem.quantity), 0),
+			specificItems,
+		}
 	}
 
 	return categoryTotal

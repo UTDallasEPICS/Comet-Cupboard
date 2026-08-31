@@ -6,6 +6,7 @@
 			</UFormField>
 		</SharedLayoutSectionUCard>
 		<SharedLayoutSectionUCard title="Category Details">
+			<SharedTextBaseSecondary v-if="props.categoryID" class="mb-4 block font-mono">Category ID: {{ props.categoryID }}</SharedTextBaseSecondary>
 			<UFormField name="categoryName" v-bind="categoryFormFields.categoryName" required>
 				<UInput v-model="state.categoryName" :placeholder="categoryFormFields.categoryName.placeholder" />
 				<div v-if="mostSimilarItems.length" class="border-border-soft mt-2 rounded-lg border p-2">
@@ -39,11 +40,15 @@ import {
 type CategorySummary = { categoryID: string; categoryName: string }
 type CategoryFormValues = CreateCategoryForm | EditCategoryForm
 
-const props = withDefaults(defineProps<{ categories?: CategorySummary[]; initialValues: CategoryFormValues; showArchived?: boolean; submitText?: string }>(), {
-	categories: () => [],
-	showArchived: false,
-	submitText: "Submit",
-})
+const props = withDefaults(
+	defineProps<{ categoryID?: string; categories?: CategorySummary[]; initialValues: CategoryFormValues; showArchived?: boolean; submitText?: string }>(),
+	{
+		categoryID: undefined,
+		categories: () => [],
+		showArchived: false,
+		submitText: "Submit",
+	}
+)
 const emit = defineEmits<{ submit: [payload: CategoryFormValues] }>()
 const categoryFormFields = createCategoryFormFields
 const { state, validate, onError } = createFormBuilder(props.showArchived ? editCategorySchema : createCategorySchema, () => props.initialValues)

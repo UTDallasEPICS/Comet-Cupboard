@@ -16,6 +16,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { CreateInventoryItemForm } from "#shared/utils/formSchemas"
+
 definePageMeta({ layout: false })
 
 const route = useRoute()
@@ -29,7 +31,7 @@ const { data: items } = await useFetch("/api/student/inventory/items", {
 	},
 })
 const { data: categories } = await useFetch<{ categoryID: string; categoryName: string }[]>("/api/student/inventory/categories", { method: "GET" })
-const onSubmit = async (itemName: string) => {
+const onSubmit = async (payload: CreateInventoryItemForm) => {
 	try {
 		const categoryID = categories.value?.find(
 			(category: { categoryID: string; categoryName: string }) => category.categoryName === currentCategory
@@ -38,9 +40,10 @@ const onSubmit = async (itemName: string) => {
 
 		const formData = new FormData()
 		formData.append("itemID", "")
-		formData.append("itemName", itemName)
+		formData.append("itemName", payload.itemName)
 		formData.append("categoryID", categoryID)
 		formData.append("archived", "false")
+		formData.append("image", payload.image)
 
 		await $fetch("/api/volunteer/inventory/item", {
 			method: "PUT",

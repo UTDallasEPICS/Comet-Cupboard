@@ -64,6 +64,7 @@ export default defineSafeHandler(async (event) => {
 			distributionCount: item.count,
 			itemCategory: item.specificItem.item.category.categoryName,
 			itemName: item.specificItem.item.itemName,
+			specificItemName: item.specificItem.productName,
 		}))
 	})
 
@@ -74,6 +75,7 @@ export default defineSafeHandler(async (event) => {
 		{ header: "Period", key: "period", width: 20 },
 		{ header: "Category", key: "category", width: 24 },
 		{ header: "Item", key: "item", width: 32 },
+		{ header: "Specific Item", key: "specificItem", width: 32 },
 		{ header: "Quantity", key: "quantity", width: 14 },
 	]
 
@@ -81,7 +83,7 @@ export default defineSafeHandler(async (event) => {
 		const firstDate = startDate ?? new Date(sourceRows[0]!.date)
 		const lastDate = endDate ?? new Date(sourceRows[sourceRows.length - 1]!.date)
 		const lastTimeLevel = getTimeLevel(lastDate, timeLevel)
-		const byPeriod: Record<string, Record<string, { total: number; items: Record<string, number> }>> = {}
+		const byPeriod: Record<string, Record<string, { total: number; items: Record<string, { total: number; specificItems: Record<string, number> }> }>> = {}
 		let curDate = new Date(firstDate)
 
 		while (curDate <= lastDate || getTimeLevel(curDate, timeLevel) === lastTimeLevel) {
@@ -110,6 +112,7 @@ export default defineSafeHandler(async (event) => {
 			const level = getTimeLevel(row.date, timeLevel)
 			const category = row.itemCategory
 			const item = row.itemName
+			const specificItem = row.specificItemName
 			const levelTotals = byPeriod[level]!
 
 			if (!(category in levelTotals)) {
@@ -119,16 +122,20 @@ export default defineSafeHandler(async (event) => {
 			levelTotals[category]!.total += row.distributionCount
 
 			if (!(item in levelTotals[category]!.items)) {
-				levelTotals[category]!.items[item] = 0
+				levelTotals[category]!.items[item] = { total: 0, specificItems: {} }
 			}
 
-			levelTotals[category]!.items[item]! += row.distributionCount
+			levelTotals[category]!.items[item]!.total += row.distributionCount
+			levelTotals[category]!.items[item]!.specificItems[specificItem] =
+				(levelTotals[category]!.items[item]!.specificItems[specificItem] ?? 0) + row.distributionCount
 		}
 
 		for (const [period, categories] of Object.entries(byPeriod)) {
 			for (const [category, values] of Object.entries(categories)) {
-				for (const [item, quantity] of Object.entries(values.items)) {
-					worksheet.addRow({ period, category, item, quantity })
+				for (const [item, itemValues] of Object.entries(values.items)) {
+					for (const [specificItem, quantity] of Object.entries(itemValues.specificItems)) {
+						worksheet.addRow({ period, category, item, specificItem, quantity })
+					}
 				}
 			}
 		}

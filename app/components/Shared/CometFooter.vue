@@ -102,6 +102,19 @@
 								</ULink>
 							</UTooltip>
 
+							<!-- Microsoft Teams -->
+							<UTooltip text="Microsoft Teams">
+								<ULink
+									:to="microsoftTeams"
+									target="_blank"
+									rel="noopener noreferrer"
+									class="flex size-11 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-white/20"
+									aria-label="Follow Comet Cupboard on Microsoft Teams"
+								>
+									<SharedIcon name="i-simple-icons-microsoftteams" class="size-5" />
+								</ULink>
+							</UTooltip>
+
 							<!-- Website -->
 							<UTooltip text="Website">
 								<ULink
@@ -157,6 +170,6 @@ const website = "https://cometcupboard.utdallas.edu/"
 const instagram = "https://www.instagram.com/cometcupboard/"
 const facebook = "https://www.facebook.com/CometCupboard/"
 const linkedin = "https://www.linkedin.com/in/comet-cupboard-303736270/"
-
+const microsoftTeams = "https://teams.microsoft.com/l/channel/19%3a0eedc0c6194f4a62a54b8bf1159500e7%40thread.tacv2/General?groupId=5275f820-7ce0-49a6-a808-c154c71ade8a&tenantId=8d281d1d-9c4d-4bf7-b16e-032d15de9f6c"
 const amazonWishlist = "https://www.amazon.com/hz/wishlist/ls/3RHYFY5KHB7OE?ref_=wl_share"
 </script>

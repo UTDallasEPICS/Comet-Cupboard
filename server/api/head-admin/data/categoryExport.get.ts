@@ -34,15 +34,19 @@ export default defineSafeHandler(async (event) => {
 	worksheet.columns = [
 		{ header: "Category", key: "category", width: 24 },
 		{ header: "Item", key: "item", width: 32 },
+		{ header: "Specific Item", key: "specificItem", width: 32 },
 		{ header: "Quantity", key: "quantity", width: 14 },
 	]
 
 	for (const item of items) {
-		worksheet.addRow({
-			category: item.category.categoryName,
-			item: item.itemName,
-			quantity: item.specificItems.reduce((sum, specificItem) => sum + Number(specificItem.quantity), 0),
-		})
+		for (const specificItem of item.specificItems) {
+			worksheet.addRow({
+				category: item.category.categoryName,
+				item: item.itemName,
+				specificItem: specificItem.productName,
+				quantity: Number(specificItem.quantity),
+			})
+		}
 	}
 
 	if (format === "csv") {

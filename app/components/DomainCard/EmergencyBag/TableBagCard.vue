@@ -14,7 +14,7 @@
 					</div>
 
 					<SharedLabel v-if="activeEmergencyBagLabels.length === 0" label="No Labels" />
-					<div class="flex gap-1">
+					<div class="flex flex-wrap gap-1">
 						<SharedLabel
 							v-for="emergencyBagLabel in activeEmergencyBagLabels"
 							:key="emergencyBagLabel.emergencyBagLabelID"
@@ -72,40 +72,24 @@
 							</div>
 						</div>
 					</div>
-					<div v-if="!props.bag.private" class="flex justify-end">
-						<SharedButtonActionButton
-							text="Edit Bag"
-							action="positive"
-							leading-icon="i-lucide-square-pen"
-							@click="navigateTo(`/volunteer/emergency-bag/${props.bag.emergencyBagID}/edit`)"
-						/>
-						<SharedButtonActionButton
-							text="Duplicate"
-							action="neutral"
-							leading-icon="i-lucide-copy"
-							@click="duplicateBag"
-						/>
-					</div>
 				</SharedLayoutGrid>
 				<div class="mt-2 max-w-sm">
-					<div v-if="props.bag.private">
-						<UAlert
-							icon="i-lucide-info"
-							:title="props.bag.bagDescription"
-							color="neutral"
-							variant="outline"
-							class="border-blue-400 bg-blue-50 p-2"
-						/>
-
-						<div class="flex justify-end pt-2">
-							<SharedButtonActionButton
-								text="Edit Bag"
-								action="positive"
-								leading-icon="i-lucide-square-pen"
-								@click="navigateTo(`/volunteer/emergency-bag/${props.bag.emergencyBagID}/edit`)"
-							/>
-						</div>
-					</div>
+					<UAlert
+						v-if="props.bag.private"
+						icon="i-lucide-info"
+						:title="props.bag.bagDescription"
+						color="neutral"
+						variant="outline"
+						class="border-blue-400 bg-blue-50 p-2"
+					/>
+				</div>
+				<div class="flex justify-end gap-2 p-2">
+					<SharedButtonActionButton
+						text="Edit Bag"
+						action="positive"
+						leading-icon="i-lucide-square-pen"
+						@click="navigateTo(`/volunteer/emergency-bag/${props.bag.emergencyBagID}/edit`)"
+					/>
 				</div>
 			</template>
 		</UCollapsible>
@@ -143,10 +127,6 @@ const props = defineProps<{
 	}
 	selected: boolean
 }>()
-
-const duplicateBag = async () => {
-	await navigateTo(`/volunteer/emergency-bag/create?duplicateFrom=${props.bag.emergencyBagID}`)
-}
 
 const activeEmergencyBagLabels = computed(() => props.bag.emergencyBagLabels.filter((label) => !label.archived))
 </script>

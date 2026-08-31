@@ -90,7 +90,6 @@
 				<div class="flex flex-col gap-4">
 					<div v-if="bagItems.length === 0" class="flex flex-col items-center justify-center gap-y-4">
 						<SharedTextBase> No items in current bag </SharedTextBase>
-						<img src="/placeholderAsset.png" class="aspect-square w-48" alt="placeholder image" />
 					</div>
 					<DomainCardEmergencyBagItemCard
 						v-for="item in bagItems"

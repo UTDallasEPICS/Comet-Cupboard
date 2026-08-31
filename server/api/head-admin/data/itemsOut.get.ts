@@ -56,28 +56,29 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
-	const rows = order.flatMap((order) => {
+	const parsedRows = order.flatMap((order) => {
 		return order.orderItems.map((item) => ({
 			date: order.createdAt,
 			distributionCount: item.count,
 			itemCategory: item.specificItem.item.category.categoryName,
 			itemName: item.specificItem.item.itemName,
+			specificItemName: item.specificItem.productName,
 		}))
 	})
 
-	if (rows.length === 0) {
-		return {}
+	if (parsedRows.length === 0) {
+		return { periodTotals: {}, rows: [] }
 	}
 
-	const firstDate = startDate ?? new Date(rows[0]!.date)
-	const lastDate = endDate ?? new Date(rows[rows.length - 1]!.date)
+	const firstDate = startDate ?? new Date(parsedRows[0]!.date)
+	const lastDate = endDate ?? new Date(parsedRows[parsedRows.length - 1]!.date)
 	const lastTimeLevel = getTimeLevel(lastDate, timeLevel)
-	const distributionsByTimeLevel: Record<string, Record<string, { total: number; items: Record<string, number> }>> = {}
+	const periodTotals: Record<string, number> = {}
 	let curDate = new Date(firstDate)
 	while (curDate <= lastDate || getTimeLevel(curDate, timeLevel) === lastTimeLevel) {
 		const level = getTimeLevel(curDate, timeLevel)
-		if (distributionsByTimeLevel[level] == undefined) {
-			distributionsByTimeLevel[level] = {}
+		if (periodTotals[level] == undefined) {
+			periodTotals[level] = 0
 		}
 
 		// Increment days within time range
@@ -97,24 +98,18 @@ export default defineSafeHandler(async (event) => {
 		}
 	}
 
-	for (const row of rows) {
-		const level = getTimeLevel(row.date, timeLevel)
-		const category = row.itemCategory
-		const item = row.itemName
-		const levelTotals = distributionsByTimeLevel[level]!
+	const rows = parsedRows.map((row) => {
+		const period = getTimeLevel(row.date, timeLevel)
+		periodTotals[period] = (periodTotals[period] ?? 0) + row.distributionCount
 
-		if (!(category in levelTotals)) {
-			levelTotals[category] = { total: 0, items: {} }
+		return {
+			period,
+			category: row.itemCategory,
+			item: row.itemName,
+			specificItem: row.specificItemName,
+			quantity: row.distributionCount,
 		}
+	})
 
-		levelTotals[category]!.total += row.distributionCount
-
-		if (!(item in levelTotals[category]!.items)) {
-			levelTotals[category]!.items[item] = 0
-		}
-
-		levelTotals[category]!.items[item]! += row.distributionCount
-	}
-
-	return distributionsByTimeLevel
+	return { periodTotals, rows }
 })
