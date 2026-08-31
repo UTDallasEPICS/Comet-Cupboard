@@ -55,28 +55,29 @@ export default defineSafeHandler(async (event) => {
 		},
 	})
 
-	const rows = itemChanges.map((row) => {
-		return {
-			date: row.completedInventoryIntakeSession.intakeDate,
-			amountChanged: row.amountChanged,
-			itemName: row.specificItem.item.itemName,
-			itemCategory: row.specificItem.item.category.categoryName,
-		}
-	})
+	const parsedRows = itemChanges.map((row) => ({
+		date: row.completedInventoryIntakeSession.intakeDate,
+		amountChanged: row.amountChanged,
+		itemName: row.specificItem.item.itemName,
+		itemCategory: row.specificItem.item.category.categoryName,
+		specificItemName: row.specificItem.productName,
+		sessionName: row.completedInventoryIntakeSession.inventoryIntakeSessionName,
+		source: row.completedInventoryIntakeSession.sourceName,
+	}))
 
-	if (rows.length === 0) {
-		return {}
+	if (parsedRows.length === 0) {
+		return { periodTotals: {}, rows: [] }
 	}
 
-	const firstDate = startDate ?? new Date(rows[0]!.date)
-	const lastDate = endDate ?? new Date(rows[rows.length - 1]!.date)
+	const firstDate = startDate ?? new Date(parsedRows[0]!.date)
+	const lastDate = endDate ?? new Date(parsedRows[parsedRows.length - 1]!.date)
 	const lastTimeLevel = getTimeLevel(lastDate, timeLevel)
-	const donationsByTimeLevel: Record<string, Record<string, { total: number; items: Record<string, number> }>> = {}
+	const periodTotals: Record<string, number> = {}
 	let curDate = new Date(firstDate)
 	while (curDate <= lastDate || getTimeLevel(curDate, timeLevel) === lastTimeLevel) {
 		const level = getTimeLevel(curDate, timeLevel)
-		if (donationsByTimeLevel[level] == undefined) {
-			donationsByTimeLevel[level] = {}
+		if (periodTotals[level] == undefined) {
+			periodTotals[level] = 0
 		}
 
 		// Increment days within time range
@@ -96,24 +97,20 @@ export default defineSafeHandler(async (event) => {
 		}
 	}
 
-	for (const row of rows) {
-		const level = getTimeLevel(row.date, timeLevel)
-		const category = row.itemCategory
-		const item = row.itemName
-		const levelTotals = donationsByTimeLevel[level]!
+	const rows = parsedRows.map((row) => {
+		const period = getTimeLevel(row.date, timeLevel)
+		periodTotals[period] = (periodTotals[period] ?? 0) + row.amountChanged
 
-		if (!(category in levelTotals)) {
-			levelTotals[category] = { total: 0, items: {} }
+		return {
+			period,
+			sessionName: row.sessionName,
+			source: row.source,
+			category: row.itemCategory,
+			item: row.itemName,
+			specificItem: row.specificItemName,
+			quantity: row.amountChanged,
 		}
+	})
 
-		levelTotals[category]!.total += row.amountChanged
-
-		if (!(item in levelTotals[category]!.items)) {
-			levelTotals[category]!.items[item] = 0
-		}
-
-		levelTotals[category]!.items[item]! += row.amountChanged
-	}
-
-	return donationsByTimeLevel
+	return { periodTotals, rows }
 })

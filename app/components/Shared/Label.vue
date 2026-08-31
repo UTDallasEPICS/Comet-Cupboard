@@ -1,6 +1,6 @@
 <template>
-	<UBadge color="neutral" variant="outline" :class="archived ? 'opacity-60' : ''">
-		<span v-if="color" class="size-2 rounded-full" :style="{ backgroundColor: color }" />
+	<UBadge color="neutral" variant="outline" class="whitespace-nowrap" :class="archived ? 'opacity-60' : ''">
+		<span v-if="color" class="size-2 shrink-0 rounded-full" :style="{ backgroundColor: color }" />
 		{{ label }}
 	</UBadge>
 </template>

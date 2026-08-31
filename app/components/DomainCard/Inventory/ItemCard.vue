@@ -21,7 +21,7 @@
 
 			<div class="relative flex min-h-24 items-center gap-4 p-4">
 				<img :src="`/api/public/image/${primaryImageName}`" :alt="name" class="border-border-soft h-16 w-16 shrink-0 rounded-lg border object-cover" />
-				<div>
+				<div class="min-w-0 flex-1">
 					<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
 					<SharedTextBaseSecondary>{{ currentCount }} in stock</SharedTextBaseSecondary>
 				</div>
@@ -57,11 +57,16 @@
 										:alt="`${name} (${product.productName})`"
 										class="border-border-soft h-12 w-12 shrink-0 rounded-md border object-cover"
 									/>
-									<div class="text-left">
-										<SharedTextBaseSecondary
-											>{{ product.productName }}
-											{{ restockSpecificItemID === product.specificItemID ? "(Selected)" : "" }}</SharedTextBaseSecondary
-										>
+									<div class="text-left min-w-0">
+										<div class="flex items-center gap-1">
+											<SharedTextBaseSecondary
+												>{{ product.productName }}
+												{{ restockSpecificItemID === product.specificItemID ? "(Selected)" : "" }}</SharedTextBaseSecondary
+											>
+											<span @click.stop>
+												<SharedNutritionLabelModal v-if="product.nutritionLabelImgName" :img-name="product.nutritionLabelImgName" />
+											</span>
+										</div>
 										<SharedTextBaseSecondary>
 											{{ product.quantity }} in stock
 											{{
@@ -70,7 +75,7 @@
 													: ""
 											}}
 										</SharedTextBaseSecondary>
-										<div class="flex flex-row gap-2">
+										<div class="flex flex-row flex-wrap gap-2">
 											<SharedLabel
 												v-for="label in product.itemLabels.filter((label) => !label.archived)"
 												:key="label.itemLabelName"
@@ -109,6 +114,7 @@ type SpecificItem = {
 	specificItemID: string
 	productName: string
 	imgName: string
+	nutritionLabelImgName?: string | null
 	quantity: number
 	itemLabels: { itemLabelName: string; color: string; archived: boolean }[]
 }

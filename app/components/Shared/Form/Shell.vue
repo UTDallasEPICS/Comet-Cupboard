@@ -15,7 +15,7 @@ withDefaults(
 		widthClass?: string
 	}>(),
 	{
-		widthClass: "w-96",
+		widthClass: "w-96 w-full",
 	}
 )
 

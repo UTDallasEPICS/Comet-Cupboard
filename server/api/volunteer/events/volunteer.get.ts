@@ -8,7 +8,7 @@ export default defineSafeHandler((event) => {
 	const eventStreamID = nanoid()
 	const userID = event.context.userSession.userID
 
-	// Send a heartbeat event every 60 seconds to detect disconnections and clean up resources
+	// Send a heartbeat event every 30 seconds to detect disconnections and clean up resources
 	const heartbeatInterval = setInterval(async () => {
 		try {
 			await eventStream.push(JSON.stringify(createEvent("heartbeat")))
@@ -17,7 +17,7 @@ export default defineSafeHandler((event) => {
 			eventStream.close()
 			connectionsByRole.volunteer.removeConnection(userID, eventStreamID)
 		}
-	}, 60 * 1000)
+	}, 30 * 1000)
 
 	eventStream.onClosed(async () => {
 		clearInterval(heartbeatInterval)

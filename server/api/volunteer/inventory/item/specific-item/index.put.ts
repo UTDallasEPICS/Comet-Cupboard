@@ -12,11 +12,13 @@ const schema = specificProductSchema
 		itemID: z.string(),
 		itemLabels: z.string().optional(),
 		image: imageSchema.shape.image.optional(),
+		nutritionLabelImage: imageSchema.shape.image.optional(),
+		removeNutritionLabelImage: z.enum(["true", "false"]).optional(),
 	})
 	.strict()
 
 export default defineSafeHandler(async (event) => {
-	const { specificItemID, productName, itemID, image, itemLabels } = await validateFormData(event, schema)
+	const { specificItemID, productName, itemID, image, itemLabels, nutritionLabelImage, removeNutritionLabelImage } = await validateFormData(event, schema)
 
 	const itemLabelNames = itemLabels ? specificProductSchema.shape.itemLabels.parse(JSON.parse(itemLabels)) : []
 
@@ -31,11 +33,18 @@ export default defineSafeHandler(async (event) => {
 			newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
 		}
 
+		let newNutritionLabelImgName: string | null = null
+
+		if (nutritionLabelImage) {
+			newNutritionLabelImgName = await uploadImage(await processImage(Buffer.from(await nutritionLabelImage.arrayBuffer())))
+		}
+
 		return await prisma.$transaction(async (tx) => {
 			const newSpecificItem = await tx.specificItem.create({
 				data: {
 					productName,
 					imgName: newImgName,
+					nutritionLabelImgName: newNutritionLabelImgName,
 					itemID,
 					quantity: 0,
 					itemLabels: {
@@ -80,12 +89,22 @@ export default defineSafeHandler(async (event) => {
 			newImgName = await uploadImage(await processImage(Buffer.from(await image.arrayBuffer())))
 		}
 
+		const oldNutritionLabelImgName = existingSpecificItem.nutritionLabelImgName
+		let newNutritionLabelImgName: string | null | undefined
+
+		if (nutritionLabelImage) {
+			newNutritionLabelImgName = await uploadImage(await processImage(Buffer.from(await nutritionLabelImage.arrayBuffer())))
+		} else if (removeNutritionLabelImage === "true") {
+			newNutritionLabelImgName = null
+		}
+
 		const transactionResult = await prisma.$transaction(async (tx) => {
 			const updatedSpecificItem = await tx.specificItem.update({
 				where: { specificItemID },
 				data: {
 					productName,
 					imgName: newImgName ?? oldImgName,
+					nutritionLabelImgName: newNutritionLabelImgName !== undefined ? newNutritionLabelImgName : oldNutritionLabelImgName,
 					itemLabels: {
 						set: [],
 						connect: itemLabelConnections,
@@ -104,11 +123,15 @@ export default defineSafeHandler(async (event) => {
 			return updatedSpecificItem
 		})
 
-		// Delete the old image only after the database transaction succeeds.
+		// Delete the old images only after the database transaction succeeds.
 		if (oldImgName && newImgName) {
 			await deleteImage(oldImgName)
+		}
+		if (oldNutritionLabelImgName && newNutritionLabelImgName !== undefined && newNutritionLabelImgName !== oldNutritionLabelImgName) {
+			await deleteImage(oldNutritionLabelImgName)
 		}
 
 		return transactionResult
 	}
 })
+

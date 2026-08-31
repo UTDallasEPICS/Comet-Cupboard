@@ -4,7 +4,10 @@
 
 		<template #content>
 			<UCard>
-				<SharedTextCardTitle>{{ title }}</SharedTextCardTitle>
+				<div class="flex items-center justify-between gap-2">
+					<SharedTextCardTitle>{{ title }}</SharedTextCardTitle>
+					<SharedButtonActionButton icon="i-lucide-x" button-variant="ghost" action="neutral" size="sm" aria-label="Close" @click="isOpen = false" />
+				</div>
 				<USeparator class="my-2" />
 				<SharedTextBase v-if="description" class="mt-4 text-center">{{ description }}</SharedTextBase>
 				<div class="mt-4 flex flex-row items-center justify-center gap-2">

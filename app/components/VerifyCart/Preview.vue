@@ -10,9 +10,14 @@
 			/>
 		</template>
 		<div v-if="validPublicCode && cart" class="flex h-full flex-col gap-y-4">
-			<SharedWarningsList v-if="pendingCartWarnings(cart).length > 0" :warnings="pendingCartWarnings(cart)" />
+			<SharedWarningsList v-if="pendingCartWarnings(cart).length > 0" :warnings="pendingCartWarnings(cart)" @navigate="scrollToCartWarning" />
 
-			<SharedLayoutGroupedCollapsible :groups="categorizedCartItems" :get-key="(item) => item.itemID" :default-open="true">
+			<SharedLayoutGroupedCollapsible
+				v-model:open-groups="openCartGroups"
+				:groups="categorizedCartItems"
+				:get-key="(item) => item.itemID"
+				:default-open="true"
+			>
 				<template #header="{ group, open }">
 					<div class="flex flex-col gap-2">
 						<SharedButtonActionButton
@@ -131,6 +136,15 @@ const categoryCartItems = computed(() => {
 })
 
 const itemFinalCounts = computed(() => cartItemFinalCounts(cart.value))
+
+const openCartGroups = ref<Record<string, boolean>>({})
+
+const scrollToCartWarning = async (link: { categoryName: string; itemID?: string }) => {
+	openCartGroups.value = { ...openCartGroups.value, [link.categoryName]: true }
+	await nextTick()
+	const targetID = link.itemID ? `cart-item-${link.itemID}` : `cart-group-${slugify(link.categoryName)}`
+	document.getElementById(targetID)?.scrollIntoView({ behavior: "smooth", block: "center" })
+}
 
 const cartAdjustedCount = computed(() => {
 	return cartCountAdjustment(cart.value)

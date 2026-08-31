@@ -4,7 +4,13 @@
 			<USeparator class="my-4" />
 			<section>
 				<div class="mx-auto w-full max-w-xl">
-					<ManageLocationEditorLocationForm :locations="locations ?? []" :initial-values="initialValues" :show-archived="true" @submit="onSubmit" />
+					<ManageLocationEditorLocationForm
+						:location-i-d="locationID"
+						:locations="locations ?? []"
+						:initial-values="initialValues"
+						:show-archived="true"
+						@submit="onSubmit"
+					/>
 				</div>
 			</section>
 		</NuxtLayout>

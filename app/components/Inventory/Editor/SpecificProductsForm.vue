@@ -18,6 +18,7 @@
 						<SharedTextBase class="font-semibold">{{ product.productName || "New Product" }}</SharedTextBase>
 					</div>
 					<div class="space-y-3">
+						<SharedTextBaseSecondary v-if="product.specificItemID" class="font-mono">Specific Item ID: {{ product.specificItemID }}</SharedTextBaseSecondary>
 						<UFormField :name="`products.${productIndex(product.key)}.productName`" v-bind="specificProductFormFields.productName" required
 							><UInput
 								v-model="product.productName"
@@ -25,13 +26,22 @@
 								class="w-full"
 								:readonly="product.productName === 'Default'"
 						/></UFormField>
-						<UFormField v-bind="specificProductFormFields.productImage">
+						<UFormField :name="`products.${productIndex(product.key)}.image`" v-bind="specificProductFormFields.productImage" required>
 							<UFileUpload
-								v-model="productImages[product.key]"
+								v-model="product.image"
 								accept=".jpg,.jpeg,.png,.webp"
 								label="Upload image"
 								class="aspect-square w-full"
 								@update:model-value="markImageChanged(product.key)"
+							/>
+						</UFormField>
+						<UFormField v-bind="specificProductFormFields.nutritionLabelImage">
+							<UFileUpload
+								v-model="nutritionLabelImages[product.key]"
+								accept=".jpg,.jpeg,.png,.webp"
+								label="Upload nutrition label image"
+								class="aspect-square w-full"
+								@update:model-value="(value) => onNutritionLabelImageChange(product.key, value)"
 							/>
 						</UFormField>
 						<UFormField :name="`products.${productIndex(product.key)}.itemLabels`" v-bind="specificProductFormFields.itemLabels">
@@ -62,10 +72,11 @@ type SpecificProduct = {
 	specificItemID: string
 	productName: string
 	imgName: string
+	nutritionLabelImgName: string | null
 	quantity: number
 	itemLabels: { itemLabelName: string; archived: boolean }[]
 }
-type EditableProduct = Omit<SpecificProduct, "itemLabels"> & { key: string; itemLabels: string[] }
+type EditableProduct = Omit<SpecificProduct, "itemLabels"> & { key: string; itemLabels: string[]; image?: File | File[] }
 
 const props = defineProps<{ itemID: string; specificItems: SpecificProduct[]; saving?: boolean; refreshToken?: number }>()
 const emit = defineEmits<{ save: [payloads: FormData[]] }>()
@@ -75,8 +86,10 @@ const { data: itemLabels } = await useFetch<{ itemLabelName: string }[]>("/api/p
 const itemLabelOptions = computed(() => (itemLabels.value ?? []).map((label) => label.itemLabelName))
 const editableProducts = ref<EditableProduct[]>([])
 const originalProducts = ref<EditableProduct[]>([])
-const productImages = reactive<Record<string, File | undefined>>({})
 const changedImageKeys = ref<Set<string>>(new Set())
+const nutritionLabelImages = reactive<Record<string, File | undefined>>({})
+const changedNutritionLabelImageKeys = ref<Set<string>>(new Set())
+const removedNutritionLabelImageKeys = ref<Set<string>>(new Set())
 
 const orderedProducts = computed(() =>
 	[...editableProducts.value].sort((first, second) => Number(second.productName === "Default") - Number(first.productName === "Default"))
@@ -89,7 +102,9 @@ const changesMade = computed(() => {
 		return (
 			product.productName !== original?.productName ||
 			[...product.itemLabels].sort().join("|") !== [...(original?.itemLabels ?? [])].sort().join("|") ||
-			changedImageKeys.value.has(product.key)
+			changedImageKeys.value.has(product.key) ||
+			changedNutritionLabelImageKeys.value.has(product.key) ||
+			removedNutritionLabelImageKeys.value.has(product.key)
 		)
 	})
 })
@@ -105,21 +120,44 @@ const hydrateProducts = async () => {
 	originalProducts.value = products.map((product) => ({ ...product, itemLabels: [...product.itemLabels] }))
 	editableProducts.value = products.map((product) => ({ ...product, itemLabels: [...product.itemLabels] }))
 	productState.value.products = editableProducts.value
-	for (const key of Object.keys(productImages)) delete productImages[key]
+	for (const key of Object.keys(nutritionLabelImages)) delete nutritionLabelImages[key]
 	changedImageKeys.value = new Set()
+	changedNutritionLabelImageKeys.value = new Set()
+	removedNutritionLabelImageKeys.value = new Set()
 	for (const product of products) {
-		if (!product.imgName) continue
-		try {
-			const image = await $fetch<Blob>(`/api/public/image/${product.imgName}`, { responseType: "blob" })
-			productImages[product.key] = new File([image], product.imgName, { type: image.type })
-		} catch {
-			// Leave the file input empty if its persisted image is unavailable.
+		if (product.imgName) {
+			try {
+				const imageBlob = await $fetch<Blob>(`/api/public/image/${product.imgName}`, { responseType: "blob" })
+				const file = new File([imageBlob], product.imgName, { type: imageBlob.type })
+				const editable = editableProducts.value.find((candidate) => candidate.key === product.key)
+				const original = originalProducts.value.find((candidate) => candidate.key === product.key)
+				if (editable) editable.image = file
+				if (original) original.image = file
+			} catch {
+				// Leave the file input empty if its persisted image is unavailable.
+			}
+		}
+		if (product.nutritionLabelImgName) {
+			try {
+				const image = await $fetch<Blob>(`/api/public/image/${product.nutritionLabelImgName}`, { responseType: "blob" })
+				nutritionLabelImages[product.key] = new File([image], product.nutritionLabelImgName, { type: image.type })
+			} catch {
+				// Leave the file input empty if its persisted image is unavailable.
+			}
 		}
 	}
 }
 
 const markImageChanged = (productKey: string) => {
 	changedImageKeys.value = new Set([...changedImageKeys.value, productKey])
+}
+
+const onNutritionLabelImageChange = (productKey: string, value: File | File[] | null | undefined) => {
+	changedNutritionLabelImageKeys.value = new Set([...changedNutritionLabelImageKeys.value, productKey])
+	const cleared = !value || (Array.isArray(value) && value.length === 0)
+	removedNutritionLabelImageKeys.value = cleared
+		? new Set([...removedNutritionLabelImageKeys.value, productKey])
+		: new Set([...removedNutritionLabelImageKeys.value].filter((key) => key !== productKey))
 }
 
 watch(
@@ -137,7 +175,16 @@ watch(
 
 const addProduct = () => {
 	const key = crypto.randomUUID()
-	editableProducts.value.push({ specificItemID: "", key, productName: "", imgName: "", quantity: 0, itemLabels: [] })
+	editableProducts.value.push({
+		specificItemID: "",
+		key,
+		productName: "",
+		imgName: "",
+		nutritionLabelImgName: null,
+		quantity: 0,
+		itemLabels: [],
+		image: undefined,
+	})
 	productState.value.products = editableProducts.value
 }
 
@@ -152,9 +199,12 @@ const saveProducts = () => {
 		formData.append("itemID", props.itemID)
 		formData.append("productName", product.productName.trim())
 		formData.append("itemLabels", JSON.stringify(product.itemLabels))
-		const selectedImage = productImages[product.key]
-		const image = Array.isArray(selectedImage) ? selectedImage[0] : selectedImage
+		const image = Array.isArray(product.image) ? product.image[0] : product.image
 		if (image && changedImageKeys.value.has(product.key)) formData.append("image", image)
+		const selectedNutritionLabelImage = nutritionLabelImages[product.key]
+		const nutritionLabelImage = Array.isArray(selectedNutritionLabelImage) ? selectedNutritionLabelImage[0] : selectedNutritionLabelImage
+		if (nutritionLabelImage && changedNutritionLabelImageKeys.value.has(product.key)) formData.append("nutritionLabelImage", nutritionLabelImage)
+		if (removedNutritionLabelImageKeys.value.has(product.key)) formData.append("removeNutritionLabelImage", "true")
 		return formData
 	})
 	emit("save", payloads)

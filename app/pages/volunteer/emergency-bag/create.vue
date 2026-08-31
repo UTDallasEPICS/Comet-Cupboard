@@ -47,12 +47,11 @@
 </template>
 
 <script lang="ts" setup>
-import { getLocalTimeZone, parseDate } from "@internationalized/date"
+import { getLocalTimeZone } from "@internationalized/date"
 definePageMeta({ layout: false })
 const stepper = ref()
 const addItemRef = useTemplateRef("addItemRef")
 const detailsRef = useTemplateRef("detailsRef")
-const route = useRoute()
 const { data: inventoryItems } = await useFetch("/api/student/inventory/items", {
 	query: { checkAvailability: "true" },
 })
@@ -75,28 +74,6 @@ const bagDetails = ref({
 	private: false,
 	bagDescription: "",
 })
-
-if (route.query.duplicateFrom) {
-	const sourceBags = await $fetch<any[]>("/api/volunteer/emergency-bag", {
-		query: { emergencyBagID: route.query.duplicateFrom },
-	})
-	const sourceBag = sourceBags[0]
-	if (sourceBag) {
-		bagItems.value = sourceBag.emergencyBagItems.map((item: any) => ({
-			specificItemID: item.specificItemID,
-			count: item.count,
-			name: item.specificItem.item.itemName,
-			productName: item.specificItem.productName,
-			imgName: item.specificItem.imgName,
-			quantity: Number(item.specificItem.quantity),
-			itemLabels: item.specificItem.itemLabels.filter((label: any) => !label.archived).map((label: any) => label.itemLabelName),
-		}))
-		bagDetails.value.labels = sourceBag.emergencyBagLabels.map((label: any) => label.emergencyBagLabelName)
-		bagDetails.value.private = sourceBag.private
-		bagDetails.value.bagDescription = sourceBag.bagDescription || ""
-		bagDetails.value.expirationDate = parseDate(sourceBag.expiryDate.slice(0, 10))
-	}
-}
 
 const steps = [
 	{ label: "Add", icon: "i-lucide-shopping-cart", description: "Add Item" },

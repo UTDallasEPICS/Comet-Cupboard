@@ -40,21 +40,27 @@ interface LocationData {
 	mapEmbedUrl?: string | null
 	description: string
 	emergencyBags: Array<{
-		emergencyBagLabels: Array<{ emergencyBagLabelName: string }>
+		emergencyBagLabels: Array<{ emergencyBagLabelName: string; color: string }>
 	}>
 }
 
 const { data: locationResults, pending } = await useFetch<LocationData[]>("/api/public/emergency-bag/location-information")
-const { data: emergencyBagLabels } = await useFetch<{ emergencyBagLabelName: string }[]>("/api/public/emergency-bag/label")
+const { data: emergencyBagLabels } = await useFetch<{ emergencyBagLabelID: string; emergencyBagLabelName: string; color: string }[]>(
+	"/api/public/emergency-bag/label"
+)
 const selectedLabels = ref<string[]>([])
 const locations = computed(() => locationResults.value ?? [])
 
-const labelOptions = computed(() => (emergencyBagLabels.value ?? []).map((label) => label.emergencyBagLabelName))
-const activeSelectedLabels = computed(() => selectedLabels.value.filter((label) => labelOptions.value.includes(label)))
+const labelOptions = computed(() => (emergencyBagLabels.value ?? []).map((label) => ({ label: label.emergencyBagLabelName, value: label.emergencyBagLabelID })))
+const labelNameByID = computed(() => new Map((emergencyBagLabels.value ?? []).map((label) => [label.emergencyBagLabelID, label.emergencyBagLabelName])))
+const activeSelectedLabels = computed(() => selectedLabels.value.filter((labelID) => labelNameByID.value.has(labelID)))
 
 const visibleBags = (location: LocationData) => {
 	return location.emergencyBags.filter((bag) =>
-		activeSelectedLabels.value.every((selectedLabel) => bag.emergencyBagLabels.some((label) => label.emergencyBagLabelName === selectedLabel))
+		activeSelectedLabels.value.every((selectedLabelID) => {
+			const selectedLabelName = labelNameByID.value.get(selectedLabelID)
+			return selectedLabelName !== undefined && bag.emergencyBagLabels.some((label) => label.emergencyBagLabelName === selectedLabelName)
+		})
 	)
 }
 </script>

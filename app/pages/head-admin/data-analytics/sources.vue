@@ -1,5 +1,5 @@
 <template>
-	<DataAnalyticsShell title="Source Contributions">
+	<DataAnalyticsShell title="Source Contribution">
 		<DataAnalyticsToolbar v-model:range="range" :show-grouping="false" />
 		<DataAnalyticsMetrics :metrics="metrics" />
 		<DataAnalyticsChart eyebrow="Items received" title="Contributions by source" :labels="chartLabels" :datasets="chartDatasets" />

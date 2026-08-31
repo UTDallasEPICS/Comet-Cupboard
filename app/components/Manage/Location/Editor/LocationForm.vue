@@ -6,6 +6,7 @@
 			</UFormField>
 		</SharedLayoutSectionUCard>
 		<SharedLayoutSectionUCard title="Location Details">
+			<SharedTextBaseSecondary v-if="props.locationID" class="mb-4 block font-mono">Location ID: {{ props.locationID }}</SharedTextBaseSecondary>
 			<UFormField name="locationName" v-bind="locationFormFields.locationName" required>
 				<UInput v-model="state.locationName" :placeholder="locationFormFields.locationName.placeholder" />
 				<div v-if="mostSimilarItems.length" class="border-border-soft mt-2 rounded-lg border p-2">
@@ -80,11 +81,15 @@ import {
 type LocationSummary = { locationID: string; locationName: string }
 type LocationFormValues = CreateLocationForm | EditLocationForm
 
-const props = withDefaults(defineProps<{ locations?: LocationSummary[]; initialValues: LocationFormValues; showArchived?: boolean; submitText?: string }>(), {
-	locations: () => [],
-	showArchived: false,
-	submitText: "Submit",
-})
+const props = withDefaults(
+	defineProps<{ locationID?: string; locations?: LocationSummary[]; initialValues: LocationFormValues; showArchived?: boolean; submitText?: string }>(),
+	{
+		locationID: undefined,
+		locations: () => [],
+		showArchived: false,
+		submitText: "Submit",
+	}
+)
 const emit = defineEmits<{ submit: [payload: LocationFormValues] }>()
 const locationFormFields = computed(() => (props.showArchived ? editLocationFormFields : createLocationFormFields))
 const showMapDirections = ref(false)
