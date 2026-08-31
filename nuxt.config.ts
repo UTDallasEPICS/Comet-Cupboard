@@ -1,5 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+	app: {
+		head: {
+			title: "MyCupboard | Comet Cupboard", // default fallback title
+			htmlAttrs: {
+				lang: "en",
+			},
+			link: [{ rel: "icon", type: "image/webp", href: "/CometCupboardIcon.webp" }],
+		},
+	},
 	devtools: { enabled: true },
 	modules: ["@nuxt/eslint", "@pinia/nuxt", "@nuxt/ui", "nuxt-auth-utils"],
 	css: ["~/assets/css/main.css"],

@@ -42,6 +42,7 @@ export type Icon =
 	| "i-lucide-hourglass"
 	| "i-lucide-info"
 	| "i-lucide-inbox"
+	| "i-lucide-instagram"
 	| "i-lucide-list-end"
 	| "i-lucide-list-filter"
 	| "i-lucide-log-in"
@@ -89,3 +90,4 @@ export type Icon =
 	| "i-simple-icons-facebook"
 	| "i-simple-icons-instagram"
 	| "i-simple-icons-linkedin"
+	| "i-simple-icons-microsoftteams"
