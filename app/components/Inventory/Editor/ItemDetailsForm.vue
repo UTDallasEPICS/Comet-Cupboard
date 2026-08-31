@@ -2,6 +2,7 @@
 	<SharedFormShell :validate="validate" :state="state" class="w-full" :on-submit="onSubmit" :on-error="onError">
 		<SharedLayoutSectionUCard title="Item Details">
 			<div class="space-y-4">
+				<SharedTextBaseSecondary class="font-mono">Item ID: {{ props.itemID }}</SharedTextBaseSecondary>
 				<UFormField name="itemName" v-bind="inventoryItemDetailsFormFields.itemName" required>
 					<UInput v-model="state.itemName" maxlength="100" :placeholder="inventoryItemDetailsFormFields.itemName.placeholder" class="w-full" />
 				</UFormField>

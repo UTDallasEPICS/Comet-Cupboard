@@ -11,14 +11,15 @@
 				:key="field.key"
 				:validate="validateField"
 				:state="field"
-				:on-submit="saveField(field)"
+				:on-submit="() => saveField(field)"
 				:on-error="onError"
 			>
 				<div class="border-border-soft space-y-3 rounded-lg border p-3">
-					<UFormField :id="`${sourceFieldFormFields.fieldName.id}-${field.key}`" name="fieldName" v-bind="sourceFieldFormFields.fieldName" required
+					<SharedTextBaseSecondary v-if="field.fieldID" class="font-mono">Field ID: {{ field.fieldID }}</SharedTextBaseSecondary>
+					<UFormField name="fieldName" v-bind="sourceFieldFormFields.fieldName" :id="`${sourceFieldFormFields.fieldName.id}-${field.key}`" required
 						><UInput v-model="field.fieldName" :placeholder="sourceFieldFormFields.fieldName.placeholder" class="w-full"
 					/></UFormField>
-					<UFormField :id="`${sourceFieldFormFields.type.id}-${field.key}`" name="type" v-bind="sourceFieldFormFields.type" required
+					<UFormField name="type" v-bind="sourceFieldFormFields.type" :id="`${sourceFieldFormFields.type.id}-${field.key}`" required
 						><USelect v-model="field.type" :items="fieldTypes" class="w-full"
 					/></UFormField>
 					<UCheckbox v-model="field.optional" label="Optional field" />
@@ -26,11 +27,9 @@
 						<div class="flex items-center justify-between gap-2">
 							<SharedTextBaseSecondary>Choice Values</SharedTextBaseSecondary>
 							<SharedButtonActionButton
-								type="button"
 								text="Add Choice"
 								leading-icon="i-lucide-plus"
-								action="neutral"
-								variant="outline"
+								action="positive"
 								@click="field.choices.push('')"
 							/>
 						</div>

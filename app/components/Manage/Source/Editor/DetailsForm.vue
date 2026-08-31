@@ -2,6 +2,7 @@
 	<SharedFormShell :validate="validate" :state="state" class="w-full" :on-submit="onSubmit" :on-error="onError">
 		<SharedLayoutSectionUCard title="Source Details">
 			<div class="space-y-4">
+				<SharedTextBaseSecondary class="font-mono">Source ID: {{ props.sourceID }}</SharedTextBaseSecondary>
 				<UFormField name="sourceName" v-bind="sourceDetailsFormFields.sourceName" required>
 					<UInput v-model="state.sourceName" :placeholder="sourceDetailsFormFields.sourceName.placeholder" class="w-full" />
 				</UFormField>

@@ -20,7 +20,7 @@
 
 			<div class="relative flex min-h-24 flex-row items-center gap-4 p-4">
 				<img :src="`/api/public/image/${primaryImageName}`" :alt="name" class="border-border-soft h-16 w-16 shrink-0 rounded-lg border object-cover" />
-				<div>
+				<div class="min-w-0 flex-1">
 					<SharedTextCardTitle>{{ name }}</SharedTextCardTitle>
 					<SharedTextBaseSecondary> {{ quantity }} available </SharedTextBaseSecondary>
 				</div>
@@ -48,8 +48,11 @@
 									:alt="`${name} (${specificItem.productName})`"
 									class="border-border-soft h-12 w-12 shrink-0 rounded-md border object-cover"
 								/>
-								<div>
-									<SharedTextBaseSecondary>{{ specificItem.productName }}</SharedTextBaseSecondary>
+								<div class="min-w-0 flex-1">
+									<div class="flex items-center gap-1">
+										<SharedTextBaseSecondary>{{ specificItem.productName }}</SharedTextBaseSecondary>
+										<SharedNutritionLabelModal v-if="specificItem.nutritionLabelImgName" :img-name="specificItem.nutritionLabelImgName" />
+									</div>
 									<SharedTextBaseSecondary>
 										{{ specificItem.quantity }} available
 										{{
@@ -58,7 +61,7 @@
 												: ""
 										}}
 									</SharedTextBaseSecondary>
-									<div class="flex flex-row gap-2">
+									<div class="flex flex-row flex-wrap gap-2">
 										<SharedLabel
 											v-for="label in specificItem.itemLabels.filter((label) => !label.archived)"
 											:key="label.itemLabelName"

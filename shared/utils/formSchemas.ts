@@ -188,7 +188,7 @@ export const sourceDetailsFormFields = {
 	sourceName: {
 		id: "sourceName",
 		label: "Source Name",
-		description: "Use up to 100 letters and common punctuation",
+		description: "Use up to 100 letters, numbers, and common punctuation",
 		placeholder: "Enter source name",
 	},
 	archived: {
@@ -241,7 +241,7 @@ export const sourceFieldFormFields = {
 
 export const inventoryItemNameSchema = nameSchema("Item name")
 
-export const createInventoryItemSchema = z.object({
+export const createInventoryItemSchema = imageSchema.extend({
 	itemName: inventoryItemNameSchema,
 })
 
@@ -251,8 +251,13 @@ export const createInventoryItemFormFields = {
 	itemName: {
 		id: "itemName",
 		label: "Item Name",
-		description: "Use up to 100 letters and common punctuation",
+		description: "Use up to 100 letters, numbers, and common punctuation",
 		placeholder: "Enter item name",
+	},
+	image: {
+		id: "image",
+		label: "Item Image",
+		description: "JPG, PNG, or WEBP. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels. Becomes the image of the default product.",
 	},
 } satisfies Record<keyof CreateInventoryItemForm, FormFieldConfig>
 
@@ -268,7 +273,7 @@ export const inventoryItemDetailsFormFields = {
 	itemName: {
 		id: "itemName",
 		label: "Item Name",
-		description: "Use up to 100 letters and common punctuation",
+		description: "Use up to 100 letters, numbers, and common punctuation",
 		placeholder: "Enter item name",
 	},
 	categoryID: {
@@ -329,7 +334,7 @@ export const tutorialNameFormFields = {
 	tutorialName: {
 		id: "tutorialName",
 		label: "Tutorial Name",
-		description: "Use up to 100 letters and common punctuation",
+		description: "Use up to 100 letters, numbers, and common punctuation",
 		placeholder: "Enter tutorial name",
 	},
 } satisfies Record<keyof TutorialNameForm, FormFieldConfig>
@@ -507,7 +512,7 @@ export const createCategoryFormFields = {
 	categoryName: {
 		id: "categoryName",
 		label: "Category Name",
-		description: "Use up to 100 letters and common punctuation",
+		description: "Use up to 100 letters, numbers, and common punctuation",
 		placeholder: "Enter category name",
 	},
 } satisfies Record<keyof CreateCategoryForm, FormFieldConfig>
@@ -533,7 +538,7 @@ export const editCategoryFormFields = {
 	categoryName: {
 		id: "categoryName",
 		label: "Category Name",
-		description: "Use up to 100 letters and common punctuation",
+		description: "Use up to 100 letters, numbers, and common punctuation",
 		placeholder: "Enter category name",
 	},
 	archived: {
@@ -575,7 +580,7 @@ export const createLocationFormFields = {
 	locationName: {
 		id: "locationName",
 		label: "Location Name",
-		description: "Use up to 100 letters and common punctuation",
+		description: "Use up to 100 letters, numbers, and common punctuation",
 		placeholder: "Enter location name",
 	},
 	description: {
@@ -613,7 +618,7 @@ export const editLocationFormFields = {
 	locationName: {
 		id: "locationName",
 		label: "Location Name",
-		description: "Use up to 100 letters and common punctuation",
+		description: "Use up to 100 letters, numbers, and common punctuation",
 		placeholder: "Enter location name",
 	},
 	description: {
@@ -742,15 +747,23 @@ export const specificProductFormFields = {
 		description: "JPG, PNG, or WEBP. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels",
 	},
 
+	nutritionLabelImage: {
+		id: "nutritionLabelImage",
+		label: "Nutrition Label Image",
+		description: "Optional. JPG, PNG, or WEBP. 2MB Max. Dimensions between 200x200 and 4096x4096 pixels",
+	},
+
 	itemLabels: {
 		id: "itemLabels",
 		label: "Item Labels",
 		placeholder: "Select labels",
 	},
-} satisfies Record<"productName" | "productImage" | "itemLabels", FormFieldConfig>
+} satisfies Record<"productName" | "productImage" | "nutritionLabelImage" | "itemLabels", FormFieldConfig>
 
 export const specificProductSchema = z.object({
 	productName: nameSchema("Product name"),
+
+	image: imageSchema.shape.image,
 
 	itemLabels: z.array(nameSchema("Item label")).default([]),
 })

@@ -1,8 +1,11 @@
 <template>
-	<UModal>
+	<UModal v-model:open="isOpen">
 		<SharedButtonActionButton icon="i-lucide-qr-code" button-variant="ghost" action="neutral" size="md" />
 		<template #content>
 			<SharedLayoutSectionUCard title="Submit Page for Emergency Bags">
+				<template #header>
+					<SharedButtonActionButton icon="i-lucide-x" button-variant="ghost" action="neutral" size="sm" aria-label="Close" @click="isOpen = false" />
+				</template>
 				<img :src="qrCodeDataURL" alt="QR Code" class="mx-auto my-4 w-64" />
 				<SharedTextBase class="text-center">
 					This QR code links to the submit page for emergency bags at
@@ -19,6 +22,7 @@
 <script setup lang="ts">
 import QRCode from "qrcode"
 
+const isOpen = ref(false)
 const qrCodeDataURL = ref("")
 const publicURL = ref("")
 

@@ -39,11 +39,11 @@
 						</div>
 						<SharedIncrementDecrementPill
 							class="ml-auto"
-							:count="specificItem.countAdjustment"
-							:min="-specificItem.count"
-							:max="0"
-							@increment="emit('update:adjustment', specificItem.specificItemID, specificItem.countAdjustment + 1)"
-							@decrement="emit('update:adjustment', specificItem.specificItemID, specificItem.countAdjustment - 1)"
+							:count="-specificItem.countAdjustment"
+							:min="0"
+							:max="specificItem.count"
+							@increment="emit('update:adjustment', specificItem.specificItemID, specificItem.countAdjustment - 1)"
+							@decrement="emit('update:adjustment', specificItem.specificItemID, specificItem.countAdjustment + 1)"
 						/>
 					</div>
 					<USeparator />

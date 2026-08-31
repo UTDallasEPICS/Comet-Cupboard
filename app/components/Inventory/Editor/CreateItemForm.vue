@@ -1,7 +1,10 @@
 <template>
 	<SharedFormShell :validate="validate" :state="state" :on-submit="submit" :on-error="onError" width-class="w-full">
 		<SharedLayoutSectionUCard title="Item Details">
-			<UFormField name="itemName" v-bind="createInventoryItemFormFields.itemName" required>
+			<UFormField name="image" v-bind="createInventoryItemFormFields.image" required>
+				<UFileUpload v-model="state.image" class="aspect-square w-full" label="Upload image" accept=".jpg,.jpeg,.png,.webp" />
+			</UFormField>
+			<UFormField name="itemName" v-bind="createInventoryItemFormFields.itemName" required class="mt-4">
 				<UInput v-model="state.itemName" maxlength="100" :placeholder="createInventoryItemFormFields.itemName.placeholder" />
 				<div v-if="mostSimilarItems.length" class="border-border-soft mt-2 rounded-lg border p-2">
 					<SharedTextBaseSecondary>Similar existing items</SharedTextBaseSecondary>
@@ -21,9 +24,9 @@ import { createInventoryItemSchema, createInventoryItemFormFields, type CreateIn
 
 type ItemSummary = { itemID: string; itemName: string }
 const props = withDefaults(defineProps<{ items?: ItemSummary[] }>(), { items: () => [] })
-const emit = defineEmits<{ submit: [itemName: string] }>()
+const emit = defineEmits<{ submit: [payload: CreateInventoryItemForm] }>()
 
-const { state, validate, onError } = createFormBuilder(createInventoryItemSchema, () => ({ itemName: "" }))
+const { state, validate, onError } = createFormBuilder(createInventoryItemSchema, () => ({ itemName: "", image: undefined }))
 const { query, filtered } = useFuzzySearch(
 	computed(() => props.items),
 	{ searchKeys: ["itemName"] }
@@ -34,5 +37,5 @@ watch(
 	{ immediate: true }
 )
 const mostSimilarItems = computed(() => filtered.value.slice(0, 10))
-const submit = (event: { data: CreateInventoryItemForm }) => emit("submit", event.data.itemName)
+const submit = (event: { data: CreateInventoryItemForm }) => emit("submit", event.data)
 </script>

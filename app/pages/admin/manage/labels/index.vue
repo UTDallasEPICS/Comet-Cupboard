@@ -6,7 +6,7 @@
 				<SharedLayoutSectionUCard title="Active Labels">
 					<div class="flex items-center justify-between gap-4">
 						<SharedTextCardTitle>Specific Item Labels</SharedTextCardTitle>
-						<SharedButtonActionButton icon="i-lucide-plus" action="positive" aria-label="Add specific item label" @click="openCreate('item')" />
+						<SharedButtonActionButton text="Add" icon="i-lucide-plus" action="positive" aria-label="Add specific item label" @click="openCreate('item')" />
 					</div>
 					<USeparator class="my-4" />
 					<SharedLayoutGrid v-if="activeItemLabels.length">
@@ -23,7 +23,7 @@
 
 					<div class="mt-6 flex items-center justify-between gap-4">
 						<SharedTextCardTitle>Emergency Bag Labels</SharedTextCardTitle>
-						<SharedButtonActionButton icon="i-lucide-plus" action="positive" aria-label="Add emergency bag label" @click="openCreate('emergency')" />
+						<SharedButtonActionButton text="Add" icon="i-lucide-plus" action="positive" aria-label="Add emergency bag label" @click="openCreate('emergency')" />
 					</div>
 					<USeparator class="my-4" />
 					<SharedLayoutGrid v-if="activeEmergencyBagLabels.length">
@@ -72,23 +72,21 @@
 		</NuxtLayout>
 
 		<UModal v-model:open="isEditorOpen" :title="editorTitle">
-			<template #content>
-				<UCard class="w-full max-w-md">
-					<SharedTextCardTitle>{{ editorTitle }}</SharedTextCardTitle>
-					<USeparator class="my-4" />
-					<ManageLabelEditorItemLabelForm
-						v-if="editingLabel?.type === 'item'"
-						:initial-values="itemLabelInitialValues"
-						:submit-text="editingLabel.label ? 'Save Label' : 'Create Label'"
-						@submit="saveItemLabel"
-					/>
-					<ManageLabelEditorEmergencyBagLabelForm
-						v-else-if="editingLabel?.type === 'emergency'"
-						:initial-values="emergencyBagLabelInitialValues"
-						:submit-text="editingLabel.label ? 'Save Label' : 'Create Label'"
-						@submit="saveEmergencyBagLabel"
-					/>
-				</UCard>
+			<template #body>
+				<ManageLabelEditorItemLabelForm
+					v-if="editingLabel?.type === 'item'"
+					:item-label-i-d="editingLabel.label?.itemLabelID"
+					:initial-values="itemLabelInitialValues"
+					:submit-text="editingLabel.label ? 'Save Label' : 'Create Label'"
+					@submit="saveItemLabel"
+				/>
+				<ManageLabelEditorEmergencyBagLabelForm
+					v-else-if="editingLabel?.type === 'emergency'"
+					:emergency-bag-label-i-d="editingLabel.label?.emergencyBagLabelID"
+					:initial-values="emergencyBagLabelInitialValues"
+					:submit-text="editingLabel.label ? 'Save Label' : 'Create Label'"
+					@submit="saveEmergencyBagLabel"
+				/>
 			</template>
 		</UModal>
 	</div>

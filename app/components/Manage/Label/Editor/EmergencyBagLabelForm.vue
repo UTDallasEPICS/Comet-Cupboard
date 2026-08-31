@@ -1,5 +1,6 @@
 <template>
 	<SharedFormShell :validate="validate" :state="state" :on-submit="submit" :on-error="onError" width-class="w-full">
+		<SharedTextBaseSecondary v-if="props.emergencyBagLabelID" class="mb-4 block font-mono">Emergency Bag Label ID: {{ props.emergencyBagLabelID }}</SharedTextBaseSecondary>
 		<UFormField name="emergencyBagLabelName" v-bind="emergencyBagLabelFormFields.emergencyBagLabelName" required>
 			<UInput v-model="state.emergencyBagLabelName" :placeholder="emergencyBagLabelFormFields.emergencyBagLabelName.placeholder" class="w-full" />
 		</UFormField>
@@ -25,10 +26,12 @@ import { emergencyBagLabelFormFields, emergencyBagLabelSchema, type EmergencyBag
 
 const props = withDefaults(
 	defineProps<{
+		emergencyBagLabelID?: string
 		initialValues: EmergencyBagLabelForm
 		submitText?: string
 	}>(),
 	{
+		emergencyBagLabelID: undefined,
 		submitText: "Save Label",
 	}
 )
